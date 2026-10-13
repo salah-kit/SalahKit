@@ -87,7 +87,9 @@ nonisolated extension PrayerSchedule {
     var states: [Date: ScheduleState] = [:]
     func state(at date: Date) -> ScheduleState {
       if let state = states[date] { return state }
-      let state = engine.state(at: date, through: bound, policy: policy)
+      // The same state `state(at:through:policy:)` gives, including its query limit.
+      let state = engine.state(
+        at: date, through: engine.clampedEnd(from: date, through: bound), policy: policy)
       states[date] = state
       return state
     }
