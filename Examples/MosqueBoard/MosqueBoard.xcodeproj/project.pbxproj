@@ -1,0 +1,618 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2F93D5DAF3FD107360660FE1 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 43E0682D52907A223BE64D40 /* Localizable.xcstrings */; };
+		3A6439FDE8374AA43B00F572 /* MosqueBoardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9951F48E7A0CDDB3CDDC929 /* MosqueBoardApp.swift */; };
+		3C010973E0B94CD2D2596052 /* MosqueBoardJourneys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302BA8757D9492104F8755EB /* MosqueBoardJourneys.swift */; };
+		4ECBC10546150307786D3E1B /* LaunchOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D269AA40D0F955A7B6465C24 /* LaunchOptions.swift */; };
+		6C54E5B214AFC963616E1EC6 /* BoardSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1194C5B1A05F57AE64C3ED5 /* BoardSnapshot.swift */; };
+		77A52A4403D574F4C22C3D24 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6145BD42FE8C1954366ACAB0 /* Board.swift */; };
+		891B32722B7A70C12EB01B5D /* TimetableDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC72A7ED79F9F1E1543C602 /* TimetableDataTests.swift */; };
+		95C979EEE4AD556090208C8C /* muis-2026.json in Resources */ = {isa = PBXBuildFile; fileRef = 2671688BA75E7B1C8229938F /* muis-2026.json */; };
+		980EA882C6072FC66022A8EE /* SalahCore in Frameworks */ = {isa = PBXBuildFile; productRef = 4DAED609B73D82F3026076BB /* SalahCore */; };
+		9D62E50A8639DF0BB1F58C27 /* edinburgh-synthetic.json in Resources */ = {isa = PBXBuildFile; fileRef = 0FB704AF25F9A843E48F0E7C /* edinburgh-synthetic.json */; };
+		CFDAA05DDDC0DFA8A5558271 /* BoardStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E0AF4166F8381C001F7B2E /* BoardStrings.swift */; };
+		D60BB56CF382DCA29799E99A /* BoardSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85136FFE90E1043B44E72D6 /* BoardSnapshotTests.swift */; };
+		E41AB9BBE51B029521C5E78A /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530E243A1B6934F148FA31D8 /* BoardView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5BDA8707BAC761E385DD8455 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D18490BFF55EF74590562C29 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0271CA3076439F309C2F109E;
+			remoteInfo = MosqueBoard;
+		};
+		73D842557FBDAA35EB37B4DC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D18490BFF55EF74590562C29 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0271CA3076439F309C2F109E;
+			remoteInfo = MosqueBoard;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		09E0AF4166F8381C001F7B2E /* BoardStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardStrings.swift; sourceTree = "<group>"; };
+		0FB704AF25F9A843E48F0E7C /* edinburgh-synthetic.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "edinburgh-synthetic.json"; sourceTree = "<group>"; };
+		2671688BA75E7B1C8229938F /* muis-2026.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "muis-2026.json"; sourceTree = "<group>"; };
+		302BA8757D9492104F8755EB /* MosqueBoardJourneys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosqueBoardJourneys.swift; sourceTree = "<group>"; };
+		43E0682D52907A223BE64D40 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		530E243A1B6934F148FA31D8 /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
+		6145BD42FE8C1954366ACAB0 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		8A69C91BBA39D721A3140414 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
+		96F3E68D6BE5DBB98B448BFD /* MosqueBoardTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MosqueBoardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1194C5B1A05F57AE64C3ED5 /* BoardSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSnapshot.swift; sourceTree = "<group>"; };
+		CDC72A7ED79F9F1E1543C602 /* TimetableDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableDataTests.swift; sourceTree = "<group>"; };
+		D269AA40D0F955A7B6465C24 /* LaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptions.swift; sourceTree = "<group>"; };
+		D483CBD9714237BF6487D803 /* MosqueBoard.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MosqueBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9951F48E7A0CDDB3CDDC929 /* MosqueBoardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosqueBoardApp.swift; sourceTree = "<group>"; };
+		EC7251AEE38E338479D0C103 /* MosqueBoardUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MosqueBoardUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1EE2DD2B1F5298CBD472F7E /* SalahKit-A1-mosque */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "SalahKit-A1-mosque"; path = ../..; sourceTree = SOURCE_ROOT; };
+		F85136FFE90E1043B44E72D6 /* BoardSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSnapshotTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F02B877453B07FF93AC08E4A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				980EA882C6072FC66022A8EE /* SalahCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0F2D62047526DD59D7C38151 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				8A69C91BBA39D721A3140414 /* Shared.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		30838C990CFBA914910603D3 /* MosqueBoard */ = {
+			isa = PBXGroup;
+			children = (
+				6145BD42FE8C1954366ACAB0 /* Board.swift */,
+				C1194C5B1A05F57AE64C3ED5 /* BoardSnapshot.swift */,
+				09E0AF4166F8381C001F7B2E /* BoardStrings.swift */,
+				530E243A1B6934F148FA31D8 /* BoardView.swift */,
+				D269AA40D0F955A7B6465C24 /* LaunchOptions.swift */,
+				43E0682D52907A223BE64D40 /* Localizable.xcstrings */,
+				D9951F48E7A0CDDB3CDDC929 /* MosqueBoardApp.swift */,
+				3C29BFE08B31E77D964CE1F1 /* Timetables */,
+			);
+			path = MosqueBoard;
+			sourceTree = "<group>";
+		};
+		3C29BFE08B31E77D964CE1F1 /* Timetables */ = {
+			isa = PBXGroup;
+			children = (
+				0FB704AF25F9A843E48F0E7C /* edinburgh-synthetic.json */,
+				2671688BA75E7B1C8229938F /* muis-2026.json */,
+			);
+			path = Timetables;
+			sourceTree = "<group>";
+		};
+		6844A8ED7C8A6B5E1FCC2190 /* MosqueBoardUITests */ = {
+			isa = PBXGroup;
+			children = (
+				302BA8757D9492104F8755EB /* MosqueBoardJourneys.swift */,
+			);
+			path = MosqueBoardUITests;
+			sourceTree = "<group>";
+		};
+		72ED143A202AC9A36491843A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D483CBD9714237BF6487D803 /* MosqueBoard.app */,
+				96F3E68D6BE5DBB98B448BFD /* MosqueBoardTests.xctest */,
+				EC7251AEE38E338479D0C103 /* MosqueBoardUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7A88EC39E529DAFE358B4FA7 /* MosqueBoardTests */ = {
+			isa = PBXGroup;
+			children = (
+				F85136FFE90E1043B44E72D6 /* BoardSnapshotTests.swift */,
+				CDC72A7ED79F9F1E1543C602 /* TimetableDataTests.swift */,
+			);
+			path = MosqueBoardTests;
+			sourceTree = "<group>";
+		};
+		DC5CAF87063AB23EA1A1FFFB /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				F1EE2DD2B1F5298CBD472F7E /* SalahKit-A1-mosque */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		EB98CE42F1827381A32424A4 = {
+			isa = PBXGroup;
+			children = (
+				0F2D62047526DD59D7C38151 /* Config */,
+				30838C990CFBA914910603D3 /* MosqueBoard */,
+				7A88EC39E529DAFE358B4FA7 /* MosqueBoardTests */,
+				6844A8ED7C8A6B5E1FCC2190 /* MosqueBoardUITests */,
+				DC5CAF87063AB23EA1A1FFFB /* Packages */,
+				72ED143A202AC9A36491843A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0271CA3076439F309C2F109E /* MosqueBoard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A2B1736A020A197C10D9AEA /* Build configuration list for PBXNativeTarget "MosqueBoard" */;
+			buildPhases = (
+				D6690BF6458647A1ABF216DF /* Sources */,
+				4E6BF6E762A1A8FE1647977C /* Resources */,
+				F02B877453B07FF93AC08E4A /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MosqueBoard;
+			packageProductDependencies = (
+				4DAED609B73D82F3026076BB /* SalahCore */,
+			);
+			productName = MosqueBoard;
+			productReference = D483CBD9714237BF6487D803 /* MosqueBoard.app */;
+			productType = "com.apple.product-type.application";
+		};
+		15678ED42E40D4C7CF987EF3 /* MosqueBoardTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DC4E40A2F6102F190CA86A9D /* Build configuration list for PBXNativeTarget "MosqueBoardTests" */;
+			buildPhases = (
+				78EEC4C4665076DC8A8C5A2A /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				612401CAAC3DE77CD1C04848 /* PBXTargetDependency */,
+			);
+			name = MosqueBoardTests;
+			packageProductDependencies = (
+			);
+			productName = MosqueBoardTests;
+			productReference = 96F3E68D6BE5DBB98B448BFD /* MosqueBoardTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		6772CCB5252437036622CDCC /* MosqueBoardUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3501E23B8A16B04B9E53BB89 /* Build configuration list for PBXNativeTarget "MosqueBoardUITests" */;
+			buildPhases = (
+				245DD32F01E824DC521B21CA /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F53564CCAA909AC881703AE5 /* PBXTargetDependency */,
+			);
+			name = MosqueBoardUITests;
+			packageProductDependencies = (
+			);
+			productName = MosqueBoardUITests;
+			productReference = EC7251AEE38E338479D0C103 /* MosqueBoardUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D18490BFF55EF74590562C29 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					0271CA3076439F309C2F109E = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					15678ED42E40D4C7CF987EF3 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					6772CCB5252437036622CDCC = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+						TestTargetID = 0271CA3076439F309C2F109E;
+					};
+				};
+			};
+			buildConfigurationList = CC9659BB25291AC5E73A0128 /* Build configuration list for PBXProject "MosqueBoard" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				ar,
+				en,
+			);
+			mainGroup = EB98CE42F1827381A32424A4;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D186988A71FFACBEA747FE00 /* XCLocalSwiftPackageReference "../.." */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 72ED143A202AC9A36491843A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0271CA3076439F309C2F109E /* MosqueBoard */,
+				15678ED42E40D4C7CF987EF3 /* MosqueBoardTests */,
+				6772CCB5252437036622CDCC /* MosqueBoardUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4E6BF6E762A1A8FE1647977C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F93D5DAF3FD107360660FE1 /* Localizable.xcstrings in Resources */,
+				9D62E50A8639DF0BB1F58C27 /* edinburgh-synthetic.json in Resources */,
+				95C979EEE4AD556090208C8C /* muis-2026.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		245DD32F01E824DC521B21CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C010973E0B94CD2D2596052 /* MosqueBoardJourneys.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78EEC4C4665076DC8A8C5A2A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D60BB56CF382DCA29799E99A /* BoardSnapshotTests.swift in Sources */,
+				891B32722B7A70C12EB01B5D /* TimetableDataTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D6690BF6458647A1ABF216DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77A52A4403D574F4C22C3D24 /* Board.swift in Sources */,
+				6C54E5B214AFC963616E1EC6 /* BoardSnapshot.swift in Sources */,
+				CFDAA05DDDC0DFA8A5558271 /* BoardStrings.swift in Sources */,
+				E41AB9BBE51B029521C5E78A /* BoardView.swift in Sources */,
+				4ECBC10546150307786D3E1B /* LaunchOptions.swift in Sources */,
+				3A6439FDE8374AA43B00F572 /* MosqueBoardApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		612401CAAC3DE77CD1C04848 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0271CA3076439F309C2F109E /* MosqueBoard */;
+			targetProxy = 73D842557FBDAA35EB37B4DC /* PBXContainerItemProxy */;
+		};
+		F53564CCAA909AC881703AE5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0271CA3076439F309C2F109E /* MosqueBoard */;
+			targetProxy = 5BDA8707BAC761E385DD8455 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		40F81856D70A7498773DFD90 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MosqueBoard;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoard";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		4E5542DE7AF1629368EFC06E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoardUITests";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = MosqueBoard;
+			};
+			name = Debug;
+		};
+		625666AA11CA2AF43A796E21 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoardUITests";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = MosqueBoard;
+			};
+			name = Release;
+		};
+		92060535A04F9DACA794F3BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8A69C91BBA39D721A3140414 /* Shared.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+		B8EFCDC2709AE986B381A735 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoardTests";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MosqueBoard.app/MosqueBoard";
+			};
+			name = Debug;
+		};
+		CB0FBBF9B94116DD68B587D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8A69C91BBA39D721A3140414 /* Shared.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		F5FACC5EB77BA1CB255BD86D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoardTests";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MosqueBoard.app/MosqueBoard";
+			};
+			name = Release;
+		};
+		F93F472BF5104C3E4477D167 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MosqueBoard;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoard";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3501E23B8A16B04B9E53BB89 /* Build configuration list for PBXNativeTarget "MosqueBoardUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4E5542DE7AF1629368EFC06E /* Debug */,
+				625666AA11CA2AF43A796E21 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4A2B1736A020A197C10D9AEA /* Build configuration list for PBXNativeTarget "MosqueBoard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F93F472BF5104C3E4477D167 /* Debug */,
+				40F81856D70A7498773DFD90 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CC9659BB25291AC5E73A0128 /* Build configuration list for PBXProject "MosqueBoard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB0FBBF9B94116DD68B587D5 /* Debug */,
+				92060535A04F9DACA794F3BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DC4E40A2F6102F190CA86A9D /* Build configuration list for PBXNativeTarget "MosqueBoardTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8EFCDC2709AE986B381A735 /* Debug */,
+				F5FACC5EB77BA1CB255BD86D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		D186988A71FFACBEA747FE00 /* XCLocalSwiftPackageReference "../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4DAED609B73D82F3026076BB /* SalahCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = D18490BFF55EF74590562C29 /* Project object */;
+}

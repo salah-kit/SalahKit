@@ -1,0 +1,101 @@
+# MosqueBoard
+
+An iPad board that shows a mosque's published prayer and iqama times with SalahCore, and calculates nothing.
+
+MosqueBoard is SalahKit's example of a published-timetable app (proposal §2.3 #2). It imports only `SalahCore`. No Adhan or SalahCalculation code is in its source or its build graph. Where the timetable has a hole, the board says so instead of inventing a time.
+
+## What it shows
+
+One screen, in landscape and portrait:
+
+- **Header:** the mosque, the local clock, and the Gregorian and Hijri dates in the mosque's time zone (`HijriDateFormat`).
+- **The day's prayers:** a row per expected kind of the current calendar day (`PrayerSchedule.day(containing:)`). Each row has the name (`PrayerNames`, Jumu'ah only when the event declares it), the begin time, the iqama time and the status from `PrayerState.status(of:)`: passed, started, next (or next and soon) and upcoming. While the state is unavailable the status reads "Unknown": the schedule can't say which prayer is current. A time the timetable doesn't publish reads "Not published".
+- **The next prayer:** its name, begin time and countdown (`PrayerDurationFormat`). If the next prayer belongs to the previous day's timetable (an Isha after midnight), the panel says so. If the timetable has nothing after the latest prayer, the panel says the next prayer isn't published yet.
+- **The coverage banner:** when the state is unavailable, the board names neither a current nor a next prayer. It lists each `ScheduleGap` instead: the day, the missing kinds and the reason.
+
+The board redraws every second, which drives the countdown and also catches every state change (`ScheduleState.changesAt`) within a second. Times use a 24-hour clock with the language's digits (`PrayerLocale.resolved`).
+
+## The data
+
+Two timetables in SalahKit's `TimetableSource` JSON. [Timetables.md](Timetables.md) describes how each file was made, and `Scripts/check-timetables.py` checks them.
+
+| Board | Timetable | Zone | Iqama and Jumu'ah |
+|---|---|---|---|
+| `muis` | MUIS's Muslim Prayer Timetable 2026 for Singapore: real, published data, 2026-01-01 to 2026-12-31 | `Asia/Singapore` | **App policy** (below) |
+| `edinburgh` | **Synthetic** timetable for a fictional mosque in Edinburgh, 2026-03-01 to 2026-10-31, with a partial row (2026-06-24), a missing day (2026-06-26), Isha after midnight in summer and both 2026 clock changes | `Europe/London` | Published in the timetable |
+
+Contains information from Muslim Prayer Timetable 2026 accessed on 2026-10-13 from data.gov.sg (Majlis Ugama Islam Singapura) which is made available under the terms of the Singapore Open Data Licence version 1.0 https://data.gov.sg/open-data-licence
+
+The MUIS board shows the same sentence in its footer, in English in both languages because it's a licence notice. Neither MUIS nor data.gov.sg endorses this app.
+
+### App policy on the MUIS board
+
+MUIS publishes begin times only: no iqama and no Jumu'ah. The board adds both as this mosque's own settings, and its footer says so. In the code, both are in `MosqueBoard/Board.swift`:
+
+- `Board.muisIqama`, an `IqamaRules`: Fajr 20 minutes after it begins, Dhuhr, Asr and Isha 10, Maghrib 5, and Jumu'ah 30 minutes after Zohor begins.
+- `DeclaredJumuahSource`, a small `PrayerSource` that wraps the `TimetableSource` and declares `.jumuah` on every Friday's Dhuhr. SalahCore never infers Jumu'ah from the weekday, so the app declares it. The published times pass through unchanged.
+
+The Edinburgh timetable publishes its own iqama and declares Jumu'ah on every Friday, so that board uses the timetable as it is.
+
+## Screenshots
+
+These are the journeys' screenshot attachments, exported from a test run on an iPad (A16) simulator with iOS 27 (`xcrun xcresulttool export attachments`) and scaled down. XCUITest stores landscape screenshots as portrait pixels with an EXIF orientation, so the two landscape ones were turned upright (`sips -r 270`) and their metadata removed.
+
+| | |
+|---|---|
+| ![A normal MUIS day in landscape](Screenshots/01-muis-normal-day.png) | ![The MUIS board in Arabic](Screenshots/07-muis-arabic.png) |
+| A normal MUIS day: iqama from the app's rules, passed rows, Asr next | Arabic: names, Arabic-Indic digits, right to left |
+| ![Isha after midnight](Screenshots/04b-edinburgh-after-midnight.png) | ![The coverage banner after the timetable ends](Screenshots/03b-muis-expired.png) |
+| 00:30 on 22 June: the next prayer is 21 June's Isha at 01:15 | 1 January 2027: the MUIS timetable has ended |
+| ![The partial row of 24 June](Screenshots/06a-edinburgh-partial-row.png) | |
+| 23:00 on 24 June: Isha isn't published, so the board names no next prayer | |
+
+## Building and running
+
+Open `MosqueBoard.xcodeproj` and run the `MosqueBoard` scheme on an iPad simulator. Simulator builds need no signing. To run on a device, copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` and set your team there; it's gitignored.
+
+From the command line, in this folder:
+
+```sh
+xcodegen                         # after changing project.yml; commit both files
+xcodebuild test -project MosqueBoard.xcodeproj -scheme MosqueBoard \
+  -destination 'platform=iOS Simulator,name=iPad (A16)'
+# The other default-isolation setting (the project defaults to MainActor):
+xcodebuild build -project MosqueBoard.xcodeproj -scheme MosqueBoard \
+  -destination 'generic/platform=iOS Simulator' SWIFT_DEFAULT_ACTOR_ISOLATION=nonisolated
+python3 -I Scripts/check-timetables.py
+```
+
+### Launch arguments
+
+| Argument | Effect |
+|---|---|
+| `-board muis` or `-board edinburgh` | The timetable and location to show (default `muis`) |
+| `-now 2026-06-22T00:30:00+01:00` | Start the board's clock at this ISO 8601 instant; it then runs in real time |
+| `-frozen` | Keep the clock at `-now` |
+| `-language ar` | Names, digits and dates in Arabic. Add `-AppleLanguages (ar)` for the system's own right-to-left behavior. |
+
+The app reads no location and stores nothing, so it needs no permissions and no privacy manifest.
+
+## Tests
+
+- `MosqueBoardTests` (Swift Testing) decodes both timetables with `TimetableSource` and checks every day: MUIS's 365 complete days, and Edinburgh's partial row, missing day, overnight Isha, clock changes and Fridays. It also tests the board's logic at fixed instants and in Arabic, the app-policy Jumu'ah, and the launch arguments.
+- `MosqueBoardUITests` launches the real app with a frozen clock and asserts what a person sees, through accessibility identifiers such as `row.fajr.time`, `next.countdown` and `coverage.banner`:
+  1. A normal MUIS day with the app's iqama, a passed row, the next row and the countdown.
+  2. Jumu'ah on a MUIS Friday, by app policy, and Dhuhr on the Thursday before.
+  3. Expired coverage: after the last Isha of 2026 the next prayer isn't published; on 1 January 2027 the banner explains the gap.
+  4. Isha at 01:15: the countdown runs across midnight, and after midnight the board shows 22 June while the next prayer is 21 June's Isha.
+  5. Countdowns across the 2026 spring-forward and fall-back count elapsed time.
+  6. The partial row and the missing day show the banner, never invented times.
+  7. Arabic names, Arabic-Indic digits and a right-to-left layout.
+
+## Accessibility and languages
+
+Every value on the board has a VoiceOver label, such as "Begins 05:31", "Iqama 05:51", "Passed" or "Time remaining: 2 hours, 6 minutes". Text uses Dynamic Type styles, and the board scrolls when it's too large to fit. Colors are system colors: primary text on the system background, with statuses also shown by symbols and weight, not by color alone. UI strings are in `Localizable.xcstrings` in English and Arabic. The Arabic strings are machine-drafted and marked as needing review.
+
+## Pending
+
+- **Contrast check:** SalahUI's `ContrastCheck` doesn't exist yet. Once it does, check the board's colors with it.
+- **A real iPad:** only simulators have run the board so far. Run it on a physical iPad in both orientations and with large Dynamic Type sizes.
+- **Arabic review:** a native speaker should review the Arabic strings.
+- **MUIS meaning:** see "For a person to confirm" in [Timetables.md](Timetables.md).

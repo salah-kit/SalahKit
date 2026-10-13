@@ -1,0 +1,80 @@
+# Generates MosqueBoard.xcodeproj. Run `xcodegen` in this folder after changing it, and commit
+# both files (STANDARD.md, Apps).
+name: MosqueBoard
+options:
+  bundleIdPrefix: io.github.salah-kit
+  deploymentTarget:
+    iOS: "17.0"
+  developmentLanguage: en
+  createIntermediateGroups: true
+configFiles:
+  Debug: Config/Shared.xcconfig
+  Release: Config/Shared.xcconfig
+packages:
+  SalahKit:
+    path: ../..
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    TARGETED_DEVICE_FAMILY: "2"
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    # Builds pass SWIFT_DEFAULT_ACTOR_ISOLATION=nonisolated on the command line to check the
+    # other isolation setting (proposal §3.1); MainActor is Xcode 26's default for new apps.
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+targets:
+  MosqueBoard:
+    type: application
+    platform: iOS
+    sources:
+      - path: MosqueBoard
+    dependencies:
+      - package: SalahKit
+        product: SalahCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MosqueBoard
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: MosqueBoard
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: >-
+          UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown
+          UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        INFOPLIST_KEY_UIRequiresFullScreen: NO
+  MosqueBoardTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: MosqueBoardTests
+    dependencies:
+      # Hosted by the app: SalahCore's symbols come from the app binary, not a second copy.
+      - target: MosqueBoard
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MosqueBoardTests
+        GENERATE_INFOPLIST_FILE: YES
+  MosqueBoardUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: MosqueBoardUITests
+    dependencies:
+      - target: MosqueBoard
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MosqueBoardUITests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: MosqueBoard
+schemes:
+  MosqueBoard:
+    build:
+      targets:
+        MosqueBoard: all
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - MosqueBoardTests
+        - MosqueBoardUITests
