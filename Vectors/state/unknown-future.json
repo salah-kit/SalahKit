@@ -1,0 +1,480 @@
+{
+  "schemaVersion": 1,
+  "description": "Unknown future times: the last published evening, a missing middle day, a partial row, a missing sunrise, and latestPrayer as an occurrence rather than a validity window.",
+  "vectors": [
+    {
+      "id": "state.unknown.last-published-evening",
+      "description": "After Isha on the last published day (12-31), the state stays available with previous and latestPrayer known and next, nextPrayer null; it changes when 2027-01-01 starts.",
+      "provenance": "proposal §7.1 'Unknown future times remain unknown'; RFC 0001 §4.7 'What this means' (first bullet)",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-12-29", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-30", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-31", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-12-31T21:00:00+08:00", "through": "2027-01-02T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+        "next": null,
+        "nextPrayer": null,
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2027-01-01T00:00:00+08:00",
+        "coverage": {
+          "requested": ["2026-12-31T21:00:00+08:00", "2027-01-02T00:00:00+08:00"],
+          "known": [["2026-12-31T21:00:00+08:00", "2027-01-01T00:00:00+08:00"]],
+          "gaps": [
+            {"start": "2027-01-01T00:00:00+08:00", "end": "2027-01-02T00:00:00+08:00", "day": "2027-01-01", "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "reason": "noPublishedData"}
+          ]
+        },
+        "statuses": {
+          "2026-12-31/fajr": "passed",
+          "2026-12-31/sunrise": "passed",
+          "2026-12-31/dhuhr": "passed",
+          "2026-12-31/asr": "passed",
+          "2026-12-31/maghrib": "passed",
+          "2026-12-31/isha": "passed"
+        }
+      }
+    },
+    {
+      "id": "state.unknown.after-last-published-day",
+      "description": "Once 2027-01-01 starts, no field is known: unavailable. The next change is 2027-01-02 00:00, where 01-02's gap starts to contain the instant.",
+      "provenance": "proposal §7.1; RFC 0001 §4.7 Availability, changesAt",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-12-29", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-30", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-31", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2027-01-01T00:00:00+08:00", "through": "2027-01-03T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "unavailable",
+        "previous": null,
+        "latestPrayer": null,
+        "next": null,
+        "nextPrayer": null,
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2027-01-02T00:00:00+08:00",
+        "coverage": {
+          "requested": ["2027-01-01T00:00:00+08:00", "2027-01-03T00:00:00+08:00"],
+          "known": [],
+          "gaps": [
+            {"start": "2027-01-01T00:00:00+08:00", "end": "2027-01-03T00:00:00+08:00", "day": "2027-01-01", "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "reason": "noPublishedData"},
+            {"start": "2027-01-02T00:00:00+08:00", "end": "2027-01-03T00:00:00+08:00", "day": "2027-01-02", "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "reason": "noPublishedData"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "state.unknown.missing-middle-day.evening-before",
+      "description": "12-02 has no row and 12-03 does. At 21:00 on 12-01, 12-03's Fajr is within the bound but never becomes next: 12-02's window [12-02 00:00, 12-03 05:40) lies before it.",
+      "provenance": "proposal §7.1 'A missing day followed by a later known row...'; RFC 0001 §4.7 next, 'What this means' (2nd bullet)",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-11-29", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-11-30", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-01", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-03", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-04", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-05", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-12-01T21:00:00+08:00", "through": "2026-12-04T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-12-01", "kind": "isha", "time": "2026-12-01T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-12-01", "kind": "isha", "time": "2026-12-01T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+        "next": null,
+        "nextPrayer": null,
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-12-02T00:00:00+08:00",
+        "coverage": {
+          "requested": ["2026-12-01T21:00:00+08:00", "2026-12-04T00:00:00+08:00"],
+          "known": [
+            ["2026-12-01T21:00:00+08:00", "2026-12-02T00:00:00+08:00"],
+            ["2026-12-03T05:40:00+08:00", "2026-12-04T00:00:00+08:00"]
+          ],
+          "gaps": [
+            {"start": "2026-12-02T00:00:00+08:00", "end": "2026-12-03T05:40:00+08:00", "day": "2026-12-02", "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "reason": "noPublishedData"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "state.unknown.missing-middle-day.inside-gap",
+      "description": "Inside the missing day's window the state is unavailable, and changesAt is the window's end (12-03 Fajr).",
+      "provenance": "proposal §7.1; RFC 0001 §4.7 Availability, changesAt",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-11-29", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-11-30", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-01", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-03", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-04", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-05", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-12-02T12:00:00+08:00", "through": "2026-12-04T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "unavailable",
+        "previous": null,
+        "latestPrayer": null,
+        "next": null,
+        "nextPrayer": null,
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-12-03T05:40:00+08:00",
+        "coverage": {
+          "requested": ["2026-12-02T12:00:00+08:00", "2026-12-04T00:00:00+08:00"],
+          "known": [["2026-12-03T05:40:00+08:00", "2026-12-04T00:00:00+08:00"]],
+          "gaps": [
+            {"start": "2026-12-02T12:00:00+08:00", "end": "2026-12-03T05:40:00+08:00", "day": "2026-12-02", "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "reason": "noPublishedData"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "state.unknown.missing-middle-day.at-gap-end",
+      "description": "At the instant of 12-03's Fajr, which bounds the window from above, Fajr is previous and just started.",
+      "provenance": "RFC 0001 §4.7 'Conventions this gives' (a known event that bounds a window from above becomes previous at its own instant)",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-11-29", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-11-30", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-01", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-03", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-04", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-05", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-12-03T05:40:00+08:00", "through": "2026-12-05T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-12-03", "kind": "fajr", "time": "2026-12-03T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-12-03", "kind": "fajr", "time": "2026-12-03T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+        "next": {"day": "2026-12-03", "kind": "sunrise", "time": "2026-12-03T07:02:00+08:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-12-03", "kind": "dhuhr", "time": "2026-12-03T13:04:00+08:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": {"day": "2026-12-03", "kind": "fajr", "time": "2026-12-03T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+        "isApproaching": false,
+        "changesAt": "2026-12-03T05:55:00+08:00",
+        "coverage": {
+          "requested": ["2026-12-03T05:40:00+08:00", "2026-12-05T00:00:00+08:00"],
+          "known": [["2026-12-03T05:40:00+08:00", "2026-12-05T00:00:00+08:00"]],
+          "gaps": []
+        }
+      }
+    },
+    {
+      "id": "state.unknown.partial-row.before-maghrib",
+      "description": "12-12 has no Isha. One minute before Maghrib, the window [Maghrib, 12-13 Fajr) hasn't opened: previous is Asr and next is Maghrib (approaching).",
+      "provenance": "proposal §7.1 'A partial row can still display its supplied times...'; RFC 0001 §4.6, §4.7",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-12-10", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-11", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06"}},
+            {"day": "2026-12-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-12-12T19:05:00+08:00", "through": "2026-12-14T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-12-12", "kind": "asr", "time": "2026-12-12T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-12-12", "kind": "asr", "time": "2026-12-12T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "next": {"day": "2026-12-12", "kind": "maghrib", "time": "2026-12-12T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-12-12", "kind": "maghrib", "time": "2026-12-12T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": true,
+        "changesAt": "2026-12-12T19:06:00+08:00",
+        "coverage": {
+          "requested": ["2026-12-12T19:05:00+08:00", "2026-12-14T00:00:00+08:00"],
+          "known": [
+            ["2026-12-12T19:05:00+08:00", "2026-12-12T19:06:00+08:00"],
+            ["2026-12-13T05:40:00+08:00", "2026-12-14T00:00:00+08:00"]
+          ],
+          "gaps": [
+            {"start": "2026-12-12T19:06:00+08:00", "end": "2026-12-13T05:40:00+08:00", "day": "2026-12-12", "kinds": ["isha"], "reason": "noPublishedData"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "state.unknown.partial-row.at-maghrib",
+      "description": "At the instant of Maghrib the missing Isha's window opens, so previous and latestPrayer are already null (half-open convention); with no next known either, the state is unavailable until 12-13's Fajr.",
+      "provenance": "RFC 0001 §4.7 'Conventions this gives', 'What this means' (third bullet)",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-12-10", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-11", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06"}},
+            {"day": "2026-12-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-12-12T19:06:00+08:00", "through": "2026-12-14T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "unavailable",
+        "previous": null,
+        "latestPrayer": null,
+        "next": null,
+        "nextPrayer": null,
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-12-13T05:40:00+08:00",
+        "coverage": {
+          "requested": ["2026-12-12T19:06:00+08:00", "2026-12-14T00:00:00+08:00"],
+          "known": [["2026-12-13T05:40:00+08:00", "2026-12-14T00:00:00+08:00"]],
+          "gaps": [
+            {"start": "2026-12-12T19:06:00+08:00", "end": "2026-12-13T05:40:00+08:00", "day": "2026-12-12", "kinds": ["isha"], "reason": "noPublishedData"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "state.unknown.partial-row.events-still-listed",
+      "description": "The partial row's supplied times are still listed by events(from:through:), with the Isha window as a gap.",
+      "provenance": "proposal §7.1; RFC 0001 §4.6 events(from:through:) 'Events of partial days are included'",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-12-10", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-11", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06"}},
+            {"day": "2026-12-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "events", "from": "2026-12-12T00:00:00+08:00", "through": "2026-12-13T06:00:00+08:00"}
+      },
+      "expected": {
+        "events": [
+          {"day": "2026-12-12", "kind": "fajr", "time": "2026-12-12T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-12-12", "kind": "sunrise", "time": "2026-12-12T07:02:00+08:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-12-12", "kind": "dhuhr", "time": "2026-12-12T13:04:00+08:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-12-12", "kind": "asr", "time": "2026-12-12T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-12-12", "kind": "maghrib", "time": "2026-12-12T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-12-13", "kind": "fajr", "time": "2026-12-13T05:40:00+08:00", "iqama": null, "observance": "ordinary"}
+        ],
+        "coverage": {
+          "requested": ["2026-12-12T00:00:00+08:00", "2026-12-13T06:00:00+08:00"],
+          "known": [
+            ["2026-12-12T00:00:00+08:00", "2026-12-12T19:06:00+08:00"],
+            ["2026-12-13T05:40:00+08:00", "2026-12-13T06:00:00+08:00"]
+          ],
+          "gaps": [
+            {"start": "2026-12-12T19:06:00+08:00", "end": "2026-12-13T05:40:00+08:00", "day": "2026-12-12", "kinds": ["isha"], "reason": "noPublishedData"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "state.unknown.missing-sunrise.after-fajr",
+      "description": "12-22 has no sunrise. Its window [Fajr, Dhuhr) holds only sunrise, so it blocks previous and next but not latestPrayer (Fajr) or nextPrayer (Dhuhr). With next null, Dhuhr's row shows as next.",
+      "provenance": "RFC 0001 §4.7 W_p, previous/latestPrayer/next/nextPrayer, status(of:)",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-12-20", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-21", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-22", "times": {"fajr": "05:40", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-23", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-24", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-12-22T06:00:00+08:00", "through": "2026-12-24T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": null,
+        "latestPrayer": {"day": "2026-12-22", "kind": "fajr", "time": "2026-12-22T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+        "next": null,
+        "nextPrayer": {"day": "2026-12-22", "kind": "dhuhr", "time": "2026-12-22T13:04:00+08:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-12-22T12:49:00+08:00",
+        "coverage": {
+          "requested": ["2026-12-22T06:00:00+08:00", "2026-12-24T00:00:00+08:00"],
+          "known": [["2026-12-22T13:04:00+08:00", "2026-12-24T00:00:00+08:00"]],
+          "gaps": [
+            {"start": "2026-12-22T06:00:00+08:00", "end": "2026-12-22T13:04:00+08:00", "day": "2026-12-22", "kinds": ["sunrise"], "reason": "noPublishedData"}
+          ]
+        },
+        "statuses": {
+          "2026-12-22/fajr": "passed",
+          "2026-12-22/dhuhr": "next",
+          "2026-12-22/asr": "upcoming",
+          "2026-12-22/maghrib": "upcoming",
+          "2026-12-22/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.unknown.missing-sunrise.dhuhr-approaching",
+      "description": "Same day at 12:55: nextPrayer Dhuhr is 9 minutes away, so isApproaching is true and Dhuhr's row is next(approaching: true).",
+      "provenance": "RFC 0001 §4.7 isApproaching, status(of:)",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-12-20", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-21", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-22", "times": {"fajr": "05:40", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-23", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-24", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-12-22T12:55:00+08:00", "through": "2026-12-24T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": null,
+        "latestPrayer": {"day": "2026-12-22", "kind": "fajr", "time": "2026-12-22T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+        "next": null,
+        "nextPrayer": {"day": "2026-12-22", "kind": "dhuhr", "time": "2026-12-22T13:04:00+08:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": true,
+        "changesAt": "2026-12-22T13:04:00+08:00",
+        "coverage": {
+          "requested": ["2026-12-22T12:55:00+08:00", "2026-12-24T00:00:00+08:00"],
+          "known": [["2026-12-22T13:04:00+08:00", "2026-12-24T00:00:00+08:00"]],
+          "gaps": [
+            {"start": "2026-12-22T12:55:00+08:00", "end": "2026-12-22T13:04:00+08:00", "day": "2026-12-22", "kinds": ["sunrise"], "reason": "noPublishedData"}
+          ]
+        },
+        "statuses": {
+          "2026-12-22/fajr": "passed",
+          "2026-12-22/dhuhr": "nextApproaching",
+          "2026-12-22/asr": "upcoming",
+          "2026-12-22/maghrib": "upcoming",
+          "2026-12-22/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.latest-prayer.after-sunrise",
+      "description": "latestPrayer is an occurrence, not a validity window: at 07:30, previous is sunrise and latestPrayer is still Fajr.",
+      "provenance": "proposal §7.1 'latestPrayer is an occurrence...'; RFC 0001 §4.7 'What this means' (fourth bullet)",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-12-19", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-20", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-21", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-22", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-23", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-12-21T07:30:00+08:00", "through": "2026-12-23T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-12-21", "kind": "sunrise", "time": "2026-12-21T07:02:00+08:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-12-21", "kind": "fajr", "time": "2026-12-21T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+        "next": {"day": "2026-12-21", "kind": "dhuhr", "time": "2026-12-21T13:04:00+08:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-12-21", "kind": "dhuhr", "time": "2026-12-21T13:04:00+08:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-12-21T12:49:00+08:00",
+        "coverage": {
+          "requested": ["2026-12-21T07:30:00+08:00", "2026-12-23T00:00:00+08:00"],
+          "known": [["2026-12-21T07:30:00+08:00", "2026-12-23T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-12-21/fajr": "passed",
+          "2026-12-21/sunrise": "passed",
+          "2026-12-21/dhuhr": "next",
+          "2026-12-21/asr": "upcoming",
+          "2026-12-21/maghrib": "upcoming",
+          "2026-12-21/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.latest-prayer.just-started-past-sunrise",
+      "description": "With a Fajr iqama at 07:10 (rule after 90), Fajr stays justStarted after sunrise (07:02): justStarted follows latestPrayer and the policy, not a religious validity window.",
+      "provenance": "proposal §7.1; RFC 0001 §4.7 justStarted",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-12-19", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-20", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-21", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-22", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-23", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"fajr": {"after": 90}}},
+        "query": {"type": "state", "at": "2026-12-21T07:05:00+08:00", "through": "2026-12-23T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-12-21", "kind": "sunrise", "time": "2026-12-21T07:02:00+08:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-12-21", "kind": "fajr", "time": "2026-12-21T05:40:00+08:00", "iqama": "2026-12-21T07:10:00+08:00", "observance": "ordinary"},
+        "next": {"day": "2026-12-21", "kind": "dhuhr", "time": "2026-12-21T13:04:00+08:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-12-21", "kind": "dhuhr", "time": "2026-12-21T13:04:00+08:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": {"day": "2026-12-21", "kind": "fajr", "time": "2026-12-21T05:40:00+08:00", "iqama": "2026-12-21T07:10:00+08:00", "observance": "ordinary"},
+        "isApproaching": false,
+        "changesAt": "2026-12-21T07:10:00+08:00",
+        "coverage": {
+          "requested": ["2026-12-21T07:05:00+08:00", "2026-12-23T00:00:00+08:00"],
+          "known": [["2026-12-21T07:05:00+08:00", "2026-12-23T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-12-21/fajr": "justStarted",
+          "2026-12-21/sunrise": "passed",
+          "2026-12-21/dhuhr": "next",
+          "2026-12-21/asr": "upcoming",
+          "2026-12-21/maghrib": "upcoming",
+          "2026-12-21/isha": "upcoming"
+        }
+      }
+    }
+  ]
+}

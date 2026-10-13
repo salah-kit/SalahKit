@@ -1,0 +1,265 @@
+{
+  "schemaVersion": 1,
+  "description": "Friday as a date fact versus declared Jumu'ah, Jumu'ah iqama rules, published iqama precedence, and iqama rule edge cases including clock changes.",
+  "vectors": [
+    {
+      "id": "state.friday.declared-jumuah",
+      "description": "A Friday row that declares Dhuhr as Jumu'ah gives the Dhuhr event observance jumuah; isFriday is true.",
+      "provenance": "proposal §7.1 'Friday is a date fact; Jumu'ah is declared policy'; RFC 0001 §4.4 step 7, §4.3 rule 11",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-16", "times": {"fajr": "05:31", "sunrise": "07:24", "dhuhr": "12:52", "asr": "15:37", "maghrib": "18:08", "isha": "19:41"}, "observances": {"dhuhr": "jumuah"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-10-16"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": true,
+        "events": [
+          {"day": "2026-10-16", "kind": "fajr", "time": "2026-10-16T05:31:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "sunrise", "time": "2026-10-16T07:24:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "dhuhr", "time": "2026-10-16T12:52:00+01:00", "iqama": null, "observance": "jumuah"},
+          {"day": "2026-10-16", "kind": "asr", "time": "2026-10-16T15:37:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "maghrib", "time": "2026-10-16T18:08:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "isha", "time": "2026-10-16T19:41:00+01:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.friday.ordinary-friday-dhuhr",
+      "description": "The same Friday without a declaration keeps an ordinary Dhuhr; isFriday is still true.",
+      "provenance": "proposal §7.1 'isFriday does not automatically label Dhuhr as Jumu'ah'; RFC 0001 §3 PrayerDay.isFriday",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-16", "times": {"fajr": "05:31", "sunrise": "07:24", "dhuhr": "12:52", "asr": "15:37", "maghrib": "18:08", "isha": "19:41"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-10-16"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": true,
+        "events": [
+          {"day": "2026-10-16", "kind": "fajr", "time": "2026-10-16T05:31:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "sunrise", "time": "2026-10-16T07:24:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "dhuhr", "time": "2026-10-16T12:52:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "asr", "time": "2026-10-16T15:37:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "maghrib", "time": "2026-10-16T18:08:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "isha", "time": "2026-10-16T19:41:00+01:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.friday.jumuah-uses-jumuah-rule",
+      "description": "A declared Jumu'ah takes its iqama from IqamaRules.jumuah (13:30), not from the Dhuhr rule.",
+      "provenance": "RFC 0001 §4.5 'A .jumuah event uses only rules.jumuah'",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-16", "times": {"fajr": "05:31", "sunrise": "07:24", "dhuhr": "12:52", "asr": "15:37", "maghrib": "18:08", "isha": "19:41"}, "observances": {"dhuhr": "jumuah"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 10}}, "jumuah": {"at": "13:30"}},
+        "query": {"type": "day", "day": "2026-10-16"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": true,
+        "events": [
+          {"day": "2026-10-16", "kind": "fajr", "time": "2026-10-16T05:31:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "sunrise", "time": "2026-10-16T07:24:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "dhuhr", "time": "2026-10-16T12:52:00+01:00", "iqama": "2026-10-16T13:30:00+01:00", "observance": "jumuah"},
+          {"day": "2026-10-16", "kind": "asr", "time": "2026-10-16T15:37:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "maghrib", "time": "2026-10-16T18:08:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "isha", "time": "2026-10-16T19:41:00+01:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.friday.jumuah-no-fallback-to-dhuhr-rule",
+      "description": "With a Dhuhr rule but no Jumu'ah rule, a declared Jumu'ah gets no iqama.",
+      "provenance": "RFC 0001 §4.5; §5 'The Jumu'ah iqama rule doesn't fall back to the Dhuhr rule'",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-16", "times": {"fajr": "05:31", "sunrise": "07:24", "dhuhr": "12:52", "asr": "15:37", "maghrib": "18:08", "isha": "19:41"}, "observances": {"dhuhr": "jumuah"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 10}}},
+        "query": {"type": "day", "day": "2026-10-16"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": true,
+        "events": [
+          {"day": "2026-10-16", "kind": "fajr", "time": "2026-10-16T05:31:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "sunrise", "time": "2026-10-16T07:24:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "dhuhr", "time": "2026-10-16T12:52:00+01:00", "iqama": null, "observance": "jumuah"},
+          {"day": "2026-10-16", "kind": "asr", "time": "2026-10-16T15:37:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "maghrib", "time": "2026-10-16T18:08:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "isha", "time": "2026-10-16T19:41:00+01:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.friday.ordinary-friday-uses-dhuhr-rule",
+      "description": "An undeclared Friday Dhuhr is ordinary: it uses the Dhuhr rule (12:52 + 10 min) and ignores the Jumu'ah rule.",
+      "provenance": "RFC 0001 §4.5 'Other prayer events use rules[kind]'",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-16", "times": {"fajr": "05:31", "sunrise": "07:24", "dhuhr": "12:52", "asr": "15:37", "maghrib": "18:08", "isha": "19:41"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 10}}, "jumuah": {"at": "13:30"}},
+        "query": {"type": "day", "day": "2026-10-16"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": true,
+        "events": [
+          {"day": "2026-10-16", "kind": "fajr", "time": "2026-10-16T05:31:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "sunrise", "time": "2026-10-16T07:24:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "dhuhr", "time": "2026-10-16T12:52:00+01:00", "iqama": "2026-10-16T13:02:00+01:00", "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "asr", "time": "2026-10-16T15:37:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "maghrib", "time": "2026-10-16T18:08:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "isha", "time": "2026-10-16T19:41:00+01:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.iqama.published-wins-over-rule",
+      "description": "Published iqama (Jumu'ah 13:15, Fajr 06:00) wins over the rules; Asr, with no published iqama, uses its rule.",
+      "provenance": "RFC 0001 §4.5 'A source's published iqama always wins over a rule'",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-16", "times": {"fajr": "05:31", "sunrise": "07:24", "dhuhr": "12:52", "asr": "15:37", "maghrib": "18:08", "isha": "19:41"}, "iqama": {"fajr": "06:00", "dhuhr": "13:15"}, "observances": {"dhuhr": "jumuah"}}
+          ]
+        },
+        "iqama": {"rules": {"fajr": {"after": 20}, "asr": {"after": 10}}, "jumuah": {"at": "13:30"}},
+        "query": {"type": "day", "day": "2026-10-16"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": true,
+        "events": [
+          {"day": "2026-10-16", "kind": "fajr", "time": "2026-10-16T05:31:00+01:00", "iqama": "2026-10-16T06:00:00+01:00", "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "sunrise", "time": "2026-10-16T07:24:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "dhuhr", "time": "2026-10-16T12:52:00+01:00", "iqama": "2026-10-16T13:15:00+01:00", "observance": "jumuah"},
+          {"day": "2026-10-16", "kind": "asr", "time": "2026-10-16T15:37:00+01:00", "iqama": "2026-10-16T15:47:00+01:00", "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "maghrib", "time": "2026-10-16T18:08:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-16", "kind": "isha", "time": "2026-10-16T19:41:00+01:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.iqama.rule-edge-cases",
+      "description": "Rules for sunrise are ignored; after 0 gives an iqama equal to the time; a negative after gives none; an .at earlier than the prayer gives none; an .at later than it applies.",
+      "provenance": "RFC 0001 §4.5",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-15", "times": {"fajr": "05:29", "sunrise": "07:22", "dhuhr": "12:52", "asr": "15:39", "maghrib": "18:10", "isha": "19:43"}}
+          ]
+        },
+        "iqama": {"rules": {"sunrise": {"after": 10}, "fajr": {"after": 0}, "asr": {"after": -5}, "maghrib": {"at": "18:00"}, "isha": {"at": "20:00"}}},
+        "query": {"type": "day", "day": "2026-10-15"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-10-15", "kind": "fajr", "time": "2026-10-15T05:29:00+01:00", "iqama": "2026-10-15T05:29:00+01:00", "observance": "ordinary"},
+          {"day": "2026-10-15", "kind": "sunrise", "time": "2026-10-15T07:22:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-15", "kind": "dhuhr", "time": "2026-10-15T12:52:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-15", "kind": "asr", "time": "2026-10-15T15:39:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-15", "kind": "maghrib", "time": "2026-10-15T18:10:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-10-15", "kind": "isha", "time": "2026-10-15T19:43:00+01:00", "iqama": "2026-10-15T20:00:00+01:00", "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.iqama.after-counts-elapsed-time.spring-forward",
+      "description": "Saturday 2026-03-07's (synthetic) Isha at 01:30 EST on Sunday plus 60 minutes of elapsed time is 03:30 EDT (07:30Z), not the nonexistent wall time 02:30.",
+      "provenance": "RFC 0001 §4.5 '.after(minutes:) ... counted in elapsed time'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-03-07", "times": {"fajr": "05:21", "sunrise": "06:23", "dhuhr": "12:08", "asr": "15:17", "maghrib": "17:55", "isha": "01:30+1"}}
+          ]
+        },
+        "iqama": {"rules": {"isha": {"after": 60}}},
+        "query": {"type": "day", "day": "2026-03-07"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-03-07", "kind": "fajr", "time": "2026-03-07T05:21:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-07", "kind": "sunrise", "time": "2026-03-07T06:23:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-07", "kind": "dhuhr", "time": "2026-03-07T12:08:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-07", "kind": "asr", "time": "2026-03-07T15:17:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-07", "kind": "maghrib", "time": "2026-03-07T17:55:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-07", "kind": "isha", "time": "2026-03-08T01:30:00-05:00", "iqama": "2026-03-08T03:30:00-04:00", "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.iqama.after-counts-elapsed-time.fall-back",
+      "description": "Fajr at 00:50 EDT on the fall-back day plus 90 minutes of elapsed time is 01:20 EST (06:20Z), not 02:20.",
+      "provenance": "RFC 0001 §4.5 '.after(minutes:) ... counted in elapsed time'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-11-01", "times": {"fajr": "00:50", "sunrise": "06:31", "dhuhr": "11:43", "asr": "14:31", "maghrib": "16:55", "isha": "18:13"}}
+          ]
+        },
+        "iqama": {"rules": {"fajr": {"after": 90}}},
+        "query": {"type": "day", "day": "2026-11-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-11-01", "kind": "fajr", "time": "2026-11-01T00:50:00-04:00", "iqama": "2026-11-01T01:20:00-05:00", "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "sunrise", "time": "2026-11-01T06:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "dhuhr", "time": "2026-11-01T11:43:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "asr", "time": "2026-11-01T14:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "maghrib", "time": "2026-11-01T16:55:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "isha", "time": "2026-11-01T18:13:00-05:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    }
+  ]
+}

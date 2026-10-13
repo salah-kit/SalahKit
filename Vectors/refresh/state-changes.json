@@ -1,0 +1,265 @@
+{
+  "schemaVersion": 1,
+  "description": "Refresh plans with the stateChanges strategy: transitions, the end boundary and the lookahead bound past the horizon.",
+  "vectors": [
+    {
+      "id": "refresh.state-changes.complete-data",
+      "description": "stateChanges from 12:00 to 17:00 with complete data and a Dhuhr iqama at 13:24: the start, Dhuhr's approach (12:49), Dhuhr (13:04), its iqama ending justStarted (13:24), Asr's approach (16:12), Asr (16:27) and Asr's fallback just-started end (16:42). validUntil is the end.",
+      "provenance": "RFC 0001 §4.8 Transitions, Dates, Budget; proposal §7.1 'Refresh planning ...'",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}}},
+        "query": {"type": "refresh", "from": "2026-10-14T12:00:00+08:00", "through": "2026-10-14T17:00:00+08:00", "strategy": "stateChanges"}
+      },
+      "expected": {
+        "dates": [
+          "2026-10-14T12:00:00+08:00",
+          "2026-10-14T12:49:00+08:00",
+          "2026-10-14T13:04:00+08:00",
+          "2026-10-14T13:24:00+08:00",
+          "2026-10-14T16:12:00+08:00",
+          "2026-10-14T16:27:00+08:00",
+          "2026-10-14T16:42:00+08:00"
+        ],
+        "validUntil": "2026-10-14T17:00:00+08:00",
+        "isTruncated": false,
+        "entries": [
+          {
+            "index": 0,
+            "availability": "available",
+            "previous": {"day": "2026-10-14", "kind": "sunrise", "time": "2026-10-14T07:02:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-10-14", "kind": "fajr", "time": "2026-10-14T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2026-10-14T12:49:00+08:00"
+          },
+          {
+            "index": 1,
+            "availability": "available",
+            "previous": {"day": "2026-10-14", "kind": "sunrise", "time": "2026-10-14T07:02:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-10-14", "kind": "fajr", "time": "2026-10-14T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": true,
+            "changesAt": "2026-10-14T13:04:00+08:00"
+          },
+          {
+            "index": 2,
+            "availability": "available",
+            "previous": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "next": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "isApproaching": false,
+            "changesAt": "2026-10-14T13:24:00+08:00"
+          },
+          {
+            "index": 3,
+            "availability": "available",
+            "previous": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "next": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2026-10-14T16:12:00+08:00"
+          },
+          {
+            "index": 4,
+            "availability": "available",
+            "previous": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "next": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": true,
+            "changesAt": "2026-10-14T16:27:00+08:00"
+          },
+          {
+            "index": 5,
+            "availability": "available",
+            "previous": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "isApproaching": false,
+            "changesAt": "2026-10-14T16:42:00+08:00"
+          },
+          {
+            "index": 6,
+            "availability": "available",
+            "previous": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2026-10-14T18:51:00+08:00"
+          }
+        ]
+      }
+    },
+    {
+      "id": "refresh.state-changes.transition-at-end-excluded",
+      "description": "A transition exactly at the end (Dhuhr at 13:04) isn't a date: dates are restricted to [s, e).",
+      "provenance": "RFC 0001 §4.8 Transitions ('stopping ... at the first value >= e')",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}}},
+        "query": {"type": "refresh", "from": "2026-10-14T12:00:00+08:00", "through": "2026-10-14T13:04:00+08:00", "strategy": "stateChanges"}
+      },
+      "expected": {
+        "dates": ["2026-10-14T12:00:00+08:00", "2026-10-14T12:49:00+08:00"],
+        "validUntil": "2026-10-14T13:04:00+08:00",
+        "isTruncated": false,
+        "entries": [
+          {
+            "index": 0,
+            "availability": "available",
+            "previous": {"day": "2026-10-14", "kind": "sunrise", "time": "2026-10-14T07:02:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-10-14", "kind": "fajr", "time": "2026-10-14T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2026-10-14T12:49:00+08:00"
+          },
+          {
+            "index": 1,
+            "availability": "available",
+            "previous": {"day": "2026-10-14", "kind": "sunrise", "time": "2026-10-14T07:02:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-10-14", "kind": "fajr", "time": "2026-10-14T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": true,
+            "changesAt": "2026-10-14T13:04:00+08:00"
+          }
+        ]
+      }
+    },
+    {
+      "id": "refresh.state-changes.lookahead-past-horizon",
+      "description": "A late-evening plan (22:00-23:30) has one entry; with the bound B = start(civil(e) + 2) its state still knows the next day's Fajr, and its changesAt (Fajr's approach) lies past the horizon.",
+      "provenance": "RFC 0001 §4.8 Lookahead; §5 (RefreshPlan carries each entry's state)",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}}},
+        "query": {"type": "refresh", "from": "2026-10-14T22:00:00+08:00", "through": "2026-10-14T23:30:00+08:00", "strategy": "stateChanges"}
+      },
+      "expected": {
+        "dates": ["2026-10-14T22:00:00+08:00"],
+        "validUntil": "2026-10-14T23:30:00+08:00",
+        "isTruncated": false,
+        "entries": [
+          {
+            "index": 0,
+            "availability": "available",
+            "previous": {"day": "2026-10-14", "kind": "isha", "time": "2026-10-14T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-10-14", "kind": "isha", "time": "2026-10-14T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-10-15", "kind": "fajr", "time": "2026-10-15T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-10-15", "kind": "fajr", "time": "2026-10-15T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2026-10-15T05:25:00+08:00"
+          }
+        ]
+      }
+    },
+    {
+      "id": "refresh.state-changes.next-just-after-horizon",
+      "description": "A plan 19:00-20:00: its last entry (19:21, Maghrib's just-started end) has next = Isha at 20:20, after the horizon.",
+      "provenance": "RFC 0001 §4.8 Lookahead",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}}},
+        "query": {"type": "refresh", "from": "2026-10-14T19:00:00+08:00", "through": "2026-10-14T20:00:00+08:00", "strategy": "stateChanges"}
+      },
+      "expected": {
+        "dates": ["2026-10-14T19:00:00+08:00", "2026-10-14T19:06:00+08:00", "2026-10-14T19:21:00+08:00"],
+        "validUntil": "2026-10-14T20:00:00+08:00",
+        "isTruncated": false,
+        "entries": [
+          {
+            "index": 0,
+            "availability": "available",
+            "previous": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": true,
+            "changesAt": "2026-10-14T19:06:00+08:00"
+          },
+          {
+            "index": 1,
+            "availability": "available",
+            "previous": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-10-14", "kind": "isha", "time": "2026-10-14T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-10-14", "kind": "isha", "time": "2026-10-14T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "isApproaching": false,
+            "changesAt": "2026-10-14T19:21:00+08:00"
+          },
+          {
+            "index": 2,
+            "availability": "available",
+            "previous": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-10-14", "kind": "isha", "time": "2026-10-14T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-10-14", "kind": "isha", "time": "2026-10-14T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2026-10-14T20:05:00+08:00"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,380 @@
+{
+  "schemaVersion": 1,
+  "description": "Refresh plans over expiring, partial and empty timetables, and a delayed next request.",
+  "vectors": [
+    {
+      "id": "refresh.coverage.timetable-expires-in-horizon",
+      "description": "The timetable ends on 12-31. Entries keep useful known state after Isha (available, next null) and add an unavailable entry where 2027-01-01's gap opens; validUntil is still the requested end.",
+      "provenance": "proposal §7.1 'Refresh planning includes coverage boundaries...', §7.3 'How it works'; RFC 0001 §4.8",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-12-29", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-30", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-31", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "refresh", "from": "2026-12-31T19:00:00+08:00", "through": "2027-01-01T06:00:00+08:00", "strategy": "stateChanges"}
+      },
+      "expected": {
+        "dates": [
+          "2026-12-31T19:00:00+08:00",
+          "2026-12-31T19:06:00+08:00",
+          "2026-12-31T19:21:00+08:00",
+          "2026-12-31T20:05:00+08:00",
+          "2026-12-31T20:20:00+08:00",
+          "2026-12-31T20:35:00+08:00",
+          "2027-01-01T00:00:00+08:00"
+        ],
+        "validUntil": "2027-01-01T06:00:00+08:00",
+        "isTruncated": false,
+        "entries": [
+          {
+            "index": 0,
+            "availability": "available",
+            "previous": {"day": "2026-12-31", "kind": "asr", "time": "2026-12-31T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-31", "kind": "asr", "time": "2026-12-31T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": true,
+            "changesAt": "2026-12-31T19:06:00+08:00"
+          },
+          {
+            "index": 1,
+            "availability": "available",
+            "previous": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "isApproaching": false,
+            "changesAt": "2026-12-31T19:21:00+08:00"
+          },
+          {
+            "index": 2,
+            "availability": "available",
+            "previous": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2026-12-31T20:05:00+08:00"
+          },
+          {
+            "index": 3,
+            "availability": "available",
+            "previous": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": true,
+            "changesAt": "2026-12-31T20:20:00+08:00"
+          },
+          {
+            "index": 4,
+            "availability": "available",
+            "previous": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": null,
+            "nextPrayer": null,
+            "justStarted": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "isApproaching": false,
+            "changesAt": "2026-12-31T20:35:00+08:00"
+          },
+          {
+            "index": 5,
+            "availability": "available",
+            "previous": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": null,
+            "nextPrayer": null,
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2027-01-01T00:00:00+08:00"
+          },
+          {
+            "index": 6,
+            "availability": "unavailable",
+            "previous": null,
+            "latestPrayer": null,
+            "next": null,
+            "nextPrayer": null,
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2027-01-02T00:00:00+08:00",
+            "coverage": {
+              "gaps": [
+                {"start": "2027-01-01T00:00:00+08:00", "end": "2027-01-03T00:00:00+08:00", "day": "2027-01-01", "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "reason": "noPublishedData"},
+                {"start": "2027-01-02T00:00:00+08:00", "end": "2027-01-03T00:00:00+08:00", "day": "2027-01-02", "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "reason": "noPublishedData"}
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "refresh.coverage.partial-row",
+      "description": "12-12 has no Isha: the plan adds an unavailable entry at Maghrib, where the Isha window opens, and the next entry at 12-13's Fajr, where it closes.",
+      "provenance": "proposal §7.1 'Both strategies insert dates when coverage changes'; RFC 0001 §4.8 Transitions",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-12-10", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-11", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06"}},
+            {"day": "2026-12-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "refresh", "from": "2026-12-12T18:00:00+08:00", "through": "2026-12-13T07:00:00+08:00", "strategy": "stateChanges"}
+      },
+      "expected": {
+        "dates": [
+          "2026-12-12T18:00:00+08:00",
+          "2026-12-12T18:51:00+08:00",
+          "2026-12-12T19:06:00+08:00",
+          "2026-12-13T05:40:00+08:00",
+          "2026-12-13T05:55:00+08:00"
+        ],
+        "validUntil": "2026-12-13T07:00:00+08:00",
+        "isTruncated": false,
+        "entries": [
+          {
+            "index": 0,
+            "availability": "available",
+            "previous": {"day": "2026-12-12", "kind": "asr", "time": "2026-12-12T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-12", "kind": "asr", "time": "2026-12-12T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-12-12", "kind": "maghrib", "time": "2026-12-12T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-12-12", "kind": "maghrib", "time": "2026-12-12T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2026-12-12T18:51:00+08:00"
+          },
+          {
+            "index": 1,
+            "availability": "available",
+            "previous": {"day": "2026-12-12", "kind": "asr", "time": "2026-12-12T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-12", "kind": "asr", "time": "2026-12-12T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-12-12", "kind": "maghrib", "time": "2026-12-12T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-12-12", "kind": "maghrib", "time": "2026-12-12T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": true,
+            "changesAt": "2026-12-12T19:06:00+08:00"
+          },
+          {
+            "index": 2,
+            "availability": "unavailable",
+            "previous": null,
+            "latestPrayer": null,
+            "next": null,
+            "nextPrayer": null,
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2026-12-13T05:40:00+08:00",
+            "coverage": {
+              "gaps": [
+                {"start": "2026-12-12T19:06:00+08:00", "end": "2026-12-13T05:40:00+08:00", "day": "2026-12-12", "kinds": ["isha"], "reason": "noPublishedData"}
+              ]
+            }
+          },
+          {
+            "index": 3,
+            "availability": "available",
+            "previous": {"day": "2026-12-13", "kind": "fajr", "time": "2026-12-13T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-13", "kind": "fajr", "time": "2026-12-13T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-12-13", "kind": "sunrise", "time": "2026-12-13T07:02:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-12-13", "kind": "dhuhr", "time": "2026-12-13T13:04:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": {"day": "2026-12-13", "kind": "fajr", "time": "2026-12-13T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+            "isApproaching": false,
+            "changesAt": "2026-12-13T05:55:00+08:00"
+          },
+          {
+            "index": 4,
+            "availability": "available",
+            "previous": {"day": "2026-12-13", "kind": "fajr", "time": "2026-12-13T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-13", "kind": "fajr", "time": "2026-12-13T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-12-13", "kind": "sunrise", "time": "2026-12-13T07:02:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-12-13", "kind": "dhuhr", "time": "2026-12-13T13:04:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2026-12-13T07:02:00+08:00"
+          }
+        ]
+      }
+    },
+    {
+      "id": "refresh.coverage.empty-timetable",
+      "description": "An initially empty timetable still produces a plan: one unavailable entry at the start.",
+      "provenance": "proposal §7.3 'An initially empty source also produces an unavailable entry'; RFC 0001 §4.8",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {"expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "rows": []},
+        "query": {"type": "refresh", "from": "2026-12-01T12:00:00+08:00", "through": "2026-12-01T18:00:00+08:00", "strategy": "stateChanges"}
+      },
+      "expected": {
+        "dates": ["2026-12-01T12:00:00+08:00"],
+        "validUntil": "2026-12-01T18:00:00+08:00",
+        "isTruncated": false,
+        "entries": [
+          {
+            "index": 0,
+            "availability": "unavailable",
+            "previous": null,
+            "latestPrayer": null,
+            "next": null,
+            "nextPrayer": null,
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2026-12-02T00:00:00+08:00"
+          }
+        ]
+      }
+    },
+    {
+      "id": "refresh.delayed-request.first-plan",
+      "description": "First of two plans over a timetable ending 12-31: 19:00-21:00. Its last entry (20:35) is strictly before its validUntil (21:00), where SalahWidgets places the expired entry.",
+      "provenance": "proposal §9 refresh ('a delayed next timeline request so gaps never silently reuse the last valid entry'); RFC 0001 §4.8 Budget, validUntil",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-12-29", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-30", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-31", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "refresh", "from": "2026-12-31T19:00:00+08:00", "through": "2026-12-31T21:00:00+08:00", "strategy": "stateChanges"}
+      },
+      "expected": {
+        "dates": [
+          "2026-12-31T19:00:00+08:00",
+          "2026-12-31T19:06:00+08:00",
+          "2026-12-31T19:21:00+08:00",
+          "2026-12-31T20:05:00+08:00",
+          "2026-12-31T20:20:00+08:00",
+          "2026-12-31T20:35:00+08:00"
+        ],
+        "validUntil": "2026-12-31T21:00:00+08:00",
+        "isTruncated": false,
+        "entries": [
+          {
+            "index": 0,
+            "availability": "available",
+            "previous": {"day": "2026-12-31", "kind": "asr", "time": "2026-12-31T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-31", "kind": "asr", "time": "2026-12-31T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": true,
+            "changesAt": "2026-12-31T19:06:00+08:00"
+          },
+          {
+            "index": 1,
+            "availability": "available",
+            "previous": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "isApproaching": false,
+            "changesAt": "2026-12-31T19:21:00+08:00"
+          },
+          {
+            "index": 2,
+            "availability": "available",
+            "previous": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2026-12-31T20:05:00+08:00"
+          },
+          {
+            "index": 3,
+            "availability": "available",
+            "previous": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-31", "kind": "maghrib", "time": "2026-12-31T19:06:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "nextPrayer": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "justStarted": null,
+            "isApproaching": true,
+            "changesAt": "2026-12-31T20:20:00+08:00"
+          },
+          {
+            "index": 4,
+            "availability": "available",
+            "previous": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": null,
+            "nextPrayer": null,
+            "justStarted": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "isApproaching": false,
+            "changesAt": "2026-12-31T20:35:00+08:00"
+          },
+          {
+            "index": 5,
+            "availability": "available",
+            "previous": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "latestPrayer": {"day": "2026-12-31", "kind": "isha", "time": "2026-12-31T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+            "next": null,
+            "nextPrayer": null,
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2027-01-01T00:00:00+08:00"
+          }
+        ]
+      }
+    },
+    {
+      "id": "refresh.delayed-request.second-plan",
+      "description": "The next provider call comes late, at 00:30 on 2027-01-01, after the first plan's validUntil. Its first entry is computed at its own start: unavailable, not the first plan's last state (available, previous = 12-31 Isha).",
+      "provenance": "proposal §9 refresh; RFC 0001 §4.8 (every entry's state is state(at: date, through: B))",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-12-29", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-30", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-12-31", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "query": {"type": "refresh", "from": "2027-01-01T00:30:00+08:00", "through": "2027-01-01T02:30:00+08:00", "strategy": "stateChanges"}
+      },
+      "expected": {
+        "dates": ["2027-01-01T00:30:00+08:00"],
+        "validUntil": "2027-01-01T02:30:00+08:00",
+        "isTruncated": false,
+        "entries": [
+          {
+            "index": 0,
+            "availability": "unavailable",
+            "previous": null,
+            "latestPrayer": null,
+            "next": null,
+            "nextPrayer": null,
+            "justStarted": null,
+            "isApproaching": false,
+            "changesAt": "2027-01-02T00:00:00+08:00",
+            "coverage": {
+              "gaps": [
+                {"start": "2027-01-01T00:30:00+08:00", "end": "2027-01-03T00:00:00+08:00", "day": "2027-01-01", "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "reason": "noPublishedData"},
+                {"start": "2027-01-02T00:00:00+08:00", "end": "2027-01-03T00:00:00+08:00", "day": "2027-01-02", "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "reason": "noPublishedData"}
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

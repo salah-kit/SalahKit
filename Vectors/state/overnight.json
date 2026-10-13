@@ -1,0 +1,304 @@
+{
+  "schemaVersion": 1,
+  "description": "Events after midnight owned by the previous civil day: day, day(containing:), events and state across midnight, and iqama after midnight.",
+  "vectors": [
+    {
+      "id": "state.overnight.day.monday-owns-isha-after-midnight",
+      "description": "Monday 2026-06-22's Isha at 00:15 on Tuesday (\"00:15+1\") and its iqama at 00:30 on Tuesday belong to Monday.",
+      "provenance": "proposal §7.1 'Ownership and instants are separate'; RFC 0001 §4.2 dayOffset, §4.3 rule 4",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-20", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:02", "isha": "00:14+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:46", "sunrise": "04:26", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}, "iqama": {"fajr": "03:15", "isha": "00:30+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:47", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:48", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-25", "times": {"fajr": "02:49", "sunrise": "04:28", "dhuhr": "13:15", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-06-22"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-06-22", "kind": "fajr", "time": "2026-06-22T02:46:00+01:00", "iqama": "2026-06-22T03:15:00+01:00", "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "sunrise", "time": "2026-06-22T04:26:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "dhuhr", "time": "2026-06-22T13:14:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "asr", "time": "2026-06-22T17:36:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "maghrib", "time": "2026-06-22T22:03:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "isha", "time": "2026-06-23T00:15:00+01:00", "iqama": "2026-06-23T00:30:00+01:00", "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.overnight.day-containing.tuesday-0010-is-tuesday",
+      "description": "day(containing:) at 00:10 on Tuesday returns Tuesday's row (the civil date), not Monday's overnight Isha.",
+      "provenance": "RFC 0001 §4.6 day(containing:)",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-20", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:02", "isha": "00:14+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:46", "sunrise": "04:26", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}, "iqama": {"fajr": "03:15", "isha": "00:30+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:47", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:48", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-25", "times": {"fajr": "02:49", "sunrise": "04:28", "dhuhr": "13:15", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}}
+          ]
+        },
+        "query": {"type": "dayContaining", "date": "2026-06-23T00:10:00+01:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-06-23", "kind": "fajr", "time": "2026-06-23T02:47:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "sunrise", "time": "2026-06-23T04:27:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "dhuhr", "time": "2026-06-23T13:14:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "asr", "time": "2026-06-23T17:36:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "maghrib", "time": "2026-06-23T22:03:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "isha", "time": "2026-06-24T00:15:00+01:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.overnight.events.spanning-midnight-lists-isha-once",
+      "description": "events(from: Monday 21:00, through: Tuesday 03:00) lists Monday's Maghrib, Monday's Isha once (at 00:15 Tuesday, owned by Monday) and Tuesday's Fajr.",
+      "provenance": "proposal §7.1 'Ownership and instants are separate'; RFC 0001 §4.6 events(from:through:)",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-20", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:02", "isha": "00:14+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:46", "sunrise": "04:26", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}, "iqama": {"fajr": "03:15", "isha": "00:30+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:47", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:48", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-25", "times": {"fajr": "02:49", "sunrise": "04:28", "dhuhr": "13:15", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}}
+          ]
+        },
+        "query": {"type": "events", "from": "2026-06-22T21:00:00+01:00", "through": "2026-06-23T03:00:00+01:00"}
+      },
+      "expected": {
+        "events": [
+          {"day": "2026-06-22", "kind": "maghrib", "time": "2026-06-22T22:03:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "isha", "time": "2026-06-23T00:15:00+01:00", "iqama": "2026-06-23T00:30:00+01:00", "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "fajr", "time": "2026-06-23T02:47:00+01:00", "iqama": null, "observance": "ordinary"}
+        ],
+        "coverage": {
+          "requested": ["2026-06-22T21:00:00+01:00", "2026-06-23T03:00:00+01:00"],
+          "known": [["2026-06-22T21:00:00+01:00", "2026-06-23T03:00:00+01:00"]],
+          "gaps": []
+        }
+      }
+    },
+    {
+      "id": "state.overnight.state.tuesday-0005-next-is-monday-isha",
+      "description": "At 00:05 on Tuesday, next is Monday's Isha (00:15) and it is approaching; previous is Monday's Maghrib.",
+      "provenance": "proposal §7.1 'State crosses midnight using owning-day context'; RFC 0001 §4.6 Context, §4.7",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-20", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:02", "isha": "00:14+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:46", "sunrise": "04:26", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}, "iqama": {"fajr": "03:15", "isha": "00:30+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:47", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:48", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-25", "times": {"fajr": "02:49", "sunrise": "04:28", "dhuhr": "13:15", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-06-23T00:05:00+01:00", "through": "2026-06-25T00:00:00+01:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-06-22", "kind": "maghrib", "time": "2026-06-22T22:03:00+01:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-06-22", "kind": "maghrib", "time": "2026-06-22T22:03:00+01:00", "iqama": null, "observance": "ordinary"},
+        "next": {"day": "2026-06-22", "kind": "isha", "time": "2026-06-23T00:15:00+01:00", "iqama": "2026-06-23T00:30:00+01:00", "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-06-22", "kind": "isha", "time": "2026-06-23T00:15:00+01:00", "iqama": "2026-06-23T00:30:00+01:00", "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": true,
+        "changesAt": "2026-06-23T00:15:00+01:00",
+        "coverage": {
+          "requested": ["2026-06-23T00:05:00+01:00", "2026-06-25T00:00:00+01:00"],
+          "known": [["2026-06-23T00:05:00+01:00", "2026-06-25T00:00:00+01:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-06-22/fajr": "passed",
+          "2026-06-22/sunrise": "passed",
+          "2026-06-22/dhuhr": "passed",
+          "2026-06-22/asr": "passed",
+          "2026-06-22/maghrib": "passed",
+          "2026-06-22/isha": "nextApproaching",
+          "2026-06-23/fajr": "upcoming",
+          "2026-06-23/sunrise": "upcoming",
+          "2026-06-23/dhuhr": "upcoming",
+          "2026-06-23/asr": "upcoming",
+          "2026-06-23/maghrib": "upcoming",
+          "2026-06-23/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.overnight.state.tuesday-0020-previous-is-monday-isha",
+      "description": "At 00:20 on Tuesday, previous and latestPrayer are Monday's Isha, still just started until its published iqama at 00:30; next is Tuesday's Fajr.",
+      "provenance": "proposal §7.1; RFC 0001 §4.7 previous, next, justStarted (untilIqama)",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-20", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:02", "isha": "00:14+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:46", "sunrise": "04:26", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}, "iqama": {"fajr": "03:15", "isha": "00:30+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:47", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:48", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-25", "times": {"fajr": "02:49", "sunrise": "04:28", "dhuhr": "13:15", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-06-23T00:20:00+01:00", "through": "2026-06-25T00:00:00+01:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-06-22", "kind": "isha", "time": "2026-06-23T00:15:00+01:00", "iqama": "2026-06-23T00:30:00+01:00", "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-06-22", "kind": "isha", "time": "2026-06-23T00:15:00+01:00", "iqama": "2026-06-23T00:30:00+01:00", "observance": "ordinary"},
+        "next": {"day": "2026-06-23", "kind": "fajr", "time": "2026-06-23T02:47:00+01:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-06-23", "kind": "fajr", "time": "2026-06-23T02:47:00+01:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": {"day": "2026-06-22", "kind": "isha", "time": "2026-06-23T00:15:00+01:00", "iqama": "2026-06-23T00:30:00+01:00", "observance": "ordinary"},
+        "isApproaching": false,
+        "changesAt": "2026-06-23T00:30:00+01:00",
+        "coverage": {
+          "requested": ["2026-06-23T00:20:00+01:00", "2026-06-25T00:00:00+01:00"],
+          "known": [["2026-06-23T00:20:00+01:00", "2026-06-25T00:00:00+01:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-06-22/fajr": "passed",
+          "2026-06-22/sunrise": "passed",
+          "2026-06-22/dhuhr": "passed",
+          "2026-06-22/asr": "passed",
+          "2026-06-22/maghrib": "passed",
+          "2026-06-22/isha": "justStarted",
+          "2026-06-23/fajr": "next",
+          "2026-06-23/sunrise": "upcoming",
+          "2026-06-23/dhuhr": "upcoming",
+          "2026-06-23/asr": "upcoming",
+          "2026-06-23/maghrib": "upcoming",
+          "2026-06-23/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.overnight.iqama-rule-at-next-day",
+      "description": "IqamaRules isha .at \"00:40+1\" resolves on the owning day's following civil day: Tuesday's Isha (00:15 Wednesday) gets iqama 00:40 Wednesday.",
+      "provenance": "RFC 0001 §4.5 '.at(w)', §4.2 dayOffset",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-20", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:02", "isha": "00:14+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:46", "sunrise": "04:26", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}, "iqama": {"fajr": "03:15", "isha": "00:30+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:47", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:48", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-25", "times": {"fajr": "02:49", "sunrise": "04:28", "dhuhr": "13:15", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}}
+          ]
+        },
+        "iqama": {"rules": {"isha": {"at": "00:40+1"}}},
+        "query": {"type": "day", "day": "2026-06-23"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-06-23", "kind": "fajr", "time": "2026-06-23T02:47:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "sunrise", "time": "2026-06-23T04:27:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "dhuhr", "time": "2026-06-23T13:14:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "asr", "time": "2026-06-23T17:36:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "maghrib", "time": "2026-06-23T22:03:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "isha", "time": "2026-06-24T00:15:00+01:00", "iqama": "2026-06-24T00:40:00+01:00", "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.overnight.iqama-published-wins-over-rule",
+      "description": "Monday's published Isha iqama (00:30+1) wins over the rule .at \"00:40+1\".",
+      "provenance": "RFC 0001 §4.5 'A source's published iqama always wins over a rule'",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-20", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:02", "isha": "00:14+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:46", "sunrise": "04:26", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}, "iqama": {"fajr": "03:15", "isha": "00:30+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:47", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:48", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-25", "times": {"fajr": "02:49", "sunrise": "04:28", "dhuhr": "13:15", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}}
+          ]
+        },
+        "iqama": {"rules": {"isha": {"at": "00:40+1"}}},
+        "query": {"type": "day", "day": "2026-06-22"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-06-22", "kind": "fajr", "time": "2026-06-22T02:46:00+01:00", "iqama": "2026-06-22T03:15:00+01:00", "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "sunrise", "time": "2026-06-22T04:26:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "dhuhr", "time": "2026-06-22T13:14:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "asr", "time": "2026-06-22T17:36:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "maghrib", "time": "2026-06-22T22:03:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "isha", "time": "2026-06-23T00:15:00+01:00", "iqama": "2026-06-23T00:30:00+01:00", "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.overnight.iqama-rule-at-same-day-before-prayer",
+      "description": "IqamaRules isha .at \"23:50\" resolves on the owning day itself (23:50 Tuesday), which is before Tuesday's Isha (00:15 Wednesday): no iqama. The rule never moves to the next occurrence of 23:50.",
+      "provenance": "RFC 0001 §4.5 '.at(w) resolves w on the event's owning day', 'The result must lie in [time, start(D+2))'",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-20", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:02", "isha": "00:14+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:45", "sunrise": "04:26", "dhuhr": "13:13", "asr": "17:35", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:46", "sunrise": "04:26", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}, "iqama": {"fajr": "03:15", "isha": "00:30+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:47", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:48", "sunrise": "04:27", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}},
+            {"day": "2026-06-25", "times": {"fajr": "02:49", "sunrise": "04:28", "dhuhr": "13:15", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}}
+          ]
+        },
+        "iqama": {"rules": {"isha": {"at": "23:50"}}},
+        "query": {"type": "day", "day": "2026-06-23"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-06-23", "kind": "fajr", "time": "2026-06-23T02:47:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "sunrise", "time": "2026-06-23T04:27:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "dhuhr", "time": "2026-06-23T13:14:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "asr", "time": "2026-06-23T17:36:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "maghrib", "time": "2026-06-23T22:03:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-23", "kind": "isha", "time": "2026-06-24T00:15:00+01:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,810 @@
+{
+  "schemaVersion": 1,
+  "description": "Wall-time resolution (normal days, spring-forward and fall-back days with each policy, for prayer times, published iqama and IqamaRules .at), publisher instants, and CivilDay.start in zones whose clock change moves midnight.",
+  "vectors": [
+    {
+      "id": "state.walltime.normal-day",
+      "description": "A complete row on an ordinary day resolves every wall time once, in the location's zone (EST).",
+      "provenance": "RFC 0001 §4.2 (one candidate), §4.4 prayerDay steps 4-8",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-03-05", "times": {"fajr": "05:23", "sunrise": "06:25", "dhuhr": "12:09", "asr": "15:16", "maghrib": "17:53", "isha": "19:11"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-03-05"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-03-05", "kind": "fajr", "time": "2026-03-05T05:23:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-05", "kind": "sunrise", "time": "2026-03-05T06:25:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-05", "kind": "dhuhr", "time": "2026-03-05T12:09:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-05", "kind": "asr", "time": "2026-03-05T15:16:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-05", "kind": "maghrib", "time": "2026-03-05T17:53:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-05", "kind": "isha", "time": "2026-03-05T19:11:00-05:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.spring-forward.reject",
+      "description": "Spring forward (America/New_York, 02:00 EST -> 03:00 EDT): Fajr published at 02:30 doesn't exist; the default policy rejects it, so Fajr is missing with reason unresolvedWallTime.",
+      "provenance": "RFC 0001 §4.2 'No candidate'; proposal §7.1 'Wall times require a resolution policy'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-03-08", "times": {"fajr": "02:30", "sunrise": "07:20", "dhuhr": "13:08", "asr": "16:18", "maghrib": "18:56", "isha": "20:14"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-03-08"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {"partial": {"fajr": "unresolvedWallTime"}},
+        "isFriday": false,
+        "events": [
+          {"day": "2026-03-08", "kind": "sunrise", "time": "2026-03-08T07:20:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "dhuhr", "time": "2026-03-08T13:08:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "asr", "time": "2026-03-08T16:18:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "maghrib", "time": "2026-03-08T18:56:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "isha", "time": "2026-03-08T20:14:00-04:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.spring-forward.next-valid",
+      "description": "Spring forward: with nonexistent = nextValid, Fajr at 02:30 resolves to 03:00 EDT, the end of the skipped range (07:00Z), not to 03:30.",
+      "provenance": "RFC 0001 §4.2 'No candidate'; proposal §7.1 'Wall times require a resolution policy'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "wallTimeResolution": {"repeated": "reject", "nonexistent": "nextValid"},
+          "rows": [
+            {"day": "2026-03-08", "times": {"fajr": "02:30", "sunrise": "07:20", "dhuhr": "13:08", "asr": "16:18", "maghrib": "18:56", "isha": "20:14"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-03-08"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-03-08", "kind": "fajr", "time": "2026-03-08T03:00:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "sunrise", "time": "2026-03-08T07:20:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "dhuhr", "time": "2026-03-08T13:08:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "asr", "time": "2026-03-08T16:18:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "maghrib", "time": "2026-03-08T18:56:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "isha", "time": "2026-03-08T20:14:00-04:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.spring-forward.next-valid.at-gap-start",
+      "description": "Spring forward: 02:00, the first skipped minute, also resolves to 03:00 EDT under nextValid.",
+      "provenance": "RFC 0001 §4.2 'No candidate'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "wallTimeResolution": {"repeated": "reject", "nonexistent": "nextValid"},
+          "rows": [
+            {"day": "2026-03-08", "times": {"fajr": "02:00", "sunrise": "07:20", "dhuhr": "13:08", "asr": "16:18", "maghrib": "18:56", "isha": "20:14"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-03-08"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-03-08", "kind": "fajr", "time": "2026-03-08T03:00:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "sunrise", "time": "2026-03-08T07:20:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "dhuhr", "time": "2026-03-08T13:08:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "asr", "time": "2026-03-08T16:18:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "maghrib", "time": "2026-03-08T18:56:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "isha", "time": "2026-03-08T20:14:00-04:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.spring-forward.all-unresolved",
+      "description": "A row whose only time is nonexistent and rejected leaves no event: the day is unavailable(unresolvedWallTime).",
+      "provenance": "RFC 0001 §4.4 prayerDay step 8; §4.3 rule 8",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [{"day": "2026-03-08", "times": {"fajr": "02:15"}}]
+        },
+        "query": {"type": "day", "day": "2026-03-08"}
+      },
+      "expected": {"availability": "unavailable", "reason": "unresolvedWallTime"}
+    },
+    {
+      "id": "state.walltime.fall-back.reject",
+      "description": "Fall back (America/New_York, 02:00 EDT -> 01:00 EST): Fajr at 01:30 happens twice; the default policy rejects it (unresolvedWallTime).",
+      "provenance": "RFC 0001 §4.2 'Two candidates'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-11-01", "times": {"fajr": "01:30", "sunrise": "06:31", "dhuhr": "11:43", "asr": "14:31", "maghrib": "16:55", "isha": "18:13"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-11-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {"partial": {"fajr": "unresolvedWallTime"}},
+        "isFriday": false,
+        "events": [
+          {"day": "2026-11-01", "kind": "sunrise", "time": "2026-11-01T06:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "dhuhr", "time": "2026-11-01T11:43:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "asr", "time": "2026-11-01T14:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "maghrib", "time": "2026-11-01T16:55:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "isha", "time": "2026-11-01T18:13:00-05:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.fall-back.earlier",
+      "description": "Fall back: with repeated = earlier, Fajr at 01:30 takes the first (EDT, 05:30Z) occurrence.",
+      "provenance": "RFC 0001 §4.2 'Two candidates'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "wallTimeResolution": {"repeated": "earlier", "nonexistent": "reject"},
+          "rows": [
+            {"day": "2026-11-01", "times": {"fajr": "01:30", "sunrise": "06:31", "dhuhr": "11:43", "asr": "14:31", "maghrib": "16:55", "isha": "18:13"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-11-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-11-01", "kind": "fajr", "time": "2026-11-01T01:30:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "sunrise", "time": "2026-11-01T06:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "dhuhr", "time": "2026-11-01T11:43:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "asr", "time": "2026-11-01T14:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "maghrib", "time": "2026-11-01T16:55:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "isha", "time": "2026-11-01T18:13:00-05:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.fall-back.later",
+      "description": "Fall back: with repeated = later, Fajr at 01:30 takes the second (EST, 06:30Z) occurrence.",
+      "provenance": "RFC 0001 §4.2 'Two candidates'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "wallTimeResolution": {"repeated": "later", "nonexistent": "reject"},
+          "rows": [
+            {"day": "2026-11-01", "times": {"fajr": "01:30", "sunrise": "06:31", "dhuhr": "11:43", "asr": "14:31", "maghrib": "16:55", "isha": "18:13"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-11-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-11-01", "kind": "fajr", "time": "2026-11-01T01:30:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "sunrise", "time": "2026-11-01T06:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "dhuhr", "time": "2026-11-01T11:43:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "asr", "time": "2026-11-01T14:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "maghrib", "time": "2026-11-01T16:55:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "isha", "time": "2026-11-01T18:13:00-05:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.published-iqama.spring-forward.reject",
+      "description": "Published Fajr iqama 02:20 on the spring-forward day doesn't exist; rejected, it becomes null and the day stays complete (iqama never affects coverage).",
+      "provenance": "RFC 0001 §4.4 prayerDay step 6; §4.3 rules 7 and 10",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-03-08", "times": {"fajr": "01:40", "sunrise": "07:20", "dhuhr": "13:08", "asr": "16:18", "maghrib": "18:56", "isha": "20:14"}, "iqama": {"fajr": "02:20"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-03-08"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-03-08", "kind": "fajr", "time": "2026-03-08T01:40:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "sunrise", "time": "2026-03-08T07:20:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "dhuhr", "time": "2026-03-08T13:08:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "asr", "time": "2026-03-08T16:18:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "maghrib", "time": "2026-03-08T18:56:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "isha", "time": "2026-03-08T20:14:00-04:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.published-iqama.spring-forward.next-valid",
+      "description": "Published Fajr iqama 02:20 resolves to 03:00 EDT under the source's nextValid policy.",
+      "provenance": "RFC 0001 §4.4 prayerDay step 6; §4.3 rules 7 and 10",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "wallTimeResolution": {"repeated": "reject", "nonexistent": "nextValid"},
+          "rows": [
+            {"day": "2026-03-08", "times": {"fajr": "01:40", "sunrise": "07:20", "dhuhr": "13:08", "asr": "16:18", "maghrib": "18:56", "isha": "20:14"}, "iqama": {"fajr": "02:20"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-03-08"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-03-08", "kind": "fajr", "time": "2026-03-08T01:40:00-05:00", "iqama": "2026-03-08T03:00:00-04:00", "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "sunrise", "time": "2026-03-08T07:20:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "dhuhr", "time": "2026-03-08T13:08:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "asr", "time": "2026-03-08T16:18:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "maghrib", "time": "2026-03-08T18:56:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "isha", "time": "2026-03-08T20:14:00-04:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.published-iqama.fall-back.reject",
+      "description": "Published Fajr iqama 01:20 on the fall-back day is repeated; policy reject gives null. Fajr itself (00:50 EDT) is unambiguous.",
+      "provenance": "RFC 0001 §4.4 prayerDay step 6; §4.2 'Two candidates'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-11-01", "times": {"fajr": "00:50", "sunrise": "06:31", "dhuhr": "11:43", "asr": "14:31", "maghrib": "16:55", "isha": "18:13"}, "iqama": {"fajr": "01:20"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-11-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-11-01", "kind": "fajr", "time": "2026-11-01T00:50:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "sunrise", "time": "2026-11-01T06:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "dhuhr", "time": "2026-11-01T11:43:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "asr", "time": "2026-11-01T14:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "maghrib", "time": "2026-11-01T16:55:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "isha", "time": "2026-11-01T18:13:00-05:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.published-iqama.fall-back.earlier",
+      "description": "Published Fajr iqama 01:20 on the fall-back day is repeated; policy earlier gives 2026-11-01T01:20-04:00. Fajr itself (00:50 EDT) is unambiguous.",
+      "provenance": "RFC 0001 §4.4 prayerDay step 6; §4.2 'Two candidates'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "wallTimeResolution": {"repeated": "earlier", "nonexistent": "reject"},
+          "rows": [
+            {"day": "2026-11-01", "times": {"fajr": "00:50", "sunrise": "06:31", "dhuhr": "11:43", "asr": "14:31", "maghrib": "16:55", "isha": "18:13"}, "iqama": {"fajr": "01:20"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-11-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-11-01", "kind": "fajr", "time": "2026-11-01T00:50:00-04:00", "iqama": "2026-11-01T01:20:00-04:00", "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "sunrise", "time": "2026-11-01T06:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "dhuhr", "time": "2026-11-01T11:43:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "asr", "time": "2026-11-01T14:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "maghrib", "time": "2026-11-01T16:55:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "isha", "time": "2026-11-01T18:13:00-05:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.published-iqama.fall-back.later",
+      "description": "Published Fajr iqama 01:20 on the fall-back day is repeated; policy later gives 2026-11-01T01:20-05:00. Fajr itself (00:50 EDT) is unambiguous.",
+      "provenance": "RFC 0001 §4.4 prayerDay step 6; §4.2 'Two candidates'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "wallTimeResolution": {"repeated": "later", "nonexistent": "reject"},
+          "rows": [
+            {"day": "2026-11-01", "times": {"fajr": "00:50", "sunrise": "06:31", "dhuhr": "11:43", "asr": "14:31", "maghrib": "16:55", "isha": "18:13"}, "iqama": {"fajr": "01:20"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-11-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-11-01", "kind": "fajr", "time": "2026-11-01T00:50:00-04:00", "iqama": "2026-11-01T01:20:00-05:00", "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "sunrise", "time": "2026-11-01T06:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "dhuhr", "time": "2026-11-01T11:43:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "asr", "time": "2026-11-01T14:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "maghrib", "time": "2026-11-01T16:55:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "isha", "time": "2026-11-01T18:13:00-05:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.iqama-rule-at.spring-forward.reject",
+      "description": "IqamaRules .at 02:30 on the spring-forward day, resolved with the rules' own wallTimeResolution (reject: no iqama).",
+      "provenance": "RFC 0001 §4.5 '.at(w)'; §4.2",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-03-08", "times": {"fajr": "01:40", "sunrise": "07:20", "dhuhr": "13:08", "asr": "16:18", "maghrib": "18:56", "isha": "20:14"}}
+          ]
+        },
+        "iqama": {"rules": {"fajr": {"at": "02:30"}}},
+        "query": {"type": "day", "day": "2026-03-08"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-03-08", "kind": "fajr", "time": "2026-03-08T01:40:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "sunrise", "time": "2026-03-08T07:20:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "dhuhr", "time": "2026-03-08T13:08:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "asr", "time": "2026-03-08T16:18:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "maghrib", "time": "2026-03-08T18:56:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "isha", "time": "2026-03-08T20:14:00-04:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.iqama-rule-at.spring-forward.next-valid",
+      "description": "IqamaRules .at 02:30 on the spring-forward day, resolved with the rules' own wallTimeResolution (nextValid: 03:00 EDT).",
+      "provenance": "RFC 0001 §4.5 '.at(w)'; §4.2",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-03-08", "times": {"fajr": "01:40", "sunrise": "07:20", "dhuhr": "13:08", "asr": "16:18", "maghrib": "18:56", "isha": "20:14"}}
+          ]
+        },
+        "iqama": {"rules": {"fajr": {"at": "02:30"}}, "wallTimeResolution": {"repeated": "reject", "nonexistent": "nextValid"}},
+        "query": {"type": "day", "day": "2026-03-08"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-03-08", "kind": "fajr", "time": "2026-03-08T01:40:00-05:00", "iqama": "2026-03-08T03:00:00-04:00", "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "sunrise", "time": "2026-03-08T07:20:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "dhuhr", "time": "2026-03-08T13:08:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "asr", "time": "2026-03-08T16:18:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "maghrib", "time": "2026-03-08T18:56:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-08", "kind": "isha", "time": "2026-03-08T20:14:00-04:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.iqama-rule-at.fall-back.reject",
+      "description": "IqamaRules .at 01:30 on the fall-back day is repeated; the rules' policy reject gives no iqama.",
+      "provenance": "RFC 0001 §4.5 '.at(w)'; §4.2 'Two candidates'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-11-01", "times": {"fajr": "00:50", "sunrise": "06:31", "dhuhr": "11:43", "asr": "14:31", "maghrib": "16:55", "isha": "18:13"}}
+          ]
+        },
+        "iqama": {"rules": {"fajr": {"at": "01:30"}}},
+        "query": {"type": "day", "day": "2026-11-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-11-01", "kind": "fajr", "time": "2026-11-01T00:50:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "sunrise", "time": "2026-11-01T06:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "dhuhr", "time": "2026-11-01T11:43:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "asr", "time": "2026-11-01T14:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "maghrib", "time": "2026-11-01T16:55:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "isha", "time": "2026-11-01T18:13:00-05:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.iqama-rule-at.fall-back.earlier",
+      "description": "IqamaRules .at 01:30 on the fall-back day is repeated; the rules' policy earlier gives 2026-11-01T01:30-04:00.",
+      "provenance": "RFC 0001 §4.5 '.at(w)'; §4.2 'Two candidates'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-11-01", "times": {"fajr": "00:50", "sunrise": "06:31", "dhuhr": "11:43", "asr": "14:31", "maghrib": "16:55", "isha": "18:13"}}
+          ]
+        },
+        "iqama": {"rules": {"fajr": {"at": "01:30"}}, "wallTimeResolution": {"repeated": "earlier", "nonexistent": "reject"}},
+        "query": {"type": "day", "day": "2026-11-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-11-01", "kind": "fajr", "time": "2026-11-01T00:50:00-04:00", "iqama": "2026-11-01T01:30:00-04:00", "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "sunrise", "time": "2026-11-01T06:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "dhuhr", "time": "2026-11-01T11:43:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "asr", "time": "2026-11-01T14:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "maghrib", "time": "2026-11-01T16:55:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "isha", "time": "2026-11-01T18:13:00-05:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.walltime.iqama-rule-at.fall-back.later",
+      "description": "IqamaRules .at 01:30 on the fall-back day is repeated; the rules' policy later gives 2026-11-01T01:30-05:00.",
+      "provenance": "RFC 0001 §4.5 '.at(w)'; §4.2 'Two candidates'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-11-01", "times": {"fajr": "00:50", "sunrise": "06:31", "dhuhr": "11:43", "asr": "14:31", "maghrib": "16:55", "isha": "18:13"}}
+          ]
+        },
+        "iqama": {"rules": {"fajr": {"at": "01:30"}}, "wallTimeResolution": {"repeated": "later", "nonexistent": "reject"}},
+        "query": {"type": "day", "day": "2026-11-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-11-01", "kind": "fajr", "time": "2026-11-01T00:50:00-04:00", "iqama": "2026-11-01T01:30:00-05:00", "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "sunrise", "time": "2026-11-01T06:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "dhuhr", "time": "2026-11-01T11:43:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "asr", "time": "2026-11-01T14:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "maghrib", "time": "2026-11-01T16:55:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "isha", "time": "2026-11-01T18:13:00-05:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.instant.kept-as-published",
+      "description": "Instants are kept as published, whatever offset they're written in: Maghrib written at -04:00 and Isha in UTC land at 22:03 and 00:15 (next civil day) BST, owned by 2026-06-22.",
+      "provenance": "RFC 0001 §3 TimetableTime.instant, §4.2 last paragraph, §4.3 rule 4",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-22", "times": {"fajr": "02:46", "sunrise": "04:26", "dhuhr": "13:14", "asr": "17:36", "maghrib": "2026-06-22T17:03:00-04:00", "isha": "2026-06-22T23:15:00Z"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-06-22"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-06-22", "kind": "fajr", "time": "2026-06-22T02:46:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "sunrise", "time": "2026-06-22T04:26:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "dhuhr", "time": "2026-06-22T13:14:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "asr", "time": "2026-06-22T17:36:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "maghrib", "time": "2026-06-22T22:03:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "isha", "time": "2026-06-23T00:15:00+01:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.instant.repeated-hour-not-reinterpreted",
+      "description": "An instant inside the repeated hour of a fall-back day isn't subject to the (default, rejecting) wall-time policy.",
+      "provenance": "RFC 0001 §4.2 '.instant times are already resolved'",
+      "input": {
+        "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-11-01", "times": {"fajr": "2026-11-01T01:30:00-05:00", "sunrise": "06:31", "dhuhr": "11:43", "asr": "14:31", "maghrib": "16:55", "isha": "18:13"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-11-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-11-01", "kind": "fajr", "time": "2026-11-01T01:30:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "sunrise", "time": "2026-11-01T06:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "dhuhr", "time": "2026-11-01T11:43:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "asr", "time": "2026-11-01T14:31:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "maghrib", "time": "2026-11-01T16:55:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "isha", "time": "2026-11-01T18:13:00-05:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.instant.before-owning-day-invalid",
+      "description": "An instant before start(D) (23:59 BST on the previous day) makes the day invalid; it is never moved.",
+      "provenance": "RFC 0001 §4.3 rule 4; §4.4 prayerDay step 5",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-22", "times": {"fajr": "2026-06-21T23:59:00+01:00", "sunrise": "04:26", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "00:15+1"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-06-22"}
+      },
+      "expected": {"availability": "unavailable", "reason": "invalidData"}
+    },
+    {
+      "id": "state.instant.at-start-of-day-plus-two-invalid",
+      "description": "An Isha instant exactly at start(D+2) is outside the half-open span [start(D), start(D+2)): invalid day.",
+      "provenance": "RFC 0001 §4.3 rule 4; §4.4 prayerDay step 5",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-22", "times": {"fajr": "02:46", "sunrise": "04:26", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "2026-06-24T00:00:00+01:00"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-06-22"}
+      },
+      "expected": {"availability": "unavailable", "reason": "invalidData"}
+    },
+    {
+      "id": "state.instant.last-minute-of-span-valid",
+      "description": "An Isha instant one minute before start(D+2) is inside the span and kept.",
+      "provenance": "RFC 0001 §4.3 rule 4; §4.4 prayerDay step 5",
+      "input": {
+        "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-22", "times": {"fajr": "02:46", "sunrise": "04:26", "dhuhr": "13:14", "asr": "17:36", "maghrib": "22:03", "isha": "2026-06-23T23:59:00+01:00"}}
+          ]
+        },
+        "query": {"type": "day", "day": "2026-06-22"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-06-22", "kind": "fajr", "time": "2026-06-22T02:46:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "sunrise", "time": "2026-06-22T04:26:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "dhuhr", "time": "2026-06-22T13:14:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "asr", "time": "2026-06-22T17:36:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "maghrib", "time": "2026-06-22T22:03:00+01:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "isha", "time": "2026-06-23T23:59:00+01:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.civilday.beirut.missing-day-starts-after-skipped-midnight",
+      "description": "Asia/Beirut skips 00:00-01:00 on 2026-03-29, so start(2026-03-29) is 01:00 +03:00 (22:00Z). With no row for that day, its gap opens there and closes at the next day's Fajr.",
+      "provenance": "RFC 0001 §4.1 start(in:) with nonexistent nextValid; §4.6 missing-event windows and coverage",
+      "input": {
+        "location": {"latitude": 33.89, "longitude": 35.5, "timeZone": "Asia/Beirut"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-03-26", "times": {"fajr": "04:38", "sunrise": "06:01", "dhuhr": "12:07", "asr": "15:31", "maghrib": "18:12", "isha": "19:29"}},
+            {"day": "2026-03-27", "times": {"fajr": "04:37", "sunrise": "06:00", "dhuhr": "12:07", "asr": "15:31", "maghrib": "18:13", "isha": "19:30"}},
+            {"day": "2026-03-28", "times": {"fajr": "04:35", "sunrise": "05:58", "dhuhr": "12:06", "asr": "15:32", "maghrib": "18:14", "isha": "19:31"}},
+            {"day": "2026-03-30", "times": {"fajr": "05:32", "sunrise": "06:55", "dhuhr": "13:05", "asr": "16:32", "maghrib": "19:16", "isha": "20:33"}},
+            {"day": "2026-03-31", "times": {"fajr": "05:31", "sunrise": "06:54", "dhuhr": "13:05", "asr": "16:33", "maghrib": "19:17", "isha": "20:34"}}
+          ]
+        },
+        "query": {"type": "events", "from": "2026-03-28T20:00:00+02:00", "through": "2026-03-30T06:00:00+03:00"}
+      },
+      "expected": {
+        "events": [
+          {"day": "2026-03-30", "kind": "fajr", "time": "2026-03-30T05:32:00+03:00", "iqama": null, "observance": "ordinary"}
+        ],
+        "coverage": {
+          "requested": ["2026-03-28T20:00:00+02:00", "2026-03-30T06:00:00+03:00"],
+          "known": [
+            ["2026-03-28T20:00:00+02:00", "2026-03-29T01:00:00+03:00"],
+            ["2026-03-30T05:32:00+03:00", "2026-03-30T06:00:00+03:00"]
+          ],
+          "gaps": [
+            {"start": "2026-03-29T01:00:00+03:00", "end": "2026-03-30T05:32:00+03:00", "day": "2026-03-29", "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "reason": "noPublishedData"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "state.civilday.beirut.day-containing-first-instant",
+      "description": "day(containing:) at 22:00Z on 2026-03-28 (01:00 +03:00, the first instant of 2026-03-29) returns 2026-03-29.",
+      "provenance": "RFC 0001 §4.1 init(containing:in:), §4.6 day(containing:)",
+      "input": {
+        "location": {"latitude": 33.89, "longitude": 35.5, "timeZone": "Asia/Beirut"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-03-28", "times": {"fajr": "04:35", "sunrise": "05:58", "dhuhr": "12:06", "asr": "15:32", "maghrib": "18:14", "isha": "19:31"}},
+            {"day": "2026-03-29", "times": {"fajr": "05:34", "sunrise": "06:57", "dhuhr": "13:06", "asr": "16:32", "maghrib": "19:15", "isha": "20:32"}}
+          ]
+        },
+        "query": {"type": "dayContaining", "date": "2026-03-28T22:00:00Z"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-03-29", "kind": "fajr", "time": "2026-03-29T05:34:00+03:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-29", "kind": "sunrise", "time": "2026-03-29T06:57:00+03:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-29", "kind": "dhuhr", "time": "2026-03-29T13:06:00+03:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-29", "kind": "asr", "time": "2026-03-29T16:32:00+03:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-29", "kind": "maghrib", "time": "2026-03-29T19:15:00+03:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-29", "kind": "isha", "time": "2026-03-29T20:32:00+03:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.civilday.beirut.day-containing-last-instant",
+      "description": "day(containing:) one minute earlier (23:59 +02:00) still returns 2026-03-28.",
+      "provenance": "RFC 0001 §4.1 init(containing:in:), §4.6 day(containing:)",
+      "input": {
+        "location": {"latitude": 33.89, "longitude": 35.5, "timeZone": "Asia/Beirut"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-03-28", "times": {"fajr": "04:35", "sunrise": "05:58", "dhuhr": "12:06", "asr": "15:32", "maghrib": "18:14", "isha": "19:31"}},
+            {"day": "2026-03-29", "times": {"fajr": "05:34", "sunrise": "06:57", "dhuhr": "13:06", "asr": "16:32", "maghrib": "19:15", "isha": "20:32"}}
+          ]
+        },
+        "query": {"type": "dayContaining", "date": "2026-03-28T21:59:00Z"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-03-28", "kind": "fajr", "time": "2026-03-28T04:35:00+02:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-28", "kind": "sunrise", "time": "2026-03-28T05:58:00+02:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-28", "kind": "dhuhr", "time": "2026-03-28T12:06:00+02:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-28", "kind": "asr", "time": "2026-03-28T15:32:00+02:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-28", "kind": "maghrib", "time": "2026-03-28T18:14:00+02:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-03-28", "kind": "isha", "time": "2026-03-28T19:31:00+02:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    },
+    {
+      "id": "state.civilday.beirut.fall-back-midnight-is-unique",
+      "description": "Asia/Beirut falls back at 00:00 +03:00 on 2026-10-25 to 23:00 +02:00 on 2026-10-24, so local midnight of 2026-10-25 happens once, at 22:00Z (not 21:00Z). A missing 2026-10-25 opens its gap there.",
+      "provenance": "RFC 0001 §4.1 start(in:); §4.6 missing-event windows",
+      "input": {
+        "location": {"latitude": 33.89, "longitude": 35.5, "timeZone": "Asia/Beirut"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-23", "times": {"fajr": "04:50", "sunrise": "06:08", "dhuhr": "11:38", "asr": "14:50", "maghrib": "17:09", "isha": "18:24"}},
+            {"day": "2026-10-24", "times": {"fajr": "04:51", "sunrise": "06:09", "dhuhr": "11:38", "asr": "14:49", "maghrib": "17:08", "isha": "18:23"}},
+            {"day": "2026-10-26", "times": {"fajr": "04:52", "sunrise": "06:10", "dhuhr": "11:38", "asr": "14:48", "maghrib": "17:06", "isha": "18:21"}}
+          ]
+        },
+        "query": {"type": "events", "from": "2026-10-24T20:00:00+02:00", "through": "2026-10-26T06:00:00+02:00"}
+      },
+      "expected": {
+        "events": [
+          {"day": "2026-10-26", "kind": "fajr", "time": "2026-10-26T04:52:00+02:00", "iqama": null, "observance": "ordinary"}
+        ],
+        "coverage": {
+          "requested": ["2026-10-24T21:00:00+03:00", "2026-10-26T06:00:00+02:00"],
+          "known": [
+            ["2026-10-24T21:00:00+03:00", "2026-10-25T00:00:00+02:00"],
+            ["2026-10-26T04:52:00+02:00", "2026-10-26T06:00:00+02:00"]
+          ],
+          "gaps": [
+            {"start": "2026-10-25T00:00:00+02:00", "end": "2026-10-26T04:52:00+02:00", "day": "2026-10-25", "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "reason": "noPublishedData"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "state.civilday.havana.repeated-midnight-starts-at-first",
+      "description": "America/Havana falls back at 01:00 CDT to 00:00 CST on 2026-11-01, so 00:00-00:59 happens twice. start(2026-11-01) takes the earlier midnight, 00:00 -04:00 (04:00Z); a missing 2026-11-01 opens its gap there.",
+      "provenance": "RFC 0001 §4.1 start(in:) with repeated earlier; §4.6 missing-event windows",
+      "input": {
+        "location": {"latitude": 23.11, "longitude": -82.37, "timeZone": "America/Havana"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-29", "times": {"fajr": "06:19", "sunrise": "07:36", "dhuhr": "13:15", "asr": "16:31", "maghrib": "18:54", "isha": "20:07"}},
+            {"day": "2026-10-30", "times": {"fajr": "06:19", "sunrise": "07:36", "dhuhr": "13:15", "asr": "16:31", "maghrib": "18:53", "isha": "20:06"}},
+            {"day": "2026-10-31", "times": {"fajr": "06:20", "sunrise": "07:37", "dhuhr": "13:15", "asr": "16:30", "maghrib": "18:52", "isha": "20:05"}},
+            {"day": "2026-11-02", "times": {"fajr": "05:21", "sunrise": "06:38", "dhuhr": "12:15", "asr": "15:29", "maghrib": "17:50", "isha": "19:04"}},
+            {"day": "2026-11-03", "times": {"fajr": "05:21", "sunrise": "06:38", "dhuhr": "12:15", "asr": "15:28", "maghrib": "17:50", "isha": "19:03"}}
+          ]
+        },
+        "query": {"type": "events", "from": "2026-10-31T20:00:00-04:00", "through": "2026-11-02T06:00:00-05:00"}
+      },
+      "expected": {
+        "events": [
+          {"day": "2026-10-31", "kind": "isha", "time": "2026-10-31T20:05:00-04:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-02", "kind": "fajr", "time": "2026-11-02T05:21:00-05:00", "iqama": null, "observance": "ordinary"}
+        ],
+        "coverage": {
+          "requested": ["2026-10-31T20:00:00-04:00", "2026-11-02T06:00:00-05:00"],
+          "known": [
+            ["2026-10-31T20:00:00-04:00", "2026-11-01T00:00:00-04:00"],
+            ["2026-11-02T05:21:00-05:00", "2026-11-02T06:00:00-05:00"]
+          ],
+          "gaps": [
+            {"start": "2026-11-01T00:00:00-04:00", "end": "2026-11-02T05:21:00-05:00", "day": "2026-11-01", "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "reason": "noPublishedData"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "state.civilday.havana.day-containing-second-pass-of-midnight",
+      "description": "day(containing:) at 00:30 -05:00 on 2026-11-01 (the second pass through 00:30) is still 2026-11-01.",
+      "provenance": "RFC 0001 §4.1 init(containing:in:)",
+      "input": {
+        "location": {"latitude": 23.11, "longitude": -82.37, "timeZone": "America/Havana"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-31", "times": {"fajr": "06:20", "sunrise": "07:37", "dhuhr": "13:15", "asr": "16:30", "maghrib": "18:52", "isha": "20:05"}},
+            {"day": "2026-11-01", "times": {"fajr": "05:20", "sunrise": "06:37", "dhuhr": "12:15", "asr": "15:29", "maghrib": "17:51", "isha": "19:04"}}
+          ]
+        },
+        "query": {"type": "dayContaining", "date": "2026-11-01T00:30:00-05:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {"day": "2026-11-01", "kind": "fajr", "time": "2026-11-01T05:20:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "sunrise", "time": "2026-11-01T06:37:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "dhuhr", "time": "2026-11-01T12:15:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "asr", "time": "2026-11-01T15:29:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "maghrib", "time": "2026-11-01T17:51:00-05:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-11-01", "kind": "isha", "time": "2026-11-01T19:04:00-05:00", "iqama": null, "observance": "ordinary"}
+        ]
+      }
+    }
+  ]
+}

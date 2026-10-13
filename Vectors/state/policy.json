@@ -1,0 +1,489 @@
+{
+  "schemaVersion": 1,
+  "description": "StatePolicy: justStarted (.fixed, .untilIqama with and without iqama), isApproaching thresholds, negative durations, changesAt, and status(of:).",
+  "vectors": [
+    {
+      "id": "state.policy.just-started.fixed.inside",
+      "description": "justStarted .fixed(600): at 13:09, five minutes after Dhuhr, Dhuhr is justStarted (its 13:24 iqama is ignored); the window ends at 13:14.",
+      "provenance": "RFC 0001 §4.7 justStarted (.fixed)",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}, "maghrib": {"after": 0}}},
+        "policy": {"approaching": 900, "justStarted": {"fixed": 600}},
+        "query": {"type": "state", "at": "2026-10-14T13:09:00+08:00", "through": "2026-10-16T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "next": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "isApproaching": false,
+        "changesAt": "2026-10-14T13:14:00+08:00",
+        "coverage": {
+          "requested": ["2026-10-14T13:09:00+08:00", "2026-10-16T00:00:00+08:00"],
+          "known": [["2026-10-14T13:09:00+08:00", "2026-10-16T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-10-14/fajr": "passed",
+          "2026-10-14/sunrise": "passed",
+          "2026-10-14/dhuhr": "justStarted",
+          "2026-10-14/asr": "next",
+          "2026-10-14/maghrib": "upcoming",
+          "2026-10-14/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.policy.just-started.fixed.at-end",
+      "description": "justStarted .fixed(600): at 13:14 the window [13:04, 13:14) has ended; the next change is Asr's approach at 16:12.",
+      "provenance": "RFC 0001 §4.7 justStarted, changesAt",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}, "maghrib": {"after": 0}}},
+        "policy": {"approaching": 900, "justStarted": {"fixed": 600}},
+        "query": {"type": "state", "at": "2026-10-14T13:14:00+08:00", "through": "2026-10-16T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "next": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-10-14T16:12:00+08:00",
+        "coverage": {
+          "requested": ["2026-10-14T13:14:00+08:00", "2026-10-16T00:00:00+08:00"],
+          "known": [["2026-10-14T13:14:00+08:00", "2026-10-16T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-10-14/fajr": "passed",
+          "2026-10-14/sunrise": "passed",
+          "2026-10-14/dhuhr": "passed",
+          "2026-10-14/asr": "next",
+          "2026-10-14/maghrib": "upcoming",
+          "2026-10-14/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.policy.just-started.until-iqama.with-iqama",
+      "description": "Default policy (untilIqama, fallback 900): Dhuhr's iqama is 13:24 (rule after 20), so at 13:20 Dhuhr is justStarted and the state changes at 13:24.",
+      "provenance": "RFC 0001 §4.7 justStarted (.untilIqama)",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}, "maghrib": {"after": 0}}},
+        "query": {"type": "state", "at": "2026-10-14T13:20:00+08:00", "through": "2026-10-16T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "next": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "isApproaching": false,
+        "changesAt": "2026-10-14T13:24:00+08:00",
+        "coverage": {
+          "requested": ["2026-10-14T13:20:00+08:00", "2026-10-16T00:00:00+08:00"],
+          "known": [["2026-10-14T13:20:00+08:00", "2026-10-16T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-10-14/fajr": "passed",
+          "2026-10-14/sunrise": "passed",
+          "2026-10-14/dhuhr": "justStarted",
+          "2026-10-14/asr": "next",
+          "2026-10-14/maghrib": "upcoming",
+          "2026-10-14/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.policy.just-started.until-iqama.at-iqama",
+      "description": "At the iqama instant (13:24) the just-started window has ended.",
+      "provenance": "RFC 0001 §4.7 justStarted ('while t is before the end of its window')",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}, "maghrib": {"after": 0}}},
+        "query": {"type": "state", "at": "2026-10-14T13:24:00+08:00", "through": "2026-10-16T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "next": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-10-14T16:12:00+08:00",
+        "coverage": {
+          "requested": ["2026-10-14T13:24:00+08:00", "2026-10-16T00:00:00+08:00"],
+          "known": [["2026-10-14T13:24:00+08:00", "2026-10-16T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-10-14/fajr": "passed",
+          "2026-10-14/sunrise": "passed",
+          "2026-10-14/dhuhr": "passed",
+          "2026-10-14/asr": "next",
+          "2026-10-14/maghrib": "upcoming",
+          "2026-10-14/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.policy.just-started.until-iqama.fallback",
+      "description": "untilIqama(fallback: 600): Asr has no iqama, so its window is [16:27, 16:37); at 16:36 Asr is justStarted.",
+      "provenance": "RFC 0001 §4.7 justStarted (.untilIqama fallback)",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}, "maghrib": {"after": 0}}},
+        "policy": {"approaching": 900, "justStarted": {"untilIqama": {"fallback": 600}}},
+        "query": {"type": "state", "at": "2026-10-14T16:36:00+08:00", "through": "2026-10-16T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "next": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": "2026-10-14T19:06:00+08:00", "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": "2026-10-14T19:06:00+08:00", "observance": "ordinary"},
+        "justStarted": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "isApproaching": false,
+        "changesAt": "2026-10-14T16:37:00+08:00",
+        "coverage": {
+          "requested": ["2026-10-14T16:36:00+08:00", "2026-10-16T00:00:00+08:00"],
+          "known": [["2026-10-14T16:36:00+08:00", "2026-10-16T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-10-14/fajr": "passed",
+          "2026-10-14/sunrise": "passed",
+          "2026-10-14/dhuhr": "passed",
+          "2026-10-14/asr": "justStarted",
+          "2026-10-14/maghrib": "next",
+          "2026-10-14/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.policy.just-started.until-iqama.iqama-equals-time",
+      "description": "Maghrib's iqama equals its time (rule after 0), so its just-started window is empty: at 19:06 justStarted is null.",
+      "provenance": "RFC 0001 §4.7 justStarted; §4.5 result in [time, start(D+2))",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}, "maghrib": {"after": 0}}},
+        "query": {"type": "state", "at": "2026-10-14T19:06:00+08:00", "through": "2026-10-16T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": "2026-10-14T19:06:00+08:00", "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-10-14", "kind": "maghrib", "time": "2026-10-14T19:06:00+08:00", "iqama": "2026-10-14T19:06:00+08:00", "observance": "ordinary"},
+        "next": {"day": "2026-10-14", "kind": "isha", "time": "2026-10-14T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-10-14", "kind": "isha", "time": "2026-10-14T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-10-14T20:05:00+08:00",
+        "coverage": {
+          "requested": ["2026-10-14T19:06:00+08:00", "2026-10-16T00:00:00+08:00"],
+          "known": [["2026-10-14T19:06:00+08:00", "2026-10-16T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-10-14/fajr": "passed",
+          "2026-10-14/sunrise": "passed",
+          "2026-10-14/dhuhr": "passed",
+          "2026-10-14/asr": "passed",
+          "2026-10-14/maghrib": "passed",
+          "2026-10-14/isha": "next"
+        }
+      }
+    },
+    {
+      "id": "state.policy.approaching.exactly-at-threshold",
+      "description": "approaching 900 s: at 12:49:00, exactly 900 s before Dhuhr, isApproaching is true.",
+      "provenance": "RFC 0001 §4.7 isApproaching ('<= policy.approaching')",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}, "maghrib": {"after": 0}}},
+        "query": {"type": "state", "at": "2026-10-14T12:49:00+08:00", "through": "2026-10-16T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-10-14", "kind": "sunrise", "time": "2026-10-14T07:02:00+08:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-10-14", "kind": "fajr", "time": "2026-10-14T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+        "next": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": true,
+        "changesAt": "2026-10-14T13:04:00+08:00",
+        "coverage": {
+          "requested": ["2026-10-14T12:49:00+08:00", "2026-10-16T00:00:00+08:00"],
+          "known": [["2026-10-14T12:49:00+08:00", "2026-10-16T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-10-14/fajr": "passed",
+          "2026-10-14/sunrise": "passed",
+          "2026-10-14/dhuhr": "nextApproaching",
+          "2026-10-14/asr": "upcoming",
+          "2026-10-14/maghrib": "upcoming",
+          "2026-10-14/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.policy.approaching.one-second-earlier",
+      "description": "At 12:48:59, 901 s before Dhuhr, isApproaching is false and the state changes at 12:49:00.",
+      "provenance": "RFC 0001 §4.7 isApproaching, changesAt ('nextPrayer.time − approaching')",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}, "maghrib": {"after": 0}}},
+        "query": {"type": "state", "at": "2026-10-14T12:48:59+08:00", "through": "2026-10-16T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-10-14", "kind": "sunrise", "time": "2026-10-14T07:02:00+08:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-10-14", "kind": "fajr", "time": "2026-10-14T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+        "next": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-10-14T12:49:00+08:00",
+        "coverage": {
+          "requested": ["2026-10-14T12:48:59+08:00", "2026-10-16T00:00:00+08:00"],
+          "known": [["2026-10-14T12:48:59+08:00", "2026-10-16T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-10-14/fajr": "passed",
+          "2026-10-14/sunrise": "passed",
+          "2026-10-14/dhuhr": "next",
+          "2026-10-14/asr": "upcoming",
+          "2026-10-14/maghrib": "upcoming",
+          "2026-10-14/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.policy.negative-durations-count-as-zero",
+      "description": "approaching -60 and fixed(-60) count as zero: at Dhuhr's instant justStarted is null and isApproaching never becomes true; the next change is Asr itself.",
+      "provenance": "RFC 0001 §4.7 'Policy durations below zero count as zero'",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}, "maghrib": {"after": 0}}},
+        "policy": {"approaching": -60, "justStarted": {"fixed": -60}},
+        "query": {"type": "state", "at": "2026-10-14T13:04:00+08:00", "through": "2026-10-16T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "next": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-10-14", "kind": "asr", "time": "2026-10-14T16:27:00+08:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-10-14T16:27:00+08:00",
+        "coverage": {
+          "requested": ["2026-10-14T13:04:00+08:00", "2026-10-16T00:00:00+08:00"],
+          "known": [["2026-10-14T13:04:00+08:00", "2026-10-16T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-10-14/fajr": "passed",
+          "2026-10-14/sunrise": "passed",
+          "2026-10-14/dhuhr": "passed",
+          "2026-10-14/asr": "next",
+          "2026-10-14/maghrib": "upcoming",
+          "2026-10-14/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.policy.status.between-fajr-and-sunrise",
+      "description": "At 05:45: Fajr is justStarted; next is sunrise, so sunrise's row is next and Dhuhr (nextPrayer) is upcoming.",
+      "provenance": "RFC 0001 §4.7 status(of:)",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}, "maghrib": {"after": 0}}},
+        "query": {"type": "state", "at": "2026-10-14T05:45:00+08:00", "through": "2026-10-16T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-10-14", "kind": "fajr", "time": "2026-10-14T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-10-14", "kind": "fajr", "time": "2026-10-14T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+        "next": {"day": "2026-10-14", "kind": "sunrise", "time": "2026-10-14T07:02:00+08:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-10-14", "kind": "dhuhr", "time": "2026-10-14T13:04:00+08:00", "iqama": "2026-10-14T13:24:00+08:00", "observance": "ordinary"},
+        "justStarted": {"day": "2026-10-14", "kind": "fajr", "time": "2026-10-14T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+        "isApproaching": false,
+        "changesAt": "2026-10-14T05:55:00+08:00",
+        "coverage": {
+          "requested": ["2026-10-14T05:45:00+08:00", "2026-10-16T00:00:00+08:00"],
+          "known": [["2026-10-14T05:45:00+08:00", "2026-10-16T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-10-14/fajr": "justStarted",
+          "2026-10-14/sunrise": "next",
+          "2026-10-14/dhuhr": "upcoming",
+          "2026-10-14/asr": "upcoming",
+          "2026-10-14/maghrib": "upcoming",
+          "2026-10-14/isha": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.policy.status.after-isha",
+      "description": "At 21:00, every event of the day has passed and the next day's Fajr is next.",
+      "provenance": "RFC 0001 §4.7 status(of:)",
+      "input": {
+        "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-10-12", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-13", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-14", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-15", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}},
+            {"day": "2026-10-16", "times": {"fajr": "05:40", "sunrise": "07:02", "dhuhr": "13:04", "asr": "16:27", "maghrib": "19:06", "isha": "20:20"}}
+          ]
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}, "maghrib": {"after": 0}}},
+        "query": {"type": "state", "at": "2026-10-14T21:00:00+08:00", "through": "2026-10-16T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-10-14", "kind": "isha", "time": "2026-10-14T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-10-14", "kind": "isha", "time": "2026-10-14T20:20:00+08:00", "iqama": null, "observance": "ordinary"},
+        "next": {"day": "2026-10-15", "kind": "fajr", "time": "2026-10-15T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-10-15", "kind": "fajr", "time": "2026-10-15T05:40:00+08:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-10-15T05:25:00+08:00",
+        "coverage": {
+          "requested": ["2026-10-14T21:00:00+08:00", "2026-10-16T00:00:00+08:00"],
+          "known": [["2026-10-14T21:00:00+08:00", "2026-10-16T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-10-14/fajr": "passed",
+          "2026-10-14/sunrise": "passed",
+          "2026-10-14/dhuhr": "passed",
+          "2026-10-14/asr": "passed",
+          "2026-10-14/maghrib": "passed",
+          "2026-10-14/isha": "passed",
+          "2026-10-15/fajr": "next",
+          "2026-10-15/sunrise": "upcoming",
+          "2026-10-15/dhuhr": "upcoming",
+          "2026-10-15/asr": "upcoming",
+          "2026-10-15/maghrib": "upcoming",
+          "2026-10-15/isha": "upcoming"
+        }
+      }
+    }
+  ]
+}
