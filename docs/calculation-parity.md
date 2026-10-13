@@ -654,7 +654,14 @@ On every day where SalahCalculation reports a kind missing and SalahTimes comput
 
 ## What Salah's users will see after D1
 
-Grouped by place and high-latitude rule. "Automatic" is Salah's automatic rule, its default: the seventh of the night beyond 48°. In the bullets, a range is the extreme over every method compared at the place, unless a method is named; the table after the list gives each method's own range. A script checks this section against the harness's table of changes (`d1-changes.tsv`: one row per place, method, rule, adjustment setting and kind, with every date). It doesn't read the prose: it checks claims written by hand for each sentence of the list. Each claim is tied to a phrase that must appear in its sentence, and the numbers in that phrase must be exactly the claim's range ends, dates and counts. The script verifies that every kind-day in the table falls under exactly one claim; that each claim's ranges, dates, months, counts, classes and named methods equal the data, a named method's range for that method alone; that every number in the bullets belongs to some claim's phrase or is a fixed fact such as a latitude; and that every cell of the table below equals that method's own range. A claim can still misstate what its sentence says in words; that part is checked only by reading.
+Grouped by place and high-latitude rule. "Automatic" is Salah's automatic rule, its default: the seventh of the night beyond 48°. In the bullets, a range is the extreme over every method compared at the place, unless a method is named; the table after the list gives each method's own range. A script checks this section against the harness's table of changes (`d1-changes.tsv`: one row per place, method, rule, adjustment setting and kind, with every date). It doesn't read the prose. It checks claims written by hand for the sentences of the list:
+- every kind-day in the table is covered by exactly one claim (other claims may restate some of them, such as the range with the defaults);
+- the ranges, dates, counts, methods and classes a claim gives equal the data, and a named method's range is that method's alone;
+- each claim's phrase appears in its sentence and holds the same set of numbers as the claim;
+- every number in the bullets is in some claim's phrase or is a fixed fact such as a latitude;
+- every cell of the table below equals that method's own range.
+
+The order of the numbers within a phrase, the months written with them, and the words were checked by reading, not by the script.
 
 - **Everywhere:** with the Muslim World League, Egyptian, Karachi or North America method, Dhuhr is a minute earlier. Other times move by at most a minute, through rounding, except as listed below. At the places below 51.5° in this comparison, nothing else differs by more than a minute.
 - **London (51.5° N):**
