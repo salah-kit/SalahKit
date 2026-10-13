@@ -67,7 +67,8 @@ from `project.yml`; both the spec and the generated project are committed. After
 or adding a file, run `xcodegen` in `Examples/MosqueBoard` from a clone whose folder is named
 `SalahKit` (the project records that folder's name), and commit both. CI regenerates the project
 and fails if anything differs, then builds the app under both default-isolation settings and runs
-its unit tests and journeys on an iPad simulator.
+its unit tests and journeys on an iPad simulator (build-only, with a warning, on a runner that has
+no iPad simulator).
 
 ## Vectors
 

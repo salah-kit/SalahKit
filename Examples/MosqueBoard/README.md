@@ -84,7 +84,7 @@ The app reads no location and stores nothing, so it needs no permissions and no 
   1. A normal MUIS day with the app's iqama, a passed row, the next row and the countdown.
   2. Jumu'ah on a MUIS Friday, by app policy, and Dhuhr on the Thursday before.
   3. Expired coverage: after the last Isha of 2026 the next prayer isn't published; on 1 January 2027 the banner explains the gap.
-  4. Isha at 01:15: the countdown runs across midnight, and after midnight the board shows 22 June while the next prayer is 21 June's Isha.
+  4. Isha at 01:15: the countdown runs across midnight, and after midnight the board shows 22 June while the next prayer is 21 June's Isha. On 30 April, Isha begins at 23:48 and its iqama at 00:00 is marked "Next day".
   5. Countdowns across the 2026 spring-forward and fall-back count elapsed time.
   6. The partial row and the missing day show the banner, never invented times.
   7. Arabic names, Arabic-Indic digits and a right-to-left layout.
