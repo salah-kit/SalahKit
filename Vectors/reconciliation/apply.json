@@ -1,0 +1,299 @@
+{
+  "schemaVersion": 1,
+  "description": "Applying plans (RFC 0003 §4.5): a fresh install, unchanged requests, and the calls a batch makes.",
+  "vectors": [
+    {
+      "id": "reconciliation.apply.fresh-install",
+      "description": "An empty center: the batch reads authorization, pending and delivered notifications, adds the three requests in plan order and reads them back. All three are confirmed, and confirmed coverage is the plan's.",
+      "provenance": "RFC 0003 §4.5 (the batch's calls, Requests, Matching, The report).",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/dhuhr/before",
+                  "fireDate": "2026-06-02T12:09:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/dhuhr/atTime",
+                  "fireDate": "2026-06-02T12:19:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/dhuhr/after",
+                  "fireDate": "2026-06-02T12:24:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/dhuhr/before",
+                "fireDate": "2026-06-02T12:09:00+03:00"
+              },
+              {
+                "id": "2026-06-02/dhuhr/atTime",
+                "fireDate": "2026-06-02T12:19:00+03:00"
+              },
+              {
+                "id": "2026-06-02/dhuhr/after",
+                "fireDate": "2026-06-02T12:24:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/after",
+            "fireDate": "2026-06-02T12:24:00+03:00",
+            "title": "dhuhr",
+            "body": "v1 after",
+            "thread": "prayers"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/atTime",
+            "fireDate": "2026-06-02T12:19:00+03:00",
+            "title": "dhuhr",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/before",
+            "fireDate": "2026-06-02T12:09:00+03:00",
+            "title": "dhuhr",
+            "body": "v1 before",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/before",
+            "fireDate": "2026-06-02T12:09:00+03:00"
+          },
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/atTime",
+            "fireDate": "2026-06-02T12:19:00+03:00"
+          },
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/after",
+            "fireDate": "2026-06-02T12:24:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.apply.unchanged-requests-are-kept",
+      "description": "The center already holds the three requests exactly as the plan wants them: nothing is added or removed, and all three are confirmed.",
+      "provenance": "RFC 0003 §4.5 step 6: a matching owned request isn't added again.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/dhuhr/before",
+              "fireDate": "2026-06-02T12:09:00+03:00",
+              "title": "dhuhr",
+              "body": "v1 before",
+              "thread": "prayers"
+            },
+            {
+              "id": "salah.prayers/2026-06-02/dhuhr/atTime",
+              "fireDate": "2026-06-02T12:19:00+03:00",
+              "title": "dhuhr",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            },
+            {
+              "id": "salah.prayers/2026-06-02/dhuhr/after",
+              "fireDate": "2026-06-02T12:24:00+03:00",
+              "title": "dhuhr",
+              "body": "v1 after",
+              "thread": "prayers"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/dhuhr/before",
+                  "fireDate": "2026-06-02T12:09:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/dhuhr/atTime",
+                  "fireDate": "2026-06-02T12:19:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/dhuhr/after",
+                  "fireDate": "2026-06-02T12:24:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/dhuhr/before",
+                "fireDate": "2026-06-02T12:09:00+03:00"
+              },
+              {
+                "id": "2026-06-02/dhuhr/atTime",
+                "fireDate": "2026-06-02T12:19:00+03:00"
+              },
+              {
+                "id": "2026-06-02/dhuhr/after",
+                "fireDate": "2026-06-02T12:24:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/after",
+            "fireDate": "2026-06-02T12:24:00+03:00",
+            "title": "dhuhr",
+            "body": "v1 after",
+            "thread": "prayers"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/atTime",
+            "fireDate": "2026-06-02T12:19:00+03:00",
+            "title": "dhuhr",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/before",
+            "fireDate": "2026-06-02T12:09:00+03:00",
+            "title": "dhuhr",
+            "body": "v1 before",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          "pendingRequests"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.apply.no-thread",
+      "description": "A scheduler without a thread identifier leaves the content's own (none here); a pending request with a thread no longer matches and is replaced.",
+      "provenance": "RFC 0003 §4.5 Requests (the thread), Matching.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": null,
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/asr/atTime",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "title": "asr",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/asr/atTime",
+                  "fireDate": "2026-06-02T15:35:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:35:00+03:00",
+            "title": "asr",
+            "body": "v1 atTime",
+            "thread": ""
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:35:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    }
+  ]
+}

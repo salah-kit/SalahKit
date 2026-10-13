@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "description": "Namespace validation (RFC 0003 §4.5): a foreign plan or alert, including an empty plan, is rejected before any call.",
+  "vectors": [
+    {
+      "id": "reconciliation.namespaces.foreign-plan",
+      "description": "A plan of another namespace is rejected before any call.",
+      "provenance": "Proposal §7.5: validate the plan's namespace before any mutation; RFC 0003 §4.5.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/isha/atTime",
+              "fireDate": "2026-06-02T20:30:00+03:00",
+              "title": "isha",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "mosque",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/asr/atTime",
+                  "fireDate": "2026-06-02T15:35:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "error": "namespaceMismatch"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00",
+            "title": "isha",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": []
+      }
+    },
+    {
+      "id": "reconciliation.namespaces.empty-foreign-plan",
+      "description": "An empty plan of another namespace is rejected too, so it can't clear this scheduler's requests.",
+      "provenance": "Proposal §7.5: 'including for an empty plan'.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/isha/atTime",
+              "fireDate": "2026-06-02T20:30:00+03:00",
+              "title": "isha",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "mosque",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": []
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "error": "namespaceMismatch"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00",
+            "title": "isha",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": []
+      }
+    },
+    {
+      "id": "reconciliation.namespaces.foreign-alert-in-a-plan",
+      "description": "A plan of this namespace holding one alert of another namespace is rejected whole.",
+      "provenance": "Proposal §7.5: 'also reject alerts from another namespace'.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/asr/atTime",
+                  "fireDate": "2026-06-02T15:35:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/maghrib/atTime",
+                  "fireDate": "2026-06-02T19:00:00+03:00",
+                  "namespace": "mosque"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "error": "namespaceMismatch"
+          }
+        ],
+        "pending": [],
+        "delivered": [],
+        "calls": []
+      }
+    },
+    {
+      "id": "reconciliation.namespaces.deliver-foreign-alert",
+      "description": "Delivering an alert of another namespace is rejected before any call.",
+      "provenance": "RFC 0003 §4.5 Validation.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00",
+                "namespace": "mosque"
+              }
+            ],
+            "now": "2026-06-02T15:35:30+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "error": "namespaceMismatch"
+          }
+        ],
+        "pending": [],
+        "delivered": [],
+        "calls": []
+      }
+    }
+  ]
+}

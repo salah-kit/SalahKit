@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "description": "Authorization (RFC 0003 §4.5 step 1): without it nothing is added and owned requests are removed; the scheduler never asks for it.",
+  "vectors": [
+    {
+      "id": "reconciliation.authorization.denied",
+      "description": "Notifications are denied: the owned request is removed, nothing is added, and every desired alert fails with notAuthorized. Confirmed coverage ends at the first one.",
+      "provenance": "A2's deniedAuthorizationRemovesOwnRequestsAndAddsNone (retained); RFC 0003 §4.5 step 4.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "authorization": "denied",
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/isha/atTime",
+              "fireDate": "2026-06-02T20:30:00+03:00",
+              "title": "isha",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            },
+            {
+              "id": "com.example.other",
+              "fireDate": "2026-06-02T20:30:00+03:00",
+              "title": "Other",
+              "body": "Another app",
+              "thread": ""
+            }
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/isha/atTime",
+                  "fireDate": "2026-06-02T20:30:00+03:00"
+                },
+                {
+                  "id": "2026-06-03/fajr/atTime",
+                  "fireDate": "2026-06-03T04:11:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T13:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T13:00:00+03:00",
+            "confirmed": [],
+            "failures": {
+              "2026-06-02/isha/atTime": "notAuthorized",
+              "2026-06-03/fajr/atTime": "notAuthorized"
+            },
+            "confirmedCoveredUntil": "2026-06-02T20:30:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "com.example.other",
+            "fireDate": "2026-06-02T20:30:00+03:00",
+            "title": "Other",
+            "body": "Another app",
+            "thread": ""
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "removePending": [
+              "salah.prayers/2026-06-02/isha/atTime"
+            ]
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.authorization.not-determined",
+      "description": "Authorization not determined: the scheduler doesn't ask (that's the app's), adds nothing and reports notAuthorized.",
+      "provenance": "Proposal §7.5 'Stays in apps: authorization requests'; A2's authorizationIsRequestedOnlyWithSomethingToSchedule (app policy).",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "authorization": "notDetermined"
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/isha/atTime",
+                  "fireDate": "2026-06-02T20:30:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T13:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T13:00:00+03:00",
+            "confirmed": [],
+            "failures": {
+              "2026-06-02/isha/atTime": "notAuthorized"
+            },
+            "confirmedCoveredUntil": "2026-06-02T20:30:00+03:00"
+          }
+        ],
+        "pending": [],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          "pendingRequests"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.authorization.provisional",
+      "description": "Provisional authorization allows requests.",
+      "provenance": "RFC 0003 §4.5 step 1.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "authorization": "provisional"
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/isha/atTime",
+                  "fireDate": "2026-06-02T20:30:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T13:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T13:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/isha/atTime",
+                "fireDate": "2026-06-02T20:30:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00",
+            "title": "isha",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    }
+  ]
+}

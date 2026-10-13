@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "description": "Delivered-notification retention (RFC 0003 §4.5 step 5), limited to the owned prefix and namespace.",
+  "vectors": [
+    {
+      "id": "reconciliation.housekeeping.delivered-retention",
+      "description": "At 13:00 the two-day retention cutoff is 13:00 on 31 May. An owned notification delivered a second before it is removed; one delivered at the cutoff, a recent one, another app's and another namespace's old ones stay.",
+      "provenance": "A2's launchHousekeepingRemovesOnlyOldOwnDeliveredNotifications (retained); proposal §7.5 'Housekeeping'; RFC 0003 §4.5 step 5.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "delivered": [
+            {
+              "id": "salah.prayers/2026-05-31/dhuhr/atTime",
+              "date": "2026-05-31T12:59:59+03:00"
+            },
+            {
+              "id": "salah.prayers/2026-05-31/asr/atTime",
+              "date": "2026-05-31T13:00:00+03:00"
+            },
+            {
+              "id": "salah.prayers/2026-06-02/dhuhr/atTime",
+              "date": "2026-06-02T12:19:00+03:00"
+            },
+            {
+              "id": "com.example.other",
+              "date": "2026-05-30T09:00:00+03:00"
+            },
+            {
+              "id": "salah.mosque/2026-05-30/fajr/atTime",
+              "date": "2026-05-30T04:11:00+03:00"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/isha/atTime",
+                  "fireDate": "2026-06-02T20:30:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T13:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T13:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/isha/atTime",
+                "fireDate": "2026-06-02T20:30:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00",
+            "title": "isha",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [
+          {
+            "id": "salah.prayers/2026-05-31/asr/atTime",
+            "date": "2026-05-31T13:00:00+03:00"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/atTime",
+            "date": "2026-06-02T12:19:00+03:00"
+          },
+          {
+            "id": "com.example.other",
+            "date": "2026-05-30T09:00:00+03:00"
+          },
+          {
+            "id": "salah.mosque/2026-05-30/fajr/atTime",
+            "date": "2026-05-30T04:11:00+03:00"
+          }
+        ],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "removeDelivered": [
+              "salah.prayers/2026-05-31/dhuhr/atTime"
+            ]
+          },
+          {
+            "add": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.housekeeping.retention-off",
+      "description": "With no retention, delivered notifications aren't read or removed.",
+      "provenance": "RFC 0003 §4.5 step 3.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": null
+        },
+        "center": {
+          "delivered": [
+            {
+              "id": "salah.prayers/2026-05-20/dhuhr/atTime",
+              "date": "2026-05-20T12:19:00+03:00"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/isha/atTime",
+                  "fireDate": "2026-06-02T20:30:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T13:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T13:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/isha/atTime",
+                "fireDate": "2026-06-02T20:30:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00",
+            "title": "isha",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [
+          {
+            "id": "salah.prayers/2026-05-20/dhuhr/atTime",
+            "date": "2026-05-20T12:19:00+03:00"
+          }
+        ],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          {
+            "add": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,483 @@
+{
+  "schemaVersion": 1,
+  "description": "Stable identities (RFC 0003 §4.2, §4.5): changed times and offsets replace a request under the same identifier, never remove it first; occurrences differ by fire date.",
+  "vectors": [
+    {
+      "id": "reconciliation.identity.moved-reminder-keeps-its-identifier",
+      "description": "Dhuhr's before-reminder moves from 10 to 15 minutes (12:09 to 12:04). Its identifier has no time in it, so the request is replaced by one add and never removed; the confirmed occurrence carries the new fire date.",
+      "provenance": "Proposal §7.5 'Identity and updates'; RFC 0003 §4.2, §4.5 step 4 and 6. Corrects A2's characterizesAMovedAlertIsRemovedBeforeItsReplacementIsAdded and characterizesIdentifiersCarryTheFireTimestamp.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/dhuhr/before",
+                  "fireDate": "2026-06-02T12:09:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          },
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/dhuhr/before",
+                  "fireDate": "2026-06-02T12:04:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/dhuhr/before",
+                "fireDate": "2026-06-02T12:09:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          },
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/dhuhr/before",
+                "fireDate": "2026-06-02T12:04:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/before",
+            "fireDate": "2026-06-02T12:04:00+03:00",
+            "title": "dhuhr",
+            "body": "v1 before",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/before",
+            "fireDate": "2026-06-02T12:09:00+03:00"
+          },
+          "pendingRequests",
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/before",
+            "fireDate": "2026-06-02T12:04:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.identity.changed-prayer-time",
+      "description": "A recalculation moves Asr from 15:35 to 15:41: the same request is replaced with the new trigger.",
+      "provenance": "Proposal §7.5: changing a calculation updates the same logical request.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/asr/atTime",
+                  "fireDate": "2026-06-02T15:35:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          },
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/asr/atTime",
+                  "fireDate": "2026-06-02T15:41:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          },
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:41:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:41:00+03:00",
+            "title": "asr",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:35:00+03:00"
+          },
+          "pendingRequests",
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:41:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.identity.changed-wording",
+      "description": "Only the wording changes: the content no longer matches, so the request is added again under the same identifier.",
+      "provenance": "RFC 0003 §4.5 Matching (content).",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/maghrib/atTime",
+                  "fireDate": "2026-06-02T19:00:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          },
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/maghrib/atTime",
+                  "fireDate": "2026-06-02T19:00:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00",
+            "wording": "v2"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/maghrib/atTime",
+                "fireDate": "2026-06-02T19:00:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          },
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/maghrib/atTime",
+                "fireDate": "2026-06-02T19:00:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/maghrib/atTime",
+            "fireDate": "2026-06-02T19:00:00+03:00",
+            "title": "maghrib",
+            "body": "v2 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/maghrib/atTime",
+            "fireDate": "2026-06-02T19:00:00+03:00"
+          },
+          "pendingRequests",
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/maghrib/atTime",
+            "fireDate": "2026-06-02T19:00:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.identity.isha-after-midnight",
+      "description": "In Edinburgh, 21 June's Isha after-reminder moves from 23:55 to 00:05 on the 22nd. It stays the 21st's request.",
+      "provenance": "RFC 0003 §4.2: the owning day, even after midnight.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-23T00:00:00+01:00",
+              "alerts": [
+                {
+                  "id": "2026-06-21/isha/after",
+                  "fireDate": "2026-06-21T23:55:00+01:00"
+                }
+              ]
+            },
+            "now": "2026-06-21T20:00:00+01:00"
+          },
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-23T00:00:00+01:00",
+              "alerts": [
+                {
+                  "id": "2026-06-21/isha/after",
+                  "fireDate": "2026-06-22T00:05:00+01:00"
+                }
+              ]
+            },
+            "now": "2026-06-21T20:00:00+01:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-21T20:00:00+01:00",
+            "confirmed": [
+              {
+                "id": "2026-06-21/isha/after",
+                "fireDate": "2026-06-21T23:55:00+01:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-23T00:00:00+01:00"
+          },
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-21T20:00:00+01:00",
+            "confirmed": [
+              {
+                "id": "2026-06-21/isha/after",
+                "fireDate": "2026-06-22T00:05:00+01:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-23T00:00:00+01:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-21/isha/after",
+            "fireDate": "2026-06-22T00:05:00+01:00",
+            "title": "isha",
+            "body": "v1 after",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-21/isha/after",
+            "fireDate": "2026-06-21T23:55:00+01:00"
+          },
+          "pendingRequests",
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-21/isha/after",
+            "fireDate": "2026-06-22T00:05:00+01:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.identity.fajr-before-midnight",
+      "description": "In Kazan, 20 June's Fajr alert fires at 23:45 on the 19th, the same instant as the 19th's Isha alert. They are two requests, each of its own day.",
+      "provenance": "RFC 0003 §4.2 (owning days, order); B1's note: an at-time alert for the next day's Fajr can fire before midnight.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-21T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-19/isha/atTime",
+                  "fireDate": "2026-06-19T23:45:00+03:00"
+                },
+                {
+                  "id": "2026-06-20/fajr/atTime",
+                  "fireDate": "2026-06-19T23:45:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-19T22:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-19T22:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-19/isha/atTime",
+                "fireDate": "2026-06-19T23:45:00+03:00"
+              },
+              {
+                "id": "2026-06-20/fajr/atTime",
+                "fireDate": "2026-06-19T23:45:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-21T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-19/isha/atTime",
+            "fireDate": "2026-06-19T23:45:00+03:00",
+            "title": "isha",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          },
+          {
+            "id": "salah.prayers/2026-06-20/fajr/atTime",
+            "fireDate": "2026-06-19T23:45:00+03:00",
+            "title": "fajr",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-19/isha/atTime",
+            "fireDate": "2026-06-19T23:45:00+03:00"
+          },
+          {
+            "add": "salah.prayers/2026-06-20/fajr/atTime",
+            "fireDate": "2026-06-19T23:45:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    }
+  ]
+}

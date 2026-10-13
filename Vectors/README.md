@@ -1,6 +1,6 @@
-# SalahCore vectors
+# SalahKit vectors
 
-Language-neutral JSON test vectors for SalahCore (RFC 0001, `docs/rfcs/0001-core.md`). Each vector pairs published timetable input with the output RFC 0001 §4 requires. The Swift tests run every file here, and a Kotlin or TypeScript port can run the same files.
+Language-neutral JSON test vectors for SalahCore (RFC 0001, `docs/rfcs/0001-core.md`), SalahCalculation (RFC 0002) and SalahAlerts (RFC 0003). Each vector pairs its input with the output the RFC requires. The Swift tests run every file here, and a Kotlin or TypeScript port can run the same files.
 
 The vectors were written from the RFC and the SalahKit proposal before any implementation existed. Every expectation was derived by hand from the RFC's rules, and the time-zone arithmetic was checked with Python's `zoneinfo` (tzdata 2026c/2026e). The inputs of `state/` and `refresh/` are `TimetableSource` data; `calculation/` holds the calculated source's vectors (below).
 
@@ -23,6 +23,8 @@ The vectors were written from the RFC and the SalahKit proposal before any imple
 | `refresh/steps.json` | `refresh` | `.steps` fine and coarse grids, including across an expiring timetable |
 | `refresh/errors.json` | `refresh` | `RefreshPlanError` and the order the errors are checked in |
 | `calculation/*.json` | all five | A calculated source (RFC 0002): see [Calculation vectors](#calculation-vectors) |
+| `alerts/*.json` | `schedule`, `plan` | Alert schedules and notification plans (RFC 0003 §4.3–§4.4): see [Alert vectors](#alert-vectors) |
+| `reconciliation/*.json` | `apply`, `deliver` steps | The notification scheduler against a modelled center (RFC 0003 §4.5): see [Reconciliation vectors](#reconciliation-vectors) |
 
 ## File shape
 
@@ -179,6 +181,130 @@ The times are synthetic. They resemble published tables for their places (Singap
 **Where the expectations come from.** The instants are SalahTimes' results from its independent Python reference implementation (`Vectors/reference/salahtimes_reference.py` at SalahTimes 0.1.0), not from the Swift engine. Which of them each answer holds, and the coverage, windows, states and plans, follow RFC 0002 §4 and RFC 0001 §4.3–§4.8; they were derived from the RFCs without reading SalahCalculation's implementation. Every vector uses minute-rounded parameters, and no rounded instant it depends on lies within a second of a rounding boundary (the reference and the Swift engine agree within about half a second before rounding). An instant is written in the location's offset, or in UTC where the zone then kept local mean time with seconds in its offset (the year 1000).
 
 A change to a calculation vector needs a written reason in RFC 0002 §10, in the same commit.
+
+## Alert vectors
+
+`alerts/` holds SalahAlerts' planning vectors (RFC 0003 §4.3–§4.4). They use the file shape above; the input differs.
+
+| File | Covers |
+|---|---|
+| `alerts/schedule.json` | Candidate alerts: every kind of a day, the half-open range, reminders of events outside the range, offsets at `maximumReminderOffset`, Isha after midnight (Edinburgh) and Fajr before midnight (Kazan, calculated) kept on their owning days, Jumu'ah and per-day settings, equal fire dates, sounds, sunrise alerts |
+| `alerts/gaps.json` | Source gaps moved per alert kind: a missing Isha, a missing day, an expired timetable, a missing Friday Dhuhr with both observances, a missing sunrise, gaps of prayers without alerts, clipping |
+| `alerts/plans.json` | Notification plans: the D7 example (30 near-term + 30 at-time requests), insufficient near-term capacity, equal fire dates at the budget's edge, reminders across midnight, horizon clipping, ranges that start after or end at or before now, past-only gaps and gaps that contain now, different coverage per kind, an expired timetable, zero and negative budgets |
+| `alerts/errors.json` | `AlertPlanningError` and the order of its checks |
+
+**Input:**
+
+```json
+{
+  "location": {"latitude": 21.4225, "longitude": 39.8262, "timeZone": "Asia/Riyadh"},
+  "source": {"expectedKinds": ["..."], "rows": ["..."]},
+  "namespace": "prayers",
+  "alertSettings": {
+    "kinds": {"fajr": {"atTime": true, "before": 600, "after": 300}, "isha": {"after": 900}},
+    "jumuah": {"before": 2700, "sound": {"named": "jumuah.caf"}},
+    "days": {"2026-06-03": {"kinds": {"fajr": {"before": 2700}}}}
+  },
+  "maximumReminderOffset": 7200,
+  "query": {"type": "plan", "from": "<instant>", "to": "<instant>", "now": "<instant>",
+            "budget": {"maxPending": 60, "nearTermWindow": 172800, "horizon": 1209600}}
+}
+```
+
+- **`source`** or **`calculation`**: a `TimetableSource` as above, or `CalculationSettings` (`{"parameters": …}`) for `PrayerSchedule(source: CalculationSource(settings), location:)`.
+- **`namespace`**: the planner's namespace.
+- **`alertSettings`**: the settings closure as a table. For a subject (day, prayer, observance): use `days[day]` when the day has an entry, else the top level; then the table's `jumuah` value when the observance is `jumuah` and the table has one, else `kinds[prayer]`. A missing entry is `nil` (no alerts). Each value is `AlertSettings` JSON (RFC 0003 §4.1): every key optional, offsets in seconds, sounds `"none"`, `"system"` or `{"named": "<file>"}`.
+- **`maximumReminderOffset`**: seconds; absent means the default, 7200.
+- **`query`**: `{"type": "schedule", "from", "to"}` calls `schedule(_:namespace:from:to:maximumReminderOffset:settings:)`; `{"type": "plan", "from", "to", "now", "budget"}` calls it and then `notificationPlan(_:from: now, budget:)`. `budget` and each of its keys are optional (defaults 60, 172800 and 1209600 seconds).
+
+**Expected:**
+
+```json
+{"requested": ["<start>", "<end>"], "alerts": [AlertRef, ...], "gaps": [AlertGapRef, ...]}
+{"effectiveRange": ["<now>", "<end>"], "alerts": [AlertRef, ...],
+ "omitted": [{"id": "2026-06-03/fajr/before", "fireDate": "<instant>"}, ...],
+ "coveredUntil": "<instant>", "coverageByKind": {"atTime": "<instant>", "before": "<instant>"}}
+{"error": {"invalidNamespace": "a/b"} | {"invalidMaximumReminderOffset": -60} |
+          {"reminderOffsetOutOfRange": {"day": "YYYY-MM-DD", "prayer": "dhuhr", "observance": "ordinary", "kind": "before", "offset": 0}}}
+```
+
+- **`AlertRef`**: `{"id": "2026-06-02/dhuhr/before", "fireDate": "<instant>", "event": "<instant>", "observance": "ordinary", "sound": "system"}`. `id` is the identity without its namespace, `<owning day>/<prayer>/<kind>`; `event` is the event's time.
+- **`AlertGapRef`**: `{"start", "end", "kind": "before", "day": "YYYY-MM-DD", "prayers": ["isha"], "reason": "noPublishedData"}`, half-open; `prayers` are compared as a set.
+- `alerts` and `gaps` are compared as ordered lists (RFC 0003 §4.2–§4.3 orders). `omitted` is the schedule's alerts in the effective range that the plan didn't select, in schedule order: a harness derives it from the schedule and the plan. `coverageByKind` is compared as a map. Offsets in errors are seconds.
+
+## Reconciliation vectors
+
+`reconciliation/` holds the notification scheduler's vectors (RFC 0003 §4.5). They run `NotificationScheduler` against a modelled notification center and assert what the center holds afterwards, the calls the scheduler made and its reports, not the plan it was given. They need UserNotifications, so a Swift harness runs them on Apple platforms other than tvOS.
+
+| File | Covers |
+|---|---|
+| `reconciliation/apply.json` | A fresh install, unchanged requests, the thread identifier |
+| `reconciliation/identity.json` | A moved reminder, a changed prayer time and wording under one identifier; Isha after midnight; Fajr before midnight |
+| `reconciliation/obsolete.json` | Only owned obsolete requests are removed; an empty plan; a passed alert with a stale request |
+| `reconciliation/namespaces.json` | Foreign plans (empty ones too) and foreign alerts, rejected before any call |
+| `reconciliation/failures.json` | A failed add that leaves an older request, stale content, a dropped request, failed reads, an alert that fires before the read-back, the plan's own coverage |
+| `reconciliation/authorization.json` | Denied, not determined, provisional |
+| `reconciliation/housekeeping.json` | Delivered-notification retention, and none |
+| `reconciliation/pump.json` | Serialized applies; overlapping applies reconciled to the latest |
+| `reconciliation/deliver.json` | Posting due alerts, skipping pending and delivered occurrences |
+
+**Input:**
+
+```json
+{
+  "scheduler": {"identifierPrefix": "salah.", "namespace": "prayers", "threadIdentifier": "prayers", "deliveredRetention": 172800},
+  "center": {
+    "authorization": "authorized",
+    "pending": [{"id": "salah.prayers/2026-06-02/asr/atTime", "fireDate": "<instant>", "title": "asr", "body": "v1 atTime", "thread": "prayers"}],
+    "delivered": [{"id": "salah.prayers/2026-06-01/asr/atTime", "date": "<instant>"}],
+    "failAdds": ["<request identifier>"], "ignoreAdds": [], "dropAdds": [], "failReads": [2]
+  },
+  "steps": [
+    {"apply": {"namespace": "prayers", "coveredUntil": "<instant>",
+               "alerts": [{"id": "2026-06-02/asr/atTime", "fireDate": "<instant>"}]},
+     "now": "<instant>", "readBackAt": "<instant>", "wording": "v1"},
+    {"deliver": [{"id": "2026-06-02/isha/before", "fireDate": "<instant>"}], "now": "<instant>"}
+  ]
+}
+```
+
+- **`scheduler`**: `NotificationScheduler(identifierPrefix:namespace:threadIdentifier:center:deliveredRetention:now:)`; `threadIdentifier` and `deliveredRetention` (seconds) may be `null`.
+- **`center`**, the model every harness implements:
+  - `authorization` is `"authorized"`, `"provisional"`, `"ephemeral"`, `"denied"` or `"notDetermined"`; `pending` holds requests with a non-repeating calendar trigger at `fireDate` (UTC) and the content `title`, `body` and `thread`; `delivered` holds delivered notifications. Each list key is optional.
+  - On each pending read, the center first delivers every pending request whose fire date is at or before the current instant: it leaves `pending` and joins `delivered`, dated at its fire date.
+  - `add` replaces a pending request with the same identifier, as Apple documents. An immediate request (no trigger) is delivered at once, dated at the current instant. For an identifier in `failAdds`, `add` throws and changes nothing; in `ignoreAdds`, it succeeds and changes nothing (stale content on read-back); in `dropAdds`, it succeeds, and the request, with any older one of that identifier, is gone (a system that keeps fewer requests).
+  - `failReads` lists pending reads that throw, counted from 1 across the vector's steps.
+- **`steps`** run in order. `now` sets the instant (the scheduler's clock and the center's) when the step starts; for an `apply`, the read-back moves it to `readBackAt` (default `now`) before the center answers. `wording` (default `"v1"`) sets the content each step's `content` closure builds: title = the prayer's raw value, body = `"<wording> <kind>"`, no thread, sound or other fields. A plan's alert takes the plan's namespace unless it names its own `namespace`; its event is irrelevant to the scheduler.
+- **Overlapping applies.** A step with `suspendAtCall: n` suspends inside its n-th center call. Every following step marked `"duringPrevious": true` is submitted while it is suspended, in order, sharing its `now`; then the call finishes. RFC 0003 §4.5's pump then stops the first batch before its next call and supersedes every waiting plan but the last.
+
+**Expected:**
+
+```json
+{
+  "reports": [
+    {"superseded": false, "verifiedAt": "<instant>",
+     "confirmed": [{"id": "2026-06-02/asr/atTime", "fireDate": "<instant>"}],
+     "failures": {"2026-06-02/isha/atTime": "addFailed"},
+     "confirmedCoveredUntil": "<instant>" | null},
+    {"posted": [OccurrenceRef], "skipped": [OccurrenceRef], "failures": {}},
+    {"error": "namespaceMismatch"}
+  ],
+  "pending": [PendingRef, ...],
+  "delivered": [{"id": "...", "date": "<instant>"}, ...],
+  "calls": ["authorizationStatus", "pendingRequests", "deliveredNotifications",
+            {"removePending": ["..."]}, {"removeDelivered": ["..."]},
+            {"add": "<request identifier>", "fireDate": "<instant>"}, {"addImmediate": "<request identifier>"}]
+}
+```
+
+- One report per step. Failures are keyed by the identity without its namespace and hold the case name: `notAuthorized`, `addFailed` (its message isn't compared) or `unconfirmed`.
+- `confirmed`, `posted` and `skipped` are ordered lists; `failures` is a map; `pending` is ordered by identifier and compared field by field; `delivered` and `calls` are ordered lists. An `add`'s `fireDate` is its trigger's instant.
+
+## Alert and reconciliation expectations
+
+A generator wrote both folders: `alerts/generator/` (`model.py` models RFC 0003 §4.3–§4.5 and the parts of RFC 0001 §4.4 and §4.6 the planner reads; `generate.py` holds the cases). It was written from RFC 0003 and the proposal's §7.5 before SalahAlerts' implementation, and doesn't read it. Kazan's instants are those of `calculation/owning-days.json`, from SalahTimes' reference. Regenerate with `python3 Vectors/alerts/generator/generate.py`, which rewrites the files byte for byte. An independent reviewer checked the expectations against §7.5 before the implementation started.
+
+A change to an existing alert or reconciliation vector needs a written reason in RFC 0003 §10, in the same commit.
 
 ## Changing a vector
 

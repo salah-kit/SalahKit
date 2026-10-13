@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "description": "Delivering due alerts (RFC 0003 §4.5): posted at once unless pending or already delivered.",
+  "vectors": [
+    {
+      "id": "reconciliation.deliver.due-alerts",
+      "description": "At 19:46 four alerts are due. Isha's before-reminder was left out of the plan and is posted at once. Maghrib's after-reminder is still pending and is skipped. Maghrib's alert was delivered at 19:00 and is skipped. Dhuhr's after-reminder moved to 19:45 after its earlier occurrence was delivered at 12:24, so it is posted.",
+      "provenance": "RFC 0003 §4.5 Delivering due alerts; A2's catchUpWindows (caught-up alerts get an immediate request).",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/maghrib/after",
+              "fireDate": "2026-06-02T19:50:00+03:00",
+              "title": "maghrib",
+              "body": "v1 after",
+              "thread": "prayers"
+            }
+          ],
+          "delivered": [
+            {
+              "id": "salah.prayers/2026-06-02/maghrib/atTime",
+              "date": "2026-06-02T19:00:00+03:00"
+            },
+            {
+              "id": "salah.prayers/2026-06-02/dhuhr/after",
+              "date": "2026-06-02T12:24:00+03:00"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/isha/before",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              },
+              {
+                "id": "2026-06-02/maghrib/after",
+                "fireDate": "2026-06-02T19:50:00+03:00"
+              },
+              {
+                "id": "2026-06-02/maghrib/atTime",
+                "fireDate": "2026-06-02T19:00:00+03:00"
+              },
+              {
+                "id": "2026-06-02/dhuhr/after",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "now": "2026-06-02T19:46:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "posted": [
+              {
+                "id": "2026-06-02/dhuhr/after",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              },
+              {
+                "id": "2026-06-02/isha/before",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "skipped": [
+              {
+                "id": "2026-06-02/maghrib/atTime",
+                "fireDate": "2026-06-02T19:00:00+03:00"
+              },
+              {
+                "id": "2026-06-02/maghrib/after",
+                "fireDate": "2026-06-02T19:50:00+03:00"
+              }
+            ],
+            "failures": {}
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/maghrib/after",
+            "fireDate": "2026-06-02T19:50:00+03:00",
+            "title": "maghrib",
+            "body": "v1 after",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [
+          {
+            "id": "salah.prayers/2026-06-02/maghrib/atTime",
+            "date": "2026-06-02T19:00:00+03:00"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/after",
+            "date": "2026-06-02T12:24:00+03:00"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/after",
+            "date": "2026-06-02T19:46:00+03:00"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/isha/before",
+            "date": "2026-06-02T19:46:00+03:00"
+          }
+        ],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "addImmediate": "salah.prayers/2026-06-02/dhuhr/after"
+          },
+          {
+            "addImmediate": "salah.prayers/2026-06-02/isha/before"
+          }
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.deliver.just-delivered-by-the-system",
+      "description": "Asr's request fired at 15:35 and the center delivers it on the first read; the alert is skipped. An immediate post that fails is reported.",
+      "provenance": "RFC 0003 §4.5 Delivering due alerts.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/asr/atTime",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "title": "asr",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            }
+          ],
+          "failAdds": [
+            "salah.prayers/2026-06-02/asr/after"
+          ]
+        },
+        "steps": [
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              },
+              {
+                "id": "2026-06-02/asr/after",
+                "fireDate": "2026-06-02T15:40:00+03:00"
+              }
+            ],
+            "now": "2026-06-02T15:40:01+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "posted": [],
+            "skipped": [
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              }
+            ],
+            "failures": {
+              "2026-06-02/asr/after": "addFailed"
+            }
+          }
+        ],
+        "pending": [],
+        "delivered": [
+          {
+            "id": "salah.prayers/2026-06-02/asr/atTime",
+            "date": "2026-06-02T15:35:00+03:00"
+          }
+        ],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "addImmediate": "salah.prayers/2026-06-02/asr/after"
+          }
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.deliver.not-authorized",
+      "description": "Without authorization nothing is posted.",
+      "provenance": "RFC 0003 §4.5 Delivering due alerts.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "authorization": "denied"
+        },
+        "steps": [
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              }
+            ],
+            "now": "2026-06-02T15:36:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "posted": [],
+            "skipped": [],
+            "failures": {
+              "2026-06-02/asr/atTime": "notAuthorized"
+            }
+          }
+        ],
+        "pending": [],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus"
+        ]
+      }
+    }
+  ]
+}

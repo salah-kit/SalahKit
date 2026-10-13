@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "description": "Obsolete requests (RFC 0003 §4.5 step 4): only owned requests the plan no longer wants are removed.",
+  "vectors": [
+    {
+      "id": "reconciliation.obsolete.only-owned-requests-are-removed",
+      "description": "The center holds an owned request the plan no longer wants (Asr), an owned request it still wants (Maghrib), another app's request, a request of another namespace under the same prefix, and one under the prefix that isn't an identity. Only Asr's is removed, in one call; Isha's is added.",
+      "provenance": "RFC 0003 §4.2 Request identifiers, §4.5 step 4; A2's obsoleteOwnRequestsAreRemovedAndOthersKept (retained).",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/asr/atTime",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "title": "asr",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            },
+            {
+              "id": "salah.prayers/2026-06-02/maghrib/atTime",
+              "fireDate": "2026-06-02T19:00:00+03:00",
+              "title": "maghrib",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            },
+            {
+              "id": "com.example.other",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "title": "Other",
+              "body": "Another app's request",
+              "thread": ""
+            },
+            {
+              "id": "salah.mosque/2026-06-02/asr/atTime",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "title": "asr",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            },
+            {
+              "id": "salah.prayers/legacy",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "title": "asr",
+              "body": "An older format",
+              "thread": ""
+            }
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/maghrib/atTime",
+                  "fireDate": "2026-06-02T19:00:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/isha/atTime",
+                  "fireDate": "2026-06-02T20:30:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T13:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T13:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/maghrib/atTime",
+                "fireDate": "2026-06-02T19:00:00+03:00"
+              },
+              {
+                "id": "2026-06-02/isha/atTime",
+                "fireDate": "2026-06-02T20:30:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "com.example.other",
+            "fireDate": "2026-06-02T15:35:00+03:00",
+            "title": "Other",
+            "body": "Another app's request",
+            "thread": ""
+          },
+          {
+            "id": "salah.mosque/2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:35:00+03:00",
+            "title": "asr",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00",
+            "title": "isha",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/maghrib/atTime",
+            "fireDate": "2026-06-02T19:00:00+03:00",
+            "title": "maghrib",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          },
+          {
+            "id": "salah.prayers/legacy",
+            "fireDate": "2026-06-02T15:35:00+03:00",
+            "title": "asr",
+            "body": "An older format",
+            "thread": ""
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "removePending": [
+              "salah.prayers/2026-06-02/asr/atTime"
+            ]
+          },
+          {
+            "add": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.obsolete.empty-plan-clears-the-namespace",
+      "description": "An empty plan of the scheduler's namespace removes every owned request and nothing else.",
+      "provenance": "RFC 0003 §4.5 step 4; A2's emptyScheduleClearsOwnRequestsAndDeliveries (retained for pending requests).",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/isha/atTime",
+              "fireDate": "2026-06-02T20:30:00+03:00",
+              "title": "isha",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            },
+            {
+              "id": "salah.mosque/2026-06-03/fajr/before",
+              "fireDate": "2026-06-03T04:01:00+03:00",
+              "title": "fajr",
+              "body": "v1 before",
+              "thread": "prayers"
+            },
+            {
+              "id": "com.example.other",
+              "fireDate": "2026-06-02T20:30:00+03:00",
+              "title": "Other",
+              "body": "Another app",
+              "thread": ""
+            }
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": []
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "com.example.other",
+            "fireDate": "2026-06-02T20:30:00+03:00",
+            "title": "Other",
+            "body": "Another app",
+            "thread": ""
+          },
+          {
+            "id": "salah.mosque/2026-06-03/fajr/before",
+            "fireDate": "2026-06-03T04:01:00+03:00",
+            "title": "fajr",
+            "body": "v1 before",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "removePending": [
+              "salah.prayers/2026-06-02/isha/atTime"
+            ]
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.obsolete.passed-alert-with-a-stale-request",
+      "description": "The plan was made at 12:00 and is applied at 12:21: Dhuhr's alert (12:19) has passed and isn't desired, so its stale request for 12:30 is obsolete and removed. It is neither confirmed nor a failure.",
+      "provenance": "RFC 0003 §4.5: the desired alerts are the plan's alerts after the batch's start.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/dhuhr/atTime",
+              "fireDate": "2026-06-02T12:30:00+03:00",
+              "title": "dhuhr",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/dhuhr/atTime",
+                  "fireDate": "2026-06-02T12:19:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/asr/atTime",
+                  "fireDate": "2026-06-02T15:35:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T12:21:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T12:21:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:35:00+03:00",
+            "title": "asr",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "removePending": [
+              "salah.prayers/2026-06-02/dhuhr/atTime"
+            ]
+          },
+          {
+            "add": "salah.prayers/2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:35:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    }
+  ]
+}

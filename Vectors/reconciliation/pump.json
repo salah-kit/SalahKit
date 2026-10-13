@@ -1,0 +1,286 @@
+{
+  "schemaVersion": 1,
+  "description": "The update pump (RFC 0003 §4.5): serialized batches, and overlapping applies reconciled toward the latest plan.",
+  "vectors": [
+    {
+      "id": "reconciliation.pump.serialized-applies",
+      "description": "Two applies, one after the other: the second sees what the first installed and changes only what differs.",
+      "provenance": "Proposal §7.5: the update pump serializes complete batches.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/dhuhr/before",
+                  "fireDate": "2026-06-02T12:09:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/dhuhr/atTime",
+                  "fireDate": "2026-06-02T12:19:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/dhuhr/after",
+                  "fireDate": "2026-06-02T12:24:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          },
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/dhuhr/before",
+                  "fireDate": "2026-06-02T12:04:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/dhuhr/atTime",
+                  "fireDate": "2026-06-02T12:19:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:05:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/dhuhr/before",
+                "fireDate": "2026-06-02T12:09:00+03:00"
+              },
+              {
+                "id": "2026-06-02/dhuhr/atTime",
+                "fireDate": "2026-06-02T12:19:00+03:00"
+              },
+              {
+                "id": "2026-06-02/dhuhr/after",
+                "fireDate": "2026-06-02T12:24:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          },
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:05:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/dhuhr/before",
+                "fireDate": "2026-06-02T12:04:00+03:00"
+              },
+              {
+                "id": "2026-06-02/dhuhr/atTime",
+                "fireDate": "2026-06-02T12:19:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/atTime",
+            "fireDate": "2026-06-02T12:19:00+03:00",
+            "title": "dhuhr",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/before",
+            "fireDate": "2026-06-02T12:04:00+03:00",
+            "title": "dhuhr",
+            "body": "v1 before",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/before",
+            "fireDate": "2026-06-02T12:09:00+03:00"
+          },
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/atTime",
+            "fireDate": "2026-06-02T12:19:00+03:00"
+          },
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/after",
+            "fireDate": "2026-06-02T12:24:00+03:00"
+          },
+          "pendingRequests",
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "removePending": [
+              "salah.prayers/2026-06-02/dhuhr/after"
+            ]
+          },
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/before",
+            "fireDate": "2026-06-02T12:04:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.pump.overlapping-applies-reconcile-to-the-latest",
+      "description": "A first apply is suspended in its fourth call, its first add. Two more plans arrive meanwhile. The first finishes its add, finds a later plan and stops; the second never makes a call; the third reconciles the center to itself, keeping the request the first added because it still matches. The first two reports say superseded and confirm nothing.",
+      "provenance": "Proposal §7.5: 'A superseded update finishes any already-started system operation before the latest generation reconciles; cancellation does not undo an accepted add'; RFC 0003 §4.5 The update pump.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/dhuhr/before",
+                  "fireDate": "2026-06-02T12:09:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/dhuhr/atTime",
+                  "fireDate": "2026-06-02T12:19:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/dhuhr/after",
+                  "fireDate": "2026-06-02T12:24:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00",
+            "suspendAtCall": 4
+          },
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/asr/atTime",
+                  "fireDate": "2026-06-02T15:35:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00",
+            "duringPrevious": true
+          },
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/dhuhr/before",
+                  "fireDate": "2026-06-02T12:09:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/asr/atTime",
+                  "fireDate": "2026-06-02T15:35:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00",
+            "duringPrevious": true
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": true,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [],
+            "failures": {},
+            "confirmedCoveredUntil": null
+          },
+          {
+            "superseded": true,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [],
+            "failures": {},
+            "confirmedCoveredUntil": null
+          },
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/dhuhr/before",
+                "fireDate": "2026-06-02T12:09:00+03:00"
+              },
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:35:00+03:00",
+            "title": "asr",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/before",
+            "fireDate": "2026-06-02T12:09:00+03:00",
+            "title": "dhuhr",
+            "body": "v1 before",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/before",
+            "fireDate": "2026-06-02T12:09:00+03:00"
+          },
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:35:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    }
+  ]
+}
