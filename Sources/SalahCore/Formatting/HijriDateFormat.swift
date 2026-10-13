@@ -20,6 +20,13 @@ nonisolated public struct HijriDateFormat: Sendable {
     public var month: Int
     /// The day of the month, from 1 to 30.
     public var day: Int
+
+    /// Creates a Hijri date, for example to compare with ``HijriDateFormat/components(of:)``.
+    public init(year: Int, month: Int, day: Int) {
+      self.year = year
+      self.month = month
+      self.day = day
+    }
   }
 
   let locale: Locale
