@@ -64,6 +64,10 @@ nonisolated public enum PrayerDayAvailability: Hashable, Sendable {
 /// - Coverage names exactly the expected kinds that are missing, with their reasons.
 /// - A source never fills a day or kind from another day or a computed fallback, and never
 ///   infers Jumu'ah: ``PrayerObservance/jumuah`` appears only on a declared Friday Dhuhr.
+///
+/// In a module whose code defaults to main-actor isolation, declare a custom source
+/// `nonisolated` (`nonisolated struct MosqueFeed: PrayerSource`), because the schedule calls it
+/// from whatever thread asks the question.
 nonisolated public protocol PrayerSource: Sendable {
   /// The event kinds this source promises; a five-prayer timetable can exclude sunrise.
   var expectedKinds: Set<PrayerKind> { get }

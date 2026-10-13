@@ -93,13 +93,13 @@ nonisolated public struct StatePolicy: Codable, Hashable, Sendable {
   }
 }
 
-extension Duration {
+nonisolated extension Duration {
   /// The duration in seconds, as a `Double`.
-  nonisolated var seconds: Double {
+  var seconds: Double {
     let parts = components
     return Double(parts.seconds) + Double(parts.attoseconds) / 1e18
   }
 
   /// The duration in seconds as a `TimeInterval`, never below zero.
-  nonisolated var nonNegativeSeconds: TimeInterval { Swift.max(0, seconds) }
+  var nonNegativeSeconds: TimeInterval { Swift.max(0, seconds) }
 }

@@ -77,6 +77,23 @@ nonisolated public struct CivilDay: Codable, Hashable, Comparable, Sendable,
     other.daysSinceEpoch - daysSinceEpoch
   }
 
+  /// The first instant of this day in `timeZone`.
+  ///
+  /// That's local midnight, resolved like a wall time: where a clock change repeats midnight,
+  /// the day starts at the earlier one; where a clock change skips midnight, the day starts at
+  /// the first valid instant after it. Where a zone skips the whole date (Pacific/Apia on
+  /// 2011-12-30), the day's start equals the next day's start, and its interval is empty.
+  public func start(in timeZone: TimeZone) -> Date {
+    Date(
+      timeIntervalSince1970: TimeInterval(WallTimeResolver.startSeconds(of: self, in: timeZone)))
+  }
+
+  /// The span of this day in `timeZone`: from its ``start(in:)`` to the next day's start.
+  public func interval(in timeZone: TimeZone) -> DateInterval {
+    let start = start(in: timeZone)
+    return DateInterval(start: start, end: max(start, adding(days: 1).start(in: timeZone)))
+  }
+
   /// Orders days chronologically.
   public static func < (lhs: CivilDay, rhs: CivilDay) -> Bool {
     (lhs.year, lhs.month, lhs.day) < (rhs.year, rhs.month, rhs.day)
