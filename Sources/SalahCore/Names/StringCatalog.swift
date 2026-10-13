@@ -4,13 +4,15 @@ import Foundation
 ///
 /// The catalog ships as a copied resource and is decoded with `JSONDecoder` on every platform,
 /// because the compiled-catalog lookup doesn't exist on Linux and returns keys under SwiftPM
-/// before 6.4 (RFC 0001, §6.1). Only the parts a lookup needs are decoded; plural and device
-/// variations are ignored.
+/// before 6.4 (RFC 0001, §6.1). Xcode 26 compiles the catalog despite `.copy`, so a build in an
+/// Xcode 26 project reads the compiled tables instead. Only the parts a lookup needs are
+/// decoded; plural and device variations are ignored.
 nonisolated struct StringCatalog: Decodable, Equatable, Sendable {
   /// A string unit: one translated value and its review state.
   struct StringUnit: Decodable, Equatable, Sendable {
-    /// `translated`, `needs_review`, or another String Catalog state.
-    var state: String
+    /// `translated`, `needs_review`, or another String Catalog state; `nil` when the value comes
+    /// from a compiled table, which doesn't keep it.
+    var state: String?
     /// The translated text.
     var value: String
   }
@@ -56,10 +58,38 @@ nonisolated struct StringCatalog: Decodable, Equatable, Sendable {
   }
 
   /// The bundled catalog, decoded once, or `nil` when it's missing or unreadable.
+  ///
+  /// Without the copied file, the catalog comes from the tables Xcode 26 compiles it into.
   static let bundled: StringCatalog? = {
-    guard let url = resourceURL, let data = try? Data(contentsOf: url) else { return nil }
+    guard let url = resourceURL else {
+      return Bundle.module.resourceURL.flatMap { compiled(in: $0) }
+    }
+    guard let data = try? Data(contentsOf: url) else { return nil }
     return try? JSONDecoder().decode(StringCatalog.self, from: data)
   }()
+
+  /// The catalog rebuilt from the tables `xcstringstool compile` writes into `directory`, one
+  /// `<language>.lproj/Localizable.strings` property list per language, or `nil` when there are
+  /// none. Comments and review states don't survive compilation.
+  static func compiled(in directory: URL, sourceLanguage: String = "en") -> StringCatalog? {
+    let folders =
+      (try? FileManager.default.contentsOfDirectory(
+        at: directory, includingPropertiesForKeys: nil)) ?? []
+    var strings: [String: Entry] = [:]
+    for folder in folders where folder.pathExtension == "lproj" {
+      let table = folder.appendingPathComponent("Localizable.strings")
+      guard let data = try? Data(contentsOf: table),
+        let values = try? PropertyListSerialization.propertyList(from: data, format: nil)
+          as? [String: String]
+      else { continue }
+      let language = folder.deletingPathExtension().lastPathComponent
+      for (key, value) in values {
+        strings[key, default: Entry()].localizations[language] = Localization(
+          stringUnit: StringUnit(state: nil, value: value))
+      }
+    }
+    return strings.isEmpty ? nil : StringCatalog(sourceLanguage: sourceLanguage, strings: strings)
+  }
 
   /// The value of `key` for `locale`, trying ``candidates(for:)`` in order and then the source
   /// language. Returns `nil` when the key is missing or has neither.

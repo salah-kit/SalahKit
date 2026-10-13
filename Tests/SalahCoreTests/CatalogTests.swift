@@ -26,6 +26,42 @@ private let salahEnglish: [PrayerNames.Entry: String] = [
     #expect(StringCatalog.bundled == catalog)
   }
 
+  @Test func compiledTablesReadLikeTheCatalog() throws {
+    // Xcode 26 compiles the copied catalog into one table per language: xcstringstool writes
+    // XML property lists and the build copies them as binary ones (RFC 0001, §6.1).
+    let catalog = try #require(StringCatalog.bundled)
+    let directory = FileManager.default.temporaryDirectory
+      .appendingPathComponent("CatalogTests-\(UUID().uuidString)")
+    defer { try? FileManager.default.removeItem(at: directory) }
+    #expect(StringCatalog.compiled(in: directory) == nil)
+
+    var tables: [String: [String: String]] = [:]
+    for (key, entry) in catalog.strings {
+      for (language, localization) in entry.localizations {
+        tables[language, default: [:]][key] = localization.stringUnit?.value
+      }
+    }
+    for (index, (language, table)) in tables.sorted(by: { $0.key < $1.key }).enumerated() {
+      let folder = directory.appendingPathComponent("\(language).lproj")
+      try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+      let format: PropertyListSerialization.PropertyListFormat =
+        index.isMultiple(of: 2) ? .binary : .xml
+      try PropertyListSerialization.data(fromPropertyList: table, format: format, options: 0)
+        .write(to: folder.appendingPathComponent("Localizable.strings"))
+    }
+
+    let compiled = try #require(StringCatalog.compiled(in: directory))
+    #expect(compiled.sourceLanguage == catalog.sourceLanguage)
+    #expect(Set(compiled.strings.keys) == Set(catalog.strings.keys))
+    for key in catalog.strings.keys {
+      for language in languages.sorted() + ["ar-EG", "pt-BR", ""] {
+        #expect(
+          compiled.value(for: key, languages: [language])
+            == catalog.value(for: key, languages: [language]), "\(key) \(language)")
+      }
+    }
+  }
+
   @Test func fileStaysValidForXcodesEditor() throws {
     let url = try #require(StringCatalog.resourceURL)
     let object = try JSONSerialization.jsonObject(with: Data(contentsOf: url))
