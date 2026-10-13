@@ -54,11 +54,13 @@ nonisolated public enum PrayerDayAvailability: Hashable, Sendable {
 ///
 /// - The same day and location always give the same answer, without blocking on I/O.
 ///   Fetching new data is the app's job. A source may be called concurrently.
-/// - ``expectedKinds`` never changes and isn't empty.
+/// - ``expectedKinds`` and ``maximumLead`` never change, and ``expectedKinds`` isn't empty.
 /// - An available day has at least one event; every event belongs to the requested day, has an
 ///   expected kind, and no kind appears twice; the day's time zone is the location's.
-/// - Every event of owning day D occurs in [start of D, start of D+2) in the location's zone:
-///   Monday's Isha at 00:15 on Tuesday belongs to Monday. Never earlier than its owning day.
+/// - Every event of owning day D occurs in [start of D − ``maximumLead``, start of D+2) in the
+///   location's zone: Monday's Isha at 00:15 on Tuesday belongs to Monday. A published time
+///   never comes before its owning day; a calculated Fajr can, where the clock runs behind the
+///   Sun.
 /// - Instants strictly increase in canonical kind order within a day, and no event of a day
 ///   occurs after an event of the next day (equal instants are allowed).
 /// - Coverage names exactly the expected kinds that are missing, with their reasons.
@@ -68,11 +70,32 @@ nonisolated public enum PrayerDayAvailability: Hashable, Sendable {
 /// In a module whose code defaults to main-actor isolation, declare a custom source
 /// `nonisolated` (`nonisolated struct MosqueFeed: PrayerSource`), because the schedule calls it
 /// from whatever thread asks the question.
+///
+/// A source that wraps another one, for example to declare Jumu'ah as the app's policy, passes
+/// the wrapped source's ``expectedKinds`` and ``maximumLead`` through.
 nonisolated public protocol PrayerSource: Sendable {
   /// The event kinds this source promises; a five-prayer timetable can exclude sunrise.
   var expectedKinds: Set<PrayerKind> { get }
 
+  /// How long before the start of its owning day an event of this source can occur.
+  ///
+  /// Zero for published times, which are written on their own day or the next. A calculated
+  /// source needs more: where a place's clock runs behind the Sun, a Fajr bounded by the middle
+  /// of the night falls shortly before midnight, as Kazan's does at 23:52 on summer evenings.
+  ///
+  /// The schedule accepts an event of day D from the start of D minus this lead, reads the next
+  /// day when a query's end comes within the lead of it, and lets a missing event's interval
+  /// start that early. Values below zero count as zero, and values above 12 hours as 12 hours.
+  var maximumLead: Duration { get }
+
   /// The events of owning day `day` at `location`, or the reason the source can't provide
   /// them. Never substitutes another day's data or a computed fallback.
   func prayerDay(_ day: CivilDay, at location: PrayerLocation) -> PrayerDayAvailability
+}
+
+nonisolated extension PrayerSource {
+  /// ``maximumLead`` in seconds, within the bounds the schedule applies: 0 to 12 hours.
+  var leadSeconds: TimeInterval {
+    min(max(maximumLead.seconds, 0), PrayerSchedule.maximumLeadSeconds)
+  }
 }

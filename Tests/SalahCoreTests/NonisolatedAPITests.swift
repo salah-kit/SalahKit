@@ -20,6 +20,7 @@ nonisolated struct OneDaySource: PrayerSource {
   let day: PrayerDay
 
   var expectedKinds: Set<PrayerKind> { Set(day.events.map(\.kind)) }
+  var maximumLead: Duration { .zero }
 
   func prayerDay(_ day: CivilDay, at location: PrayerLocation) -> PrayerDayAvailability {
     day == self.day.day ? .available(self.day, coverage: .complete) : .unavailable(.noPublishedData)
@@ -56,7 +57,8 @@ nonisolated func exercisePublicAPI() throws -> String {
     rules: [.asr: .after(minutes: 10)], jumuah: .at(WallClockTime(hour: 13, minute: 30)),
     wallTimeResolution: WallTimeResolution())
   let schedule = PrayerSchedule(source: source, location: location, iqama: rules)
-  _ = (schedule.source.expectedKinds, schedule.location, schedule.iqama)
+  _ = (schedule.source.expectedKinds, schedule.source.maximumLead, schedule.location)
+  _ = schedule.iqama
   _ = PrayerSchedule.maximumQueryDays
   let availability = schedule.day(friday)
   _ = (availability.coverage, schedule.day(containing: friday.start(in: zone)))

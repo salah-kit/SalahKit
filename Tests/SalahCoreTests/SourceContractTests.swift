@@ -10,6 +10,7 @@ import Testing
   struct FixedSource: PrayerSource {
     var expectedKinds: Set<PrayerKind>
     var answers: [CivilDay: PrayerDayAvailability]
+    var maximumLead: Duration = .zero
 
     func prayerDay(_ day: CivilDay, at location: PrayerLocation) -> PrayerDayAvailability {
       answers[day] ?? .unavailable(.noPublishedData)

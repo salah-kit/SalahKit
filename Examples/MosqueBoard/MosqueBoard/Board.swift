@@ -87,6 +87,7 @@ nonisolated struct DeclaredJumuahSource: PrayerSource {
   let timetable: TimetableSource
 
   var expectedKinds: Set<PrayerKind> { timetable.expectedKinds }
+  var maximumLead: Duration { timetable.maximumLead }
 
   func prayerDay(_ day: CivilDay, at location: PrayerLocation) -> PrayerDayAvailability {
     let availability = timetable.prayerDay(day, at: location)

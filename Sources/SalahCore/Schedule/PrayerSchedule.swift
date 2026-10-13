@@ -25,6 +25,9 @@ nonisolated public struct PrayerSchedule: Sendable {
   /// the 400th day after the start's day.
   public static let maximumQueryDays = 400
 
+  /// The largest ``PrayerSource/maximumLead`` the schedule honors, in seconds: 12 hours.
+  static let maximumLeadSeconds: TimeInterval = 12 * 3_600
+
   /// Where the schedule's days come from.
   public let source: any PrayerSource
   /// The location whose time zone defines the schedule's days.
@@ -109,7 +112,7 @@ nonisolated public struct PrayerSchedule: Sendable {
       !day.events.isEmpty
     else { return .unavailable(.invalidData) }
 
-    let spanStart = requested.start(in: zone)
+    let spanStart = requested.start(in: zone).addingTimeInterval(-source.leadSeconds)
     let spanEnd = requested.adding(days: 2).start(in: zone)
     var events: [PrayerEvent] = []
     for event in day.events {

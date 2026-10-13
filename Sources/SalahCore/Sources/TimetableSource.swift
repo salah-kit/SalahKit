@@ -112,6 +112,10 @@ nonisolated public struct TimetableSource: PrayerSource, Codable, Hashable, Send
     self.wallTimeResolution = wallTimeResolution
   }
 
+  /// Zero: a published time is written on its own day or the next (`"00:15+1"`), never before
+  /// its owning day.
+  public var maximumLead: Duration { .zero }
+
   /// The day of the earliest row, if there is one.
   public var firstDay: CivilDay? { rows.first?.day }
 

@@ -3,7 +3,8 @@ import Foundation
 /// Answers one public query, reading each owning day from the source at most once.
 ///
 /// A state at an instant uses its own context: the days from two before the instant's civil
-/// day through the bound's civil day. Evaluating `changesAt` and refresh plans moves that
+/// day through the bound's civil day, or the next day when the source's lead reaches back to
+/// the bound (RFC 0001, section 4.6). Evaluating `changesAt` and refresh plans moves that
 /// context, so the engine keeps the days and day starts it has read, and the few contexts it
 /// built last with their change candidates. Those queries move forward in time, so older
 /// contexts aren't needed again, and a long plan doesn't hold a context for every day.
@@ -11,6 +12,8 @@ nonisolated final class ScheduleEngine {
   let schedule: PrayerSchedule
   private let zone: TimeZone
   private let expectedKinds: Set<PrayerKind>
+  /// How long before its owning day an event can occur, in seconds (section 4.3, rule 4).
+  private let lead: TimeInterval
   private var days: [CivilDay: PrayerDayAvailability] = [:]
   private var starts: [CivilDay: Date] = [:]
   private var contexts: [ContextKey: CachedContext] = [:]
@@ -21,6 +24,7 @@ nonisolated final class ScheduleEngine {
     self.schedule = schedule
     self.zone = schedule.location.timeZone
     self.expectedKinds = schedule.source.expectedKinds
+    self.lead = schedule.source.leadSeconds
   }
 
   /// The civil day that contains `date` in the location's zone.
@@ -50,9 +54,15 @@ nonisolated final class ScheduleEngine {
     return min(max(end, start), max(limit, start))
   }
 
+  /// The last owning day whose events can occur by `bound`: the civil day of `bound`, or a
+  /// later day whose lead reaches back to `bound`.
+  func lastDay(through bound: Date) -> CivilDay {
+    civilDay(containing: Gregorian.clamped(bound.addingTimeInterval(lead)))
+  }
+
   /// The context of a query over `[date, bound]`.
   func context(at date: Date, through bound: Date) -> ScheduleContext {
-    context(first: civilDay(containing: date).adding(days: -2), last: civilDay(containing: bound))
+    context(first: civilDay(containing: date).adding(days: -2), last: lastDay(through: bound))
   }
 
   func context(first: CivilDay, last: CivilDay) -> ScheduleContext {
@@ -60,7 +70,7 @@ nonisolated final class ScheduleEngine {
   }
 
   private func cached(at date: Date, through bound: Date) -> CachedContext {
-    cached(first: civilDay(containing: date).adding(days: -2), last: civilDay(containing: bound))
+    cached(first: civilDay(containing: date).adding(days: -2), last: lastDay(through: bound))
   }
 
   private func cached(first: CivilDay, last: CivilDay) -> CachedContext {
@@ -72,7 +82,7 @@ nonisolated final class ScheduleEngine {
       ScheduleContext(
         days: contextDays, availability: contextDays.map(day),
         starts: (0..<(count + 2)).map { start(of: first.adding(days: $0)) },
-        expectedKinds: expectedKinds))
+        expectedKinds: expectedKinds, lead: lead))
     contexts[key] = cached
     contextOrder.append(key)
     if contextOrder.count > Self.contextCacheLimit {

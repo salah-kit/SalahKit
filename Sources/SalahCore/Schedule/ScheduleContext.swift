@@ -28,9 +28,10 @@ nonisolated struct ScheduleContext {
   ///   - availability: Each day's checked availability, with iqama applied.
   ///   - starts: The start of each day, then of the two days after the last one.
   ///   - expectedKinds: The source's expected kinds.
+  ///   - lead: How long before its owning day an event can occur, in seconds.
   init(
     days: [CivilDay], availability: [PrayerDayAvailability], starts: [Date],
-    expectedKinds: Set<PrayerKind>
+    expectedKinds: Set<PrayerKind>, lead: TimeInterval
   ) {
     let known = availability.map { $0.day?.events ?? [] }
     var windows: [Window] = []
@@ -48,7 +49,7 @@ nonisolated struct ScheduleContext {
 
       var grouped: [WindowKey: Set<PrayerKind>] = [:]
       for (kind, reason) in missing {
-        var lower = starts[index]
+        var lower = starts[index].addingTimeInterval(-lead)
         var upper = starts[index + 2]
         for event in known[index] {
           if event.kind < kind { lower = max(lower, event.time) }
