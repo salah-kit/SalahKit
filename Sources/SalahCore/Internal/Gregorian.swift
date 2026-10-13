@@ -3,18 +3,23 @@ import Foundation
 /// Proleptic Gregorian day arithmetic without `Calendar`, so day math is exact and identical on
 /// every platform. The algorithms are Howard Hinnant's `days_from_civil` and `civil_from_days`.
 nonisolated enum Gregorian {
+  /// The largest number of days from 1970-01-01 the arithmetic works with, about 2.7 million
+  /// years. Larger values are clamped to it, so nonsensical input can't overflow.
+  static let dayLimit = 1_000_000_000
+
   /// Days from 1970-01-01 to the given date. Months outside 1...12 roll into adjacent years,
   /// and days outside the month roll into adjacent months.
   static func daysSinceEpoch(year: Int, month: Int, day: Int) -> Int {
-    let monthIndex = month - 1
-    let normalizedYear = year + floorDivision(monthIndex, 12)
+    let monthIndex = clamped(month, 30_000_000) - 1
+    let normalizedYear = clamped(year, 2_500_000) + floorDivision(monthIndex, 12)
     let normalizedMonth = floorModulo(monthIndex, 12) + 1
-    return daysFromCivil(normalizedYear, normalizedMonth, 1) + (day - 1)
+    return clamped(
+      daysFromCivil(normalizedYear, normalizedMonth, 1) + (clamped(day, dayLimit) - 1), dayLimit)
   }
 
   /// The date `days` days after 1970-01-01.
   static func date(daysSinceEpoch days: Int) -> (year: Int, month: Int, day: Int) {
-    let shifted = days + 719_468
+    let shifted = clamped(days, dayLimit) + 719_468
     let era = (shifted >= 0 ? shifted : shifted - 146_096) / 146_097
     let dayOfEra = shifted - era * 146_097
     let yearOfEra =
@@ -25,6 +30,25 @@ nonisolated enum Gregorian {
     let month = shiftedMonth < 10 ? shiftedMonth + 3 : shiftedMonth - 9
     let year = yearOfEra + era * 400 + (month <= 2 ? 1 : 0)
     return (year, month, day)
+  }
+
+  /// Seconds since 1970 within the day limit; not-a-number counts as zero.
+  static func clampedSeconds(_ seconds: TimeInterval) -> TimeInterval {
+    let limit = TimeInterval(dayLimit) * 86_400
+    guard !seconds.isNaN else { return 0 }
+    return min(max(seconds, -limit), limit)
+  }
+
+  static func clamped(_ value: Int, _ limit: Int) -> Int {
+    min(max(value, -limit), limit)
+  }
+
+  /// `date` within the day limit; a date that isn't a number counts as 1970-01-01. Dates in
+  /// range come back unchanged.
+  static func clamped(_ date: Date) -> Date {
+    let seconds = date.timeIntervalSince1970
+    let clamped = clampedSeconds(seconds)
+    return clamped == seconds ? date : Date(timeIntervalSince1970: clamped)
   }
 
   static func isLeapYear(_ year: Int) -> Bool {

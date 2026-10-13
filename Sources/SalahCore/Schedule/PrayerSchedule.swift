@@ -69,7 +69,8 @@ nonisolated public struct PrayerSchedule: Sendable {
   /// ``maximumQueryDays`` is clamped.
   public func events(from start: Date, through end: Date) -> ScheduleEvents {
     let engine = ScheduleEngine(schedule: self)
-    let end = engine.clampedEnd(from: start, through: end)
+    let start = Gregorian.clamped(start)
+    let end = engine.clampedEnd(from: start, through: Gregorian.clamped(end))
     let context = engine.context(at: start, through: end)
     return ScheduleEvents(
       events: context.events.filter { $0.time >= start && $0.time <= end },
@@ -90,8 +91,10 @@ nonisolated public struct PrayerSchedule: Sendable {
     at date: Date, through end: Date, policy: StatePolicy = StatePolicy()
   ) -> ScheduleState {
     let engine = ScheduleEngine(schedule: self)
+    let date = Gregorian.clamped(date)
     return engine.state(
-      at: date, through: engine.clampedEnd(from: date, through: end), policy: policy)
+      at: date, through: engine.clampedEnd(from: date, through: Gregorian.clamped(end)),
+      policy: policy)
   }
 
   /// The source's answer for `requested`, checked against the source contract.

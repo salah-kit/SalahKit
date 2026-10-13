@@ -83,7 +83,7 @@ nonisolated enum InstantText {
 
   /// Formats to the nearest millisecond, so text parsed from milliseconds round-trips exactly.
   static func format(_ date: Date) -> String {
-    let milliseconds = Int((date.timeIntervalSince1970 * 1_000).rounded())
+    let milliseconds = Int((Gregorian.clampedSeconds(date.timeIntervalSince1970) * 1_000).rounded())
     let seconds = Gregorian.floorDivision(milliseconds, 1_000)
     let millisecond = Gregorian.floorModulo(milliseconds, 1_000)
     let days = Gregorian.floorDivision(seconds, 86_400)

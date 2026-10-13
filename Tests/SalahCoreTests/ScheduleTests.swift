@@ -155,6 +155,27 @@ import Testing
     #expect(plan.validUntil == start.addingTimeInterval(95))
   }
 
+  @Test func nonsensicalInputDoesNotTrap() throws {
+    let nan = Date(timeIntervalSince1970: .nan)
+    let infinity = Date(timeIntervalSince1970: .infinity)
+    let huge = CivilDay(year: .max, month: .max, day: .max)
+    let tiny = CivilDay(year: .min, month: .min, day: .min)
+    _ = (
+      CivilDay(containing: nan, in: Self.london), CivilDay(containing: infinity, in: Self.london)
+    )
+    _ = (huge.start(in: Self.london), huge.interval(in: Self.london), huge.weekday)
+    _ = (huge.adding(days: .max).description, tiny.adding(days: .min).description)
+    _ = PrayerEvent(scheduleDay: huge, kind: .fajr, time: infinity).id
+    _ = Self.schedule.state(at: nan, through: infinity)
+    _ = Self.schedule.state(at: Date(timeIntervalSince1970: -.infinity), through: nan)
+    _ = Self.schedule.events(from: nan, through: .distantFuture)
+    _ = Self.schedule.events(from: .distantPast, through: infinity)
+    _ = try? Self.schedule.refreshPlan(from: nan, through: infinity, limit: 3)
+    #expect(throws: RefreshPlanError.nonPositiveHorizon) {
+      try Self.schedule.refreshPlan(from: infinity, through: nan)
+    }
+  }
+
   @Test func stateAccessorsMatchTheCase() {
     let noon = Self.firstDay.start(in: Self.singapore).addingTimeInterval(12 * 3_600)
     let state = Self.schedule.state(at: noon, through: noon.addingTimeInterval(86_400))

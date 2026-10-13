@@ -72,7 +72,8 @@ nonisolated extension PrayerSchedule {
     from start: Date, through end: Date, strategy: RefreshStrategy = .stateChanges,
     policy: StatePolicy = StatePolicy(), limit: Int = 96
   ) throws(RefreshPlanError) -> RefreshPlan {
-    guard end > start else { throw .nonPositiveHorizon }
+    let start = Gregorian.clamped(start)
+    guard Gregorian.clamped(end) > start else { throw .nonPositiveHorizon }
     guard limit >= 2 else { throw .limitTooSmall }
     if case .steps(let fine, let coarse, let window) = strategy,
       fine <= .zero || coarse <= .zero || window < .zero
@@ -81,7 +82,8 @@ nonisolated extension PrayerSchedule {
     }
 
     let engine = ScheduleEngine(schedule: self)
-    let horizon = DateInterval(start: start, end: engine.clampedEnd(from: start, through: end))
+    let horizon = DateInterval(
+      start: start, end: engine.clampedEnd(from: start, through: Gregorian.clamped(end)))
     let end = horizon.end
     let bound = engine.start(of: engine.civilDay(containing: end).adding(days: 2))
     var states: [Date: ScheduleState] = [:]

@@ -42,7 +42,7 @@ nonisolated public struct CivilDay: Codable, Hashable, Comparable, Sendable,
   /// The civil day that contains `date` in `timeZone`.
   public init(containing date: Date, in timeZone: TimeZone) {
     let seconds =
-      Int((date.timeIntervalSince1970).rounded(.down))
+      Int(Gregorian.clampedSeconds(date.timeIntervalSince1970).rounded(.down))
       + timeZone.secondsFromGMT(for: date)
     let civil = Gregorian.date(daysSinceEpoch: Gregorian.floorDivision(seconds, 86_400))
     self.init(year: civil.year, month: civil.month, day: civil.day)
@@ -68,7 +68,8 @@ nonisolated public struct CivilDay: Codable, Hashable, Comparable, Sendable,
 
   /// The day `days` days after this one (or before it, for a negative count).
   public func adding(days: Int) -> CivilDay {
-    let civil = Gregorian.date(daysSinceEpoch: daysSinceEpoch + days)
+    let (sum, overflow) = daysSinceEpoch.addingReportingOverflow(days)
+    let civil = Gregorian.date(daysSinceEpoch: overflow ? (days > 0 ? Int.max : Int.min) : sum)
     return CivilDay(year: civil.year, month: civil.month, day: civil.day)
   }
 
