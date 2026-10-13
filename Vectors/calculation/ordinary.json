@@ -1,0 +1,979 @@
+{
+  "schemaVersion": 1,
+  "description": "Ordinary calculated days at several places and methods: complete days whose instants are SalahTimes' unchanged, and the day, dayContaining, events and state queries over them.",
+  "vectors": [
+    {
+      "id": "calculation.ordinary.day.makkah-umm-al-qura",
+      "description": "Makkah, Umm al-Qura, 2026-10-13: a complete day of six events at SalahTimes' instants, ordinary and without iqama; Isha is Maghrib plus 90 minutes.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 5; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-10-13"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-10-13",
+            "kind": "fajr",
+            "time": "2026-10-13T04:59:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "sunrise",
+            "time": "2026-10-13T06:16:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "dhuhr",
+            "time": "2026-10-13T12:07:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "asr",
+            "time": "2026-10-13T15:28:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "maghrib",
+            "time": "2026-10-13T17:58:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "isha",
+            "time": "2026-10-13T19:28:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordinary.day.cairo-egyptian",
+      "description": "Cairo, Egyptian General Authority of Survey (19.5° and 17.5°), 2026-01-15: a complete winter day.",
+      "provenance": "RFC 0002 §4.2, §4.3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 30.0444,
+          "longitude": 31.2357,
+          "timeZone": "Africa/Cairo",
+          "countryCode": "EG",
+          "name": "Cairo"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 19.5},
+            "isha": {"angle": 17.5},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-01-15"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-01-15",
+            "kind": "fajr",
+            "time": "2026-01-15T05:21:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-01-15",
+            "kind": "sunrise",
+            "time": "2026-01-15T06:52:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-01-15",
+            "kind": "dhuhr",
+            "time": "2026-01-15T12:04:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-01-15",
+            "kind": "asr",
+            "time": "2026-01-15T14:58:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-01-15",
+            "kind": "maghrib",
+            "time": "2026-01-15T17:17:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-01-15",
+            "kind": "isha",
+            "time": "2026-01-15T18:39:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordinary.day.istanbul-diyanet",
+      "description": "Istanbul, Diyanet, 2026-06-21: the method's adjustments (sunrise −7, Dhuhr +5, Asr +4, Maghrib +7 minutes) pass through in the settings and the instants.",
+      "provenance": "RFC 0002 §4.2, §4.3; RFC 0002 §4.1 (every parameter passes through); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 41.0082,
+          "longitude": 28.9784,
+          "timeZone": "Europe/Istanbul",
+          "countryCode": "TR",
+          "name": "Istanbul"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "methodAdjustments": {"sunrise": -7, "dhuhr": 5, "asr": 4, "maghrib": 7},
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-06-21"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-06-21",
+            "kind": "fajr",
+            "time": "2026-06-21T03:24:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "sunrise",
+            "time": "2026-06-21T05:25:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "dhuhr",
+            "time": "2026-06-21T13:11:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "asr",
+            "time": "2026-06-21T17:11:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "maghrib",
+            "time": "2026-06-21T20:47:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "isha",
+            "time": "2026-06-21T22:38:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordinary.day.london-moonsighting-committee",
+      "description": "London, Moonsighting Committee, 2026-12-21: the seasonal Fajr and Isha rules with their method adjustments.",
+      "provenance": "RFC 0002 §4.2, §4.3; RFC 0002 §4.1; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 51.5074,
+          "longitude": -0.1278,
+          "timeZone": "Europe/London",
+          "countryCode": "GB",
+          "name": "London"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": "moonsightingCommittee",
+            "isha": {"moonsightingCommittee": "general"},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "methodAdjustments": {"dhuhr": 5, "maghrib": 3},
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-12-21"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-12-21",
+            "kind": "fajr",
+            "time": "2026-12-21T06:22:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-12-21",
+            "kind": "sunrise",
+            "time": "2026-12-21T08:04:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-12-21",
+            "kind": "dhuhr",
+            "time": "2026-12-21T12:04:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-12-21",
+            "kind": "asr",
+            "time": "2026-12-21T13:38:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-12-21",
+            "kind": "maghrib",
+            "time": "2026-12-21T15:56:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-12-21",
+            "kind": "isha",
+            "time": "2026-12-21T17:32:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordinary.day.jakarta-kemenag",
+      "description": "Jakarta, Kemenag, 2026-04-01: rounding up, a Maghrib angle of 1° and method adjustments on every kind.",
+      "provenance": "RFC 0002 §4.2, §4.3; RFC 0002 §4.1; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": -6.2088,
+          "longitude": 106.8456,
+          "timeZone": "Asia/Jakarta",
+          "countryCode": "ID",
+          "name": "Jakarta"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 20},
+            "isha": {"angle": 18},
+            "maghrib": {"angle": 1},
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "methodAdjustments": {"fajr": 2, "sunrise": -3, "dhuhr": 3, "asr": 2, "maghrib": 2, "isha": 2},
+            "rounding": "up"
+          }
+        },
+        "query": {"type": "day", "day": "2026-04-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-04-01",
+            "kind": "fajr",
+            "time": "2026-04-01T04:40:00+07:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-04-01",
+            "kind": "sunrise",
+            "time": "2026-04-01T05:53:00+07:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-04-01",
+            "kind": "dhuhr",
+            "time": "2026-04-01T12:00:00+07:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-04-01",
+            "kind": "asr",
+            "time": "2026-04-01T15:14:00+07:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-04-01",
+            "kind": "maghrib",
+            "time": "2026-04-01T18:01:00+07:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-04-01",
+            "kind": "isha",
+            "time": "2026-04-01T19:10:00+07:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordinary.day.new-york-isna-hanafi",
+      "description": "New York, ISNA with Hanafi Asr (CalculationSettings(method: .isna, madhab: .hanafi)), 2026-09-22.",
+      "provenance": "RFC 0002 §4.2, §4.3; RFC 0002 §4.1 (init(method:madhab:ramadanIsha:)); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 40.7128,
+          "longitude": -74.006,
+          "timeZone": "America/New_York",
+          "countryCode": "US",
+          "name": "New York"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 15},
+            "isha": {"angle": 15},
+            "maghrib": "sunset",
+            "madhab": "hanafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-09-22"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-09-22",
+            "kind": "fajr",
+            "time": "2026-09-22T05:28:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-09-22",
+            "kind": "sunrise",
+            "time": "2026-09-22T06:44:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-09-22",
+            "kind": "dhuhr",
+            "time": "2026-09-22T12:49:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-09-22",
+            "kind": "asr",
+            "time": "2026-09-22T17:05:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-09-22",
+            "kind": "maghrib",
+            "time": "2026-09-22T18:53:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-09-22",
+            "kind": "isha",
+            "time": "2026-09-22T20:08:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordinary.day.singapore-muis",
+      "description": "Singapore, MUIS, 2026-03-20: rounding up and a one-minute Dhuhr adjustment.",
+      "provenance": "RFC 0002 §4.2, §4.3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 1.3521,
+          "longitude": 103.8198,
+          "timeZone": "Asia/Singapore",
+          "countryCode": "SG",
+          "name": "Singapore"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 20},
+            "isha": {"angle": 18},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "methodAdjustments": {"dhuhr": 1},
+            "rounding": "up"
+          }
+        },
+        "query": {"type": "day", "day": "2026-03-20"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": true,
+        "events": [
+          {
+            "day": "2026-03-20",
+            "kind": "fajr",
+            "time": "2026-03-20T05:53:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-20",
+            "kind": "sunrise",
+            "time": "2026-03-20T07:10:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-20",
+            "kind": "dhuhr",
+            "time": "2026-03-20T13:14:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-20",
+            "kind": "asr",
+            "time": "2026-03-20T16:16:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-20",
+            "kind": "maghrib",
+            "time": "2026-03-20T19:16:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-20",
+            "kind": "isha",
+            "time": "2026-03-20T20:25:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordinary.day.buenos-aires-mwl",
+      "description": "Buenos Aires, Muslim World League, 2026-06-21: a southern-hemisphere winter day.",
+      "provenance": "RFC 0002 §4.2, §4.3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": -34.6037,
+          "longitude": -58.3816,
+          "timeZone": "America/Argentina/Buenos_Aires",
+          "countryCode": "AR",
+          "name": "Buenos Aires"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-06-21"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-06-21",
+            "kind": "fajr",
+            "time": "2026-06-21T06:30:00-03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "sunrise",
+            "time": "2026-06-21T08:00:00-03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "dhuhr",
+            "time": "2026-06-21T12:55:00-03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "asr",
+            "time": "2026-06-21T15:33:00-03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "maghrib",
+            "time": "2026-06-21T17:50:00-03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "isha",
+            "time": "2026-06-21T19:16:00-03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordinary.day.makkah-defaulted-parameters",
+      "description": "Makkah, settings whose parameters give only fajr and isha (18° and 17°): every other key decodes as SalahTimes' default (sunset Maghrib, Shafi'i, recommended rule, nearest minute), the same day as the Muslim World League preset.",
+      "provenance": "RFC 0002 §4.1 (missing parameter keys decode as their defaults); RFC 0002 §4.2, §4.3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {"parameters": {"fajr": {"angle": 18}, "isha": {"angle": 17}}},
+        "query": {"type": "day", "day": "2026-10-13"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-10-13",
+            "kind": "fajr",
+            "time": "2026-10-13T05:02:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "sunrise",
+            "time": "2026-10-13T06:16:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "dhuhr",
+            "time": "2026-10-13T12:07:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "asr",
+            "time": "2026-10-13T15:28:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "maghrib",
+            "time": "2026-10-13T17:58:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "isha",
+            "time": "2026-10-13T19:08:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordinary.day.makkah-user-adjustments-rounding-up",
+      "description": "Makkah, Umm al-Qura with user adjustments (Fajr −2, Isha +5 minutes) and rounding up, 2026-10-12: the adjusted, rounded instants come through unchanged.",
+      "provenance": "RFC 0002 §4.1, §4.3 step 4 (kept at SalahTimes' instant, unchanged); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "adjustments": {"fajr": -2, "isha": 5},
+            "rounding": "up"
+          }
+        },
+        "query": {"type": "day", "day": "2026-10-12"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-10-12",
+            "kind": "fajr",
+            "time": "2026-10-12T04:58:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-12",
+            "kind": "sunrise",
+            "time": "2026-10-12T06:16:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-12",
+            "kind": "dhuhr",
+            "time": "2026-10-12T12:08:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-12",
+            "kind": "asr",
+            "time": "2026-10-12T15:29:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-12",
+            "kind": "maghrib",
+            "time": "2026-10-12T17:59:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-12",
+            "kind": "isha",
+            "time": "2026-10-12T19:34:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordinary.day-containing.makkah-noon",
+      "description": "dayContaining at 12:00 on 2026-10-13 in Makkah is the calculated day 2026-10-13.",
+      "provenance": "RFC 0001 §4.6 (day(containing:)); RFC 0002 §4.2, §4.3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "dayContaining", "date": "2026-10-13T12:00:00+03:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-10-13",
+            "kind": "fajr",
+            "time": "2026-10-13T04:59:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "sunrise",
+            "time": "2026-10-13T06:16:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "dhuhr",
+            "time": "2026-10-13T12:07:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "asr",
+            "time": "2026-10-13T15:28:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "maghrib",
+            "time": "2026-10-13T17:58:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "isha",
+            "time": "2026-10-13T19:28:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordinary.events.cairo-whole-day",
+      "description": "Events of Cairo's 2026-01-15, midnight to midnight: the six events and complete coverage. The neighboring days are complete, so no window appears.",
+      "provenance": "RFC 0001 §4.6 (events, coverage); RFC 0002 §4.2, §4.3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 30.0444,
+          "longitude": 31.2357,
+          "timeZone": "Africa/Cairo",
+          "countryCode": "EG",
+          "name": "Cairo"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 19.5},
+            "isha": {"angle": 17.5},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {
+          "type": "events",
+          "from": "2026-01-15T00:00:00+02:00",
+          "through": "2026-01-16T00:00:00+02:00"
+        }
+      },
+      "expected": {
+        "events": [
+          {
+            "day": "2026-01-15",
+            "kind": "fajr",
+            "time": "2026-01-15T05:21:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-01-15",
+            "kind": "sunrise",
+            "time": "2026-01-15T06:52:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-01-15",
+            "kind": "dhuhr",
+            "time": "2026-01-15T12:04:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-01-15",
+            "kind": "asr",
+            "time": "2026-01-15T14:58:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-01-15",
+            "kind": "maghrib",
+            "time": "2026-01-15T17:17:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-01-15",
+            "kind": "isha",
+            "time": "2026-01-15T18:39:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ],
+        "coverage": {
+          "requested": ["2026-01-15T00:00:00+02:00", "2026-01-16T00:00:00+02:00"],
+          "known": [["2026-01-15T00:00:00+02:00", "2026-01-16T00:00:00+02:00"]],
+          "gaps": []
+        }
+      }
+    },
+    {
+      "id": "calculation.ordinary.state.makkah-before-dhuhr",
+      "description": "State at 11:55 on 2026-10-13 in Makkah: previous is sunrise, latestPrayer Fajr, next and nextPrayer Dhuhr (12:07), approaching since 11:52; it changes at Dhuhr.",
+      "provenance": "RFC 0001 §4.7; RFC 0002 §4.2, §4.3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-10-13T11:55:00+03:00", "through": "2026-10-15T00:00:00+03:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {
+          "day": "2026-10-13",
+          "kind": "sunrise",
+          "time": "2026-10-13T06:16:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "latestPrayer": {
+          "day": "2026-10-13",
+          "kind": "fajr",
+          "time": "2026-10-13T04:59:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "next": {
+          "day": "2026-10-13",
+          "kind": "dhuhr",
+          "time": "2026-10-13T12:07:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "nextPrayer": {
+          "day": "2026-10-13",
+          "kind": "dhuhr",
+          "time": "2026-10-13T12:07:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "justStarted": null,
+        "isApproaching": true,
+        "changesAt": "2026-10-13T12:07:00+03:00",
+        "coverage": {
+          "requested": ["2026-10-13T11:55:00+03:00", "2026-10-15T00:00:00+03:00"],
+          "known": [["2026-10-13T11:55:00+03:00", "2026-10-15T00:00:00+03:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-10-13/fajr": "passed",
+          "2026-10-13/sunrise": "passed",
+          "2026-10-13/dhuhr": "nextApproaching",
+          "2026-10-13/asr": "upcoming",
+          "2026-10-14/fajr": "upcoming"
+        }
+      }
+    }
+  ]
+}

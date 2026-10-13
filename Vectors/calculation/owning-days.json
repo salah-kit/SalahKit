@@ -1,0 +1,948 @@
+{
+  "schemaVersion": 1,
+  "description": "Owning days across midnight in both directions: an Isha after midnight that belongs to the evening before (Kashgar), and a Fajr before midnight that belongs to the next day within the 12-hour lead (Kazan, and a user adjustment at Makkah).",
+  "vectors": [
+    {
+      "id": "calculation.owning-days.day.kashgar-isha-after-midnight",
+      "description": "Kashgar on China Standard Time, Muslim World League, 2026-06-21: Isha is at 00:19 on 06-22 and belongs to 06-21. The day is complete.",
+      "provenance": "RFC 0002 §4.2, §4.3; RFC 0002 §4.4; RFC 0001 §4.3 rule 4; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 39.4704,
+          "longitude": 75.9898,
+          "timeZone": "Asia/Shanghai",
+          "countryCode": "CN",
+          "name": "Kashgar"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-06-21"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-06-21",
+            "kind": "fajr",
+            "time": "2026-06-21T05:28:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "sunrise",
+            "time": "2026-06-21T07:29:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "dhuhr",
+            "time": "2026-06-21T14:58:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "asr",
+            "time": "2026-06-21T18:55:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "maghrib",
+            "time": "2026-06-21T22:27:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "isha",
+            "time": "2026-06-22T00:19:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.owning-days.day-containing.kashgar-0010",
+      "description": "dayContaining at 00:10 on 2026-06-22 in Kashgar is 06-22's day (Fajr 05:28 onward), not 06-21's overnight Isha.",
+      "provenance": "RFC 0001 §4.6 (day(containing:) is the civil date); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 39.4704,
+          "longitude": 75.9898,
+          "timeZone": "Asia/Shanghai",
+          "countryCode": "CN",
+          "name": "Kashgar"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "dayContaining", "date": "2026-06-22T00:10:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-06-22",
+            "kind": "fajr",
+            "time": "2026-06-22T05:28:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-22",
+            "kind": "sunrise",
+            "time": "2026-06-22T07:29:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-22",
+            "kind": "dhuhr",
+            "time": "2026-06-22T14:58:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-22",
+            "kind": "asr",
+            "time": "2026-06-22T18:56:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-22",
+            "kind": "maghrib",
+            "time": "2026-06-22T22:27:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-22",
+            "kind": "isha",
+            "time": "2026-06-23T00:19:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.owning-days.events.kashgar-across-midnight",
+      "description": "Events from 22:00 on 06-21 to 01:00 on 06-22 in Kashgar: 06-21's Maghrib (22:27) and Isha (00:19), both owned by 06-21; coverage is complete.",
+      "provenance": "RFC 0001 §4.6 (events); RFC 0002 §4.2, §4.3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 39.4704,
+          "longitude": 75.9898,
+          "timeZone": "Asia/Shanghai",
+          "countryCode": "CN",
+          "name": "Kashgar"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {
+          "type": "events",
+          "from": "2026-06-21T22:00:00+08:00",
+          "through": "2026-06-22T01:00:00+08:00"
+        }
+      },
+      "expected": {
+        "events": [
+          {
+            "day": "2026-06-21",
+            "kind": "maghrib",
+            "time": "2026-06-21T22:27:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "isha",
+            "time": "2026-06-22T00:19:00+08:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ],
+        "coverage": {
+          "requested": ["2026-06-21T22:00:00+08:00", "2026-06-22T01:00:00+08:00"],
+          "known": [["2026-06-21T22:00:00+08:00", "2026-06-22T01:00:00+08:00"]],
+          "gaps": []
+        }
+      }
+    },
+    {
+      "id": "calculation.owning-days.state.kashgar-0010",
+      "description": "State at 00:10 on 06-22 in Kashgar: previous is 06-21's Maghrib, next 06-21's Isha at 00:19, approaching since 00:04; 06-22's Fajr is upcoming.",
+      "provenance": "RFC 0001 §4.7; RFC 0002 §4.2, §4.3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 39.4704,
+          "longitude": 75.9898,
+          "timeZone": "Asia/Shanghai",
+          "countryCode": "CN",
+          "name": "Kashgar"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-06-22T00:10:00+08:00", "through": "2026-06-24T00:00:00+08:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {
+          "day": "2026-06-21",
+          "kind": "maghrib",
+          "time": "2026-06-21T22:27:00+08:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "latestPrayer": {
+          "day": "2026-06-21",
+          "kind": "maghrib",
+          "time": "2026-06-21T22:27:00+08:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "next": {
+          "day": "2026-06-21",
+          "kind": "isha",
+          "time": "2026-06-22T00:19:00+08:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "nextPrayer": {
+          "day": "2026-06-21",
+          "kind": "isha",
+          "time": "2026-06-22T00:19:00+08:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "justStarted": null,
+        "isApproaching": true,
+        "changesAt": "2026-06-22T00:19:00+08:00",
+        "coverage": {
+          "requested": ["2026-06-22T00:10:00+08:00", "2026-06-24T00:00:00+08:00"],
+          "known": [["2026-06-22T00:10:00+08:00", "2026-06-24T00:00:00+08:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-06-21/maghrib": "passed",
+          "2026-06-21/isha": "nextApproaching",
+          "2026-06-22/fajr": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "calculation.owning-days.day.kazan-fajr-before-midnight",
+      "description": "Kazan on Moscow time, Muslim World League with the middle-of-the-night rule, 2026-06-20: Fajr falls at 23:45 on 06-19, within the 12-hour lead, and belongs to 06-20. Isha at 23:45 equals 06-21's Fajr, which stays (equal instants are allowed across days). The day is complete.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 3 (equal instants stay); RFC 0001 §4.3 rule 4, §4.6 (context reads civil(b + lead)), §10 #1; RFC 0002 §4.4; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 55.7963,
+          "longitude": 49.1088,
+          "timeZone": "Europe/Moscow",
+          "countryCode": "RU",
+          "name": "Kazan"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "middleOfTheNight",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-06-20"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-06-20",
+            "kind": "fajr",
+            "time": "2026-06-19T23:45:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-20",
+            "kind": "sunrise",
+            "time": "2026-06-20T02:58:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-20",
+            "kind": "dhuhr",
+            "time": "2026-06-20T11:45:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-20",
+            "kind": "asr",
+            "time": "2026-06-20T16:17:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-20",
+            "kind": "maghrib",
+            "time": "2026-06-20T20:32:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-20",
+            "kind": "isha",
+            "time": "2026-06-20T23:45:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.owning-days.day.kazan-2026-06-19",
+      "description": "Kazan, 2026-06-19: Fajr at 23:45 on 06-18 and Isha at 23:45, equal to 06-20's Fajr. Complete.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 3; RFC 0001 §4.3 rule 4, §4.6 (context reads civil(b + lead)), §10 #1; RFC 0002 §4.4; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 55.7963,
+          "longitude": 49.1088,
+          "timeZone": "Europe/Moscow",
+          "countryCode": "RU",
+          "name": "Kazan"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "middleOfTheNight",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-06-19"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": true,
+        "events": [
+          {
+            "day": "2026-06-19",
+            "kind": "fajr",
+            "time": "2026-06-18T23:45:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-19",
+            "kind": "sunrise",
+            "time": "2026-06-19T02:58:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-19",
+            "kind": "dhuhr",
+            "time": "2026-06-19T11:45:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-19",
+            "kind": "asr",
+            "time": "2026-06-19T16:17:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-19",
+            "kind": "maghrib",
+            "time": "2026-06-19T20:32:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-19",
+            "kind": "isha",
+            "time": "2026-06-19T23:45:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.owning-days.events.kazan-before-midnight",
+      "description": "Events from 23:00 to 23:59 on 06-19 in Kazan: 06-19's Isha and 06-20's Fajr, both at 23:45, in events order (owning day breaks the tie). The query ends before midnight, but the context reads up to civil(b + 12 h) = 06-20.",
+      "provenance": "RFC 0001 §4.6 (context with a lead, events order); RFC 0001 §4.3 rule 4, §4.6 (context reads civil(b + lead)), §10 #1; RFC 0002 §4.4; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 55.7963,
+          "longitude": 49.1088,
+          "timeZone": "Europe/Moscow",
+          "countryCode": "RU",
+          "name": "Kazan"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "middleOfTheNight",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {
+          "type": "events",
+          "from": "2026-06-19T23:00:00+03:00",
+          "through": "2026-06-19T23:59:00+03:00"
+        }
+      },
+      "expected": {
+        "events": [
+          {
+            "day": "2026-06-19",
+            "kind": "isha",
+            "time": "2026-06-19T23:45:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-20",
+            "kind": "fajr",
+            "time": "2026-06-19T23:45:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ],
+        "coverage": {
+          "requested": ["2026-06-19T23:00:00+03:00", "2026-06-19T23:59:00+03:00"],
+          "known": [["2026-06-19T23:00:00+03:00", "2026-06-19T23:59:00+03:00"]],
+          "gaps": []
+        }
+      }
+    },
+    {
+      "id": "calculation.owning-days.day-containing.kazan-2350",
+      "description": "dayContaining at 23:50 on 06-19 in Kazan is 06-19's day, although 06-20's Fajr has already begun.",
+      "provenance": "RFC 0001 §4.6 (day(containing:)); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 55.7963,
+          "longitude": 49.1088,
+          "timeZone": "Europe/Moscow",
+          "countryCode": "RU",
+          "name": "Kazan"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "middleOfTheNight",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "dayContaining", "date": "2026-06-19T23:50:00+03:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": true,
+        "events": [
+          {
+            "day": "2026-06-19",
+            "kind": "fajr",
+            "time": "2026-06-18T23:45:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-19",
+            "kind": "sunrise",
+            "time": "2026-06-19T02:58:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-19",
+            "kind": "dhuhr",
+            "time": "2026-06-19T11:45:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-19",
+            "kind": "asr",
+            "time": "2026-06-19T16:17:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-19",
+            "kind": "maghrib",
+            "time": "2026-06-19T20:32:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-19",
+            "kind": "isha",
+            "time": "2026-06-19T23:45:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.owning-days.state.kazan-2320",
+      "description": "State at 23:20 on 06-19 in Kazan: next and nextPrayer are 06-19's Isha (23:45), which comes first of the two events at 23:45 in events order; not yet approaching (23:30).",
+      "provenance": "RFC 0001 §4.7 (ties follow the events order); RFC 0001 §4.3 rule 4, §4.6 (context reads civil(b + lead)), §10 #1; RFC 0002 §4.4; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 55.7963,
+          "longitude": 49.1088,
+          "timeZone": "Europe/Moscow",
+          "countryCode": "RU",
+          "name": "Kazan"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "middleOfTheNight",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-06-19T23:20:00+03:00", "through": "2026-06-21T00:00:00+03:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {
+          "day": "2026-06-19",
+          "kind": "maghrib",
+          "time": "2026-06-19T20:32:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "latestPrayer": {
+          "day": "2026-06-19",
+          "kind": "maghrib",
+          "time": "2026-06-19T20:32:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "next": {
+          "day": "2026-06-19",
+          "kind": "isha",
+          "time": "2026-06-19T23:45:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "nextPrayer": {
+          "day": "2026-06-19",
+          "kind": "isha",
+          "time": "2026-06-19T23:45:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-06-19T23:30:00+03:00",
+        "coverage": {
+          "requested": ["2026-06-19T23:20:00+03:00", "2026-06-21T00:00:00+03:00"],
+          "known": [["2026-06-19T23:20:00+03:00", "2026-06-21T00:00:00+03:00"]],
+          "gaps": []
+        },
+        "statuses": {"2026-06-19/maghrib": "passed", "2026-06-19/isha": "next", "2026-06-20/fajr": "upcoming"}
+      }
+    },
+    {
+      "id": "calculation.owning-days.state.kazan-2345",
+      "description": "State at 23:45 on 06-19 in Kazan, the instant of 06-19's Isha and 06-20's Fajr: previous and latestPrayer are 06-20's Fajr, the later of the tie in events order, and it has just started; next is 06-20's sunrise (02:58).",
+      "provenance": "RFC 0001 §4.7 (previous: the latest event, ties by events order; justStarted); RFC 0001 §4.3 rule 4, §4.6 (context reads civil(b + lead)), §10 #1; RFC 0002 §4.4; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 55.7963,
+          "longitude": 49.1088,
+          "timeZone": "Europe/Moscow",
+          "countryCode": "RU",
+          "name": "Kazan"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "middleOfTheNight",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-06-19T23:45:00+03:00", "through": "2026-06-21T00:00:00+03:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {
+          "day": "2026-06-20",
+          "kind": "fajr",
+          "time": "2026-06-19T23:45:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "latestPrayer": {
+          "day": "2026-06-20",
+          "kind": "fajr",
+          "time": "2026-06-19T23:45:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "next": {
+          "day": "2026-06-20",
+          "kind": "sunrise",
+          "time": "2026-06-20T02:58:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "nextPrayer": {
+          "day": "2026-06-20",
+          "kind": "dhuhr",
+          "time": "2026-06-20T11:45:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "justStarted": {
+          "day": "2026-06-20",
+          "kind": "fajr",
+          "time": "2026-06-19T23:45:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "isApproaching": false,
+        "changesAt": "2026-06-20T00:00:00+03:00",
+        "coverage": {
+          "requested": ["2026-06-19T23:45:00+03:00", "2026-06-21T00:00:00+03:00"],
+          "known": [["2026-06-19T23:45:00+03:00", "2026-06-21T00:00:00+03:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-06-19/isha": "passed",
+          "2026-06-20/fajr": "justStarted",
+          "2026-06-20/sunrise": "next",
+          "2026-06-20/dhuhr": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "calculation.owning-days.state.kazan-0030",
+      "description": "State at 00:30 on 06-20 in Kazan: today's Fajr began 45 minutes before midnight, so previous and latestPrayer are 06-20's Fajr; its just-started window ended at 00:00. Next is sunrise.",
+      "provenance": "RFC 0001 §4.7; RFC 0001 §4.3 rule 4, §4.6 (context reads civil(b + lead)), §10 #1; RFC 0002 §4.4; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 55.7963,
+          "longitude": 49.1088,
+          "timeZone": "Europe/Moscow",
+          "countryCode": "RU",
+          "name": "Kazan"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "middleOfTheNight",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-06-20T00:30:00+03:00", "through": "2026-06-22T00:00:00+03:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {
+          "day": "2026-06-20",
+          "kind": "fajr",
+          "time": "2026-06-19T23:45:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "latestPrayer": {
+          "day": "2026-06-20",
+          "kind": "fajr",
+          "time": "2026-06-19T23:45:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "next": {
+          "day": "2026-06-20",
+          "kind": "sunrise",
+          "time": "2026-06-20T02:58:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "nextPrayer": {
+          "day": "2026-06-20",
+          "kind": "dhuhr",
+          "time": "2026-06-20T11:45:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-06-20T02:58:00+03:00",
+        "coverage": {
+          "requested": ["2026-06-20T00:30:00+03:00", "2026-06-22T00:00:00+03:00"],
+          "known": [["2026-06-20T00:30:00+03:00", "2026-06-22T00:00:00+03:00"]],
+          "gaps": []
+        },
+        "statuses": {"2026-06-20/fajr": "passed", "2026-06-20/sunrise": "next", "2026-06-20/dhuhr": "upcoming"}
+      }
+    },
+    {
+      "id": "calculation.owning-days.state.kazan-bound-before-midnight",
+      "description": "State at 23:50 on 06-19 in Kazan, through 23:55: the bound is before midnight, yet 06-20's Fajr (23:45) is previous because the context reads civil(b + 12 h). 06-20's Fajr has just started (until 00:00). Nothing falls by the bound, so next is null, and the state doesn't change within it.",
+      "provenance": "RFC 0001 §4.6 (context), §4.7 (an event after b is never next); RFC 0001 §4.3 rule 4, §4.6 (context reads civil(b + lead)), §10 #1; RFC 0002 §4.4; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 55.7963,
+          "longitude": 49.1088,
+          "timeZone": "Europe/Moscow",
+          "countryCode": "RU",
+          "name": "Kazan"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "middleOfTheNight",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-06-19T23:50:00+03:00", "through": "2026-06-19T23:55:00+03:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {
+          "day": "2026-06-20",
+          "kind": "fajr",
+          "time": "2026-06-19T23:45:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "latestPrayer": {
+          "day": "2026-06-20",
+          "kind": "fajr",
+          "time": "2026-06-19T23:45:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "next": null,
+        "nextPrayer": null,
+        "justStarted": {
+          "day": "2026-06-20",
+          "kind": "fajr",
+          "time": "2026-06-19T23:45:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "isApproaching": false,
+        "changesAt": null,
+        "coverage": {
+          "requested": ["2026-06-19T23:50:00+03:00", "2026-06-19T23:55:00+03:00"],
+          "known": [["2026-06-19T23:50:00+03:00", "2026-06-19T23:55:00+03:00"]],
+          "gaps": []
+        }
+      }
+    },
+    {
+      "id": "calculation.owning-days.day.makkah-fajr-adjusted-before-midnight",
+      "description": "Makkah, Umm al-Qura with a user adjustment of −300 minutes on Fajr, 2026-10-13: Fajr moves to 23:59 on 10-12, inside [start(D) − 12 h, start(D + 2)), and stays with 10-13. 10-12's Isha (19:29) is earlier, so nothing gives way.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 4; RFC 0002 §4.4 (12 hours covers large user adjustments); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "adjustments": {"fajr": -300},
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-10-13"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-10-13",
+            "kind": "fajr",
+            "time": "2026-10-12T23:59:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "sunrise",
+            "time": "2026-10-13T06:16:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "dhuhr",
+            "time": "2026-10-13T12:07:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "asr",
+            "time": "2026-10-13T15:28:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "maghrib",
+            "time": "2026-10-13T17:58:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "isha",
+            "time": "2026-10-13T19:28:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.owning-days.events.makkah-fajr-adjusted-before-midnight",
+      "description": "Events from 23:00 on 10-12 to 00:30 on 10-13 in Makkah with Fajr adjusted by −300 minutes: 10-13's Fajr at 23:59 on 10-12.",
+      "provenance": "RFC 0001 §4.6 (context with a lead); RFC 0002 §4.2, §4.3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "adjustments": {"fajr": -300},
+            "rounding": "nearest"
+          }
+        },
+        "query": {
+          "type": "events",
+          "from": "2026-10-12T23:00:00+03:00",
+          "through": "2026-10-13T00:30:00+03:00"
+        }
+      },
+      "expected": {
+        "events": [
+          {
+            "day": "2026-10-13",
+            "kind": "fajr",
+            "time": "2026-10-12T23:59:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ],
+        "coverage": {
+          "requested": ["2026-10-12T23:00:00+03:00", "2026-10-13T00:30:00+03:00"],
+          "known": [["2026-10-12T23:00:00+03:00", "2026-10-13T00:30:00+03:00"]],
+          "gaps": []
+        }
+      }
+    }
+  ]
+}

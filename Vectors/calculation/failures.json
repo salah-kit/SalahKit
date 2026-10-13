@@ -1,0 +1,734 @@
+{
+  "schemaVersion": 1,
+  "description": "Every failure of RFC 0002 §4.5: invalid coordinates and parameters, unsupported years, an invalid date, a date the zone skips, a day with nothing left, and a kind outside the owning span.",
+  "vectors": [
+    {
+      "id": "calculation.failures.day.latitude-95",
+      "description": "Latitude 95: SalahTimes rejects the coordinates, so every day is unavailable with invalidData.",
+      "provenance": "RFC 0002 §4.2 step 1-2, §4.3 steps 1-3, §4.5 (invalid coordinates); SalahTimes' algorithm section 2",
+      "input": {
+        "location": {"latitude": 95, "longitude": 39.8262, "timeZone": "Asia/Riyadh"},
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-10-13"}
+      },
+      "expected": {"availability": "unavailable", "reason": "invalidData"}
+    },
+    {
+      "id": "calculation.failures.events.latitude-95",
+      "description": "Events from 12:00 to 13:00 with latitude 95: no events, and one invalidData gap for each context day whose window reaches the request (06-20 to 06-22).",
+      "provenance": "RFC 0002 §4.2 step 1-2, §4.3 steps 1-3, §4.5; RFC 0001 §4.6 (windows of unavailable days)",
+      "input": {
+        "location": {"latitude": 95, "longitude": 39.8262, "timeZone": "Asia/Riyadh"},
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {
+          "type": "events",
+          "from": "2026-06-21T12:00:00+03:00",
+          "through": "2026-06-21T13:00:00+03:00"
+        }
+      },
+      "expected": {
+        "events": [],
+        "coverage": {
+          "requested": ["2026-06-21T12:00:00+03:00", "2026-06-21T13:00:00+03:00"],
+          "known": [],
+          "gaps": [
+            {
+              "start": "2026-06-21T12:00:00+03:00",
+              "end": "2026-06-21T13:00:00+03:00",
+              "day": "2026-06-20",
+              "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+              "reason": "invalidData"
+            },
+            {
+              "start": "2026-06-21T12:00:00+03:00",
+              "end": "2026-06-21T13:00:00+03:00",
+              "day": "2026-06-21",
+              "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+              "reason": "invalidData"
+            },
+            {
+              "start": "2026-06-21T12:00:00+03:00",
+              "end": "2026-06-21T13:00:00+03:00",
+              "day": "2026-06-22",
+              "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+              "reason": "invalidData"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calculation.failures.day.negative-fajr-angle",
+      "description": "A Fajr angle of −18°: SalahTimes rejects the parameters, so the day is unavailable with invalidData.",
+      "provenance": "RFC 0002 §4.2 step 1-2, §4.3 steps 1-3, §4.5 (invalid parameters); SalahTimes' algorithm section 2",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": -18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-10-13"}
+      },
+      "expected": {"availability": "unavailable", "reason": "invalidData"}
+    },
+    {
+      "id": "calculation.failures.day.isha-interval-too-long",
+      "description": "An Isha interval of 2000 minutes (SalahTimes accepts 0 to 1440): invalidData.",
+      "provenance": "RFC 0002 §4.2 step 1-2, §4.3 steps 1-3, §4.5 (invalid parameters); SalahTimes' algorithm section 2",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 2000},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-10-13"}
+      },
+      "expected": {"availability": "unavailable", "reason": "invalidData"}
+    },
+    {
+      "id": "calculation.failures.day.year-999",
+      "description": "The year 999 is before SalahTimes' supported range (1000 to 3000): unavailable with calculationUnavailable.",
+      "provenance": "RFC 0002 §4.2 step 1-2, §4.3 steps 1-3, §4.5 (unsupported year)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "0999-12-31"}
+      },
+      "expected": {"availability": "unavailable", "reason": "calculationUnavailable"}
+    },
+    {
+      "id": "calculation.failures.day.year-3001",
+      "description": "The year 3001 is after SalahTimes' supported range: unavailable with calculationUnavailable.",
+      "provenance": "RFC 0002 §4.2 step 1-2, §4.3 steps 1-3, §4.5 (unsupported year)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "3001-01-01"}
+      },
+      "expected": {"availability": "unavailable", "reason": "calculationUnavailable"}
+    },
+    {
+      "id": "calculation.failures.day.year-1000-first-supported-day",
+      "description": "1000-01-01 in Makkah, the first supported day, in the proleptic Gregorian calendar: complete. The instants are written in UTC because Asia/Riyadh then kept local mean time (+03:06:52).",
+      "provenance": "RFC 0002 §4.2, §4.3; RFC 0001 §4.1 (proleptic Gregorian); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "1000-01-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "1000-01-01",
+            "kind": "fajr",
+            "time": "1000-01-01T02:40:00Z",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "1000-01-01",
+            "kind": "sunrise",
+            "time": "1000-01-01T04:01:00Z",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "1000-01-01",
+            "kind": "dhuhr",
+            "time": "1000-01-01T09:27:00Z",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "1000-01-01",
+            "kind": "asr",
+            "time": "1000-01-01T12:31:00Z",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "1000-01-01",
+            "kind": "maghrib",
+            "time": "1000-01-01T14:52:00Z",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "1000-01-01",
+            "kind": "isha",
+            "time": "1000-01-01T16:22:00Z",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.failures.day.year-3000-last-supported-day",
+      "description": "3000-12-31 in Jakarta, Kemenag, the last supported day: the next day can't be calculated, so nothing is removed for it, and the day is complete.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 3 (only a next day that succeeds removes times); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": -6.2088,
+          "longitude": 106.8456,
+          "timeZone": "Asia/Jakarta",
+          "countryCode": "ID",
+          "name": "Jakarta"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 20},
+            "isha": {"angle": 18},
+            "maghrib": {"angle": 1},
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "methodAdjustments": {"fajr": 2, "sunrise": -3, "dhuhr": 3, "asr": 2, "maghrib": 2, "isha": 2},
+            "rounding": "up"
+          }
+        },
+        "query": {"type": "day", "day": "3000-12-31"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "3000-12-31",
+            "kind": "fajr",
+            "time": "3000-12-31T04:16:00+07:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "3000-12-31",
+            "kind": "sunrise",
+            "time": "3000-12-31T05:36:00+07:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "3000-12-31",
+            "kind": "dhuhr",
+            "time": "3000-12-31T11:57:00+07:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "3000-12-31",
+            "kind": "asr",
+            "time": "3000-12-31T15:23:00+07:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "3000-12-31",
+            "kind": "maghrib",
+            "time": "3000-12-31T18:11:00+07:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "3000-12-31",
+            "kind": "isha",
+            "time": "3000-12-31T19:26:00+07:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.failures.day.february-30",
+      "description": "2026-02-30 isn't a real date: unavailable with invalidData.",
+      "provenance": "RFC 0002 §4.2 step 1-2, §4.3 steps 1-3, §4.5 (step 1); RFC 0001 §4.1",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-02-30"}
+      },
+      "expected": {"availability": "unavailable", "reason": "invalidData"}
+    },
+    {
+      "id": "calculation.failures.day.apia-skipped-date",
+      "description": "Pacific/Apia skipped 2011-12-30 when it moved across the date line: the date has no time on the clock, so it is unavailable with calculationUnavailable rather than repeating 12-31's solar day.",
+      "provenance": "RFC 0002 §4.2 step 1-2, §4.3 steps 1-3, §4.5 (step 1 of §4.3); RFC 0001 §4.1",
+      "input": {
+        "location": {
+          "latitude": -13.8333,
+          "longitude": -171.7667,
+          "timeZone": "Pacific/Apia",
+          "countryCode": "WS",
+          "name": "Apia"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2011-12-30"}
+      },
+      "expected": {"availability": "unavailable", "reason": "calculationUnavailable"}
+    },
+    {
+      "id": "calculation.failures.day.apia-before-skipped-date",
+      "description": "Apia, 2011-12-29, the last day at UTC−10: the next date can't be calculated, so nothing is removed for it, and the day is complete.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": -13.8333,
+          "longitude": -171.7667,
+          "timeZone": "Pacific/Apia",
+          "countryCode": "WS",
+          "name": "Apia"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2011-12-29"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2011-12-29",
+            "kind": "fajr",
+            "time": "2011-12-29T05:42:00-10:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-29",
+            "kind": "sunrise",
+            "time": "2011-12-29T07:01:00-10:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-29",
+            "kind": "dhuhr",
+            "time": "2011-12-29T13:29:00-10:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-29",
+            "kind": "asr",
+            "time": "2011-12-29T16:55:00-10:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-29",
+            "kind": "maghrib",
+            "time": "2011-12-29T19:57:00-10:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-29",
+            "kind": "isha",
+            "time": "2011-12-29T21:12:00-10:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.failures.day.apia-after-skipped-date",
+      "description": "Apia, 2011-12-31, the first day at UTC+14: complete.",
+      "provenance": "RFC 0002 §4.2, §4.3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": -13.8333,
+          "longitude": -171.7667,
+          "timeZone": "Pacific/Apia",
+          "countryCode": "WS",
+          "name": "Apia"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2011-12-31"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2011-12-31",
+            "kind": "fajr",
+            "time": "2011-12-31T05:42:00+14:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-31",
+            "kind": "sunrise",
+            "time": "2011-12-31T07:02:00+14:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-31",
+            "kind": "dhuhr",
+            "time": "2011-12-31T13:30:00+14:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-31",
+            "kind": "asr",
+            "time": "2011-12-31T16:55:00+14:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-31",
+            "kind": "maghrib",
+            "time": "2011-12-31T19:58:00+14:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-31",
+            "kind": "isha",
+            "time": "2011-12-31T21:12:00+14:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.failures.events.apia-across-skipped-date",
+      "description": "Events from 18:00 on 12-29 (UTC−10) to 08:00 on 12-31 (UTC+14) in Apia: 12-29's Maghrib and Isha, and 12-31's Fajr and sunrise. The skipped 12-30 has one calculationUnavailable gap from 12-29's Isha to 12-31's Fajr.",
+      "provenance": "RFC 0001 §4.6 (a skipped date is still a context day); RFC 0002 §4.2 step 1-2, §4.3 steps 1-3, §4.5; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": -13.8333,
+          "longitude": -171.7667,
+          "timeZone": "Pacific/Apia",
+          "countryCode": "WS",
+          "name": "Apia"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {
+          "type": "events",
+          "from": "2011-12-29T18:00:00-10:00",
+          "through": "2011-12-31T08:00:00+14:00"
+        }
+      },
+      "expected": {
+        "events": [
+          {
+            "day": "2011-12-29",
+            "kind": "maghrib",
+            "time": "2011-12-29T19:57:00-10:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-29",
+            "kind": "isha",
+            "time": "2011-12-29T21:12:00-10:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-31",
+            "kind": "fajr",
+            "time": "2011-12-31T05:42:00+14:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-31",
+            "kind": "sunrise",
+            "time": "2011-12-31T07:02:00+14:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ],
+        "coverage": {
+          "requested": ["2011-12-29T18:00:00-10:00", "2011-12-31T08:00:00+14:00"],
+          "known": [
+            ["2011-12-29T18:00:00-10:00", "2011-12-29T21:12:00-10:00"],
+            ["2011-12-31T05:42:00+14:00", "2011-12-31T08:00:00+14:00"]
+          ],
+          "gaps": [
+            {
+              "start": "2011-12-29T21:12:00-10:00",
+              "end": "2011-12-31T05:42:00+14:00",
+              "day": "2011-12-30",
+              "kinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+              "reason": "calculationUnavailable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calculation.failures.day.nothing-left",
+      "description": "Method and user adjustments of +1440 minutes each on every kind move every event two days later, beyond start(D + 2): no kind is left, so the day is unavailable with calculationUnavailable.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 4; RFC 0002 §4.5 (no kind left); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "methodAdjustments": {
+              "fajr": 1440,
+              "sunrise": 1440,
+              "dhuhr": 1440,
+              "asr": 1440,
+              "maghrib": 1440,
+              "isha": 1440
+            },
+            "adjustments": {
+              "fajr": 1440,
+              "sunrise": 1440,
+              "dhuhr": 1440,
+              "asr": 1440,
+              "maghrib": 1440,
+              "isha": 1440
+            },
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-10-13"}
+      },
+      "expected": {"availability": "unavailable", "reason": "calculationUnavailable"}
+    },
+    {
+      "id": "calculation.failures.day.fajr-before-lead",
+      "description": "Makkah, Umm al-Qura with Fajr adjusted by −1100 minutes, 2026-10-13: Fajr would fall at 10:39 on 10-12, before start(D) − 12 h (12:00 on 10-12), so it is missing; the rest of the day is kept.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 4 (before start(X) − L); RFC 0002 §4.4; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "adjustments": {"fajr": -1100},
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-10-13"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {"partial": {"fajr": "calculationUnavailable"}},
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-10-13",
+            "kind": "sunrise",
+            "time": "2026-10-13T06:16:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "dhuhr",
+            "time": "2026-10-13T12:07:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "asr",
+            "time": "2026-10-13T15:28:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "maghrib",
+            "time": "2026-10-13T17:58:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "isha",
+            "time": "2026-10-13T19:28:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    }
+  ]
+}

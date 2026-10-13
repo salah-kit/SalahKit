@@ -1,0 +1,485 @@
+{
+  "schemaVersion": 1,
+  "description": "Days on which the clock changes: spring forward and fall back in London and New York, and Beirut's skipped midnight.",
+  "vectors": [
+    {
+      "id": "calculation.clock-changes.day.london-spring-forward",
+      "description": "London, ISNA, 2026-03-29, when clocks go from 01:00 GMT to 02:00 BST: a complete day, every event on BST.",
+      "provenance": "RFC 0002 §4.2, §4.3; RFC 0001 §4.1 (start(in:) with nextValid and earlier); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 51.5074,
+          "longitude": -0.1278,
+          "timeZone": "Europe/London",
+          "countryCode": "GB",
+          "name": "London"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 15},
+            "isha": {"angle": 15},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-03-29"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-03-29",
+            "kind": "fajr",
+            "time": "2026-03-29T05:08:00+01:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-29",
+            "kind": "sunrise",
+            "time": "2026-03-29T06:43:00+01:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-29",
+            "kind": "dhuhr",
+            "time": "2026-03-29T13:05:00+01:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-29",
+            "kind": "asr",
+            "time": "2026-03-29T16:35:00+01:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-29",
+            "kind": "maghrib",
+            "time": "2026-03-29T19:29:00+01:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-29",
+            "kind": "isha",
+            "time": "2026-03-29T21:04:00+01:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.clock-changes.day.london-fall-back",
+      "description": "London, ISNA, 2026-10-25, when clocks go back from 02:00 BST to 01:00 GMT: a complete day, every event on GMT.",
+      "provenance": "RFC 0002 §4.2, §4.3; RFC 0001 §4.1 (start(in:) with nextValid and earlier); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 51.5074,
+          "longitude": -0.1278,
+          "timeZone": "Europe/London",
+          "countryCode": "GB",
+          "name": "London"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 15},
+            "isha": {"angle": 15},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-10-25"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-10-25",
+            "kind": "fajr",
+            "time": "2026-10-25T05:09:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-25",
+            "kind": "sunrise",
+            "time": "2026-10-25T06:42:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-25",
+            "kind": "dhuhr",
+            "time": "2026-10-25T11:45:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-25",
+            "kind": "asr",
+            "time": "2026-10-25T14:16:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-25",
+            "kind": "maghrib",
+            "time": "2026-10-25T16:47:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-25",
+            "kind": "isha",
+            "time": "2026-10-25T18:19:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.clock-changes.events.london-spring-forward-night",
+      "description": "Events from 18:00 GMT on 03-28 to 08:00 BST on 03-29 in London: 03-28's Maghrib and Isha, then 03-29's Fajr and sunrise; complete coverage across the change.",
+      "provenance": "RFC 0001 §4.6; RFC 0002 §4.2, §4.3; RFC 0001 §4.1 (start(in:) with nextValid and earlier); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 51.5074,
+          "longitude": -0.1278,
+          "timeZone": "Europe/London",
+          "countryCode": "GB",
+          "name": "London"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 15},
+            "isha": {"angle": 15},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {
+          "type": "events",
+          "from": "2026-03-28T18:00:00+00:00",
+          "through": "2026-03-29T08:00:00+01:00"
+        }
+      },
+      "expected": {
+        "events": [
+          {
+            "day": "2026-03-28",
+            "kind": "maghrib",
+            "time": "2026-03-28T18:27:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-28",
+            "kind": "isha",
+            "time": "2026-03-28T20:02:00+00:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-29",
+            "kind": "fajr",
+            "time": "2026-03-29T05:08:00+01:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-29",
+            "kind": "sunrise",
+            "time": "2026-03-29T06:43:00+01:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ],
+        "coverage": {
+          "requested": ["2026-03-28T18:00:00+00:00", "2026-03-29T08:00:00+01:00"],
+          "known": [["2026-03-28T18:00:00+00:00", "2026-03-29T08:00:00+01:00"]],
+          "gaps": []
+        }
+      }
+    },
+    {
+      "id": "calculation.clock-changes.state.london-spring-forward-night",
+      "description": "State at 02:30 BST on 03-29 in London, just after the change: previous is 03-28's Isha, next 03-29's Fajr.",
+      "provenance": "RFC 0001 §4.7; RFC 0002 §4.2, §4.3; RFC 0001 §4.1 (start(in:) with nextValid and earlier); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 51.5074,
+          "longitude": -0.1278,
+          "timeZone": "Europe/London",
+          "countryCode": "GB",
+          "name": "London"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 15},
+            "isha": {"angle": 15},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-03-29T02:30:00+01:00", "through": "2026-03-31T00:00:00+01:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {
+          "day": "2026-03-28",
+          "kind": "isha",
+          "time": "2026-03-28T20:02:00+00:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "latestPrayer": {
+          "day": "2026-03-28",
+          "kind": "isha",
+          "time": "2026-03-28T20:02:00+00:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "next": {
+          "day": "2026-03-29",
+          "kind": "fajr",
+          "time": "2026-03-29T05:08:00+01:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "nextPrayer": {
+          "day": "2026-03-29",
+          "kind": "fajr",
+          "time": "2026-03-29T05:08:00+01:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-03-29T04:53:00+01:00",
+        "coverage": {
+          "requested": ["2026-03-29T02:30:00+01:00", "2026-03-31T00:00:00+01:00"],
+          "known": [["2026-03-29T02:30:00+01:00", "2026-03-31T00:00:00+01:00"]],
+          "gaps": []
+        },
+        "statuses": {"2026-03-28/isha": "passed", "2026-03-29/fajr": "next"}
+      }
+    },
+    {
+      "id": "calculation.clock-changes.day.new-york-spring-forward",
+      "description": "New York, ISNA, 2026-03-08, the spring-forward day: complete, every event on EDT.",
+      "provenance": "RFC 0002 §4.2, §4.3; RFC 0001 §4.1 (start(in:) with nextValid and earlier); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 40.7128,
+          "longitude": -74.006,
+          "timeZone": "America/New_York",
+          "countryCode": "US",
+          "name": "New York"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 15},
+            "isha": {"angle": 15},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-03-08"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-03-08",
+            "kind": "fajr",
+            "time": "2026-03-08T06:04:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-08",
+            "kind": "sunrise",
+            "time": "2026-03-08T07:19:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-08",
+            "kind": "dhuhr",
+            "time": "2026-03-08T13:07:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-08",
+            "kind": "asr",
+            "time": "2026-03-08T16:22:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-08",
+            "kind": "maghrib",
+            "time": "2026-03-08T18:55:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-08",
+            "kind": "isha",
+            "time": "2026-03-08T20:10:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.clock-changes.day.beirut-skipped-midnight",
+      "description": "Beirut, Muslim World League, 2026-03-29: clocks go from 00:00 to 01:00, so the day starts at 01:00 EEST. A complete day.",
+      "provenance": "RFC 0002 §4.2, §4.3; RFC 0001 §4.1 (start(in:) with nextValid and earlier); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 33.8938,
+          "longitude": 35.5018,
+          "timeZone": "Asia/Beirut",
+          "countryCode": "LB",
+          "name": "Beirut"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-03-29"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-03-29",
+            "kind": "fajr",
+            "time": "2026-03-29T05:06:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-29",
+            "kind": "sunrise",
+            "time": "2026-03-29T06:30:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-29",
+            "kind": "dhuhr",
+            "time": "2026-03-29T12:43:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-29",
+            "kind": "asr",
+            "time": "2026-03-29T16:15:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-29",
+            "kind": "maghrib",
+            "time": "2026-03-29T18:56:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-29",
+            "kind": "isha",
+            "time": "2026-03-29T20:16:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.clock-changes.events.beirut-skipped-midnight",
+      "description": "Events from 21:00 on 03-28 to 06:00 on 03-29 in Beirut, across the skipped midnight: 03-29's Fajr only; complete coverage.",
+      "provenance": "RFC 0001 §4.6; RFC 0002 §4.2, §4.3; RFC 0001 §4.1 (start(in:) with nextValid and earlier); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 33.8938,
+          "longitude": 35.5018,
+          "timeZone": "Asia/Beirut",
+          "countryCode": "LB",
+          "name": "Beirut"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {
+          "type": "events",
+          "from": "2026-03-28T21:00:00+02:00",
+          "through": "2026-03-29T06:00:00+03:00"
+        }
+      },
+      "expected": {
+        "events": [
+          {
+            "day": "2026-03-29",
+            "kind": "fajr",
+            "time": "2026-03-29T05:06:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ],
+        "coverage": {
+          "requested": ["2026-03-28T21:00:00+02:00", "2026-03-29T06:00:00+03:00"],
+          "known": [["2026-03-28T21:00:00+02:00", "2026-03-29T06:00:00+03:00"]],
+          "gaps": []
+        }
+      }
+    }
+  ]
+}

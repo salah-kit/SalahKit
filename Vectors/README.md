@@ -22,6 +22,7 @@ The vectors were written from the RFC and the SalahKit proposal before any imple
 | `refresh/coverage.json` | `refresh` | Expiring, partial and empty timetables; a cross-day overlap; a delayed next request |
 | `refresh/steps.json` | `refresh` | `.steps` fine and coarse grids, including across an expiring timetable |
 | `refresh/errors.json` | `refresh` | `RefreshPlanError` and the order the errors are checked in |
+| `calculation/*.json` | all five | A calculated source (RFC 0002): see [Calculation vectors](#calculation-vectors) |
 
 ## File shape
 
@@ -155,6 +156,29 @@ Gaps are half-open `[start, end)`, clipped to the request. For a zero-length req
 ## Data
 
 The times are synthetic. They resemble published tables for their places (Singapore, Edinburgh, New York, Beirut, Havana, Reykjavik, Apia) so a reader can follow them, but they aren't copied from any timetable, and some are placed deliberately (a Fajr inside a clock change, an Isha after the next Fajr). The Singapore-like rows repeat the same six times every day to keep the arithmetic checkable.
+
+## Calculation vectors
+
+`calculation/` holds vectors for SalahCalculation's `CalculationSource` (RFC 0002, `docs/rfcs/0002-calculation.md`, section 7). They use the schema above with one difference in the input: `settings` replaces `source`.
+
+- **`settings`**: a `CalculationSettings` value, `{"parameters": <parameters>}`, where the parameters are SalahTimes' `CalculationParameters` JSON (SalahTimes' `Vectors/README.md` lists the keys). Missing keys decode as SalahTimes' defaults; only `fajr` and `isha` are required.
+- Build `PrayerSchedule(source: CalculationSource(settings), location:, iqama:)` from `settings`, `location` and `iqama`, then run the query as above. Query types, expected shapes and comparison rules are unchanged.
+- Ids start with `calculation.<file>.`.
+
+| File | Query types | Covers |
+|---|---|---|
+| `calculation/ordinary.json` | `day`, `dayContaining`, `events`, `state` | Complete days at several places and methods, method and user adjustments, rounding up, Hanafi Asr, defaulted parameter keys |
+| `calculation/owning-days.json` | `day`, `dayContaining`, `events`, `state` | Isha after midnight owned by the evening before (Kashgar); Fajr before midnight owned by the next day within the 12-hour lead, tied with the previous Isha (Kazan, middle-of-the-night rule) or moved there by a user adjustment (Makkah); the lead in queries that end before midnight |
+| `calculation/polar.json` | `day`, `events`, `state` | Polar day and night (Tromsø) and a disabled high-latitude rule (Oslo): missing kinds, their windows and the states across them |
+| `calculation/ordering.json` | `day`, `events`, `state` | Ties (Tehran's method at Oslo, Diyanet at 66° N), inverted pairs (Fajr after sunrise, Isha before Maghrib) and an Isha after the next day's first event (Umm al-Qura at 66.5° N, an Isha adjusted into the next day) |
+| `calculation/failures.json` | `day`, `events` | Every failure of RFC 0002 §4.5: invalid coordinates and parameters, years outside 1000–3000 and the supported range's first and last days, an invalid date, Pacific/Apia's skipped 2011-12-30 and the days around it, a day with no kind left, a Fajr before the lead |
+| `calculation/opt-ins.json` | `day`, `state` | The Ramadan Isha rule off and on, Ramadan's last day and the day after, a Hijri day offset, an angle-based Isha the rule leaves alone, and a Friday whose Dhuhr stays ordinary under a Jumu'ah iqama rule |
+| `calculation/clock-changes.json` | `day`, `events`, `state` | Spring forward and fall back (London, New York), Beirut's skipped midnight, a state just after the clocks go forward |
+| `calculation/state-and-refresh.json` | `refresh`, `state` | `.stateChanges` plans across an early-Fajr night, a polar day and night, a missing Isha, a disabled rule and Isha after midnight; the entry budget; states on Kazan's early-Fajr evening and in London's repeated hour |
+
+**Where the expectations come from.** The instants are SalahTimes' results from its independent Python reference implementation (`Vectors/reference/salahtimes_reference.py` at SalahTimes 0.1.0), not from the Swift engine. Which of them each answer holds, and the coverage, windows, states and plans, follow RFC 0002 §4 and RFC 0001 §4.3–§4.8; they were derived from the RFCs without reading SalahCalculation's implementation. Every vector uses minute-rounded parameters, and no rounded instant it depends on lies within a second of a rounding boundary (the reference and the Swift engine agree within about half a second before rounding). An instant is written in the location's offset, or in UTC where the zone then kept local mean time with seconds in its offset (the year 1000).
+
+A change to a calculation vector needs a written reason in RFC 0002 §10, in the same commit.
 
 ## Changing a vector
 

@@ -1,0 +1,670 @@
+{
+  "schemaVersion": 1,
+  "description": "Polar day and night at Tromsø, and a disabled high-latitude rule at Oslo: the kinds that don't occur are missing with calculationUnavailable, and the schedule's windows cover them.",
+  "vectors": [
+    {
+      "id": "calculation.polar.day.tromso-polar-day",
+      "description": "Tromsø, Muslim World League, 2026-06-21 (polar day): only Dhuhr and Asr occur. Fajr, sunrise, Maghrib and Isha are missing with calculationUnavailable.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 4 (doesNotOccur); RFC 0002 §4.5; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 69.6492,
+          "longitude": 18.9553,
+          "timeZone": "Europe/Oslo",
+          "countryCode": "NO",
+          "name": "Tromsø"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-06-21"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {
+          "partial": {
+            "fajr": "calculationUnavailable",
+            "sunrise": "calculationUnavailable",
+            "maghrib": "calculationUnavailable",
+            "isha": "calculationUnavailable"
+          }
+        },
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-06-21",
+            "kind": "dhuhr",
+            "time": "2026-06-21T12:46:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "asr",
+            "time": "2026-06-21T17:58:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.polar.day.tromso-polar-night",
+      "description": "Tromsø, Muslim World League, 2026-12-21 (polar night): Fajr, Dhuhr and Isha occur, from the recommended rule's bounds; sunrise, Asr and Maghrib are missing.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 4 (doesNotOccur); RFC 0002 §4.5; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 69.6492,
+          "longitude": 18.9553,
+          "timeZone": "Europe/Oslo",
+          "countryCode": "NO",
+          "name": "Tromsø"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-12-21"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {
+          "partial": {
+            "sunrise": "calculationUnavailable",
+            "asr": "calculationUnavailable",
+            "maghrib": "calculationUnavailable"
+          }
+        },
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-12-21",
+            "kind": "fajr",
+            "time": "2026-12-21T06:28:00+01:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-12-21",
+            "kind": "dhuhr",
+            "time": "2026-12-21T11:42:00+01:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-12-21",
+            "kind": "isha",
+            "time": "2026-12-21T16:44:00+01:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.polar.events.tromso-polar-day",
+      "description": "Events of 2026-06-21 at Tromsø, midnight to midnight: Dhuhr and Asr. Each missing kind's window runs between the known events around it, across the neighboring days: the night from 06-20's Asr to 06-21's Dhuhr, and from 06-21's Asr to 06-22's Dhuhr, clipped to the request.",
+      "provenance": "RFC 0001 §4.6 (missing-event windows, clipping); RFC 0002 §4.2, §4.3 step 4 (doesNotOccur); RFC 0002 §4.5; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 69.6492,
+          "longitude": 18.9553,
+          "timeZone": "Europe/Oslo",
+          "countryCode": "NO",
+          "name": "Tromsø"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {
+          "type": "events",
+          "from": "2026-06-21T00:00:00+02:00",
+          "through": "2026-06-22T00:00:00+02:00"
+        }
+      },
+      "expected": {
+        "events": [
+          {
+            "day": "2026-06-21",
+            "kind": "dhuhr",
+            "time": "2026-06-21T12:46:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "asr",
+            "time": "2026-06-21T17:58:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ],
+        "coverage": {
+          "requested": ["2026-06-21T00:00:00+02:00", "2026-06-22T00:00:00+02:00"],
+          "known": [["2026-06-21T12:46:00+02:00", "2026-06-21T17:58:00+02:00"]],
+          "gaps": [
+            {
+              "start": "2026-06-21T00:00:00+02:00",
+              "end": "2026-06-21T12:46:00+02:00",
+              "day": "2026-06-20",
+              "kinds": ["maghrib", "isha"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-21T00:00:00+02:00",
+              "end": "2026-06-21T12:46:00+02:00",
+              "day": "2026-06-21",
+              "kinds": ["fajr", "sunrise"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-21T17:58:00+02:00",
+              "end": "2026-06-22T00:00:00+02:00",
+              "day": "2026-06-21",
+              "kinds": ["maghrib", "isha"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-21T17:58:00+02:00",
+              "end": "2026-06-22T00:00:00+02:00",
+              "day": "2026-06-22",
+              "kinds": ["fajr", "sunrise"],
+              "reason": "calculationUnavailable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calculation.polar.state.tromso-polar-day-afternoon",
+      "description": "State at 15:00 on 06-21 at Tromsø: previous is Dhuhr and next is Asr (17:58). No window lies between them, so the state is available.",
+      "provenance": "RFC 0001 §4.7; RFC 0002 §4.2, §4.3 step 4 (doesNotOccur); RFC 0002 §4.5; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 69.6492,
+          "longitude": 18.9553,
+          "timeZone": "Europe/Oslo",
+          "countryCode": "NO",
+          "name": "Tromsø"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-06-21T15:00:00+02:00", "through": "2026-06-23T00:00:00+02:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {
+          "day": "2026-06-21",
+          "kind": "dhuhr",
+          "time": "2026-06-21T12:46:00+02:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "latestPrayer": {
+          "day": "2026-06-21",
+          "kind": "dhuhr",
+          "time": "2026-06-21T12:46:00+02:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "next": {
+          "day": "2026-06-21",
+          "kind": "asr",
+          "time": "2026-06-21T17:58:00+02:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "nextPrayer": {
+          "day": "2026-06-21",
+          "kind": "asr",
+          "time": "2026-06-21T17:58:00+02:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-06-21T17:43:00+02:00",
+        "coverage": {
+          "requested": ["2026-06-21T15:00:00+02:00", "2026-06-23T00:00:00+02:00"],
+          "known": [
+            ["2026-06-21T15:00:00+02:00", "2026-06-21T17:58:00+02:00"],
+            ["2026-06-22T12:46:00+02:00", "2026-06-22T17:58:00+02:00"]
+          ],
+          "gaps": [
+            {
+              "start": "2026-06-21T17:58:00+02:00",
+              "end": "2026-06-22T12:46:00+02:00",
+              "day": "2026-06-21",
+              "kinds": ["maghrib", "isha"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-21T17:58:00+02:00",
+              "end": "2026-06-22T12:46:00+02:00",
+              "day": "2026-06-22",
+              "kinds": ["fajr", "sunrise"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-22T17:58:00+02:00",
+              "end": "2026-06-23T00:00:00+02:00",
+              "day": "2026-06-22",
+              "kinds": ["maghrib", "isha"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-22T17:58:00+02:00",
+              "end": "2026-06-23T00:00:00+02:00",
+              "day": "2026-06-23",
+              "kinds": ["fajr", "sunrise"],
+              "reason": "calculationUnavailable"
+            }
+          ]
+        },
+        "statuses": {"2026-06-21/dhuhr": "passed", "2026-06-21/asr": "next", "2026-06-22/dhuhr": "upcoming"}
+      }
+    },
+    {
+      "id": "calculation.polar.state.tromso-polar-day-evening",
+      "description": "State at 20:00 on 06-21 at Tromsø: Asr has passed, and the windows of 06-21's Maghrib and Isha and 06-22's Fajr and sunrise run until 06-22's Dhuhr. No event is usable, so the state is unavailable until 06-22's Dhuhr.",
+      "provenance": "RFC 0001 §4.7 (availability, changesAt); RFC 0002 §4.2, §4.3 step 4 (doesNotOccur); RFC 0002 §4.5; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 69.6492,
+          "longitude": 18.9553,
+          "timeZone": "Europe/Oslo",
+          "countryCode": "NO",
+          "name": "Tromsø"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-06-21T20:00:00+02:00", "through": "2026-06-23T00:00:00+02:00"}
+      },
+      "expected": {
+        "availability": "unavailable",
+        "previous": null,
+        "latestPrayer": null,
+        "next": null,
+        "nextPrayer": null,
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-06-22T12:46:00+02:00",
+        "coverage": {
+          "requested": ["2026-06-21T20:00:00+02:00", "2026-06-23T00:00:00+02:00"],
+          "known": [["2026-06-22T12:46:00+02:00", "2026-06-22T17:58:00+02:00"]],
+          "gaps": [
+            {
+              "start": "2026-06-21T20:00:00+02:00",
+              "end": "2026-06-22T12:46:00+02:00",
+              "day": "2026-06-21",
+              "kinds": ["maghrib", "isha"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-21T20:00:00+02:00",
+              "end": "2026-06-22T12:46:00+02:00",
+              "day": "2026-06-22",
+              "kinds": ["fajr", "sunrise"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-22T17:58:00+02:00",
+              "end": "2026-06-23T00:00:00+02:00",
+              "day": "2026-06-22",
+              "kinds": ["maghrib", "isha"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-22T17:58:00+02:00",
+              "end": "2026-06-23T00:00:00+02:00",
+              "day": "2026-06-23",
+              "kinds": ["fajr", "sunrise"],
+              "reason": "calculationUnavailable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calculation.polar.state.tromso-polar-night-morning",
+      "description": "State at 10:00 on 12-21 at Tromsø: sunrise's window runs from Fajr to Dhuhr. It holds only sunrise, so latestPrayer is Fajr and nextPrayer Dhuhr, while previous and next are null.",
+      "provenance": "RFC 0001 §4.7 (W_p excludes a window holding only sunrise; status of nextPrayer when next is null); RFC 0002 §4.2, §4.3 step 4 (doesNotOccur); RFC 0002 §4.5; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 69.6492,
+          "longitude": 18.9553,
+          "timeZone": "Europe/Oslo",
+          "countryCode": "NO",
+          "name": "Tromsø"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-12-21T10:00:00+01:00", "through": "2026-12-23T00:00:00+01:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": null,
+        "latestPrayer": {
+          "day": "2026-12-21",
+          "kind": "fajr",
+          "time": "2026-12-21T06:28:00+01:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "next": null,
+        "nextPrayer": {
+          "day": "2026-12-21",
+          "kind": "dhuhr",
+          "time": "2026-12-21T11:42:00+01:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-12-21T11:27:00+01:00",
+        "coverage": {
+          "requested": ["2026-12-21T10:00:00+01:00", "2026-12-23T00:00:00+01:00"],
+          "known": [
+            ["2026-12-21T16:44:00+01:00", "2026-12-22T06:29:00+01:00"],
+            ["2026-12-22T16:44:00+01:00", "2026-12-23T00:00:00+01:00"]
+          ],
+          "gaps": [
+            {
+              "start": "2026-12-21T10:00:00+01:00",
+              "end": "2026-12-21T11:42:00+01:00",
+              "day": "2026-12-21",
+              "kinds": ["sunrise"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-12-21T11:42:00+01:00",
+              "end": "2026-12-21T16:44:00+01:00",
+              "day": "2026-12-21",
+              "kinds": ["asr", "maghrib"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-12-22T06:29:00+01:00",
+              "end": "2026-12-22T11:43:00+01:00",
+              "day": "2026-12-22",
+              "kinds": ["sunrise"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-12-22T11:43:00+01:00",
+              "end": "2026-12-22T16:44:00+01:00",
+              "day": "2026-12-22",
+              "kinds": ["asr", "maghrib"],
+              "reason": "calculationUnavailable"
+            }
+          ]
+        },
+        "statuses": {"2026-12-21/fajr": "passed", "2026-12-21/dhuhr": "next", "2026-12-21/isha": "upcoming"}
+      }
+    },
+    {
+      "id": "calculation.polar.state.tromso-polar-night-afternoon",
+      "description": "State at 14:00 on 12-21 at Tromsø: Asr and Maghrib are missing between Dhuhr and Isha, so no field is known until Isha (16:44).",
+      "provenance": "RFC 0001 §4.7; RFC 0002 §4.2, §4.3 step 4 (doesNotOccur); RFC 0002 §4.5; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 69.6492,
+          "longitude": 18.9553,
+          "timeZone": "Europe/Oslo",
+          "countryCode": "NO",
+          "name": "Tromsø"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-12-21T14:00:00+01:00", "through": "2026-12-23T00:00:00+01:00"}
+      },
+      "expected": {
+        "availability": "unavailable",
+        "previous": null,
+        "latestPrayer": null,
+        "next": null,
+        "nextPrayer": null,
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-12-21T16:44:00+01:00",
+        "coverage": {
+          "requested": ["2026-12-21T14:00:00+01:00", "2026-12-23T00:00:00+01:00"],
+          "known": [
+            ["2026-12-21T16:44:00+01:00", "2026-12-22T06:29:00+01:00"],
+            ["2026-12-22T16:44:00+01:00", "2026-12-23T00:00:00+01:00"]
+          ],
+          "gaps": [
+            {
+              "start": "2026-12-21T14:00:00+01:00",
+              "end": "2026-12-21T16:44:00+01:00",
+              "day": "2026-12-21",
+              "kinds": ["asr", "maghrib"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-12-22T06:29:00+01:00",
+              "end": "2026-12-22T11:43:00+01:00",
+              "day": "2026-12-22",
+              "kinds": ["sunrise"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-12-22T11:43:00+01:00",
+              "end": "2026-12-22T16:44:00+01:00",
+              "day": "2026-12-22",
+              "kinds": ["asr", "maghrib"],
+              "reason": "calculationUnavailable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calculation.polar.day.oslo-rule-disabled",
+      "description": "Oslo, Muslim World League with the high-latitude rule disabled, 2026-06-21: the Sun never reaches 18° or 17° below the horizon, so Fajr and Isha are missing with calculationUnavailable.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 4 (doesNotOccur); RFC 0002 §4.5; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 59.9139,
+          "longitude": 10.7522,
+          "timeZone": "Europe/Oslo",
+          "countryCode": "NO",
+          "name": "Oslo"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "disabled",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-06-21"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {"partial": {"fajr": "calculationUnavailable", "isha": "calculationUnavailable"}},
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-06-21",
+            "kind": "sunrise",
+            "time": "2026-06-21T03:54:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "dhuhr",
+            "time": "2026-06-21T13:19:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "asr",
+            "time": "2026-06-21T18:00:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "maghrib",
+            "time": "2026-06-21T22:44:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.polar.state.oslo-rule-disabled-night",
+      "description": "State at 01:00 on 06-22 in Oslo with the rule disabled: the windows of 06-21's Isha and 06-22's Fajr run from 06-21's Maghrib (22:44) to 06-22's sunrise (03:54). The state is unavailable until sunrise.",
+      "provenance": "RFC 0001 §4.6, §4.7; RFC 0002 §4.2, §4.3 step 4 (doesNotOccur); RFC 0002 §4.5; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 59.9139,
+          "longitude": 10.7522,
+          "timeZone": "Europe/Oslo",
+          "countryCode": "NO",
+          "name": "Oslo"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "disabled",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-06-22T01:00:00+02:00", "through": "2026-06-24T00:00:00+02:00"}
+      },
+      "expected": {
+        "availability": "unavailable",
+        "previous": null,
+        "latestPrayer": null,
+        "next": null,
+        "nextPrayer": null,
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-06-22T03:54:00+02:00",
+        "coverage": {
+          "requested": ["2026-06-22T01:00:00+02:00", "2026-06-24T00:00:00+02:00"],
+          "known": [
+            ["2026-06-22T03:54:00+02:00", "2026-06-22T22:44:00+02:00"],
+            ["2026-06-23T03:54:00+02:00", "2026-06-23T22:44:00+02:00"]
+          ],
+          "gaps": [
+            {
+              "start": "2026-06-22T01:00:00+02:00",
+              "end": "2026-06-22T03:54:00+02:00",
+              "day": "2026-06-21",
+              "kinds": ["isha"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-22T01:00:00+02:00",
+              "end": "2026-06-22T03:54:00+02:00",
+              "day": "2026-06-22",
+              "kinds": ["fajr"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-22T22:44:00+02:00",
+              "end": "2026-06-23T03:54:00+02:00",
+              "day": "2026-06-22",
+              "kinds": ["isha"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-22T22:44:00+02:00",
+              "end": "2026-06-23T03:54:00+02:00",
+              "day": "2026-06-23",
+              "kinds": ["fajr"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-23T22:44:00+02:00",
+              "end": "2026-06-24T00:00:00+02:00",
+              "day": "2026-06-23",
+              "kinds": ["isha"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-23T22:44:00+02:00",
+              "end": "2026-06-24T00:00:00+02:00",
+              "day": "2026-06-24",
+              "kinds": ["fajr"],
+              "reason": "calculationUnavailable"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

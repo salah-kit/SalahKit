@@ -1,0 +1,893 @@
+{
+  "schemaVersion": 1,
+  "description": "Kinds the contract can't hold in order: a tie (Maghrib and Isha at one instant), an inverted pair (Fajr after sunrise, Isha before Maghrib), and an Isha after the next day's first event.",
+  "vectors": [
+    {
+      "id": "calculation.ordering.day.oslo-tehran-tie",
+      "description": "Oslo, Tehran's method, 2026-06-21: Maghrib (4.5°) and Isha (14°) are both bounded by the same seventh of the night and fall at the same instant, so Isha, the later kind of the tie, is missing.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 4 (strictly after the last kept kind); RFC 0001 §4.3 rule 5; RFC 0002 §9 #1, #2; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 59.9139,
+          "longitude": 10.7522,
+          "timeZone": "Europe/Oslo",
+          "countryCode": "NO",
+          "name": "Oslo"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 17.7},
+            "isha": {"angle": 14},
+            "maghrib": {"angle": 4.5},
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-06-21"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {"partial": {"isha": "calculationUnavailable"}},
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-06-21",
+            "kind": "fajr",
+            "time": "2026-06-21T03:09:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "sunrise",
+            "time": "2026-06-21T03:54:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "dhuhr",
+            "time": "2026-06-21T13:19:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "asr",
+            "time": "2026-06-21T18:00:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-21",
+            "kind": "maghrib",
+            "time": "2026-06-21T23:28:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordering.day.oslo-tehran-tie-2026-07-14",
+      "description": "Oslo, Tehran's method, 2026-07-14, the last day of the 2026 tie season: Isha is missing.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 4 (strictly after the last kept kind); RFC 0001 §4.3 rule 5; RFC 0002 §9 #1, #2; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 59.9139,
+          "longitude": 10.7522,
+          "timeZone": "Europe/Oslo",
+          "countryCode": "NO",
+          "name": "Oslo"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 17.7},
+            "isha": {"angle": 14},
+            "maghrib": {"angle": 4.5},
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-07-14"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {"partial": {"isha": "calculationUnavailable"}},
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-07-14",
+            "kind": "fajr",
+            "time": "2026-07-14T03:29:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-07-14",
+            "kind": "sunrise",
+            "time": "2026-07-14T04:19:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-07-14",
+            "kind": "dhuhr",
+            "time": "2026-07-14T13:23:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-07-14",
+            "kind": "asr",
+            "time": "2026-07-14T17:58:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-07-14",
+            "kind": "maghrib",
+            "time": "2026-07-14T23:16:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordering.day.oslo-tehran-after-ties",
+      "description": "Oslo, Tehran's method, 2026-07-15: Isha is a minute after Maghrib again, and the day is complete.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 4 (strictly after the last kept kind); RFC 0001 §4.3 rule 5; RFC 0002 §9 #1, #2; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 59.9139,
+          "longitude": 10.7522,
+          "timeZone": "Europe/Oslo",
+          "countryCode": "NO",
+          "name": "Oslo"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 17.7},
+            "isha": {"angle": 14},
+            "maghrib": {"angle": 4.5},
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-07-15"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-07-15",
+            "kind": "fajr",
+            "time": "2026-07-15T03:30:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-07-15",
+            "kind": "sunrise",
+            "time": "2026-07-15T04:21:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-07-15",
+            "kind": "dhuhr",
+            "time": "2026-07-15T13:23:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-07-15",
+            "kind": "asr",
+            "time": "2026-07-15T17:57:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-07-15",
+            "kind": "maghrib",
+            "time": "2026-07-15T23:14:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-07-15",
+            "kind": "isha",
+            "time": "2026-07-15T23:15:00+02:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordering.state.oslo-tehran-tie-night",
+      "description": "State at 23:30 on 06-21 in Oslo, Tehran's method: Maghrib was at 23:28 and Isha is missing, with a window from Maghrib to 06-22's Fajr. Nothing is known until Fajr.",
+      "provenance": "RFC 0001 §4.7; RFC 0002 §4.2, §4.3 step 4 (strictly after the last kept kind); RFC 0001 §4.3 rule 5; RFC 0002 §9 #1, #2; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 59.9139,
+          "longitude": 10.7522,
+          "timeZone": "Europe/Oslo",
+          "countryCode": "NO",
+          "name": "Oslo"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 17.7},
+            "isha": {"angle": 14},
+            "maghrib": {"angle": 4.5},
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-06-21T23:30:00+02:00", "through": "2026-06-23T00:00:00+02:00"}
+      },
+      "expected": {
+        "availability": "unavailable",
+        "previous": null,
+        "latestPrayer": null,
+        "next": null,
+        "nextPrayer": null,
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-06-22T03:10:00+02:00",
+        "coverage": {
+          "requested": ["2026-06-21T23:30:00+02:00", "2026-06-23T00:00:00+02:00"],
+          "known": [["2026-06-22T03:10:00+02:00", "2026-06-22T23:28:00+02:00"]],
+          "gaps": [
+            {
+              "start": "2026-06-21T23:30:00+02:00",
+              "end": "2026-06-22T03:10:00+02:00",
+              "day": "2026-06-21",
+              "kinds": ["isha"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-22T23:28:00+02:00",
+              "end": "2026-06-23T00:00:00+02:00",
+              "day": "2026-06-22",
+              "kinds": ["isha"],
+              "reason": "calculationUnavailable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calculation.ordering.day.arctic-diyanet-inversions",
+      "description": "66° N, 25° E (Europe/Helsinki), Diyanet, 2026-07-01: Fajr (01:34) is after sunrise moved by its −7 minutes (01:32), and Isha (01:07) is before Maghrib moved by its +7 minutes (01:08). Of each inverted pair the later kind, sunrise and Isha, is missing.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 4 (strictly after the last kept kind); RFC 0001 §4.3 rule 5; RFC 0002 §9 #1, #2; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {"latitude": 66.0, "longitude": 25.0, "timeZone": "Europe/Helsinki"},
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "methodAdjustments": {"sunrise": -7, "dhuhr": 5, "asr": 4, "maghrib": 7},
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-07-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {"partial": {"sunrise": "calculationUnavailable", "isha": "calculationUnavailable"}},
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-07-01",
+            "kind": "fajr",
+            "time": "2026-07-01T01:34:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-07-01",
+            "kind": "dhuhr",
+            "time": "2026-07-01T13:29:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-07-01",
+            "kind": "asr",
+            "time": "2026-07-01T18:25:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-07-01",
+            "kind": "maghrib",
+            "time": "2026-07-02T01:08:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordering.day.arctic-diyanet-tie",
+      "description": "66° N, 25° E, Diyanet, 2026-06-10: Maghrib and Isha both at 01:04 on 06-11; Isha is missing.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 4 (strictly after the last kept kind); RFC 0001 §4.3 rule 5; RFC 0002 §9 #1, #2; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {"latitude": 66.0, "longitude": 25.0, "timeZone": "Europe/Helsinki"},
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "methodAdjustments": {"sunrise": -7, "dhuhr": 5, "asr": 4, "maghrib": 7},
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-06-10"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {"partial": {"isha": "calculationUnavailable"}},
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-06-10",
+            "kind": "fajr",
+            "time": "2026-06-10T01:40:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-10",
+            "kind": "sunrise",
+            "time": "2026-06-10T01:42:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-10",
+            "kind": "dhuhr",
+            "time": "2026-06-10T13:24:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-10",
+            "kind": "asr",
+            "time": "2026-06-10T18:20:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-10",
+            "kind": "maghrib",
+            "time": "2026-06-11T01:04:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordering.day.rovaniemi-isha-after-next-fajr",
+      "description": "66.5° N, 25.7° E (Europe/Helsinki), Umm al-Qura, 2026-06-01: Isha, 90 minutes after a Maghrib at 00:24 on 06-02, would be after 06-02's Fajr (01:51), so it is missing; Maghrib stays.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 3 (the earlier day gives way); RFC 0001 §4.3 rule 6, §9 #3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 66.5,
+          "longitude": 25.7,
+          "timeZone": "Europe/Helsinki",
+          "countryCode": "FI",
+          "name": "Rovaniemi"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-06-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {"partial": {"isha": "calculationUnavailable"}},
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-06-01",
+            "kind": "fajr",
+            "time": "2026-06-01T01:55:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-01",
+            "kind": "sunrise",
+            "time": "2026-06-01T02:12:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-01",
+            "kind": "dhuhr",
+            "time": "2026-06-01T13:15:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-01",
+            "kind": "asr",
+            "time": "2026-06-01T18:09:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-01",
+            "kind": "maghrib",
+            "time": "2026-06-02T00:24:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordering.day.rovaniemi-next-day-keeps-fajr",
+      "description": "66.5° N, 25.7° E, Umm al-Qura, 2026-06-02: the following day keeps its Fajr (01:51). Its own Isha is after 06-03's Fajr, so it is missing too.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 3 (the earlier day gives way); RFC 0001 §4.3 rule 6, §9 #3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 66.5,
+          "longitude": 25.7,
+          "timeZone": "Europe/Helsinki",
+          "countryCode": "FI",
+          "name": "Rovaniemi"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-06-02"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {"partial": {"isha": "calculationUnavailable"}},
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-06-02",
+            "kind": "fajr",
+            "time": "2026-06-02T01:51:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-02",
+            "kind": "sunrise",
+            "time": "2026-06-02T02:06:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-02",
+            "kind": "dhuhr",
+            "time": "2026-06-02T13:15:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-02",
+            "kind": "asr",
+            "time": "2026-06-02T18:09:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-02",
+            "kind": "maghrib",
+            "time": "2026-06-03T00:31:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordering.day.rovaniemi-last-complete",
+      "description": "66.5° N, 25.7° E, Umm al-Qura, 2026-05-31: Isha (01:48 on 06-01) is before 06-01's Fajr (01:55), so the day is complete.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 3 (the earlier day gives way); RFC 0001 §4.3 rule 6, §9 #3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 66.5,
+          "longitude": 25.7,
+          "timeZone": "Europe/Helsinki",
+          "countryCode": "FI",
+          "name": "Rovaniemi"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-05-31"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-05-31",
+            "kind": "fajr",
+            "time": "2026-05-31T01:59:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-05-31",
+            "kind": "sunrise",
+            "time": "2026-05-31T02:17:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-05-31",
+            "kind": "dhuhr",
+            "time": "2026-05-31T13:15:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-05-31",
+            "kind": "asr",
+            "time": "2026-05-31T18:08:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-05-31",
+            "kind": "maghrib",
+            "time": "2026-06-01T00:18:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-05-31",
+            "kind": "isha",
+            "time": "2026-06-01T01:48:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordering.events.rovaniemi-missing-isha",
+      "description": "Events from 12:00 on 06-01 to 12:00 on 06-02 at 66.5° N: 06-01's Dhuhr, Asr and Maghrib, and 06-02's Fajr and sunrise. 06-01's Isha has a window from its Maghrib to 06-02's Fajr.",
+      "provenance": "RFC 0001 §4.6; RFC 0002 §4.2, §4.3 step 3 (the earlier day gives way); RFC 0001 §4.3 rule 6, §9 #3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 66.5,
+          "longitude": 25.7,
+          "timeZone": "Europe/Helsinki",
+          "countryCode": "FI",
+          "name": "Rovaniemi"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {
+          "type": "events",
+          "from": "2026-06-01T12:00:00+03:00",
+          "through": "2026-06-02T12:00:00+03:00"
+        }
+      },
+      "expected": {
+        "events": [
+          {
+            "day": "2026-06-01",
+            "kind": "dhuhr",
+            "time": "2026-06-01T13:15:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-01",
+            "kind": "asr",
+            "time": "2026-06-01T18:09:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-01",
+            "kind": "maghrib",
+            "time": "2026-06-02T00:24:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-02",
+            "kind": "fajr",
+            "time": "2026-06-02T01:51:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-06-02",
+            "kind": "sunrise",
+            "time": "2026-06-02T02:06:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ],
+        "coverage": {
+          "requested": ["2026-06-01T12:00:00+03:00", "2026-06-02T12:00:00+03:00"],
+          "known": [
+            ["2026-06-01T12:00:00+03:00", "2026-06-02T00:24:00+03:00"],
+            ["2026-06-02T01:51:00+03:00", "2026-06-02T12:00:00+03:00"]
+          ],
+          "gaps": [
+            {
+              "start": "2026-06-02T00:24:00+03:00",
+              "end": "2026-06-02T01:51:00+03:00",
+              "day": "2026-06-01",
+              "kinds": ["isha"],
+              "reason": "calculationUnavailable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calculation.ordering.state.rovaniemi-before-maghrib",
+      "description": "State at 23:00 on 06-01 at 66.5° N: previous is Asr and next Maghrib (00:24). The Isha window starts at Maghrib, so it doesn't hide Maghrib.",
+      "provenance": "RFC 0001 §4.7; RFC 0002 §4.2, §4.3 step 3 (the earlier day gives way); RFC 0001 §4.3 rule 6, §9 #3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 66.5,
+          "longitude": 25.7,
+          "timeZone": "Europe/Helsinki",
+          "countryCode": "FI",
+          "name": "Rovaniemi"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-06-01T23:00:00+03:00", "through": "2026-06-03T00:00:00+03:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {
+          "day": "2026-06-01",
+          "kind": "asr",
+          "time": "2026-06-01T18:09:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "latestPrayer": {
+          "day": "2026-06-01",
+          "kind": "asr",
+          "time": "2026-06-01T18:09:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "next": {
+          "day": "2026-06-01",
+          "kind": "maghrib",
+          "time": "2026-06-02T00:24:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "nextPrayer": {
+          "day": "2026-06-01",
+          "kind": "maghrib",
+          "time": "2026-06-02T00:24:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-06-02T00:09:00+03:00",
+        "coverage": {
+          "requested": ["2026-06-01T23:00:00+03:00", "2026-06-03T00:00:00+03:00"],
+          "known": [
+            ["2026-06-01T23:00:00+03:00", "2026-06-02T00:24:00+03:00"],
+            ["2026-06-02T01:51:00+03:00", "2026-06-03T00:00:00+03:00"]
+          ],
+          "gaps": [
+            {
+              "start": "2026-06-02T00:24:00+03:00",
+              "end": "2026-06-02T01:51:00+03:00",
+              "day": "2026-06-01",
+              "kinds": ["isha"],
+              "reason": "calculationUnavailable"
+            }
+          ]
+        },
+        "statuses": {"2026-06-01/asr": "passed", "2026-06-01/maghrib": "next", "2026-06-02/fajr": "upcoming"}
+      }
+    },
+    {
+      "id": "calculation.ordering.state.rovaniemi-after-maghrib",
+      "description": "State at 00:30 on 06-02 at 66.5° N: Maghrib has passed and 06-01's Isha window runs until 06-02's Fajr (01:51), so the state is unavailable until then.",
+      "provenance": "RFC 0001 §4.7; RFC 0002 §4.2, §4.3 step 3 (the earlier day gives way); RFC 0001 §4.3 rule 6, §9 #3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 66.5,
+          "longitude": 25.7,
+          "timeZone": "Europe/Helsinki",
+          "countryCode": "FI",
+          "name": "Rovaniemi"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "state", "at": "2026-06-02T00:30:00+03:00", "through": "2026-06-04T00:00:00+03:00"}
+      },
+      "expected": {
+        "availability": "unavailable",
+        "previous": null,
+        "latestPrayer": null,
+        "next": null,
+        "nextPrayer": null,
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-06-02T01:51:00+03:00",
+        "coverage": {
+          "requested": ["2026-06-02T00:30:00+03:00", "2026-06-04T00:00:00+03:00"],
+          "known": [
+            ["2026-06-02T01:51:00+03:00", "2026-06-03T00:31:00+03:00"],
+            ["2026-06-03T01:46:00+03:00", "2026-06-04T00:00:00+03:00"]
+          ],
+          "gaps": [
+            {
+              "start": "2026-06-02T00:30:00+03:00",
+              "end": "2026-06-02T01:51:00+03:00",
+              "day": "2026-06-01",
+              "kinds": ["isha"],
+              "reason": "calculationUnavailable"
+            },
+            {
+              "start": "2026-06-03T00:31:00+03:00",
+              "end": "2026-06-03T01:46:00+03:00",
+              "day": "2026-06-02",
+              "kinds": ["isha"],
+              "reason": "calculationUnavailable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calculation.ordering.day.makkah-isha-adjusted-into-next-day",
+      "description": "Makkah, Umm al-Qura with a user adjustment of +1440 minutes on Isha, 2026-10-13: Isha falls at 19:28 on 10-14, inside the owning span but after 10-14's Fajr, so it is missing.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 3 (the earlier day gives way); RFC 0001 §4.3 rule 6, §9 #3; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "adjustments": {"isha": 1440},
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-10-13"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {"partial": {"isha": "calculationUnavailable"}},
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-10-13",
+            "kind": "fajr",
+            "time": "2026-10-13T04:59:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "sunrise",
+            "time": "2026-10-13T06:16:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "dhuhr",
+            "time": "2026-10-13T12:07:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "asr",
+            "time": "2026-10-13T15:28:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "maghrib",
+            "time": "2026-10-13T17:58:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    }
+  ]
+}

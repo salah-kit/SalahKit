@@ -1,0 +1,610 @@
+{
+  "schemaVersion": 1,
+  "description": "The opt-in Ramadan Isha rule, and a Friday whose Dhuhr stays ordinary because a calculated source never declares Jumu'ah.",
+  "vectors": [
+    {
+      "id": "calculation.opt-ins.day.makkah-ramadan-off",
+      "description": "Makkah, Umm al-Qura, 2026-03-01 (12 Ramadan 1447) with the Ramadan rule off: Isha is Maghrib plus 90 minutes.",
+      "provenance": "RFC 0002 §4.6 (Ramadan Isha); SalahTimes RFC 0001 decision 7; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-03-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-03-01",
+            "kind": "fajr",
+            "time": "2026-03-01T05:25:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "sunrise",
+            "time": "2026-03-01T06:41:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "dhuhr",
+            "time": "2026-03-01T12:33:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "asr",
+            "time": "2026-03-01T15:54:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "maghrib",
+            "time": "2026-03-01T18:25:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "isha",
+            "time": "2026-03-01T19:55:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.opt-ins.day.makkah-ramadan-on",
+      "description": "The same day with ramadanIsha {interval: 120 minutes} (CalculationSettings(method: .ummAlQura, ramadanIsha: …)): Isha is Maghrib plus 120 minutes; nothing else changes.",
+      "provenance": "RFC 0002 §4.6 (Ramadan Isha); SalahTimes RFC 0001 decision 7; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest",
+            "ramadanIsha": {"interval": {"minutes": 120, "hijriDayOffset": 0}}
+          }
+        },
+        "query": {"type": "day", "day": "2026-03-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-03-01",
+            "kind": "fajr",
+            "time": "2026-03-01T05:25:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "sunrise",
+            "time": "2026-03-01T06:41:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "dhuhr",
+            "time": "2026-03-01T12:33:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "asr",
+            "time": "2026-03-01T15:54:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "maghrib",
+            "time": "2026-03-01T18:25:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "isha",
+            "time": "2026-03-01T20:25:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.opt-ins.day.makkah-ramadan-last-day",
+      "description": "2026-03-19, the last day of Ramadan 1447 in the Umm al-Qura calendar, with the rule on: Isha is Maghrib plus 120 minutes.",
+      "provenance": "RFC 0002 §4.6 (Ramadan Isha); SalahTimes RFC 0001 decision 7; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest",
+            "ramadanIsha": {"interval": {"minutes": 120, "hijriDayOffset": 0}}
+          }
+        },
+        "query": {"type": "day", "day": "2026-03-19"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-03-19",
+            "kind": "fajr",
+            "time": "2026-03-19T05:10:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-19",
+            "kind": "sunrise",
+            "time": "2026-03-19T06:26:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-19",
+            "kind": "dhuhr",
+            "time": "2026-03-19T12:28:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-19",
+            "kind": "asr",
+            "time": "2026-03-19T15:53:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-19",
+            "kind": "maghrib",
+            "time": "2026-03-19T18:31:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-19",
+            "kind": "isha",
+            "time": "2026-03-19T20:31:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.opt-ins.day.makkah-after-ramadan",
+      "description": "2026-03-20, the day after Ramadan, with the rule on: Isha is back to Maghrib plus 90 minutes.",
+      "provenance": "RFC 0002 §4.6 (Ramadan Isha); SalahTimes RFC 0001 decision 7; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest",
+            "ramadanIsha": {"interval": {"minutes": 120, "hijriDayOffset": 0}}
+          }
+        },
+        "query": {"type": "day", "day": "2026-03-20"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": true,
+        "events": [
+          {
+            "day": "2026-03-20",
+            "kind": "fajr",
+            "time": "2026-03-20T05:09:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-20",
+            "kind": "sunrise",
+            "time": "2026-03-20T06:25:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-20",
+            "kind": "dhuhr",
+            "time": "2026-03-20T12:28:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-20",
+            "kind": "asr",
+            "time": "2026-03-20T15:53:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-20",
+            "kind": "maghrib",
+            "time": "2026-03-20T18:32:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-20",
+            "kind": "isha",
+            "time": "2026-03-20T20:02:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.opt-ins.day.makkah-ramadan-hijri-offset",
+      "description": "2026-02-17, the day before Ramadan 1447, with the rule on and a Hijri day offset of +1: the shifted calendar puts it in Ramadan, so Isha is Maghrib plus 120 minutes.",
+      "provenance": "RFC 0002 §4.6 (Ramadan Isha); SalahTimes RFC 0001 decision 7; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest",
+            "ramadanIsha": {"interval": {"minutes": 120, "hijriDayOffset": 1}}
+          }
+        },
+        "query": {"type": "day", "day": "2026-02-17"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-02-17",
+            "kind": "fajr",
+            "time": "2026-02-17T05:33:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-02-17",
+            "kind": "sunrise",
+            "time": "2026-02-17T06:50:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-02-17",
+            "kind": "dhuhr",
+            "time": "2026-02-17T12:35:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-02-17",
+            "kind": "asr",
+            "time": "2026-02-17T15:53:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-02-17",
+            "kind": "maghrib",
+            "time": "2026-02-17T18:19:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-02-17",
+            "kind": "isha",
+            "time": "2026-02-17T20:19:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.opt-ins.day.makkah-ramadan-angle-isha",
+      "description": "Makkah, Muslim World League with the Ramadan rule on, 2026-03-01: the rule replaces only an interval Isha, so the 17° Isha is unchanged.",
+      "provenance": "RFC 0002 §4.6 (Ramadan Isha); SalahTimes RFC 0001 decision 7; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest",
+            "ramadanIsha": {"interval": {"minutes": 120, "hijriDayOffset": 0}}
+          }
+        },
+        "query": {"type": "day", "day": "2026-03-01"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-03-01",
+            "kind": "fajr",
+            "time": "2026-03-01T05:27:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "sunrise",
+            "time": "2026-03-01T06:41:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "dhuhr",
+            "time": "2026-03-01T12:33:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "asr",
+            "time": "2026-03-01T15:54:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "maghrib",
+            "time": "2026-03-01T18:25:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-03-01",
+            "kind": "isha",
+            "time": "2026-03-01T19:35:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.opt-ins.day.makkah-friday-dhuhr-ordinary",
+      "description": "Makkah, Umm al-Qura, Friday 2026-10-16, with iqama rules {dhuhr: after 20} and {jumuah: after 45}: Dhuhr stays ordinary, so the Dhuhr rule gives its iqama (12:26) and the Jumu'ah rule doesn't apply.",
+      "provenance": "RFC 0001 §4.3 rule 11 (never inferred from the weekday), §4.5 (the Jumu'ah rule applies only to a declared Jumu'ah); RFC 0002 §4.2 step 5 (observance .ordinary); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}}, "jumuah": {"after": 45}},
+        "query": {"type": "day", "day": "2026-10-16"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": "complete",
+        "isFriday": true,
+        "events": [
+          {
+            "day": "2026-10-16",
+            "kind": "fajr",
+            "time": "2026-10-16T05:00:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-16",
+            "kind": "sunrise",
+            "time": "2026-10-16T06:17:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-16",
+            "kind": "dhuhr",
+            "time": "2026-10-16T12:06:00+03:00",
+            "iqama": "2026-10-16T12:26:00+03:00",
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-16",
+            "kind": "asr",
+            "time": "2026-10-16T15:26:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-16",
+            "kind": "maghrib",
+            "time": "2026-10-16T17:56:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-16",
+            "kind": "isha",
+            "time": "2026-10-16T19:26:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.opt-ins.state.makkah-friday-after-dhuhr",
+      "description": "State at 12:15 on Friday 2026-10-16 in Makkah with the same iqama rules: the ordinary Dhuhr (12:06) has just started until its iqama at 12:26.",
+      "provenance": "RFC 0001 §4.3 rule 11 (never inferred from the weekday), §4.5 (the Jumu'ah rule applies only to a declared Jumu'ah); RFC 0002 §4.2 step 5 (observance .ordinary); RFC 0001 §4.7 (justStarted untilIqama); instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "rounding": "nearest"
+          }
+        },
+        "iqama": {"rules": {"dhuhr": {"after": 20}}, "jumuah": {"after": 45}},
+        "query": {"type": "state", "at": "2026-10-16T12:15:00+03:00", "through": "2026-10-18T00:00:00+03:00"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {
+          "day": "2026-10-16",
+          "kind": "dhuhr",
+          "time": "2026-10-16T12:06:00+03:00",
+          "iqama": "2026-10-16T12:26:00+03:00",
+          "observance": "ordinary"
+        },
+        "latestPrayer": {
+          "day": "2026-10-16",
+          "kind": "dhuhr",
+          "time": "2026-10-16T12:06:00+03:00",
+          "iqama": "2026-10-16T12:26:00+03:00",
+          "observance": "ordinary"
+        },
+        "next": {
+          "day": "2026-10-16",
+          "kind": "asr",
+          "time": "2026-10-16T15:26:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "nextPrayer": {
+          "day": "2026-10-16",
+          "kind": "asr",
+          "time": "2026-10-16T15:26:00+03:00",
+          "iqama": null,
+          "observance": "ordinary"
+        },
+        "justStarted": {
+          "day": "2026-10-16",
+          "kind": "dhuhr",
+          "time": "2026-10-16T12:06:00+03:00",
+          "iqama": "2026-10-16T12:26:00+03:00",
+          "observance": "ordinary"
+        },
+        "isApproaching": false,
+        "changesAt": "2026-10-16T12:26:00+03:00",
+        "coverage": {
+          "requested": ["2026-10-16T12:15:00+03:00", "2026-10-18T00:00:00+03:00"],
+          "known": [["2026-10-16T12:15:00+03:00", "2026-10-18T00:00:00+03:00"]],
+          "gaps": []
+        },
+        "statuses": {"2026-10-16/dhuhr": "justStarted", "2026-10-16/asr": "next"}
+      }
+    }
+  ]
+}
