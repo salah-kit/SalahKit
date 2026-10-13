@@ -719,12 +719,12 @@
         "source": {
           "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
           "rows": [
-            {"day": "2026-10-23", "times": {"fajr": "04:50", "sunrise": "06:08", "dhuhr": "11:38", "asr": "14:50", "maghrib": "17:09", "isha": "18:24"}},
-            {"day": "2026-10-24", "times": {"fajr": "04:51", "sunrise": "06:09", "dhuhr": "11:38", "asr": "14:49", "maghrib": "17:08", "isha": "18:23"}},
+            {"day": "2026-10-23", "times": {"fajr": "05:50", "sunrise": "07:08", "dhuhr": "12:38", "asr": "15:50", "maghrib": "18:09", "isha": "19:24"}},
+            {"day": "2026-10-24", "times": {"fajr": "05:51", "sunrise": "07:09", "dhuhr": "12:38", "asr": "15:49", "maghrib": "18:08", "isha": "19:23"}},
             {"day": "2026-10-26", "times": {"fajr": "04:52", "sunrise": "06:10", "dhuhr": "11:38", "asr": "14:48", "maghrib": "17:06", "isha": "18:21"}}
           ]
         },
-        "query": {"type": "events", "from": "2026-10-24T20:00:00+02:00", "through": "2026-10-26T06:00:00+02:00"}
+        "query": {"type": "events", "from": "2026-10-24T21:00:00+03:00", "through": "2026-10-26T06:00:00+02:00"}
       },
       "expected": {
         "events": [
