@@ -104,6 +104,7 @@ struct BoardSnapshotTests {
     let partialNoon = try snapshot(.edinburgh, at: "2026-06-24T12:00:00+01:00")
     #expect(try row(.isha, in: partialNoon).time == nil)
     #expect(try row(.isha, in: partialNoon).missingReason == "not published")
+    #expect(try row(.isha, in: partialNoon).missingText == "Not published")
     #expect(partialNoon.banner == nil)
 
     let partialNight = try snapshot(.edinburgh, at: "2026-06-24T23:00:00+01:00")
@@ -135,6 +136,51 @@ struct BoardSnapshotTests {
     #expect(time == "١٦:٠٦")
   }
 
+  @Test func aMissingTimeShowsItsOwnReason() throws {
+    // 01:30 doesn't exist in Edinburgh on the spring-forward day, so Fajr can't be resolved.
+    let day = CivilDay(year: 2026, month: 3, day: 29)
+    func local(_ hour: Int, _ minute: Int) -> TimetableTime {
+      .local(WallClockTime(hour: hour, minute: minute))
+    }
+    let source = TimetableSource(
+      rows: [
+        TimetableSource.Row(
+          day: day,
+          times: [
+            .fajr: local(1, 30), .sunrise: local(6, 51), .dhuhr: local(13, 19),
+            .asr: local(16, 45), .maghrib: local(19, 45), .isha: local(21, 50),
+          ])
+      ],
+      expectedKinds: Set(PrayerKind.allCases))
+    let edinburgh = try Board.load(.edinburgh)
+    let board = Board(
+      id: .edinburgh, schedule: PrayerSchedule(source: source, location: edinburgh.location))
+    let noon = BoardSnapshot.make(
+      board: board, at: try Date("2026-03-29T12:00:00+01:00", strategy: .iso8601),
+      strings: english)
+    let fajr = try row(.fajr, in: noon)
+    #expect(fajr.time == nil)
+    #expect(fajr.missingReason == "the local time is skipped or repeated")
+    #expect(fajr.missingText == "The local time is skipped or repeated")
+  }
+
+  @Test func anIqamaAfterMidnightIsMarkedOnlyWhenItsPrayerBeginsBefore() throws {
+    let lateIsha = try row(.isha, in: try snapshot(.edinburgh, at: "2026-04-30T22:00:00+01:00"))
+    #expect(lateIsha.time == "23:48")
+    #expect(!lateIsha.isNextDay)
+    #expect(lateIsha.iqama == "00:00")
+    #expect(lateIsha.iqamaIsNextDay)
+
+    // Both after midnight: the begin time's mark covers the iqama.
+    let overnight = try row(.isha, in: try snapshot(.edinburgh, at: "2026-06-21T23:30:00+01:00"))
+    #expect(overnight.isNextDay)
+    #expect(overnight.iqama == "01:25")
+    #expect(!overnight.iqamaIsNextDay)
+
+    let sameDay = try row(.isha, in: try snapshot(.edinburgh, at: "2026-03-29T12:00:00+01:00"))
+    #expect(!sameDay.iqamaIsNextDay)
+  }
+
   @Test func launchOptionsAndClock() throws {
     let options = LaunchOptions(arguments: [
       "MosqueBoard", "-board", "edinburgh", "-now", "2026-06-21T23:30:00+01:00", "-frozen",
@@ -151,5 +197,13 @@ struct BoardSnapshotTests {
     let frozen = BoardClock(start: start, launch: launch, frozen: true)
     #expect(frozen.now(at: launch.addingTimeInterval(90)) == start)
     #expect(BoardClock(launch: launch).now(at: launch.addingTimeInterval(5)) == launch + 5)
+
+    // `-frozen` without a valid `-now` can't freeze the real clock, so the board keeps
+    // redrawing instead of showing the launch instant forever.
+    let unparsed = LaunchOptions(arguments: ["MosqueBoard", "-now", "2026-06-22T00:30", "-frozen"])
+    #expect(unparsed.now == nil)
+    let live = BoardClock(start: unparsed.now, launch: launch, frozen: unparsed.frozen)
+    #expect(!live.frozen)
+    #expect(live.now(at: launch.addingTimeInterval(60)) == launch + 60)
   }
 }

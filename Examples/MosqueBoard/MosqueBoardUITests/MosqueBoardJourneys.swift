@@ -127,6 +127,8 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
     XCTAssertEqual(label("next.time", in: app), "Begins 01:15")
     XCTAssertEqual(label("next.countdown", in: app), "Time remaining: 1 hour, 45 minutes")
     XCTAssertEqual(label("row.isha.nextDay", in: app), "Next day")
+    // The begin time's mark covers an iqama on the same night.
+    assertMissing("row.isha.iqamaNextDay", in: app)
     XCTAssertEqual(label("row.maghrib.status", in: app), "Passed")
     assertMissing("next.owningDay", in: app)
     screenshot("04a-edinburgh-before-midnight", of: app)
@@ -141,6 +143,14 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
     XCTAssertEqual(label("row.fajr.time", in: app), "Begins 03:32")
     XCTAssertEqual(label("row.fajr.status", in: app), "Upcoming")
     screenshot("04b-edinburgh-after-midnight", of: app)
+    app.terminate()
+
+    // Isha begins before midnight and its iqama is after it: the iqama carries the mark.
+    app = launch("edinburgh", at: "2026-04-30T22:00:00+01:00")
+    XCTAssertEqual(label("row.isha.time", in: app), "Begins 23:48")
+    assertMissing("row.isha.nextDay", in: app)
+    XCTAssertEqual(label("row.isha.iqama", in: app), "Iqama 00:00")
+    XCTAssertEqual(label("row.isha.iqamaNextDay", in: app), "Next day")
   }
 
   /// 5. Countdowns across both 2026 clock changes count elapsed time, not wall-clock time.

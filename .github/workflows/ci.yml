@@ -120,11 +120,19 @@ jobs:
         run: scripts/select-xcode.sh
 
       # The committed project must be exactly what project.yml generates (STANDARD.md, Apps).
+      # `git status` also catches generated files that were never committed; the checkout's
+      # folder is named SalahKit, the name the project was generated under (see project.yml).
       - name: Check the generated project
         run: |
           brew install xcodegen
           (cd Examples/MosqueBoard && xcodegen --quiet)
-          git diff --exit-code -- Examples/MosqueBoard
+          changes="$(git status --porcelain -- Examples/MosqueBoard)"
+          if [[ -n "${changes}" ]]; then
+            echo "${changes}"
+            git diff -- Examples/MosqueBoard
+            echo "::error::Examples/MosqueBoard differs from what project.yml generates."
+            exit 1
+          fi
 
       # The app builds under both default-isolation settings (proposal section 3.1).
       - name: Build (MainActor and nonisolated)

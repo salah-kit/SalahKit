@@ -49,13 +49,13 @@
 		6145BD42FE8C1954366ACAB0 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		8A69C91BBA39D721A3140414 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
 		96F3E68D6BE5DBB98B448BFD /* MosqueBoardTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MosqueBoardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6BB3421B708ABE9918F8AEA /* SalahKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SalahKit; path = ../..; sourceTree = SOURCE_ROOT; };
 		C1194C5B1A05F57AE64C3ED5 /* BoardSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSnapshot.swift; sourceTree = "<group>"; };
 		CDC72A7ED79F9F1E1543C602 /* TimetableDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableDataTests.swift; sourceTree = "<group>"; };
 		D269AA40D0F955A7B6465C24 /* LaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptions.swift; sourceTree = "<group>"; };
 		D483CBD9714237BF6487D803 /* MosqueBoard.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MosqueBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9951F48E7A0CDDB3CDDC929 /* MosqueBoardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosqueBoardApp.swift; sourceTree = "<group>"; };
 		EC7251AEE38E338479D0C103 /* MosqueBoardUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MosqueBoardUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F1EE2DD2B1F5298CBD472F7E /* SalahKit-A1-mosque */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "SalahKit-A1-mosque"; path = ../..; sourceTree = SOURCE_ROOT; };
 		F85136FFE90E1043B44E72D6 /* BoardSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSnapshotTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -133,7 +133,7 @@
 		DC5CAF87063AB23EA1A1FFFB /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				F1EE2DD2B1F5298CBD472F7E /* SalahKit-A1-mosque */,
+				A6BB3421B708ABE9918F8AEA /* SalahKit */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -335,7 +335,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoard";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};
@@ -351,7 +351,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoardUITests";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				TEST_TARGET_NAME = MosqueBoard;
 			};
 			name = Debug;
@@ -368,7 +368,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoardUITests";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				TEST_TARGET_NAME = MosqueBoard;
 			};
 			name = Release;
@@ -431,7 +431,6 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};
@@ -447,7 +446,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoardTests";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MosqueBoard.app/MosqueBoard";
 			};
 			name = Debug;
@@ -517,7 +516,6 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -533,7 +531,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoardTests";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MosqueBoard.app/MosqueBoard";
 			};
 			name = Release;
@@ -555,7 +553,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoard";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};

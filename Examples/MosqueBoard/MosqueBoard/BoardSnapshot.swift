@@ -23,12 +23,20 @@ nonisolated struct BoardSnapshot: Equatable, Sendable {
     /// Whether the time is on the next calendar day (written `+1` in the timetable).
     var isNextDay: Bool
     var iqama: String?
+    /// Whether the iqama falls on the calendar day after the begin time: Isha at 23:54 with
+    /// its iqama at 00:05.
+    var iqamaIsNextDay = false
     /// Why the time is missing, when it is.
     var missingReason: String?
     /// `nil` when the state is unavailable, so the schedule can't say.
     var status: Status?
     var statusText: String?
     var id: String { kind.rawValue }
+
+    /// The text shown in place of a missing time: its reason, starting with a capital.
+    var missingText: String? {
+      missingReason.map { $0.prefix(1).uppercased() + $0.dropFirst() }
+    }
   }
 
   /// The next prayer, or why there isn't one.
@@ -103,7 +111,12 @@ extension BoardSnapshot {
             Row(
               kind: kind, name: strings.names.name(of: event), time: format.time(event.time),
               isNextDay: CivilDay(containing: event.time, in: format.timeZone) != today,
-              iqama: event.iqama.map(format.time), missingReason: nil, status: status,
+              iqama: event.iqama.map(format.time),
+              iqamaIsNextDay: event.iqama.map {
+                CivilDay(containing: $0, in: format.timeZone)
+                  != CivilDay(containing: event.time, in: format.timeZone)
+              } ?? false,
+              missingReason: nil, status: status,
               statusText: status.map { $0.text(strings) } ?? strings("Unknown")))
         } else {
           let reason = missing[kind] ?? .noPublishedData

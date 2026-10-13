@@ -156,7 +156,7 @@ private struct PrayerRowView: View {
               .accessibilityIdentifier("\(id).nextDay")
           }
         } else {
-          Text(verbatim: strings("Not published"))
+          Text(verbatim: row.missingText ?? "")
             .font(.title3)
             .accessibilityLabel(
               Text(verbatim: strings("Begin time: \(row.missingReason ?? "")"))
@@ -167,10 +167,17 @@ private struct PrayerRowView: View {
       .frame(width: timeWidth, alignment: .leading)
       Group {
         if let iqama = row.iqama {
-          Text(verbatim: iqama)
-            .font(.title.monospacedDigit())
-            .accessibilityLabel(Text(verbatim: strings("Iqama \(iqama)")))
-            .accessibilityIdentifier("\(id).iqama")
+          VStack(alignment: .leading, spacing: 0) {
+            Text(verbatim: iqama)
+              .font(.title.monospacedDigit())
+              .accessibilityLabel(Text(verbatim: strings("Iqama \(iqama)")))
+              .accessibilityIdentifier("\(id).iqama")
+            if row.iqamaIsNextDay {
+              Text(verbatim: strings("Next day"))
+                .font(.caption)
+                .accessibilityIdentifier("\(id).iqamaNextDay")
+            }
+          }
         } else {
           Text(verbatim: "–").font(.title).accessibilityHidden(true)
         }

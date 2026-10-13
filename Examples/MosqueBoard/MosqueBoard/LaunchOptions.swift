@@ -4,7 +4,7 @@ import Foundation
 ///
 /// - `-board muis|edinburgh`: the timetable to show (default `muis`).
 /// - `-now <ISO 8601 instant>`: start the board's clock at this instant; it then advances in
-///   real time, or stays put with `-frozen`.
+///   real time, or stays put with `-frozen`. Without a valid `-now`, `-frozen` has no effect.
 /// - `-language en|ar`: the language of names, digits and dates (default: the app's language).
 nonisolated struct LaunchOptions: Equatable, Sendable {
   var board: Board.ID = .muis
@@ -43,13 +43,14 @@ nonisolated struct BoardClock: Sendable {
   var start: Date?
   /// The real instant the app launched.
   var launch: Date
-  /// Whether the clock stays at `start`.
+  /// Whether the clock stays at `start`. Only a clock with a start can be frozen: without
+  /// one, the board follows the real clock and keeps redrawing.
   var frozen: Bool
 
   init(start: Date? = nil, launch: Date = Date(), frozen: Bool = false) {
     self.start = start
     self.launch = launch
-    self.frozen = frozen
+    self.frozen = frozen && start != nil
   }
 
   /// The board's instant at a real instant.

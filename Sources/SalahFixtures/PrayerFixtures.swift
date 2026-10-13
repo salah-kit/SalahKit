@@ -81,9 +81,9 @@ nonisolated public enum PrayerFixtures {
     /// The state of the moment's schedule at its instant.
     ///
     /// The state looks ahead to the start of the second civil day after the instant's civil day
-    /// in the place's time zone, so the next prayer is known even late in the evening. That is
-    /// the bound that `PrayerSchedule.refreshPlan(from:through:strategy:policy:limit:)` gives
-    /// each of its entries.
+    /// in the place's time zone, so the next prayer is known even late in the evening. A refresh
+    /// plan applies the same rule to its horizon's end, so its first entry matches this state
+    /// only when the horizon ends on the instant's civil day.
     ///
     /// - Parameter policy: When a prayer counts as approaching or just started.
     /// - Returns: The state at ``date``, with the coverage from ``date`` to that bound.

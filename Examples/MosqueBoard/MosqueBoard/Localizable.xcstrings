@@ -273,23 +273,6 @@
         }
       }
     },
-    "Not published": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "غير منشور"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Not published"
-          }
-        }
-      }
-    },
     "Passed": {
       "extractionState": "manual",
       "localizations": {

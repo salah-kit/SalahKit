@@ -146,8 +146,9 @@ for gap in state.coverage.gaps {
 print(state.changesAt == (try Date("2026-10-18T06:02:00+01:00", strategy: .iso8601)))  // true
 ```
 
-The gap belongs to 17 October and runs from that day's Maghrib to Sunday's Fajr, the span in
-which the missing Isha could fall. ``ScheduleState/changesAt`` is the next instant at which the
+The gap belongs to 17 October. The missing Isha could fall anywhere from that day's Maghrib to
+Sunday's Fajr, and the coverage reports that span clipped to the question, so the gap starts at
+19:00. ``ScheduleState/changesAt`` is the next instant at which the
 state changes within the bound, here Sunday's Fajr. A screen that redraws then never shows a
 stale state.
 

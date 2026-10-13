@@ -56,12 +56,18 @@ The repository uses `swift format` with the shared `.swift-format` configuration
 every salah-kit repository). CI fails on any finding:
 
 ```sh
-scripts/lint.sh                                                   # what CI runs
-swift format --in-place --recursive Sources Tests Package.swift    # fix findings
+scripts/lint.sh                                                            # what CI runs
+swift format --in-place --recursive Sources Tests Package.swift Examples    # fix findings
 ```
 
-Add `Examples` to the second command once that directory has Swift files; `scripts/lint.sh`
-picks it up on its own.
+## Examples
+
+`Examples/MosqueBoard` is an iPad app generated with [XcodeGen](https://github.com/yonaskolb/XcodeGen)
+from `project.yml`; both the spec and the generated project are committed. After changing the spec
+or adding a file, run `xcodegen` in `Examples/MosqueBoard` from a clone whose folder is named
+`SalahKit` (the project records that folder's name), and commit both. CI regenerates the project
+and fails if anything differs, then builds the app under both default-isolation settings and runs
+its unit tests and journeys on an iPad simulator.
 
 ## Vectors
 

@@ -61,7 +61,7 @@ nonisolated struct Board: Sendable {
 
   /// MosqueBoard's own congregation settings for the MUIS board (app policy).
   ///
-  /// Jumu'ah is 30 minutes after Zohor begins, leaving time for the khutbah.
+  /// Jumu'ah is 30 minutes after Dhuhr begins, leaving time for the khutbah.
   static let muisIqama = IqamaRules(
     rules: [
       .fajr: .after(minutes: 20),
