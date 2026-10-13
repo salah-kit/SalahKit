@@ -27,7 +27,10 @@ case "${platform}" in
     ;;
 esac
 
-if ! xcodebuild -showsdks 2>/dev/null | grep -q -- "-sdk ${sdk}"; then
+# The SDK list is read whole before it's searched. In `xcodebuild | grep -q`, grep could exit
+# before xcodebuild finished writing, and pipefail would then skip a build that should run.
+sdks="$(xcodebuild -showsdks 2>/dev/null || true)"
+if ! grep -q -- "-sdk ${sdk}" <<<"${sdks}"; then
   message="the selected Xcode has no ${platform} SDK; skipping its build"
   if [[ -n "${GITHUB_ACTIONS:-}" ]]; then
     echo "::warning title=${platform} skipped::${message}"
