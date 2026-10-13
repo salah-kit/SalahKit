@@ -13,6 +13,12 @@ concurrency:
 permissions:
   contents: read
 
+# An explicit `bash` runs every step with `-eo pipefail`. GitHub's default shell omits pipefail,
+# so a failing command piped into another, such as `xcodebuild … | tee`, would pass the step.
+defaults:
+  run:
+    shell: bash
+
 jobs:
   macos:
     name: macOS (build, test, Apple platforms)
@@ -79,6 +85,13 @@ jobs:
           persist-credentials: false
       - name: swift format lint
         run: scripts/lint.sh
+      # Keeps the workflow's `defaults` honest: a step that loses pipefail fails here.
+      - name: Check that a failed command piped into another fails its step
+        run: |
+          if (exit 3) | cat; then
+            echo "::error::Steps run without pipefail, so a failed build piped into tee would pass."
+            exit 1
+          fi
 
   isolation:
     name: Default isolation (${{ matrix.isolation }})
