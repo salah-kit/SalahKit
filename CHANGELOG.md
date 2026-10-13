@@ -56,8 +56,10 @@ apps that prove them through the public API.
   Edinburgh one, with iqama, coverage banners, Isha after midnight, clock changes and Arabic,
   and XCUITest journeys for each.
 - **CalculatedPhone**, an iPhone example that calculates with SalahCalculation: every
-  calculation parameter on screen and in its settings, the schedule and state across midnight,
-  and polar days and invalid locations shown as they are, with XCUITest journeys for each.
+  calculation parameter on screen; settings for the method or custom angles, the madhab, the
+  high-latitude rule, rounding, Ramadan's Isha and the user's minutes; the schedule and state
+  across midnight; and polar days and invalid locations shown as they are, with XCUITest
+  journeys for each.
 - CI for macOS, Linux, both default-isolation settings, lint, MosqueBoard (including a check
   that it links no calculation code) and CalculatedPhone; documentation published to GitHub
   Pages.

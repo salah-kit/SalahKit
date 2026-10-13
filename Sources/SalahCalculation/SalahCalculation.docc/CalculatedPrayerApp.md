@@ -204,5 +204,7 @@ above, when your module defaults to the main actor.
 
 ### See it in an app
 
-`Examples/CalculatedPhone` in the SalahKit repository is an iPhone app built this way, with
-settings for every parameter, the state across midnight, and polar days shown as they are.
+`Examples/CalculatedPhone` in the SalahKit repository is an iPhone app built this way. It shows
+every parameter behind its times, has settings for the method or custom angles, the madhab, the
+high-latitude rule, rounding, Ramadan's Isha and the user's minutes, and shows the state across
+midnight and polar days as they are.
