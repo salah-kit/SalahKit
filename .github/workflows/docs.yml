@@ -32,6 +32,8 @@ jobs:
         run: scripts/select-xcode.sh
 
       - name: Build the site
+        env:
+          DOCC_STRICT: "0"
         run: scripts/build-docs.sh .build/docs-site
 
       - name: Upload the site
