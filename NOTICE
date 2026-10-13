@@ -21,15 +21,19 @@ nor data.gov.sg endorses this project, and the example doesn't present the data
 as an official MUIS product.
 
 
-2. Times computed with Adhan Swift (SalahFixtures and MosqueBoard example)
+2. Times computed with Adhan Swift (SalahFixtures, MosqueBoard example and the
+   calculation parity report)
 
-Files: the timetable data in Sources/SalahFixtures, and
-Examples/MosqueBoard/MosqueBoard/Timetables/edinburgh-synthetic.json
+Files: the timetable data in Sources/SalahFixtures,
+Examples/MosqueBoard/MosqueBoard/Timetables/edinburgh-synthetic.json, and the
+comparison figures in docs/calculation-parity.md
 
-The prayer times in the SalahFixtures sample data and the begin times in the
-synthetic Edinburgh timetable were computed with Adhan Swift
+The prayer times in the SalahFixtures sample data, the begin times in the
+synthetic Edinburgh timetable and the Salah-side times behind the parity
+report's figures were computed with Adhan Swift
 (https://github.com/batoulapps/adhan-swift, commit a6fa2de), used as a
 calculator on a development machine. Adhan Swift is Copyright (c) 2016 Batoul
 Apps and is distributed under the MIT License. This repository contains none of
-Adhan Swift's code. Sources/SalahFixtures/FixtureData.md and
-Examples/MosqueBoard/Timetables.md record how the times were made.
+Adhan Swift's code. Sources/SalahFixtures/FixtureData.md,
+Examples/MosqueBoard/Timetables.md and docs/calculation-parity.md record how
+the times were made.
