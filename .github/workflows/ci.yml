@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A newer push to the same pull request or branch cancels the run it supersedes.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  macos:
+    name: macOS (build, test, Apple platforms)
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          persist-credentials: false
+
+      # Hosted runners don't offer Xcode 27, so CI uses the newest installed Xcode 26
+      # (docs/rfcs/0001-core.md, section 6.4). The runner's default Xcode can lag behind it.
+      - name: Select the newest Xcode 26
+        run: scripts/select-xcode.sh
+
+      - name: Build
+        run: swift build
+
+      - name: Test
+        run: swift test
+
+      # Generic destinations compile for each simulator platform without booting a simulator.
+      # Xcode 26 on macos-26 ships every simulator SDK the manifest supports. If a future image
+      # drops one, the step reports it as skipped instead of failing (STANDARD.md, CI).
+      - name: Build for Apple platforms
+        run: |
+          for platform in "iOS Simulator" "watchOS Simulator" "tvOS Simulator" "visionOS Simulator"; do
+            echo "::group::${platform}"
+            scripts/build-apple-platform.sh "${platform}"
+            echo "::endgroup::"
+          done
+
+  linux:
+    name: Linux (${{ matrix.image }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # swift:6.2-noble is the oldest toolchain the manifest (swift-tools-version 6.2) allows.
+        image: ["swift:6.2-noble", "swift:latest"]
+    container: ${{ matrix.image }} # zizmor: ignore[unpinned-images] -- swift:latest tracks the newest release on purpose
+    steps:
+      - uses: actions/checkout@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          persist-credentials: false
+      - name: Toolchain
+        run: swift --version
+      - name: Build
+        run: swift build
+      - name: Test
+        run: swift test
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Pinned to the toolchain contributors format with locally (Swift 6.4), so the formatter's
+    # output doesn't change under a pull request when swift:latest moves.
+    container: swift:6.4-noble
+    steps:
+      - uses: actions/checkout@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          persist-credentials: false
+      - name: swift format lint
+        run: scripts/lint.sh
+
+  isolation:
+    name: Default isolation (${{ matrix.isolation }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # The package must compile for adopters whose targets default to either isolation
+        # (docs/rfcs/0001-core.md, section 6.3). The flag needs Swift 6.2 or later.
+        isolation: [nonisolated, MainActor]
+    container: swift:latest # zizmor: ignore[unpinned-images] -- the newest toolchain on purpose
+    steps:
+      - uses: actions/checkout@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          persist-credentials: false
+      - name: Build
+        env:
+          ISOLATION: ${{ matrix.isolation }}
+        run: |
+          if [ "${ISOLATION}" = "MainActor" ]; then
+            swift build --build-tests -Xswiftc -default-isolation -Xswiftc MainActor
+          else
+            swift build --build-tests
+          fi

@@ -1,0 +1,62 @@
+name: Docs
+
+# Publishes the DocC site to https://salah-kit.github.io/SalahKit/ from main.
+# Pull requests run the same build without deploying, so a broken catalog or an unresolved
+# link fails before it reaches main.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build documentation
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          persist-credentials: false
+
+      # Hosted runners don't offer Xcode 27, so the docs build with the newest installed Xcode 26
+      # (docs/rfcs/0001-core.md, section 6.4).
+      - name: Select the newest Xcode 26
+        run: scripts/select-xcode.sh
+
+      - name: Build the site
+        run: scripts/build-docs.sh .build/docs-site
+
+      - name: Upload the site
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          path: .build/docs-site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # Deployments queue instead of cancelling each other, so the last push to main always lands.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
