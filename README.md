@@ -77,7 +77,7 @@ if case .available(let day, _) = schedule.day(today) {
 }
 ```
 
-`CalculationSettings` holds SalahTimes' parameters whole: change any angle, the madhab, the high-latitude rule, rounding or the minutes on `settings.parameters`. `Examples/CalculatedPhone` is a complete iPhone app built this way. It shows every parameter behind its times, has settings for the method or custom angles, the madhab, the high-latitude rule, rounding, Ramadan's Isha and the user's minutes, and shows the state across midnight and polar days as they are.
+`CalculationSettings` holds SalahTimes' parameters whole: change any angle, the madhab, the high-latitude rule, rounding or the minutes on `settings.parameters`. `Examples/CalculatedPhone` is a complete iPhone app built this way. It shows every parameter behind its times and has settings for the place, the method or a custom method's Fajr angle, Isha rule and night span, the madhab, the high-latitude rule, rounding, Ramadan's Isha and the user's minutes. It shows the state across midnight, and polar days as they are.
 
 ### A published timetable
 
