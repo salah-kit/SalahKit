@@ -2,7 +2,7 @@
 
 Language-neutral JSON test vectors for SalahCore (RFC 0001, `docs/rfcs/0001-core.md`). Each vector pairs published timetable input with the output RFC 0001 §4 requires. The Swift tests run every file here, and a Kotlin or TypeScript port can run the same files.
 
-The vectors were written from the RFC and the SalahKit proposal before any implementation existed. Every expectation was derived by hand from the RFC's rules, and the time-zone arithmetic was checked with Python's `zoneinfo` (tzdata 2026c/2026e). All inputs are `TimetableSource` data. Calculated sources add their own vectors later (RFC 0001 §7).
+The vectors were written from the RFC and the SalahKit proposal before any implementation existed. Every expectation was derived by hand from the RFC's rules, and the time-zone arithmetic was checked with Python's `zoneinfo` (tzdata 2026c/2026e). The inputs of `state/` and `refresh/` are `TimetableSource` data; `calculation/` holds the calculated source's vectors (below).
 
 ## Layout
 

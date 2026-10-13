@@ -81,7 +81,8 @@ nonisolated public protocol PrayerSource: Sendable {
   ///
   /// Zero for published times, which are written on their own day or the next. A calculated
   /// source needs more: where a place's clock runs behind the Sun, a Fajr bounded by the middle
-  /// of the night falls shortly before midnight, as Kazan's does at 23:52 on summer evenings.
+  /// of the night falls shortly before midnight, as Kazan's does between 23:40 and 23:52 on
+  /// summer evenings.
   ///
   /// The schedule accepts an event of day D from the start of D minus this lead, reads the next
   /// day when a query's end comes within the lead of it, and lets a missing event's interval

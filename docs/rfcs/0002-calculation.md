@@ -76,7 +76,7 @@ SalahCalculation doesn't re-export SalahTimes. An app that names SalahTimes type
 
 1. **Invalid date.** `D` isn't a real Gregorian date: `.unavailable(.invalidData)`.
 2. **Calculate `D`** (the steps of §4.3). If that fails, `.unavailable(reason)` with its reason.
-3. **The next day.** Calculate `D + 1` the same way. If it succeeds and has at least one time, let `first` be its earliest. Every time of `D` later than `first` is removed and its kind is missing with `.calculationUnavailable`. Equal instants stay. (Core §4.3 rule 6: no event of a day after an event of the next day. The earlier day gives way, because its late event, typically an interval Isha near the polar circles, is the one the rules can't place.)
+3. **The next day.** Calculate `D + 1` with the steps of §4.3 (this step doesn't apply to it). If it succeeds and has at least one time, let `first` be its earliest. Every time of `D` later than `first` is removed and its kind is missing with `.calculationUnavailable`. Equal instants stay. (Core §4.3 rule 6: no event of a day after an event of the next day. The earlier day gives way, because its late event, typically an interval Isha near the polar circles, is the one the rules can't place.)
 4. **Nothing left:** `.unavailable(.calculationUnavailable)`.
 5. **Otherwise** `.available(PrayerDay(day: D, timeZone: Z, events:), coverage:)`, with one event per remaining kind: `scheduleDay` `D`, `observance` `.ordinary`, `iqama` `nil`. Coverage is `.complete` when all six kinds remain, else `.partial(missing:)` with every missing kind and its reason.
 
@@ -102,7 +102,7 @@ The steps never move an instant, never take one from another day, and never infe
 
 A calculated event belongs to the day it was computed for. SalahTimes picks that day's solar day by the transit nearest local noon (SalahTimes RFC 0001, decision 1), so:
 - an Isha after midnight belongs to the evening before (Kashgar on Beijing time, high latitudes in summer);
-- where the clock runs behind the Sun, a Fajr near the middle of the night belongs to the next day but falls before it begins. In 2026 this happens on 96 days in Kazan and Naberezhnye Chelny under the middle-of-the-night rule (as early as 23:45), on 45 in Oskemen, and on 19 to 31 in Jiamusi under the default rule with the Egyptian or MUIS method. Near the polar circles, sunrise can too.
+- where the clock runs behind the Sun, a Fajr near the middle of the night belongs to the next day but falls before it begins. In 2026 this happens on 96 days in Kazan and Naberezhnye Chelny under the middle-of-the-night rule (in Kazan from 5 May to 8 August, between 23:40 and 23:52 the evening before), on 45 in Oskemen, and on 19 to 31 in Jiamusi under the default rule with the Egyptian or MUIS method. Near the polar circles, sunrise can too.
 
 SalahCore 0.1 accepts such events through `PrayerSource.maximumLead` (Core §4.3 rule 4, §10). `CalculationSource` declares 12 hours, SalahCore's maximum, which covers every place's clock offset and leaves room for large user adjustments. An instant earlier than that is missing (§4.3 step 4).
 
@@ -129,7 +129,7 @@ Both are SalahTimes features (SalahTimes RFC 0001, decision 7); SalahCalculation
 
 - Every public type is `nonisolated` and `Sendable`, like SalahCore's (Core §3). A widget extension or a background task can calculate off the main actor.
 - SalahTimes is used as SwiftPM builds it, with nonisolated default isolation. SalahKit's isolation checks apply MainActor default isolation to SalahKit's own targets only (Core §6.3).
-- A day costs two SalahTimes calculations (`D` and `D + 1`), about 20 µs in release. A 400-day query reads about 403 owning days.
+- A day costs two SalahTimes calculations (`D` and `D + 1`), about 20 µs in release. A query of the longest span, 400 days, reads at most 403 owning days: two before it for context, and none after it, because its end is the start of a day and the lead reaches back only 12 hours.
 
 ## 5. Changes from the proposal's sketch (§7.2)
 
@@ -151,9 +151,9 @@ SalahKit depends on SalahTimes `.upToNextMinor(from: "0.1.0")`. Before 1.0, a Sa
 
 `Vectors/calculation/` holds language-neutral vectors for a calculated source, so a port of SalahCore and SalahCalculation to another language can check itself. They use the SalahCore vector schema (`Vectors/README.md`) with one difference in the input: `settings` (a `CalculationSettings` JSON value) replaces `source`, and the schedule is `PrayerSchedule(source: CalculationSource(settings), location:, iqama:)`. Query types and expected shapes are SalahCore's.
 
-The expected instants come from SalahTimes' independent Python reference implementation (SalahTimes `Vectors/reference/`), not from the Swift engine; the rules of §4 decide which of them each answer holds. The vectors cover ordinary days, owning days across midnight in both directions, the lead, polar day and night, a disabled high-latitude rule, ties, an Isha after the next Fajr, every failure in §4.5, the Ramadan opt-in, Fridays, clock changes, state and refresh plans across these cases.
+The expected instants come from SalahTimes' independent Python reference implementation (SalahTimes `Vectors/reference/`), not from the Swift engine; the rules of §4 decide which of them each answer holds. The vectors were written from this RFC and RFC 0001 without reading SalahCalculation's implementation, by a model of both kept in `Vectors/calculation/generator/`, which regenerates them byte for byte. The vectors cover ordinary days, owning days across midnight in both directions, the lead, polar day and night, a disabled high-latitude rule, ties, an Isha after the next Fajr, every failure in §4.5, the Ramadan opt-in, Fridays, clock changes, state and refresh plans across these cases.
 
-SalahTimes' own vectors (`Vectors/times/`, copied into `Tests/SalahCalculationTests/SalahTimesVectors/` at 0.1.0) also run through the adapter: every time SalahTimes expects comes out of `CalculationSource` unchanged, or its kind is missing for a reason in §4.5.
+SalahTimes' own vectors (`Vectors/times/`, copied into `Tests/Data/SalahTimes-0.1.0/times/` from the 0.1.0 tag) also run through the adapter: every time SalahTimes expects comes out of `CalculationSource` unchanged, or its kind is missing for a reason in §4.5.
 
 ## 8. Evidence
 

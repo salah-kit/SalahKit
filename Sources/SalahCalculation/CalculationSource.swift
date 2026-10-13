@@ -49,8 +49,8 @@ nonisolated public struct CalculationSource: PrayerSource, Hashable, Sendable {
   /// Twelve hours, the most SalahCore allows.
   ///
   /// Where the clock runs behind the Sun, a Fajr near the middle of the night falls shortly
-  /// before its day begins: in Kazan, under the middle-of-the-night rule, at 23:52 on the
-  /// evening before. Near the polar circles, sunrise can too.
+  /// before its day begins: in Kazan, under the middle-of-the-night rule, between 23:40 and
+  /// 23:52 on the evening before, from May to August. Near the polar circles, sunrise can too.
   public var maximumLead: Duration { .seconds(Self.leadSeconds) }
 
   /// The calculated events of `day` at `location`, or why there are none.
