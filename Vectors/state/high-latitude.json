@@ -292,6 +292,119 @@
           "gaps": []
         }
       }
+    },
+    {
+      "id": "state.highlat.events.isha-equals-next-fajr",
+      "description": "06-21's Isha (02:10 on 06-22, a middle-of-the-night rule) coincides with 06-22's Fajr. Equal instants across days are allowed: no overlap gap, both events listed, the earlier owning day first.",
+      "provenance": "RFC 0001 §4.3 rule 6 ('Equal instants are allowed'), §4.6 Events order, Overlap gaps",
+      "input": {
+        "location": {"latitude": 64.15, "longitude": -21.94, "timeZone": "Atlantic/Reykjavik"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-19", "times": {"fajr": "02:09", "sunrise": "02:55", "dhuhr": "13:29", "asr": "17:59", "maghrib": "00:03+1", "isha": "01:05+1"}},
+            {"day": "2026-06-20", "times": {"fajr": "02:09", "sunrise": "02:55", "dhuhr": "13:30", "asr": "17:59", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:10", "sunrise": "02:55", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "02:10+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:10", "sunrise": "02:56", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:11", "sunrise": "02:56", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:11", "sunrise": "02:57", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}}
+          ]
+        },
+        "query": {"type": "events", "from": "2026-06-22T01:00:00Z", "through": "2026-06-22T03:00:00Z"}
+      },
+      "expected": {
+        "events": [
+          {"day": "2026-06-21", "kind": "isha", "time": "2026-06-22T02:10:00+00:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "fajr", "time": "2026-06-22T02:10:00+00:00", "iqama": null, "observance": "ordinary"},
+          {"day": "2026-06-22", "kind": "sunrise", "time": "2026-06-22T02:56:00+00:00", "iqama": null, "observance": "ordinary"}
+        ],
+        "coverage": {
+          "requested": ["2026-06-22T01:00:00+00:00", "2026-06-22T03:00:00+00:00"],
+          "known": [["2026-06-22T01:00:00+00:00", "2026-06-22T03:00:00+00:00"]],
+          "gaps": []
+        }
+      }
+    },
+    {
+      "id": "state.highlat.state.before-shared-instant",
+      "description": "At 02:00, ten minutes before the shared instant, next and nextPrayer are 06-21's Isha, the first of the two tied events in events order, and it is approaching.",
+      "provenance": "RFC 0001 §4.7 next ('Ties follow the events order'), §4.6 Events order, status(of:)",
+      "input": {
+        "location": {"latitude": 64.15, "longitude": -21.94, "timeZone": "Atlantic/Reykjavik"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-19", "times": {"fajr": "02:09", "sunrise": "02:55", "dhuhr": "13:29", "asr": "17:59", "maghrib": "00:03+1", "isha": "01:05+1"}},
+            {"day": "2026-06-20", "times": {"fajr": "02:09", "sunrise": "02:55", "dhuhr": "13:30", "asr": "17:59", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:10", "sunrise": "02:55", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "02:10+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:10", "sunrise": "02:56", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:11", "sunrise": "02:56", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:11", "sunrise": "02:57", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-06-22T02:00:00Z", "through": "2026-06-24T00:00:00Z"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-06-21", "kind": "maghrib", "time": "2026-06-22T00:04:00+00:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-06-21", "kind": "maghrib", "time": "2026-06-22T00:04:00+00:00", "iqama": null, "observance": "ordinary"},
+        "next": {"day": "2026-06-21", "kind": "isha", "time": "2026-06-22T02:10:00+00:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-06-21", "kind": "isha", "time": "2026-06-22T02:10:00+00:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": true,
+        "changesAt": "2026-06-22T02:10:00+00:00",
+        "coverage": {
+          "requested": ["2026-06-22T02:00:00+00:00", "2026-06-24T00:00:00+00:00"],
+          "known": [["2026-06-22T02:00:00+00:00", "2026-06-24T00:00:00+00:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-06-21/maghrib": "passed",
+          "2026-06-21/isha": "nextApproaching",
+          "2026-06-22/fajr": "upcoming"
+        }
+      }
+    },
+    {
+      "id": "state.highlat.state.at-shared-instant",
+      "description": "At the shared instant 02:10, previous and latestPrayer are 06-22's Fajr, the last of the tied events in events order, and Fajr is just started; 06-21's Isha has passed.",
+      "provenance": "RFC 0001 §4.7 previous, latestPrayer ('Ties follow the events order'), justStarted, status(of:)",
+      "input": {
+        "location": {"latitude": 64.15, "longitude": -21.94, "timeZone": "Atlantic/Reykjavik"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-19", "times": {"fajr": "02:09", "sunrise": "02:55", "dhuhr": "13:29", "asr": "17:59", "maghrib": "00:03+1", "isha": "01:05+1"}},
+            {"day": "2026-06-20", "times": {"fajr": "02:09", "sunrise": "02:55", "dhuhr": "13:30", "asr": "17:59", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:10", "sunrise": "02:55", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "02:10+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:10", "sunrise": "02:56", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:11", "sunrise": "02:56", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:11", "sunrise": "02:57", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-06-22T02:10:00Z", "through": "2026-06-24T00:00:00Z"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-06-22", "kind": "fajr", "time": "2026-06-22T02:10:00+00:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-06-22", "kind": "fajr", "time": "2026-06-22T02:10:00+00:00", "iqama": null, "observance": "ordinary"},
+        "next": {"day": "2026-06-22", "kind": "sunrise", "time": "2026-06-22T02:56:00+00:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-06-22", "kind": "dhuhr", "time": "2026-06-22T13:30:00+00:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": {"day": "2026-06-22", "kind": "fajr", "time": "2026-06-22T02:10:00+00:00", "iqama": null, "observance": "ordinary"},
+        "isApproaching": false,
+        "changesAt": "2026-06-22T02:25:00+00:00",
+        "coverage": {
+          "requested": ["2026-06-22T02:10:00+00:00", "2026-06-24T00:00:00+00:00"],
+          "known": [["2026-06-22T02:10:00+00:00", "2026-06-24T00:00:00+00:00"]],
+          "gaps": []
+        },
+        "statuses": {
+          "2026-06-21/isha": "passed",
+          "2026-06-22/fajr": "justStarted",
+          "2026-06-22/sunrise": "next",
+          "2026-06-22/dhuhr": "upcoming"
+        }
+      }
     }
   ]
 }

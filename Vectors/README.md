@@ -8,19 +8,19 @@ The vectors were written from the RFC and the SalahKit proposal before any imple
 
 | Path | Query types | Covers |
 |---|---|---|
-| `state/wall-time.json` | `day`, `dayContaining`, `events` | Wall-time resolution with every policy, for prayer times, published iqama and `IqamaRules .at`; publisher instants; `CivilDay.start` where a clock change moves midnight (Asia/Beirut, America/Havana) |
+| `state/wall-time.json` | `day`, `dayContaining`, `events` | Wall-time resolution with every policy, for prayer times, published iqama and `IqamaRules .at`; publisher instants; `CivilDay.start` where a clock change moves midnight (Asia/Beirut, America/Havana) or skips a date (Pacific/Apia, 2011-12-30) |
 | `state/overnight.json` | `day`, `dayContaining`, `events`, `state` | Isha and iqama after midnight, owned by the previous civil day |
 | `state/coverage.json` | `day`, `events`, `state` | Complete, partial and unavailable days, empty timetables, five-prayer tables, missing-event windows, clipping and `knownIntervals` |
 | `state/unknown-future.json` | `state`, `events` | The last published evening, a missing middle day, a partial row, a missing sunrise, `latestPrayer` after sunrise |
-| `state/friday-and-iqama.json` | `day` | Declared Jumu'ah versus an ordinary Friday, Jumu'ah iqama rules, published iqama precedence, iqama rule edge cases across clock changes |
+| `state/friday-and-iqama.json` | `day` | Declared Jumu'ah versus an ordinary Friday, Jumu'ah iqama rules, published iqama precedence (and a discarded published iqama that leaves room for a rule), iqama rule edge cases across clock changes and at the end of the owning span |
 | `state/invalid-data.json` | `day`, `events` | Rows that make their day `unavailable(invalidData)`, and iqama that is discarded instead |
-| `state/high-latitude.json` | `day`, `events`, `state` | Maghrib and Isha after midnight, and a cross-day overlap |
-| `state/policy.json` | `state` | `StatePolicy` (`justStarted`, `approaching`), `changesAt`, `status(of:)` |
-| `state/query-limits.json` | `events`, `state` | Zero-length requests inside and outside gaps; an end before the start; the 400-civil-day clamp |
+| `state/high-latitude.json` | `day`, `events`, `state` | Maghrib and Isha after midnight, a cross-day overlap, and Isha at the same instant as the next Fajr |
+| `state/policy.json` | `state` | `StatePolicy` (`justStarted`, `approaching`), `changesAt`, `status(of:)`, the before-Fajr moment |
+| `state/query-limits.json` | `events`, `state` | Zero-length requests inside and outside gaps; an end before the start; the inclusive bound; the 400-civil-day clamp |
 | `refresh/state-changes.json` | `refresh` | `.stateChanges` transitions and the lookahead bound |
 | `refresh/budget.json` | `refresh` | The entry budget and `validUntil` cutoff |
 | `refresh/coverage.json` | `refresh` | Expiring, partial and empty timetables; a cross-day overlap; a delayed next request |
-| `refresh/steps.json` | `refresh` | `.steps` fine and coarse grids |
+| `refresh/steps.json` | `refresh` | `.steps` fine and coarse grids, including across an expiring timetable |
 | `refresh/errors.json` | `refresh` | `RefreshPlanError` and the order the errors are checked in |
 
 ## File shape
@@ -78,7 +78,7 @@ Build `PrayerSchedule(source:location:iqama:)` from `source`, `location` and `iq
 
 `strategy` is `"stateChanges"` or `{"steps": {"fine": s, "coarse": s, "window": s}}` (seconds).
 
-Most `state` vectors use `through = start(civil(at) + 2)`, the bound `PrayerFixtures.Moment` uses; a few use a later bound so that a later day could become `next` if the rules allowed it.
+Most `state` vectors use `through = start(civil(at) + 2)`, the bound `PrayerFixtures.Moment` uses; a few use a later bound so that a later day could become `next` if the rules allowed it, and a few an earlier one to test the bound itself.
 
 ## Expected shapes
 
@@ -154,7 +154,7 @@ Gaps are half-open `[start, end)`, clipped to the request. For a zero-length req
 
 ## Data
 
-The times are synthetic. They resemble published tables for their places (Singapore, Edinburgh, New York, Beirut, Havana, Reykjavik) so a reader can follow them, but they aren't copied from any timetable, and some are placed deliberately (a Fajr inside a clock change, an Isha after the next Fajr). The Singapore-like rows repeat the same six times every day to keep the arithmetic checkable.
+The times are synthetic. They resemble published tables for their places (Singapore, Edinburgh, New York, Beirut, Havana, Reykjavik, Apia) so a reader can follow them, but they aren't copied from any timetable, and some are placed deliberately (a Fajr inside a clock change, an Isha after the next Fajr). The Singapore-like rows repeat the same six times every day to keep the arithmetic checkable.
 
 ## Changing a vector
 
