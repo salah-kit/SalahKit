@@ -16,12 +16,12 @@ The vectors were written from the RFC and the SalahKit proposal before any imple
 | `state/invalid-data.json` | `day`, `events` | Rows that make their day `unavailable(invalidData)`, and iqama that is discarded instead |
 | `state/high-latitude.json` | `day`, `events`, `state` | Maghrib and Isha after midnight, and a cross-day overlap |
 | `state/policy.json` | `state` | `StatePolicy` (`justStarted`, `approaching`), `changesAt`, `status(of:)` |
-| `state/query-limits.json` | `events`, `state` | An end before the start; the 400-civil-day clamp |
+| `state/query-limits.json` | `events`, `state` | Zero-length requests inside and outside gaps; an end before the start; the 400-civil-day clamp |
 | `refresh/state-changes.json` | `refresh` | `.stateChanges` transitions and the lookahead bound |
 | `refresh/budget.json` | `refresh` | The entry budget and `validUntil` cutoff |
-| `refresh/coverage.json` | `refresh` | Expiring, partial and empty timetables; a delayed next request |
+| `refresh/coverage.json` | `refresh` | Expiring, partial and empty timetables; a cross-day overlap; a delayed next request |
 | `refresh/steps.json` | `refresh` | `.steps` fine and coarse grids |
-| `refresh/errors.json` | `refresh` | `RefreshPlanError` |
+| `refresh/errors.json` | `refresh` | `RefreshPlanError` and the order the errors are checked in |
 
 ## File shape
 
@@ -100,7 +100,7 @@ Most `state` vectors use `through = start(civil(at) + 2)`, the bound `PrayerFixt
 }
 ```
 
-Gaps are half-open `[start, end)`, clipped to the request. `kinds` are written in canonical order.
+Gaps are half-open `[start, end)`, clipped to the request. For a zero-length request (`from` equal to, or after, `through`), each gap containing the instant appears as `[a, a]`, and `known` is `[[a, a]]` only when no gap is kept (RFC 0001 §4.6). `kinds` are written in canonical order.
 
 **`day` and `dayContaining`:**
 
@@ -146,7 +146,7 @@ Gaps are half-open `[start, end)`, clipped to the request. `kinds` are written i
 - **Lists are ordered**:
   - events in events order (instant, then owning day, then canonical kind; RFC 0001 §4.6);
   - `known` by start;
-  - `gaps` by start, then day, then reason in declaration order (`noPublishedData`, `calculationUnavailable`, `invalidData`, `unresolvedWallTime`);
+  - `gaps` are compared as arrays, element by element, in the order RFC 0001 §4.6 defines: by start, then day, then reason in declaration order (`noPublishedData`, `calculationUnavailable`, `invalidData`, `unresolvedWallTime`). Every expected `gaps` array is listed in exactly that order;
   - `dates` ascending.
 - **Gap `kinds`** and **`partial` coverage** are compared as a set and a map.
 - **An EventRef** matches when its day, kind, time, iqama and observance all match.

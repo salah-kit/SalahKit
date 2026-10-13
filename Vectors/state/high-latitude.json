@@ -180,6 +180,118 @@
           "gaps": []
         }
       }
+    },
+    {
+      "id": "state.highlat.state.before-overlap",
+      "description": "At 02:05 on 06-22, just before the overlap opens, previous is 06-21's Maghrib and next is 06-22's Fajr (approaching); the overlap's lower bound is the Fajr instant itself, so it doesn't block Fajr.",
+      "provenance": "RFC 0001 §4.7 (W includes the overlap gaps of §4.6), next",
+      "input": {
+        "location": {"latitude": 64.15, "longitude": -21.94, "timeZone": "Atlantic/Reykjavik"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-19", "times": {"fajr": "02:09", "sunrise": "02:55", "dhuhr": "13:29", "asr": "17:59", "maghrib": "00:03+1", "isha": "01:05+1"}},
+            {"day": "2026-06-20", "times": {"fajr": "02:09", "sunrise": "02:55", "dhuhr": "13:30", "asr": "17:59", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:10", "sunrise": "02:55", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "02:15+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:10", "sunrise": "02:56", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:11", "sunrise": "02:56", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:11", "sunrise": "02:57", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-06-22T02:05:00Z", "through": "2026-06-24T00:00:00Z"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-06-21", "kind": "maghrib", "time": "2026-06-22T00:04:00+00:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-06-21", "kind": "maghrib", "time": "2026-06-22T00:04:00+00:00", "iqama": null, "observance": "ordinary"},
+        "next": {"day": "2026-06-22", "kind": "fajr", "time": "2026-06-22T02:10:00+00:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-06-22", "kind": "fajr", "time": "2026-06-22T02:10:00+00:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": null,
+        "isApproaching": true,
+        "changesAt": "2026-06-22T02:10:00+00:00",
+        "coverage": {
+          "requested": ["2026-06-22T02:05:00+00:00", "2026-06-24T00:00:00+00:00"],
+          "known": [
+            ["2026-06-22T02:05:00+00:00", "2026-06-22T02:10:00+00:00"],
+            ["2026-06-22T02:15:00+00:00", "2026-06-24T00:00:00+00:00"]
+          ],
+          "gaps": [
+            {"start": "2026-06-22T02:10:00+00:00", "end": "2026-06-22T02:15:00+00:00", "day": "2026-06-21", "kinds": ["isha"], "reason": "invalidData"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "state.highlat.state.inside-overlap",
+      "description": "At 02:12, inside the overlap [first(06-22), last(06-21)) = [02:10, 02:15), the state asserts nothing across the contradicting data: every field is null and the state is unavailable until the overlap ends at 02:15.",
+      "provenance": "RFC 0001 §4.7 ('W is every gap of the context ... the overlap gaps of §4.6'), Availability; §4.6 Overlap gaps",
+      "input": {
+        "location": {"latitude": 64.15, "longitude": -21.94, "timeZone": "Atlantic/Reykjavik"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-19", "times": {"fajr": "02:09", "sunrise": "02:55", "dhuhr": "13:29", "asr": "17:59", "maghrib": "00:03+1", "isha": "01:05+1"}},
+            {"day": "2026-06-20", "times": {"fajr": "02:09", "sunrise": "02:55", "dhuhr": "13:30", "asr": "17:59", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:10", "sunrise": "02:55", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "02:15+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:10", "sunrise": "02:56", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:11", "sunrise": "02:56", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:11", "sunrise": "02:57", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-06-22T02:12:00Z", "through": "2026-06-24T00:00:00Z"}
+      },
+      "expected": {
+        "availability": "unavailable",
+        "previous": null,
+        "latestPrayer": null,
+        "next": null,
+        "nextPrayer": null,
+        "justStarted": null,
+        "isApproaching": false,
+        "changesAt": "2026-06-22T02:15:00+00:00",
+        "coverage": {
+          "requested": ["2026-06-22T02:12:00+00:00", "2026-06-24T00:00:00+00:00"],
+          "known": [["2026-06-22T02:15:00+00:00", "2026-06-24T00:00:00+00:00"]],
+          "gaps": [
+            {"start": "2026-06-22T02:12:00+00:00", "end": "2026-06-22T02:15:00+00:00", "day": "2026-06-21", "kinds": ["isha"], "reason": "invalidData"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "state.highlat.state.at-overlap-end",
+      "description": "At 02:15, the overlap's end and 06-21's Isha instant, Isha becomes previous and justStarted (half-open gap); next is 06-22's sunrise.",
+      "provenance": "RFC 0001 §4.7 'Conventions this gives'",
+      "input": {
+        "location": {"latitude": 64.15, "longitude": -21.94, "timeZone": "Atlantic/Reykjavik"},
+        "source": {
+          "expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+          "rows": [
+            {"day": "2026-06-19", "times": {"fajr": "02:09", "sunrise": "02:55", "dhuhr": "13:29", "asr": "17:59", "maghrib": "00:03+1", "isha": "01:05+1"}},
+            {"day": "2026-06-20", "times": {"fajr": "02:09", "sunrise": "02:55", "dhuhr": "13:30", "asr": "17:59", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-21", "times": {"fajr": "02:10", "sunrise": "02:55", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "02:15+1"}},
+            {"day": "2026-06-22", "times": {"fajr": "02:10", "sunrise": "02:56", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-23", "times": {"fajr": "02:11", "sunrise": "02:56", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}},
+            {"day": "2026-06-24", "times": {"fajr": "02:11", "sunrise": "02:57", "dhuhr": "13:30", "asr": "18:00", "maghrib": "00:04+1", "isha": "01:06+1"}}
+          ]
+        },
+        "query": {"type": "state", "at": "2026-06-22T02:15:00Z", "through": "2026-06-24T00:00:00Z"}
+      },
+      "expected": {
+        "availability": "available",
+        "previous": {"day": "2026-06-21", "kind": "isha", "time": "2026-06-22T02:15:00+00:00", "iqama": null, "observance": "ordinary"},
+        "latestPrayer": {"day": "2026-06-21", "kind": "isha", "time": "2026-06-22T02:15:00+00:00", "iqama": null, "observance": "ordinary"},
+        "next": {"day": "2026-06-22", "kind": "sunrise", "time": "2026-06-22T02:56:00+00:00", "iqama": null, "observance": "ordinary"},
+        "nextPrayer": {"day": "2026-06-22", "kind": "dhuhr", "time": "2026-06-22T13:30:00+00:00", "iqama": null, "observance": "ordinary"},
+        "justStarted": {"day": "2026-06-21", "kind": "isha", "time": "2026-06-22T02:15:00+00:00", "iqama": null, "observance": "ordinary"},
+        "isApproaching": false,
+        "changesAt": "2026-06-22T02:30:00+00:00",
+        "coverage": {
+          "requested": ["2026-06-22T02:15:00+00:00", "2026-06-24T00:00:00+00:00"],
+          "known": [["2026-06-22T02:15:00+00:00", "2026-06-24T00:00:00+00:00"]],
+          "gaps": []
+        }
+      }
     }
   ]
 }
