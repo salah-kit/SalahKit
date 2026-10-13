@@ -13,7 +13,7 @@ import SalahTimes
 /// or bring parameters you already have with ``init(parameters:)``. ``CalculationSource``
 /// passes ``parameters`` to SalahTimes exactly as they are: nothing is rebuilt from a subset or
 /// reset to a method's value, so every control SalahTimes has stays in your users' hands. That
-/// includes the opt-in Ramadan rule, ``SalahTimes/CalculationParameters/ramadanIsha``, which
+/// includes the opt-in Ramadan rule, `CalculationParameters.ramadanIsha`, which
 /// changes only an interval-based Isha on days in Ramadan.
 ///
 /// The value is `Codable`, so an app can keep it in its settings or an App Group and give it to

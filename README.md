@@ -1,6 +1,6 @@
 # SalahKit
 
-Swift packages for building prayer-time apps on Apple platforms: a typed prayer schedule with honest coverage, published timetables with iqama, and the words and numbers to show them.
+Swift packages for building prayer-time apps on Apple platforms: a typed prayer schedule with honest coverage, from calculated times or published timetables with iqama, and the words and numbers to show them.
 
 [![CI](https://github.com/salah-kit/SalahKit/actions/workflows/ci.yml/badge.svg)](https://github.com/salah-kit/SalahKit/actions/workflows/ci.yml)
 [![Latest release](https://img.shields.io/github/v/release/salah-kit/SalahKit?include_prereleases&sort=semver)](https://github.com/salah-kit/SalahKit/releases)
@@ -13,12 +13,13 @@ SalahKit is the app layer of the [salah-kit](https://github.com/salah-kit) ecosy
 | Product | What it gives an app |
 |---|---|
 | **SalahCore** | The schedule model and the `PrayerSource` contract; `TimetableSource` for published times, with wall-time resolution around clock changes; optional iqama rules; the prayer state at any moment; refresh planning; prayer names in a String Catalog; duration, numbering and Hijri formatting on Foundation |
+| **SalahCalculation** | Calculated times from [SalahTimes](https://github.com/salah-kit/SalahTimes) as a `PrayerSource`: `CalculationSettings` carries every calculation parameter to the engine unchanged, `CalculationSource` reports a time it can't calculate (a polar summer's Isha) as missing instead of guessing, and `CalculationMethod.suggested(for:)` offers a sourced starting method |
 | **SalahFixtures** | Ready-made timetables and moments for previews and tests |
 
-SalahCore never invents a time. A timetable that ends on 31 December, skips a day or leaves Isha blank produces a schedule that says so: the state after the last published Isha has no next prayer, and a missing day is a gap with a reason, not yesterday's times. A Friday is a date; Jumu'ah appears only where your data or your app declares it.
+SalahKit never invents a time. A timetable that ends on 31 December, skips a day or leaves Isha blank produces a schedule that says so: the state after the last published Isha has no next prayer, and a missing day is a gap with a reason, not yesterday's times. A calculation that has no Isha in a polar summer says so too. A Friday is a date; Jumu'ah appears only where your data or your app declares it.
 
 What it deliberately isn't:
-- **Not a calculation engine.** Calculated times come from [SalahTimes](https://github.com/salah-kit/SalahTimes), connected through `PrayerSource`. Any other engine or data feed can plug in the same way.
+- **Not a calculation engine.** SalahCalculation connects [SalahTimes](https://github.com/salah-kit/SalahTimes), the salah-kit engine, through `PrayerSource`. Any other engine or data feed can plug in the same way, and a timetable app that links only SalahCore never links SalahTimes.
 - **No UI, notifications or location services in the core.** Words and colors live at the edges; interface text other than prayer names belongs to your app.
 - **No adhan recordings.** Your app ships its own sounds.
 
@@ -31,13 +32,51 @@ dependencies: [
   .package(url: "https://github.com/salah-kit/SalahKit.git", from: "0.1.0")
 ],
 targets: [
-  .target(name: "YourApp", dependencies: [.product(name: "SalahCore", package: "SalahKit")])
+  .target(
+    name: "YourApp",
+    dependencies: [
+      .product(name: "SalahCore", package: "SalahKit"),
+      // For calculated times. A timetable app needs only SalahCore.
+      .product(name: "SalahCalculation", package: "SalahKit"),
+    ])
 ]
 ```
 
-In Xcode, choose File > Add Package Dependencies and enter `https://github.com/salah-kit/SalahKit.git`.
+In Xcode, choose File > Add Package Dependencies, enter `https://github.com/salah-kit/SalahKit.git`, and add the products you use. SalahCalculation brings SalahTimes along; `import SalahTimes` where your code names a method or another calculation rule.
 
 ## Quick start
+
+### Calculated times
+
+Today's prayer times in Istanbul, calculated with the method SalahTimes suggests for Turkey:
+
+```swift
+import Foundation
+import SalahCalculation
+import SalahCore
+import SalahTimes
+
+guard let zone = TimeZone(identifier: "Europe/Istanbul") else { return }
+let istanbul = PrayerLocation(
+  latitude: 41.0082, longitude: 28.9784, timeZone: zone, countryCode: "TR", name: "Istanbul")
+
+// Diyanet's method, which SalahTimes suggests for Turkey, with Hanafi Asr.
+let settings = CalculationSettings(
+  method: CalculationMethod.suggested(for: istanbul) ?? .muslimWorldLeague, madhab: .hanafi)
+let schedule = PrayerSchedule(source: CalculationSource(settings), location: istanbul)
+
+let today = CivilDay(containing: Date(), in: zone)
+if case .available(let day, _) = schedule.day(today) {
+  let clock = Date.FormatStyle(date: .omitted, time: .shortened, timeZone: zone)
+  for event in day.events {
+    print(event.kind, event.time.formatted(clock))
+  }
+}
+```
+
+`CalculationSettings` holds SalahTimes' parameters whole: change any angle, the madhab, the high-latitude rule, rounding or the minutes on `settings.parameters`. `Examples/CalculatedPhone` is a complete iPhone app built this way, with settings for every parameter, the state across midnight, and polar days shown as they are.
+
+### A published timetable
 
 A mosque board that runs on its published timetable:
 
@@ -78,12 +117,12 @@ case .unavailable(let coverage, _):
 
 ## Documentation
 
-The DocC documentation is at <https://salah-kit.github.io/SalahKit/>. Start with "Using a mosque timetable with iqama and incomplete coverage". The design and its contracts are in [RFC 0001](docs/rfcs/0001-core.md); the behavior every implementation must reproduce is in [`Vectors/`](Vectors/README.md).
+The DocC documentation is at <https://salah-kit.github.io/SalahKit/>. Start with "A calculated prayer app with Core and Calculation" or "Using a mosque timetable with iqama and incomplete coverage". The design and its contracts are in [RFC 0001](docs/rfcs/0001-core.md) (SalahCore) and [RFC 0002](docs/rfcs/0002-calculation.md) (SalahCalculation); the behavior every implementation must reproduce is in [`Vectors/`](Vectors/README.md). [`docs/calculation-parity.md`](docs/calculation-parity.md) compares SalahCalculation with the times Salah computed with adhan-swift.
 
 ## Supported platforms
 
 - iOS 16, macOS 13, watchOS 9, tvOS 16 and visionOS 1 or later.
-- Linux: SalahCore and SalahFixtures build and pass their tests on Ubuntu with Swift 6.2 or later.
+- Linux: SalahCore, SalahCalculation and SalahFixtures build and pass their tests on Ubuntu with Swift 6.2 or later.
 - Swift 6.2 or later (Xcode 26 or later), in Swift 6 language mode. The API is `nonisolated` and `Sendable`, so it works the same in modules that default to `MainActor` isolation.
 
 ## Status and versioning

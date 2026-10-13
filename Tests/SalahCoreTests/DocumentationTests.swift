@@ -53,8 +53,12 @@ import Testing
         "Tests/SalahCoreTests/DocumentationExamples.swift"),
       encoding: .utf8)
     let haystack = "\n\(Self.normalized(examples))\n"
-    // Package manifest fragments aren't app code.
-    let blocks = try document.blocks("swift").filter { !$0.contains(".package(url:") }
+    // Package manifest fragments aren't app code, and SalahCalculation's tests check the
+    // calculation blocks (CalculationDocumentationTests).
+    let blocks = try document.blocks("swift").filter {
+      !$0.contains(".package(url:") && !$0.contains("CalculationSource")
+        && !$0.contains("CalculationSettings")
+    }
     #expect(!blocks.isEmpty)
     for block in blocks {
       #expect(

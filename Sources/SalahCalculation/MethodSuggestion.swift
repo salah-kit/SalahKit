@@ -13,7 +13,7 @@ nonisolated extension CalculationMethod {
   /// let method = CalculationMethod.suggested(for: location) ?? .muslimWorldLeague
   /// ```
   ///
-  /// - Parameter location: A location whose ``SalahCore/PrayerLocation/countryCode`` is an
+  /// - Parameter location: A location whose `PrayerLocation.countryCode` is an
   ///   ISO 3166-1 alpha-2 code, in either case.
   /// - Returns: The suggested method, or `nil`.
   public static func suggested(for location: PrayerLocation) -> CalculationMethod? {

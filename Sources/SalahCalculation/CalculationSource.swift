@@ -13,17 +13,17 @@ import SalahTimes
 /// time zone, and reports what SalahCore's source contract can hold. It never invents, moves or
 /// reorders a time:
 /// - A kind that doesn't occur, such as Isha when the Sun stays above 18° all night with
-///   ``SalahTimes/HighLatitudeRule/disabled``, or sunset during polar day, is missing with
-///   ``SalahCore/ScheduleGapReason/calculationUnavailable``.
+///   `HighLatitudeRule.disabled`, or sunset during polar day, is missing with
+///   `ScheduleGapReason.calculationUnavailable`.
 /// - So is a time the contract can't place: one earlier than ``maximumLead`` before the start of
 ///   its day or not before the start of the day after the next, one that isn't strictly after
 ///   the kind before it (the later kind of an equal or inverted pair is missing, such as an Isha
 ///   that a high-latitude bound puts at Maghrib's instant), and one after the next day's first
 ///   event (such as an interval Isha after the next Fajr near the polar circles).
 /// - A day with nothing left, and a date that its time zone skips, is unavailable with
-///   ``SalahCore/ScheduleGapReason/calculationUnavailable``, as is a year outside the range
+///   `ScheduleGapReason.calculationUnavailable`, as is a year outside the range
 ///   SalahTimes calculates. Coordinates or parameters that SalahTimes rejects make every day
-///   unavailable with ``SalahCore/ScheduleGapReason/invalidData``.
+///   unavailable with `ScheduleGapReason.invalidData`.
 ///
 /// An event belongs to the day it was computed for, even when it occurs on a neighboring civil
 /// date: Isha after midnight belongs to the evening before, and where the clock runs behind the
@@ -31,7 +31,7 @@ import SalahTimes
 ///
 /// The source declares no Jumu'ah and no iqama. A Friday's Dhuhr is ordinary unless your app
 /// declares Jumu'ah in a source that wraps this one, and a mosque's congregation times come from
-/// ``SalahCore/IqamaRules``.
+/// `IqamaRules`.
 nonisolated public struct CalculationSource: PrayerSource, Hashable, Sendable {
   /// How the source calculates.
   public let settings: CalculationSettings
