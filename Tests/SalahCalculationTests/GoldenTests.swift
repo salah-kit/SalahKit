@@ -230,8 +230,9 @@ nonisolated enum GoldenVectors {
     return result
   }
 
-  /// The earliest event the source keeps for a day after `day` whose span starts before `end`,
-  /// the end of `day`'s span: the next day, and the one after it (RFC 0002, section 4.2).
+  /// The earliest time of the days after `day` whose span starts before `end`, the end of
+  /// `day`'s span: the next day and the one after it, each checked on its own (RFC 0002,
+  /// section 4.2, step 3).
   static func laterFirstEvent(after day: CivilDay, before end: Date, _ vector: Vector) -> Date? {
     let zone = vector.location.timeZone
     var first: Date?
@@ -243,8 +244,9 @@ nonisolated enum GoldenVectors {
     return first
   }
 
-  /// The earliest event the source keeps for `day`, calculated with SalahTimes directly and
-  /// filtered as RFC 0002, section 4.3 describes; `nil` when the day can't be calculated.
+  /// The earliest of `day`'s times that pass RFC 0002, section 4.3, calculated with SalahTimes
+  /// directly: what step 3 of section 4.2 compares with, before that day's own step 3. `nil`
+  /// when the day can't be calculated.
   static func firstEvent(of day: CivilDay, _ vector: Vector) -> Date? {
     let zone = vector.location.timeZone
     guard day.adding(days: 1).start(in: zone) > day.start(in: zone),
