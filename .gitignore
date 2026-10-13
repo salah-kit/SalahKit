@@ -1,0 +1,10 @@
+.DS_Store
+/.build
+/Packages
+.derived/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+.swiftpm/configuration/registries.json
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.netrc
