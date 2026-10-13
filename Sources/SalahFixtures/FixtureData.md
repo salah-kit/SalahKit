@@ -4,6 +4,8 @@ This is the provenance record for the data behind `PrayerFixtures`: eight places
 
 The tables under "Places" and "Moments" and the list under "Checks run by the generator" are the generator's output, inserted as it wrote them. The independent checks ran separately and are described under "Independent checks".
 
+`PrayerFixtures` holds these tables as Swift code, in `PrayerFixtures+Places.swift` and `PrayerFixtures+Moments.swift`. The tests in `Tests/SalahFixturesTests` read this file and compare every begin time, every iqama and every moment with it, so a change to one without the other fails them.
+
 ## Conventions
 
 - A time is a local wall-clock time in the place's time zone, written `HH:MM`. `HH:MM+1` is a time after local midnight that belongs to the previous day's row (RFC 0001, section 4.2).
