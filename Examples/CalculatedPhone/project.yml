@@ -1,0 +1,95 @@
+# Generates CalculatedPhone.xcodeproj. Run `xcodegen` in this folder after changing it, and
+# commit both files (STANDARD.md, Apps).
+#
+# Generate from a clone whose folder is named `SalahKit`, as CI's checkout is: XcodeGen names
+# the local package's folder reference after the folder that `../..` resolves to, so another
+# name changes the project and fails CI's generate check.
+name: CalculatedPhone
+options:
+  bundleIdPrefix: io.github.salah-kit
+  deploymentTarget:
+    iOS: "17.0"
+  developmentLanguage: en
+  createIntermediateGroups: true
+configFiles:
+  Debug: Config/Shared.xcconfig
+  Release: Config/Shared.xcconfig
+packages:
+  SalahKit:
+    path: ../..
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    # The default actor isolation of the app's own targets. Builds pass
+    # CALCULATEDPHONE_ISOLATION=nonisolated (or MainActor) to check both settings (proposal
+    # §3.1). Passing SWIFT_DEFAULT_ACTOR_ISOLATION itself on the command line would also reach
+    # the package targets and make SalahTimes' types main-actor-isolated, which no app sees
+    # (docs/rfcs/0001-core.md, section 6.3); this setting reaches only the targets below.
+    CALCULATEDPHONE_ISOLATION: MainActor
+targets:
+  CalculatedPhone:
+    type: application
+    platform: iOS
+    sources:
+      - path: CalculatedPhone
+    dependencies:
+      # SalahTimes comes with SalahCalculation: the app imports it to name the engine's types
+      # (CalculationMethod, Madhab, ...) without a package dependency of its own.
+      - package: SalahKit
+        product: SalahCore
+      - package: SalahKit
+        product: SalahCalculation
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.CalculatedPhone
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(CALCULATEDPHONE_ISOLATION)
+        # iPhone only. Set per target: XcodeGen's iOS preset writes "1,2" at target level, which
+        # would override a project-level value.
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_KEY_CFBundleDisplayName: CalculatedPhone
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+  CalculatedPhoneTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: CalculatedPhoneTests
+    dependencies:
+      # Hosted by the app: SalahKit's symbols come from the app binary, not a second copy.
+      - target: CalculatedPhone
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.CalculatedPhoneTests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(CALCULATEDPHONE_ISOLATION)
+        TARGETED_DEVICE_FAMILY: "1"
+  CalculatedPhoneUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: CalculatedPhoneUITests
+    dependencies:
+      - target: CalculatedPhone
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.CalculatedPhoneUITests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(CALCULATEDPHONE_ISOLATION)
+        TARGETED_DEVICE_FAMILY: "1"
+        TEST_TARGET_NAME: CalculatedPhone
+schemes:
+  CalculatedPhone:
+    build:
+      targets:
+        CalculatedPhone: all
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - CalculatedPhoneTests
+        - CalculatedPhoneUITests
