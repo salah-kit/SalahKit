@@ -1,6 +1,6 @@
 # RFC 0002: SalahCalculation
 
-- **Status:** Draft. Open to findings from `CalculatedPhone` and from Salah's migration.
+- **Status:** Draft for 0.1.0. `CalculatedPhone` has reported: its findings are in §9 and §10. Open to findings from Salah's migration and other adopters until 1.0 (STANDARD.md, Releases).
 - **Products:** SalahCalculation.
 - **Started:** 2026-10-13.
 - **Supersedes:** the SalahAdhan sketch in the SalahKit proposal, §7.2, read with Amendment 3 (SalahTimes replaces adhan-swift).
@@ -171,6 +171,8 @@ SalahTimes' own vectors (`Vectors/times/`, copied into `Tests/Data/SalahTimes-0.
 1. **Equal instants within a day.** SalahCore requires strictly increasing times within a day, so where SalahTimes legitimately puts Maghrib and Isha at the same instant (Tehran's method from 58°, both bounded by a seventh of the night), Isha is missing. A contract that allowed equal instants within a day would keep it.
 2. **Which kind of an inverted pair is wrong.** The later kind is dropped. For a Fajr after sunrise (Diyanet's and Kemenag's precautionary minutes at 66° to 69°), the Fajr is arguably the doubtful one. Waiting for a consumer at those latitudes.
 3. **Known non-occurrence.** A prayer that doesn't occur (polar day) is reported like an unknown one, so the state asserts nothing across its window. A "doesn't occur tonight" coverage reason would let a view say more. It would be a Core change.
+4. **Which parameters a method defines** (from CalculatedPhone). The app shows "Method: Umm al-Qura" until the user changes a rule the method defines, and then "Custom". `CalculationSettings` can't say which parameters a method defines, so the app keeps its own split between the method's fields (Fajr, Maghrib and Isha rules, night span, method minutes, rounding) and the user's (madhab, high-latitude rule, user minutes, Ramadan rule). Every app that names its method needs that split; where the line falls is a policy question. Waiting for a second consumer.
+5. **Adjustments by prayer kind** (from CalculatedPhone). `PrayerAdjustments` has a property per SalahTimes event, so an app that edits minutes per `PrayerKind` writes its own subscript. SalahCalculation owns the mapping between the two and could offer one. Waiting for a second consumer.
 
 ## 10. Changes after review
 
