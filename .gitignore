@@ -9,3 +9,5 @@ xcuserdata/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
 Local.xcconfig
+# SwiftPM resolves SalahTimes to the newest release the manifest allows, as it does for adopters.
+Package.resolved
