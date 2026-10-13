@@ -63,7 +63,8 @@ let now = Date()
 switch schedule.state(at: now, through: now.addingTimeInterval(2 * 86_400)) {
 case .available(let state, _):
   if let next = state.nextPrayer {
-    let remaining = PrayerDurationFormat.string(next.time.timeIntervalSince(now), locale: names.locale)
+    let remaining = PrayerDurationFormat.string(
+      next.time.timeIntervalSince(now), locale: names.locale)
     print("\(names.name(of: next)) in \(remaining)")
   } else {
     print("The next prayer isn't published yet.")

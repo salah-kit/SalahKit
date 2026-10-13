@@ -1,0 +1,35 @@
+SalahKit
+Copyright (c) 2026 The Salah Kit Authors. MIT License; see LICENSE.
+
+This repository contains third-party data and data computed with third-party
+software. Each item below says what it is, where it came from and its terms.
+
+
+1. MUIS prayer timetable (MosqueBoard example)
+
+File: Examples/MosqueBoard/MosqueBoard/Timetables/muis-2026.json
+
+Contains information from Muslim Prayer Timetable 2026 accessed on 2026-10-13
+from data.gov.sg (Majlis Ugama Islam Singapura) which is made available under
+the terms of the Singapore Open Data Licence version 1.0
+https://data.gov.sg/open-data-licence
+
+The data was converted to SalahKit's timetable format by
+Examples/MosqueBoard/Scripts/convert-muis.py. This file is covered by the
+Singapore Open Data Licence, not by this repository's MIT License. Neither MUIS
+nor data.gov.sg endorses this project, and the example doesn't present the data
+as an official MUIS product.
+
+
+2. Times computed with Adhan Swift (SalahFixtures and MosqueBoard example)
+
+Files: the timetable data in Sources/SalahFixtures, and
+Examples/MosqueBoard/MosqueBoard/Timetables/edinburgh-synthetic.json
+
+The prayer times in the SalahFixtures sample data and the begin times in the
+synthetic Edinburgh timetable were computed with Adhan Swift
+(https://github.com/batoulapps/adhan-swift, commit a6fa2de), used as a
+calculator on a development machine. Adhan Swift is Copyright (c) 2016 Batoul
+Apps and is distributed under the MIT License. This repository contains none of
+Adhan Swift's code. Sources/SalahFixtures/FixtureData.md and
+Examples/MosqueBoard/Timetables.md record how the times were made.
