@@ -25,7 +25,9 @@ let package = Package(
     ),
     .target(
       name: "SalahFixtures",
-      dependencies: ["SalahCore"]
+      dependencies: ["SalahCore"],
+      // The provenance record of the fixture data is documentation, not a resource.
+      exclude: ["FixtureData.md"]
     ),
     .testTarget(
       name: "SalahCoreTests",
