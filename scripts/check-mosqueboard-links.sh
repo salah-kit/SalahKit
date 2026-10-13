@@ -51,7 +51,8 @@ if [[ ${#binaries[@]} -eq 0 ]]; then
   fail "no MosqueBoard binary in ${app}"
 fi
 core=0
-for binary in "${binaries[@]}"; do
+# The `+` form expands to nothing for an empty array, which bash 3.2 (macOS) rejects under `set -u`.
+for binary in ${binaries[@]+"${binaries[@]}"}; do
   symbols="$(nm "${binary}" 2>/dev/null || true)"
   count_core="$(grep -c '9SalahCore' <<<"${symbols}" || true)"
   count_calculation="$(grep -c '16SalahCalculation' <<<"${symbols}" || true)"

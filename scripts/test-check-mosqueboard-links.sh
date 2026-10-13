@@ -90,6 +90,11 @@ expect "a SalahCalculation target in the build graph" \
   "the build graph has a SalahCalculation or SalahTimes target"
 
 new_case
+printf '%s\n' "note: Target dependency graph (1 target)" \
+  "    Target 'MosqueBoard' in project 'MosqueBoard' (no dependencies)" "" >"${dir}/build.log"
+expect "a build graph without SalahCore" "the build graph has no SalahCore target"
+
+new_case
 echo "** BUILD SUCCEEDED **" >"${dir}/build.log"
 expect "a log without a build graph" "no target dependency graph"
 
@@ -125,6 +130,17 @@ new_case
 : >"${products}/SalahTimes.o"
 expect "SalahTimes build output in the products" \
   "the products hold SalahCalculation or SalahTimes build output"
+
+new_case
+mkdir -p "${products}/SalahCalculation.swiftmodule"
+expect "a SalahCalculation module in the products" \
+  "the products hold SalahCalculation or SalahTimes build output"
+
+# A Release build keeps the app's code in the executable, which is checked like the dylib.
+new_case
+mv "${binary}" "${products}/MosqueBoard.app/MosqueBoard"
+echo "${times_symbol}" >>"${dir}/symbols"
+expect "SalahTimes symbols in a Release build's executable" "has SalahTimes symbols"
 
 new_case
 mv "${binary}" "${dir}/moved.dylib"
