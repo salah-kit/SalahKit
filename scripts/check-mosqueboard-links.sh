@@ -9,8 +9,11 @@
 #
 # 1. The build graph: xcodebuild's "Target dependency graph" must list SalahCore and no target
 #    of SalahCalculation or SalahTimes.
-# 2. The binary: the app's executable code must carry SalahCore's Swift symbols and none of
-#    SalahCalculation's or SalahTimes', and the products must hold no object or module of them.
+# 2. The binary: the app's executable code must carry SalahCore's Swift symbols, none of
+#    SalahCalculation's or SalahTimes' and no string naming either, and the products must hold
+#    no object or module of them.
+#
+# scripts/test-check-mosqueboard-links.sh tests each of these checks.
 
 set -euo pipefail
 
@@ -53,13 +56,16 @@ for binary in "${binaries[@]}"; do
   count_core="$(grep -c '9SalahCore' <<<"${symbols}" || true)"
   count_calculation="$(grep -c '16SalahCalculation' <<<"${symbols}" || true)"
   count_times="$(grep -c '10SalahTimes' <<<"${symbols}" || true)"
-  echo "${binary#"${products}/"}: SalahCore ${count_core}, SalahCalculation ${count_calculation}, SalahTimes ${count_times} symbols"
+  # All of the strings are read before they're searched. In `strings | grep -q`, grep would exit
+  # at the first match, and the SIGPIPE that stops strings would make pipefail fail the pipe,
+  # which would turn the match into a pass.
+  text="$(strings -a "${binary}")"
+  count_mentions="$(grep -c -E 'SalahCalculation|SalahTimes' <<<"${text}" || true)"
+  echo "${binary#"${products}/"}: SalahCore ${count_core}, SalahCalculation ${count_calculation}, SalahTimes ${count_times} symbols; ${count_mentions} strings naming either"
   core=$((core + count_core))
   [[ "${count_calculation}" -eq 0 ]] || fail "${binary} has SalahCalculation symbols"
   [[ "${count_times}" -eq 0 ]] || fail "${binary} has SalahTimes symbols"
-  if strings -a "${binary}" | grep -q -E 'SalahCalculation|SalahTimes'; then
-    fail "${binary} mentions SalahCalculation or SalahTimes"
-  fi
+  [[ "${count_mentions}" -eq 0 ]] || fail "${binary} mentions SalahCalculation or SalahTimes"
 done
 [[ "${core}" -gt 0 ]] || fail "no SalahCore symbols: the check would prove nothing"
 

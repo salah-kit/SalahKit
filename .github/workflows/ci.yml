@@ -166,6 +166,11 @@ jobs:
             echo "::endgroup::"
           done
 
+      # The link check below must be able to fail: each of its checks runs against made-up
+      # builds that break it.
+      - name: Test the link check
+        run: scripts/test-check-mosqueboard-links.sh
+
       # The timetable example links SalahCore only, although the package graph resolves
       # SalahTimes for SalahCalculation (proposal section 2.3 #2): checked in the build graph and
       # in the binary.
