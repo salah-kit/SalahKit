@@ -1,0 +1,2101 @@
+{
+  "schemaVersion": 1,
+  "kind": "prayerTimes",
+  "description": "The opt-in Ramadan Isha rule. Ramadan 1447 runs from 2026-02-18 to 2026-03-19 in the Umm al-Qura calendar (Foundation's .islamicUmmAlQura and Java's HijrahChronology agree). The rule replaces a positive Isha interval on days that fall in Ramadan after adding the Hijri day offset, and nothing else.",
+  "vectors": [
+    {
+      "id": "ramadan-off-makkah-2026-02-16",
+      "description": "Umm al-Qura's 90-minute interval at Makkah on 2026-02-16, with the Ramadan rule off.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-16",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-16T02:33:47Z",
+        "sunrise": "2026-02-16T03:50:47Z",
+        "dhuhr": "2026-02-16T09:34:44Z",
+        "asr": "2026-02-16T12:52:26Z",
+        "sunset": "2026-02-16T15:18:58Z",
+        "maghrib": "2026-02-16T15:18:58Z",
+        "isha": "2026-02-16T16:48:58Z",
+        "middleOfTheNight": "2026-02-16T20:56:06Z",
+        "lastThirdOfTheNight": "2026-02-16T22:48:29Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset-1-makkah-2026-02-16",
+      "description": "The Ramadan rule (120 minutes, offset -1) at Makkah on 2026-02-16: 2026-02-15 is outside Ramadan.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-16",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": -1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-16T02:33:47Z",
+        "sunrise": "2026-02-16T03:50:47Z",
+        "dhuhr": "2026-02-16T09:34:44Z",
+        "asr": "2026-02-16T12:52:26Z",
+        "sunset": "2026-02-16T15:18:58Z",
+        "maghrib": "2026-02-16T15:18:58Z",
+        "isha": "2026-02-16T16:48:58Z",
+        "middleOfTheNight": "2026-02-16T20:56:06Z",
+        "lastThirdOfTheNight": "2026-02-16T22:48:29Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2026-02-16",
+      "description": "The Ramadan rule (120 minutes, offset +0) at Makkah on 2026-02-16: 2026-02-16 is outside Ramadan.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-16",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-16T02:33:47Z",
+        "sunrise": "2026-02-16T03:50:47Z",
+        "dhuhr": "2026-02-16T09:34:44Z",
+        "asr": "2026-02-16T12:52:26Z",
+        "sunset": "2026-02-16T15:18:58Z",
+        "maghrib": "2026-02-16T15:18:58Z",
+        "isha": "2026-02-16T16:48:58Z",
+        "middleOfTheNight": "2026-02-16T20:56:06Z",
+        "lastThirdOfTheNight": "2026-02-16T22:48:29Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+1-makkah-2026-02-16",
+      "description": "The Ramadan rule (120 minutes, offset +1) at Makkah on 2026-02-16: 2026-02-17 is outside Ramadan.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-16",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-16T02:33:47Z",
+        "sunrise": "2026-02-16T03:50:47Z",
+        "dhuhr": "2026-02-16T09:34:44Z",
+        "asr": "2026-02-16T12:52:26Z",
+        "sunset": "2026-02-16T15:18:58Z",
+        "maghrib": "2026-02-16T15:18:58Z",
+        "isha": "2026-02-16T16:48:58Z",
+        "middleOfTheNight": "2026-02-16T20:56:06Z",
+        "lastThirdOfTheNight": "2026-02-16T22:48:29Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-off-makkah-2026-02-17",
+      "description": "Umm al-Qura's 90-minute interval at Makkah on 2026-02-17, with the Ramadan rule off.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-17",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-17T02:33:14Z",
+        "sunrise": "2026-02-17T03:50:09Z",
+        "dhuhr": "2026-02-17T09:34:40Z",
+        "asr": "2026-02-17T12:52:41Z",
+        "sunset": "2026-02-17T15:19:28Z",
+        "maghrib": "2026-02-17T15:19:28Z",
+        "isha": "2026-02-17T16:49:28Z",
+        "middleOfTheNight": "2026-02-17T20:56:04Z",
+        "lastThirdOfTheNight": "2026-02-17T22:48:16Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset-1-makkah-2026-02-17",
+      "description": "The Ramadan rule (120 minutes, offset -1) at Makkah on 2026-02-17: 2026-02-16 is outside Ramadan.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-17",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": -1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-17T02:33:14Z",
+        "sunrise": "2026-02-17T03:50:09Z",
+        "dhuhr": "2026-02-17T09:34:40Z",
+        "asr": "2026-02-17T12:52:41Z",
+        "sunset": "2026-02-17T15:19:28Z",
+        "maghrib": "2026-02-17T15:19:28Z",
+        "isha": "2026-02-17T16:49:28Z",
+        "middleOfTheNight": "2026-02-17T20:56:04Z",
+        "lastThirdOfTheNight": "2026-02-17T22:48:16Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2026-02-17",
+      "description": "The Ramadan rule (120 minutes, offset +0) at Makkah on 2026-02-17: 2026-02-17 is outside Ramadan.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-17",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-17T02:33:14Z",
+        "sunrise": "2026-02-17T03:50:09Z",
+        "dhuhr": "2026-02-17T09:34:40Z",
+        "asr": "2026-02-17T12:52:41Z",
+        "sunset": "2026-02-17T15:19:28Z",
+        "maghrib": "2026-02-17T15:19:28Z",
+        "isha": "2026-02-17T16:49:28Z",
+        "middleOfTheNight": "2026-02-17T20:56:04Z",
+        "lastThirdOfTheNight": "2026-02-17T22:48:16Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+1-makkah-2026-02-17",
+      "description": "The Ramadan rule (120 minutes, offset +1) at Makkah on 2026-02-17: 2026-02-18 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-17",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-17T02:33:14Z",
+        "sunrise": "2026-02-17T03:50:09Z",
+        "dhuhr": "2026-02-17T09:34:40Z",
+        "asr": "2026-02-17T12:52:41Z",
+        "sunset": "2026-02-17T15:19:28Z",
+        "maghrib": "2026-02-17T15:19:28Z",
+        "isha": "2026-02-17T17:19:28Z",
+        "middleOfTheNight": "2026-02-17T20:56:04Z",
+        "lastThirdOfTheNight": "2026-02-17T22:48:16Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-off-makkah-2026-02-18",
+      "description": "Umm al-Qura's 90-minute interval at Makkah on 2026-02-18, with the Ramadan rule off.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-18",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-18T02:32:40Z",
+        "sunrise": "2026-02-18T03:49:30Z",
+        "dhuhr": "2026-02-18T09:34:36Z",
+        "asr": "2026-02-18T12:52:54Z",
+        "sunset": "2026-02-18T15:19:58Z",
+        "maghrib": "2026-02-18T15:19:58Z",
+        "isha": "2026-02-18T16:49:58Z",
+        "middleOfTheNight": "2026-02-18T20:56:01Z",
+        "lastThirdOfTheNight": "2026-02-18T22:48:02Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset-1-makkah-2026-02-18",
+      "description": "The Ramadan rule (120 minutes, offset -1) at Makkah on 2026-02-18: 2026-02-17 is outside Ramadan.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-18",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": -1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-18T02:32:40Z",
+        "sunrise": "2026-02-18T03:49:30Z",
+        "dhuhr": "2026-02-18T09:34:36Z",
+        "asr": "2026-02-18T12:52:54Z",
+        "sunset": "2026-02-18T15:19:58Z",
+        "maghrib": "2026-02-18T15:19:58Z",
+        "isha": "2026-02-18T16:49:58Z",
+        "middleOfTheNight": "2026-02-18T20:56:01Z",
+        "lastThirdOfTheNight": "2026-02-18T22:48:02Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2026-02-18",
+      "description": "The Ramadan rule (120 minutes, offset +0) at Makkah on 2026-02-18: 2026-02-18 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-18",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-18T02:32:40Z",
+        "sunrise": "2026-02-18T03:49:30Z",
+        "dhuhr": "2026-02-18T09:34:36Z",
+        "asr": "2026-02-18T12:52:54Z",
+        "sunset": "2026-02-18T15:19:58Z",
+        "maghrib": "2026-02-18T15:19:58Z",
+        "isha": "2026-02-18T17:19:58Z",
+        "middleOfTheNight": "2026-02-18T20:56:01Z",
+        "lastThirdOfTheNight": "2026-02-18T22:48:02Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+1-makkah-2026-02-18",
+      "description": "The Ramadan rule (120 minutes, offset +1) at Makkah on 2026-02-18: 2026-02-19 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-18",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-18T02:32:40Z",
+        "sunrise": "2026-02-18T03:49:30Z",
+        "dhuhr": "2026-02-18T09:34:36Z",
+        "asr": "2026-02-18T12:52:54Z",
+        "sunset": "2026-02-18T15:19:58Z",
+        "maghrib": "2026-02-18T15:19:58Z",
+        "isha": "2026-02-18T17:19:58Z",
+        "middleOfTheNight": "2026-02-18T20:56:01Z",
+        "lastThirdOfTheNight": "2026-02-18T22:48:02Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-off-makkah-2026-02-19",
+      "description": "Umm al-Qura's 90-minute interval at Makkah on 2026-02-19, with the Ramadan rule off.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-19",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-19T02:32:05Z",
+        "sunrise": "2026-02-19T03:48:50Z",
+        "dhuhr": "2026-02-19T09:34:30Z",
+        "asr": "2026-02-19T12:53:07Z",
+        "sunset": "2026-02-19T15:20:27Z",
+        "maghrib": "2026-02-19T15:20:27Z",
+        "isha": "2026-02-19T16:50:27Z",
+        "middleOfTheNight": "2026-02-19T20:55:58Z",
+        "lastThirdOfTheNight": "2026-02-19T22:47:48Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset-1-makkah-2026-02-19",
+      "description": "The Ramadan rule (120 minutes, offset -1) at Makkah on 2026-02-19: 2026-02-18 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-19",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": -1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-19T02:32:05Z",
+        "sunrise": "2026-02-19T03:48:50Z",
+        "dhuhr": "2026-02-19T09:34:30Z",
+        "asr": "2026-02-19T12:53:07Z",
+        "sunset": "2026-02-19T15:20:27Z",
+        "maghrib": "2026-02-19T15:20:27Z",
+        "isha": "2026-02-19T17:20:27Z",
+        "middleOfTheNight": "2026-02-19T20:55:58Z",
+        "lastThirdOfTheNight": "2026-02-19T22:47:48Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2026-02-19",
+      "description": "The Ramadan rule (120 minutes, offset +0) at Makkah on 2026-02-19: 2026-02-19 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-19",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-19T02:32:05Z",
+        "sunrise": "2026-02-19T03:48:50Z",
+        "dhuhr": "2026-02-19T09:34:30Z",
+        "asr": "2026-02-19T12:53:07Z",
+        "sunset": "2026-02-19T15:20:27Z",
+        "maghrib": "2026-02-19T15:20:27Z",
+        "isha": "2026-02-19T17:20:27Z",
+        "middleOfTheNight": "2026-02-19T20:55:58Z",
+        "lastThirdOfTheNight": "2026-02-19T22:47:48Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+1-makkah-2026-02-19",
+      "description": "The Ramadan rule (120 minutes, offset +1) at Makkah on 2026-02-19: 2026-02-20 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-02-19",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-02-19T02:32:05Z",
+        "sunrise": "2026-02-19T03:48:50Z",
+        "dhuhr": "2026-02-19T09:34:30Z",
+        "asr": "2026-02-19T12:53:07Z",
+        "sunset": "2026-02-19T15:20:27Z",
+        "maghrib": "2026-02-19T15:20:27Z",
+        "isha": "2026-02-19T17:20:27Z",
+        "middleOfTheNight": "2026-02-19T20:55:58Z",
+        "lastThirdOfTheNight": "2026-02-19T22:47:48Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-off-makkah-2026-03-05",
+      "description": "Umm al-Qura's 90-minute interval at Makkah on 2026-03-05, with the Ramadan rule off.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-05",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-05T02:22:12Z",
+        "sunrise": "2026-03-05T03:38:12Z",
+        "dhuhr": "2026-03-05T09:32:11Z",
+        "asr": "2026-03-05T12:54:33Z",
+        "sunset": "2026-03-05T15:26:28Z",
+        "maghrib": "2026-03-05T15:26:28Z",
+        "isha": "2026-03-05T16:56:28Z",
+        "middleOfTheNight": "2026-03-05T20:53:56Z",
+        "lastThirdOfTheNight": "2026-03-05T22:43:05Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset-1-makkah-2026-03-05",
+      "description": "The Ramadan rule (120 minutes, offset -1) at Makkah on 2026-03-05: 2026-03-04 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-05",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": -1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-05T02:22:12Z",
+        "sunrise": "2026-03-05T03:38:12Z",
+        "dhuhr": "2026-03-05T09:32:11Z",
+        "asr": "2026-03-05T12:54:33Z",
+        "sunset": "2026-03-05T15:26:28Z",
+        "maghrib": "2026-03-05T15:26:28Z",
+        "isha": "2026-03-05T17:26:28Z",
+        "middleOfTheNight": "2026-03-05T20:53:56Z",
+        "lastThirdOfTheNight": "2026-03-05T22:43:05Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2026-03-05",
+      "description": "The Ramadan rule (120 minutes, offset +0) at Makkah on 2026-03-05: 2026-03-05 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-05",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-05T02:22:12Z",
+        "sunrise": "2026-03-05T03:38:12Z",
+        "dhuhr": "2026-03-05T09:32:11Z",
+        "asr": "2026-03-05T12:54:33Z",
+        "sunset": "2026-03-05T15:26:28Z",
+        "maghrib": "2026-03-05T15:26:28Z",
+        "isha": "2026-03-05T17:26:28Z",
+        "middleOfTheNight": "2026-03-05T20:53:56Z",
+        "lastThirdOfTheNight": "2026-03-05T22:43:05Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+1-makkah-2026-03-05",
+      "description": "The Ramadan rule (120 minutes, offset +1) at Makkah on 2026-03-05: 2026-03-06 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-05",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-05T02:22:12Z",
+        "sunrise": "2026-03-05T03:38:12Z",
+        "dhuhr": "2026-03-05T09:32:11Z",
+        "asr": "2026-03-05T12:54:33Z",
+        "sunset": "2026-03-05T15:26:28Z",
+        "maghrib": "2026-03-05T15:26:28Z",
+        "isha": "2026-03-05T17:26:28Z",
+        "middleOfTheNight": "2026-03-05T20:53:56Z",
+        "lastThirdOfTheNight": "2026-03-05T22:43:05Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-off-makkah-2026-03-18",
+      "description": "Umm al-Qura's 90-minute interval at Makkah on 2026-03-18, with the Ramadan rule off.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-18",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-18T02:10:48Z",
+        "sunrise": "2026-03-18T03:26:48Z",
+        "dhuhr": "2026-03-18T09:28:46Z",
+        "asr": "2026-03-18T12:53:23Z",
+        "sunset": "2026-03-18T15:31:04Z",
+        "maghrib": "2026-03-18T15:31:04Z",
+        "isha": "2026-03-18T17:01:04Z",
+        "middleOfTheNight": "2026-03-18T20:50:27Z",
+        "lastThirdOfTheNight": "2026-03-18T22:36:55Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset-1-makkah-2026-03-18",
+      "description": "The Ramadan rule (120 minutes, offset -1) at Makkah on 2026-03-18: 2026-03-17 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-18",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": -1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-18T02:10:48Z",
+        "sunrise": "2026-03-18T03:26:48Z",
+        "dhuhr": "2026-03-18T09:28:46Z",
+        "asr": "2026-03-18T12:53:23Z",
+        "sunset": "2026-03-18T15:31:04Z",
+        "maghrib": "2026-03-18T15:31:04Z",
+        "isha": "2026-03-18T17:31:04Z",
+        "middleOfTheNight": "2026-03-18T20:50:27Z",
+        "lastThirdOfTheNight": "2026-03-18T22:36:55Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2026-03-18",
+      "description": "The Ramadan rule (120 minutes, offset +0) at Makkah on 2026-03-18: 2026-03-18 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-18",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-18T02:10:48Z",
+        "sunrise": "2026-03-18T03:26:48Z",
+        "dhuhr": "2026-03-18T09:28:46Z",
+        "asr": "2026-03-18T12:53:23Z",
+        "sunset": "2026-03-18T15:31:04Z",
+        "maghrib": "2026-03-18T15:31:04Z",
+        "isha": "2026-03-18T17:31:04Z",
+        "middleOfTheNight": "2026-03-18T20:50:27Z",
+        "lastThirdOfTheNight": "2026-03-18T22:36:55Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+1-makkah-2026-03-18",
+      "description": "The Ramadan rule (120 minutes, offset +1) at Makkah on 2026-03-18: 2026-03-19 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-18",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-18T02:10:48Z",
+        "sunrise": "2026-03-18T03:26:48Z",
+        "dhuhr": "2026-03-18T09:28:46Z",
+        "asr": "2026-03-18T12:53:23Z",
+        "sunset": "2026-03-18T15:31:04Z",
+        "maghrib": "2026-03-18T15:31:04Z",
+        "isha": "2026-03-18T17:31:04Z",
+        "middleOfTheNight": "2026-03-18T20:50:27Z",
+        "lastThirdOfTheNight": "2026-03-18T22:36:55Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-off-makkah-2026-03-19",
+      "description": "Umm al-Qura's 90-minute interval at Makkah on 2026-03-19, with the Ramadan rule off.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-19",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-19T02:09:51Z",
+        "sunrise": "2026-03-19T03:25:53Z",
+        "dhuhr": "2026-03-19T09:28:29Z",
+        "asr": "2026-03-19T12:53:13Z",
+        "sunset": "2026-03-19T15:31:23Z",
+        "maghrib": "2026-03-19T15:31:23Z",
+        "isha": "2026-03-19T17:01:23Z",
+        "middleOfTheNight": "2026-03-19T20:50:09Z",
+        "lastThirdOfTheNight": "2026-03-19T22:36:24Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset-1-makkah-2026-03-19",
+      "description": "The Ramadan rule (120 minutes, offset -1) at Makkah on 2026-03-19: 2026-03-18 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-19",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": -1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-19T02:09:51Z",
+        "sunrise": "2026-03-19T03:25:53Z",
+        "dhuhr": "2026-03-19T09:28:29Z",
+        "asr": "2026-03-19T12:53:13Z",
+        "sunset": "2026-03-19T15:31:23Z",
+        "maghrib": "2026-03-19T15:31:23Z",
+        "isha": "2026-03-19T17:31:23Z",
+        "middleOfTheNight": "2026-03-19T20:50:09Z",
+        "lastThirdOfTheNight": "2026-03-19T22:36:24Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2026-03-19",
+      "description": "The Ramadan rule (120 minutes, offset +0) at Makkah on 2026-03-19: 2026-03-19 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-19",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-19T02:09:51Z",
+        "sunrise": "2026-03-19T03:25:53Z",
+        "dhuhr": "2026-03-19T09:28:29Z",
+        "asr": "2026-03-19T12:53:13Z",
+        "sunset": "2026-03-19T15:31:23Z",
+        "maghrib": "2026-03-19T15:31:23Z",
+        "isha": "2026-03-19T17:31:23Z",
+        "middleOfTheNight": "2026-03-19T20:50:09Z",
+        "lastThirdOfTheNight": "2026-03-19T22:36:24Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+1-makkah-2026-03-19",
+      "description": "The Ramadan rule (120 minutes, offset +1) at Makkah on 2026-03-19: 2026-03-20 is outside Ramadan.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-19",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-19T02:09:51Z",
+        "sunrise": "2026-03-19T03:25:53Z",
+        "dhuhr": "2026-03-19T09:28:29Z",
+        "asr": "2026-03-19T12:53:13Z",
+        "sunset": "2026-03-19T15:31:23Z",
+        "maghrib": "2026-03-19T15:31:23Z",
+        "isha": "2026-03-19T17:01:23Z",
+        "middleOfTheNight": "2026-03-19T20:50:09Z",
+        "lastThirdOfTheNight": "2026-03-19T22:36:24Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-off-makkah-2026-03-20",
+      "description": "Umm al-Qura's 90-minute interval at Makkah on 2026-03-20, with the Ramadan rule off.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T02:08:54Z",
+        "sunrise": "2026-03-20T03:24:58Z",
+        "dhuhr": "2026-03-20T09:28:11Z",
+        "asr": "2026-03-20T12:53:02Z",
+        "sunset": "2026-03-20T15:31:43Z",
+        "maghrib": "2026-03-20T15:31:43Z",
+        "isha": "2026-03-20T17:01:43Z",
+        "middleOfTheNight": "2026-03-20T20:49:50Z",
+        "lastThirdOfTheNight": "2026-03-20T22:35:52Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset-1-makkah-2026-03-20",
+      "description": "The Ramadan rule (120 minutes, offset -1) at Makkah on 2026-03-20: 2026-03-19 is in Ramadan. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": -1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T02:08:54Z",
+        "sunrise": "2026-03-20T03:24:58Z",
+        "dhuhr": "2026-03-20T09:28:11Z",
+        "asr": "2026-03-20T12:53:02Z",
+        "sunset": "2026-03-20T15:31:43Z",
+        "maghrib": "2026-03-20T15:31:43Z",
+        "isha": "2026-03-20T17:31:43Z",
+        "middleOfTheNight": "2026-03-20T20:49:50Z",
+        "lastThirdOfTheNight": "2026-03-20T22:35:52Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2026-03-20",
+      "description": "The Ramadan rule (120 minutes, offset +0) at Makkah on 2026-03-20: 2026-03-20 is outside Ramadan.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T02:08:54Z",
+        "sunrise": "2026-03-20T03:24:58Z",
+        "dhuhr": "2026-03-20T09:28:11Z",
+        "asr": "2026-03-20T12:53:02Z",
+        "sunset": "2026-03-20T15:31:43Z",
+        "maghrib": "2026-03-20T15:31:43Z",
+        "isha": "2026-03-20T17:01:43Z",
+        "middleOfTheNight": "2026-03-20T20:49:50Z",
+        "lastThirdOfTheNight": "2026-03-20T22:35:52Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+1-makkah-2026-03-20",
+      "description": "The Ramadan rule (120 minutes, offset +1) at Makkah on 2026-03-20: 2026-03-21 is outside Ramadan.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T02:08:54Z",
+        "sunrise": "2026-03-20T03:24:58Z",
+        "dhuhr": "2026-03-20T09:28:11Z",
+        "asr": "2026-03-20T12:53:02Z",
+        "sunset": "2026-03-20T15:31:43Z",
+        "maghrib": "2026-03-20T15:31:43Z",
+        "isha": "2026-03-20T17:01:43Z",
+        "middleOfTheNight": "2026-03-20T20:49:50Z",
+        "lastThirdOfTheNight": "2026-03-20T22:35:52Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-off-makkah-2026-03-21",
+      "description": "Umm al-Qura's 90-minute interval at Makkah on 2026-03-21, with the Ramadan rule off.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-21",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-21T02:07:57Z",
+        "sunrise": "2026-03-21T03:24:03Z",
+        "dhuhr": "2026-03-21T09:27:53Z",
+        "asr": "2026-03-21T12:52:50Z",
+        "sunset": "2026-03-21T15:32:02Z",
+        "maghrib": "2026-03-21T15:32:02Z",
+        "isha": "2026-03-21T17:02:02Z",
+        "middleOfTheNight": "2026-03-21T20:49:31Z",
+        "lastThirdOfTheNight": "2026-03-21T22:35:20Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset-1-makkah-2026-03-21",
+      "description": "The Ramadan rule (120 minutes, offset -1) at Makkah on 2026-03-21: 2026-03-20 is outside Ramadan.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-21",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": -1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-21T02:07:57Z",
+        "sunrise": "2026-03-21T03:24:03Z",
+        "dhuhr": "2026-03-21T09:27:53Z",
+        "asr": "2026-03-21T12:52:50Z",
+        "sunset": "2026-03-21T15:32:02Z",
+        "maghrib": "2026-03-21T15:32:02Z",
+        "isha": "2026-03-21T17:02:02Z",
+        "middleOfTheNight": "2026-03-21T20:49:31Z",
+        "lastThirdOfTheNight": "2026-03-21T22:35:20Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2026-03-21",
+      "description": "The Ramadan rule (120 minutes, offset +0) at Makkah on 2026-03-21: 2026-03-21 is outside Ramadan.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-21",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-21T02:07:57Z",
+        "sunrise": "2026-03-21T03:24:03Z",
+        "dhuhr": "2026-03-21T09:27:53Z",
+        "asr": "2026-03-21T12:52:50Z",
+        "sunset": "2026-03-21T15:32:02Z",
+        "maghrib": "2026-03-21T15:32:02Z",
+        "isha": "2026-03-21T17:02:02Z",
+        "middleOfTheNight": "2026-03-21T20:49:31Z",
+        "lastThirdOfTheNight": "2026-03-21T22:35:20Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+1-makkah-2026-03-21",
+      "description": "The Ramadan rule (120 minutes, offset +1) at Makkah on 2026-03-21: 2026-03-22 is outside Ramadan.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-21",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 1
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-21T02:07:57Z",
+        "sunrise": "2026-03-21T03:24:03Z",
+        "dhuhr": "2026-03-21T09:27:53Z",
+        "asr": "2026-03-21T12:52:50Z",
+        "sunset": "2026-03-21T15:32:02Z",
+        "maghrib": "2026-03-21T15:32:02Z",
+        "isha": "2026-03-21T17:02:02Z",
+        "middleOfTheNight": "2026-03-21T20:49:31Z",
+        "lastThirdOfTheNight": "2026-03-21T22:35:20Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2025-02-28",
+      "description": "The Ramadan rule (120 minutes, offset 0) at Makkah on 2025-02-28.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2025-02-28",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2025-02-28T02:25:54Z",
+        "sunrise": "2025-02-28T03:42:04Z",
+        "dhuhr": "2025-02-28T09:33:10Z",
+        "asr": "2025-02-28T12:54:24Z",
+        "sunset": "2025-02-28T15:24:34Z",
+        "maghrib": "2025-02-28T15:24:34Z",
+        "isha": "2025-02-28T16:54:34Z",
+        "middleOfTheNight": "2025-02-28T20:54:51Z",
+        "lastThirdOfTheNight": "2025-02-28T22:44:57Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2025-03-01",
+      "description": "The Ramadan rule (120 minutes, offset 0) at Makkah on 2025-03-01. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2025-03-01",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2025-03-01T02:25:09Z",
+        "sunrise": "2025-03-01T03:41:17Z",
+        "dhuhr": "2025-03-01T09:32:59Z",
+        "asr": "2025-03-01T12:54:28Z",
+        "sunset": "2025-03-01T15:24:59Z",
+        "maghrib": "2025-03-01T15:24:59Z",
+        "isha": "2025-03-01T17:24:59Z",
+        "middleOfTheNight": "2025-03-01T20:54:41Z",
+        "lastThirdOfTheNight": "2025-03-01T22:44:35Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2025-03-29",
+      "description": "The Ramadan rule (120 minutes, offset 0) at Makkah on 2025-03-29. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2025-03-29",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2025-03-29T01:59:53Z",
+        "sunrise": "2025-03-29T03:16:29Z",
+        "dhuhr": "2025-03-29T09:25:25Z",
+        "asr": "2025-03-29T12:50:48Z",
+        "sunset": "2025-03-29T15:34:39Z",
+        "maghrib": "2025-03-29T15:34:39Z",
+        "isha": "2025-03-29T17:34:39Z",
+        "middleOfTheNight": "2025-03-29T20:46:46Z",
+        "lastThirdOfTheNight": "2025-03-29T22:30:49Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2025-03-30",
+      "description": "The Ramadan rule (120 minutes, offset 0) at Makkah on 2025-03-30.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2025-03-30",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2025-03-30T01:58:54Z",
+        "sunrise": "2025-03-30T03:15:34Z",
+        "dhuhr": "2025-03-30T09:25:07Z",
+        "asr": "2025-03-30T12:50:30Z",
+        "sunset": "2025-03-30T15:34:58Z",
+        "maghrib": "2025-03-30T15:34:58Z",
+        "isha": "2025-03-30T17:04:58Z",
+        "middleOfTheNight": "2025-03-30T20:46:26Z",
+        "lastThirdOfTheNight": "2025-03-30T22:30:15Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2027-02-07",
+      "description": "The Ramadan rule (120 minutes, offset 0) at Makkah on 2027-02-07.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2027-02-07",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2027-02-07T02:37:56Z",
+        "sunrise": "2027-02-07T03:55:50Z",
+        "dhuhr": "2027-02-07T09:34:47Z",
+        "asr": "2027-02-07T12:49:26Z",
+        "sunset": "2027-02-07T15:13:58Z",
+        "maghrib": "2027-02-07T15:13:58Z",
+        "isha": "2027-02-07T16:43:58Z",
+        "middleOfTheNight": "2027-02-07T20:55:46Z",
+        "lastThirdOfTheNight": "2027-02-07T22:49:42Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2027-02-08",
+      "description": "The Ramadan rule (120 minutes, offset 0) at Makkah on 2027-02-08. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2027-02-08",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2027-02-08T02:37:34Z",
+        "sunrise": "2027-02-08T03:55:22Z",
+        "dhuhr": "2027-02-08T09:34:50Z",
+        "asr": "2027-02-08T12:49:49Z",
+        "sunset": "2027-02-08T15:14:32Z",
+        "maghrib": "2027-02-08T15:14:32Z",
+        "isha": "2027-02-08T17:14:32Z",
+        "middleOfTheNight": "2027-02-08T20:55:52Z",
+        "lastThirdOfTheNight": "2027-02-08T22:49:38Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2027-03-08",
+      "description": "The Ramadan rule (120 minutes, offset 0) at Makkah on 2027-03-08. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2027-03-08",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2027-03-08T02:19:56Z",
+        "sunrise": "2027-03-08T03:35:52Z",
+        "dhuhr": "2027-03-08T09:31:32Z",
+        "asr": "2027-03-08T12:54:30Z",
+        "sunset": "2027-03-08T15:27:30Z",
+        "maghrib": "2027-03-08T15:27:30Z",
+        "isha": "2027-03-08T17:27:30Z",
+        "middleOfTheNight": "2027-03-08T20:53:18Z",
+        "lastThirdOfTheNight": "2027-03-08T22:41:54Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-offset+0-makkah-2027-03-09",
+      "description": "The Ramadan rule (120 minutes, offset 0) at Makkah on 2027-03-09.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2027-03-09",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2027-03-09T02:19:05Z",
+        "sunrise": "2027-03-09T03:35:01Z",
+        "dhuhr": "2027-03-09T09:31:17Z",
+        "asr": "2027-03-09T12:54:27Z",
+        "sunset": "2027-03-09T15:27:52Z",
+        "maghrib": "2027-03-09T15:27:52Z",
+        "isha": "2027-03-09T16:57:52Z",
+        "middleOfTheNight": "2027-03-09T20:53:03Z",
+        "lastThirdOfTheNight": "2027-03-09T22:41:27Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-qatar-doha-2026-03-01",
+      "description": "Qatar's interval with the Ramadan rule at Doha on 2026-03-01, rounded to the nearest minute. The Ramadan interval applies.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-01",
+        "timeZone": "Asia/Qatar",
+        "coordinates": {
+          "latitude": 25.2854,
+          "longitude": 51.531
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 90
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "nearest",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-01T01:41:00Z",
+        "sunrise": "2026-03-01T02:57:00Z",
+        "dhuhr": "2026-03-01T08:46:00Z",
+        "asr": "2026-03-01T12:07:00Z",
+        "sunset": "2026-03-01T14:36:00Z",
+        "maghrib": "2026-03-01T14:36:00Z",
+        "isha": "2026-03-01T16:36:00Z",
+        "middleOfTheNight": "2026-03-01T20:08:00Z",
+        "lastThirdOfTheNight": "2026-03-01T21:59:00Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-angle-isha-makkah-2026-03-05",
+      "description": "Muslim World League's angle Isha at Makkah on 2026-03-05, in Ramadan, with the Ramadan rule on: unchanged.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-05",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-05T02:24:21Z",
+        "sunrise": "2026-03-05T03:38:12Z",
+        "dhuhr": "2026-03-05T09:32:11Z",
+        "asr": "2026-03-05T12:54:33Z",
+        "sunset": "2026-03-05T15:26:28Z",
+        "maghrib": "2026-03-05T15:26:28Z",
+        "isha": "2026-03-05T16:36:04Z",
+        "middleOfTheNight": "2026-03-05T20:55:00Z",
+        "lastThirdOfTheNight": "2026-03-05T22:44:31Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-angle-isha-off-makkah-2026-03-05",
+      "description": "The same day with the rule off.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-05",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-05T02:24:21Z",
+        "sunrise": "2026-03-05T03:38:12Z",
+        "dhuhr": "2026-03-05T09:32:11Z",
+        "asr": "2026-03-05T12:54:33Z",
+        "sunset": "2026-03-05T15:26:28Z",
+        "maghrib": "2026-03-05T15:26:28Z",
+        "isha": "2026-03-05T16:36:04Z",
+        "middleOfTheNight": "2026-03-05T20:55:00Z",
+        "lastThirdOfTheNight": "2026-03-05T22:44:31Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-zero-interval-makkah-2026-03-05",
+      "description": "An Isha interval of 0 at Makkah on 2026-03-05, in Ramadan, with the Ramadan rule on: the rule only replaces a positive interval, so Isha is Maghrib.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-05",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18.5
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "minutesAfterMaghrib": 0
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-05T02:22:12Z",
+        "sunrise": "2026-03-05T03:38:12Z",
+        "dhuhr": "2026-03-05T09:32:11Z",
+        "asr": "2026-03-05T12:54:33Z",
+        "sunset": "2026-03-05T15:26:28Z",
+        "maghrib": "2026-03-05T15:26:28Z",
+        "isha": "2026-03-05T15:26:28Z",
+        "middleOfTheNight": "2026-03-05T20:53:56Z",
+        "lastThirdOfTheNight": "2026-03-05T22:43:05Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "ramadan-moonsighting-london-2026-03-05",
+      "description": "The Moonsighting Committee's Isha at London on 2026-03-05, in Ramadan, with the Ramadan rule on: unchanged. Fajr is bounded (the angle alone gives 2026-03-05 04:46 local). Isha is bounded (the angle alone gives 2026-03-05 19:39 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-05",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": "moonsightingCommittee",
+          "maghrib": "sunset",
+          "isha": {
+            "moonsightingCommittee": "general"
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none",
+          "ramadanIsha": {
+            "interval": {
+              "minutes": 120,
+              "hijriDayOffset": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-05T05:02:18Z",
+        "sunrise": "2026-03-05T06:37:07Z",
+        "dhuhr": "2026-03-05T12:11:59Z",
+        "asr": "2026-03-05T15:09:01Z",
+        "sunset": "2026-03-05T17:47:46Z",
+        "maghrib": "2026-03-05T17:47:46Z",
+        "isha": "2026-03-05T19:08:48Z",
+        "middleOfTheNight": "2026-03-05T23:23:59Z",
+        "lastThirdOfTheNight": "2026-03-06T01:16:03Z"
+      },
+      "toleranceSeconds": 1
+    }
+  ]
+}

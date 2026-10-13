@@ -1,0 +1,487 @@
+{
+  "schemaVersion": 1,
+  "description": "SalahTimes' calculation-method presets, as the Codable JSON of CalculationParameters. When an authority documents its rules, its entry follows them: the astronomical definition plus the precautionary minutes (methodAdjustments) and rounding it documents. When an authority publishes only timetables (MUIS, the UAE), the values are fitted to them. User adjustments are zero, the high-latitude rule is 'recommended' and the Ramadan Isha rule is off in every preset. METHODS.md gives the sources, retrieved 2026-10-13, and the measured differences from official timetables. 'sources' maps each method to its source URLs.",
+  "methods": {
+    "muslimWorldLeague": {
+      "fajr": {
+        "angle": 18
+      },
+      "isha": {
+        "angle": 17
+      },
+      "maghrib": "sunset",
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "nearest",
+      "ramadanIsha": "off"
+    },
+    "isna": {
+      "fajr": {
+        "angle": 15
+      },
+      "isha": {
+        "angle": 15
+      },
+      "maghrib": "sunset",
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "nearest",
+      "ramadanIsha": "off"
+    },
+    "egyptian": {
+      "fajr": {
+        "angle": 19.5
+      },
+      "isha": {
+        "angle": 17.5
+      },
+      "maghrib": "sunset",
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "nearest",
+      "ramadanIsha": "off"
+    },
+    "ummAlQura": {
+      "fajr": {
+        "angle": 18.5
+      },
+      "isha": {
+        "minutesAfterMaghrib": 90
+      },
+      "maghrib": "sunset",
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "nearest",
+      "ramadanIsha": "off"
+    },
+    "karachi": {
+      "fajr": {
+        "angle": 18
+      },
+      "isha": {
+        "angle": 18
+      },
+      "maghrib": "sunset",
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "nearest",
+      "ramadanIsha": "off"
+    },
+    "tehran": {
+      "fajr": {
+        "angle": 17.7
+      },
+      "isha": {
+        "angle": 14
+      },
+      "maghrib": {
+        "angle": 4.5
+      },
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "nearest",
+      "ramadanIsha": "off"
+    },
+    "diyanet": {
+      "fajr": {
+        "angle": 18
+      },
+      "isha": {
+        "angle": 17
+      },
+      "maghrib": "sunset",
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 0,
+        "sunrise": -7,
+        "dhuhr": 5,
+        "asr": 4,
+        "maghrib": 7,
+        "isha": 0
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "nearest",
+      "ramadanIsha": "off"
+    },
+    "dubai": {
+      "fajr": {
+        "angle": 18.2
+      },
+      "isha": {
+        "angle": 18.2
+      },
+      "maghrib": "sunset",
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 0,
+        "sunrise": -3,
+        "dhuhr": 3,
+        "asr": 3,
+        "maghrib": 3,
+        "isha": 0
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "nearest",
+      "ramadanIsha": "off"
+    },
+    "kuwait": {
+      "fajr": {
+        "angle": 18
+      },
+      "isha": {
+        "angle": 17.5
+      },
+      "maghrib": "sunset",
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "nearest",
+      "ramadanIsha": "off"
+    },
+    "qatar": {
+      "fajr": {
+        "angle": 18
+      },
+      "isha": {
+        "minutesAfterMaghrib": 90
+      },
+      "maghrib": "sunset",
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "nearest",
+      "ramadanIsha": "off"
+    },
+    "muis": {
+      "fajr": {
+        "angle": 20
+      },
+      "isha": {
+        "angle": 18
+      },
+      "maghrib": "sunset",
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 1,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "up",
+      "ramadanIsha": "off"
+    },
+    "jakim": {
+      "fajr": {
+        "angle": 18
+      },
+      "isha": {
+        "angle": 18
+      },
+      "maghrib": "sunset",
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 1,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "nearest",
+      "ramadanIsha": "off"
+    },
+    "kemenag": {
+      "fajr": {
+        "angle": 20
+      },
+      "isha": {
+        "angle": 18
+      },
+      "maghrib": {
+        "angle": 1
+      },
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 2,
+        "sunrise": -3,
+        "dhuhr": 3,
+        "asr": 2,
+        "maghrib": 2,
+        "isha": 2
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "up",
+      "ramadanIsha": "off"
+    },
+    "moonsightingCommittee": {
+      "fajr": "moonsightingCommittee",
+      "isha": {
+        "moonsightingCommittee": "general"
+      },
+      "maghrib": "sunset",
+      "madhab": "shafi",
+      "highLatitudeRule": "recommended",
+      "nightSpan": "sunsetToFajr",
+      "methodAdjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 5,
+        "asr": 0,
+        "maghrib": 3,
+        "isha": 0
+      },
+      "adjustments": {
+        "fajr": 0,
+        "sunrise": 0,
+        "dhuhr": 0,
+        "asr": 0,
+        "maghrib": 0,
+        "isha": 0
+      },
+      "rounding": "nearest",
+      "ramadanIsha": "off"
+    }
+  },
+  "sources": {
+    "muslimWorldLeague": [
+      "http://praytimes.org/calculation"
+    ],
+    "isna": [
+      "http://praytimes.org/calculation",
+      "https://astronomycenter.net/articles/2012/07/30/81?l=en"
+    ],
+    "egyptian": [
+      "https://www.dar-alifta.org/ar/fatwa/details/13816",
+      "http://praytimes.org/calculation"
+    ],
+    "ummAlQura": [
+      "http://praytimes.org/calculation",
+      "http://praytimes.org/code/v2/js/PrayTimes.js"
+    ],
+    "karachi": [
+      "http://praytimes.org/calculation"
+    ],
+    "tehran": [
+      "https://khabaronline.ir/news/86445",
+      "https://www.bahesab.ir/time/sun",
+      "http://praytimes.org/code/v2/js/PrayTimes.js"
+    ],
+    "diyanet": [
+      "https://vakithesaplama.diyanet.gov.tr/temkin.php",
+      "https://namazvakitleri.diyanet.gov.tr/tr-TR/9206"
+    ],
+    "dubai": [
+      "https://aladhan.com/calculation-methods",
+      "https://www.szgmc.gov.ae/en/worshippers/prayer-timingss",
+      "https://github.com/batoulapps/adhan-swift/tree/main/Tests/AdhanTests/Resources/Times"
+    ],
+    "kuwait": [
+      "https://api.aladhan.com/v1/methods"
+    ],
+    "qatar": [
+      "https://qatarch.com/public/uploads/orginal/emsakia/emsakya.pdf",
+      "https://qatarch.com/brief-altakwem"
+    ],
+    "muis": [
+      "https://data.gov.sg/datasets/d_d441e7242e78efc566024dd5b0d9829c/view",
+      "https://www.muis.gov.sg/-/media/Files/Corporate-Site/Prayer-Timetable-2025.ashx",
+      "https://praytimes.org/docs/methods"
+    ],
+    "jakim": [
+      "https://www.muftiwp.gov.my/en/artikel/al-kafi-li-al-fatawi/4271",
+      "https://www.muftiselangor.gov.my/2024/08/09/66/"
+    ],
+    "kemenag": [
+      "https://www.cnnindonesia.com/nasional/20201221182418-20-584880",
+      "https://repository.uinsuna.ac.id/id/eprint/43/"
+    ],
+    "moonsightingCommittee": [
+      "https://www.moonsighting.com/how-we.html",
+      "https://www.moonsighting.com/faq_pt.html",
+      "https://raw.githubusercontent.com/kskhan77/prayer-times-moonsighting/HEAD/booklet-fajr-isha.pdf"
+    ]
+  }
+}

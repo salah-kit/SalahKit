@@ -1,0 +1,2135 @@
+{
+  "schemaVersion": 1,
+  "kind": "prayerTimes",
+  "description": "Daylight saving time changes, the days around them, and the same days in a fixed-offset zone. The instants don't depend on whether the zone observes daylight saving time.",
+  "vectors": [
+    {
+      "id": "dst-london-2026-03-28",
+      "description": "London in Europe/London on 2026-03-28, the day before the change from UTC+0 to UTC+1. Fajr is bounded (the angle alone gives 2026-03-28 03:48 local). Isha is bounded (the angle alone gives 2026-03-28 20:16 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-28",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-28T04:08:02Z",
+        "sunrise": "2026-03-28T05:45:09Z",
+        "dhuhr": "2026-03-28T12:05:34Z",
+        "asr": "2026-03-28T15:33:38Z",
+        "sunset": "2026-03-28T18:27:02Z",
+        "maghrib": "2026-03-28T18:27:02Z",
+        "isha": "2026-03-28T20:03:35Z",
+        "middleOfTheNight": "2026-03-28T23:16:41Z",
+        "lastThirdOfTheNight": "2026-03-29T00:53:14Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-london-2026-03-28-etc-gmt",
+      "description": "London's coordinates in Etc/GMT on 2026-03-28: the same instants as in Europe/London. Fajr is bounded (the angle alone gives 2026-03-28 03:48 local). Isha is bounded (the angle alone gives 2026-03-28 20:16 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-28",
+        "timeZone": "Etc/GMT",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-28T04:08:02Z",
+        "sunrise": "2026-03-28T05:45:09Z",
+        "dhuhr": "2026-03-28T12:05:34Z",
+        "asr": "2026-03-28T15:33:38Z",
+        "sunset": "2026-03-28T18:27:02Z",
+        "maghrib": "2026-03-28T18:27:02Z",
+        "isha": "2026-03-28T20:03:35Z",
+        "middleOfTheNight": "2026-03-28T23:16:41Z",
+        "lastThirdOfTheNight": "2026-03-29T00:53:14Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-london-2026-03-29",
+      "description": "London in Europe/London on 2026-03-29, the day of the change from UTC+0 to UTC+1. Fajr is bounded (the angle alone gives 2026-03-29 04:46 local). Isha is bounded (the angle alone gives 2026-03-29 21:18 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-29",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-29T04:06:19Z",
+        "sunrise": "2026-03-29T05:42:52Z",
+        "dhuhr": "2026-03-29T12:05:16Z",
+        "asr": "2026-03-29T15:34:34Z",
+        "sunset": "2026-03-29T18:28:43Z",
+        "maghrib": "2026-03-29T18:28:43Z",
+        "isha": "2026-03-29T20:04:42Z",
+        "middleOfTheNight": "2026-03-29T23:16:40Z",
+        "lastThirdOfTheNight": "2026-03-30T00:52:39Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-london-2026-03-29-etc-gmt",
+      "description": "London's coordinates in Etc/GMT on 2026-03-29: the same instants as in Europe/London. Fajr is bounded (the angle alone gives 2026-03-29 03:46 local). Isha is bounded (the angle alone gives 2026-03-29 20:18 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-29",
+        "timeZone": "Etc/GMT",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-29T04:06:19Z",
+        "sunrise": "2026-03-29T05:42:52Z",
+        "dhuhr": "2026-03-29T12:05:16Z",
+        "asr": "2026-03-29T15:34:34Z",
+        "sunset": "2026-03-29T18:28:43Z",
+        "maghrib": "2026-03-29T18:28:43Z",
+        "isha": "2026-03-29T20:04:42Z",
+        "middleOfTheNight": "2026-03-29T23:16:40Z",
+        "lastThirdOfTheNight": "2026-03-30T00:52:39Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-london-2026-03-29-etc-gmt-1",
+      "description": "London's coordinates in Etc/GMT-1 on 2026-03-29: the same instants as in Europe/London. Fajr is bounded (the angle alone gives 2026-03-29 04:46 local). Isha is bounded (the angle alone gives 2026-03-29 21:18 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-29",
+        "timeZone": "Etc/GMT-1",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-29T04:06:19Z",
+        "sunrise": "2026-03-29T05:42:52Z",
+        "dhuhr": "2026-03-29T12:05:16Z",
+        "asr": "2026-03-29T15:34:34Z",
+        "sunset": "2026-03-29T18:28:43Z",
+        "maghrib": "2026-03-29T18:28:43Z",
+        "isha": "2026-03-29T20:04:42Z",
+        "middleOfTheNight": "2026-03-29T23:16:40Z",
+        "lastThirdOfTheNight": "2026-03-30T00:52:39Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-london-2026-03-30",
+      "description": "London in Europe/London on 2026-03-30, the day after the change from UTC+0 to UTC+1. Fajr is bounded (the angle alone gives 2026-03-30 04:43 local). Isha is bounded (the angle alone gives 2026-03-30 21:20 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-30",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-30T04:04:37Z",
+        "sunrise": "2026-03-30T05:40:35Z",
+        "dhuhr": "2026-03-30T12:04:58Z",
+        "asr": "2026-03-30T15:35:29Z",
+        "sunset": "2026-03-30T18:30:24Z",
+        "maghrib": "2026-03-30T18:30:24Z",
+        "isha": "2026-03-30T20:05:49Z",
+        "middleOfTheNight": "2026-03-30T23:16:39Z",
+        "lastThirdOfTheNight": "2026-03-31T00:52:04Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-london-2026-03-30-etc-gmt",
+      "description": "London's coordinates in Etc/GMT on 2026-03-30: the same instants as in Europe/London. Fajr is bounded (the angle alone gives 2026-03-30 03:43 local). Isha is bounded (the angle alone gives 2026-03-30 20:20 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-30",
+        "timeZone": "Etc/GMT",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-30T04:04:37Z",
+        "sunrise": "2026-03-30T05:40:35Z",
+        "dhuhr": "2026-03-30T12:04:58Z",
+        "asr": "2026-03-30T15:35:29Z",
+        "sunset": "2026-03-30T18:30:24Z",
+        "maghrib": "2026-03-30T18:30:24Z",
+        "isha": "2026-03-30T20:05:49Z",
+        "middleOfTheNight": "2026-03-30T23:16:39Z",
+        "lastThirdOfTheNight": "2026-03-31T00:52:04Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-london-2026-10-24",
+      "description": "London in Europe/London on 2026-10-24, the day before the change from UTC+1 to UTC+0.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-24",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-24T04:47:53Z",
+        "sunrise": "2026-10-24T06:39:53Z",
+        "dhuhr": "2026-10-24T11:44:42Z",
+        "asr": "2026-10-24T14:17:50Z",
+        "sunset": "2026-10-24T16:48:45Z",
+        "maghrib": "2026-10-24T16:48:45Z",
+        "isha": "2026-10-24T18:34:06Z",
+        "middleOfTheNight": "2026-10-24T22:49:07Z",
+        "lastThirdOfTheNight": "2026-10-25T00:49:14Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-london-2026-10-24-etc-gmt",
+      "description": "London's coordinates in Etc/GMT on 2026-10-24: the same instants as in Europe/London.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-24",
+        "timeZone": "Etc/GMT",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-24T04:47:53Z",
+        "sunrise": "2026-10-24T06:39:53Z",
+        "dhuhr": "2026-10-24T11:44:42Z",
+        "asr": "2026-10-24T14:17:50Z",
+        "sunset": "2026-10-24T16:48:45Z",
+        "maghrib": "2026-10-24T16:48:45Z",
+        "isha": "2026-10-24T18:34:06Z",
+        "middleOfTheNight": "2026-10-24T22:49:07Z",
+        "lastThirdOfTheNight": "2026-10-25T00:49:14Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-london-2026-10-25",
+      "description": "London in Europe/London on 2026-10-25, the day of the change from UTC+1 to UTC+0.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-25",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-25T04:49:29Z",
+        "sunrise": "2026-10-25T06:41:37Z",
+        "dhuhr": "2026-10-25T11:44:35Z",
+        "asr": "2026-10-25T14:16:16Z",
+        "sunset": "2026-10-25T16:46:46Z",
+        "maghrib": "2026-10-25T16:46:46Z",
+        "isha": "2026-10-25T18:32:17Z",
+        "middleOfTheNight": "2026-10-25T22:48:55Z",
+        "lastThirdOfTheNight": "2026-10-26T00:49:38Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-london-2026-10-25-etc-gmt",
+      "description": "London's coordinates in Etc/GMT on 2026-10-25: the same instants as in Europe/London.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-25",
+        "timeZone": "Etc/GMT",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-25T04:49:29Z",
+        "sunrise": "2026-10-25T06:41:37Z",
+        "dhuhr": "2026-10-25T11:44:35Z",
+        "asr": "2026-10-25T14:16:16Z",
+        "sunset": "2026-10-25T16:46:46Z",
+        "maghrib": "2026-10-25T16:46:46Z",
+        "isha": "2026-10-25T18:32:17Z",
+        "middleOfTheNight": "2026-10-25T22:48:55Z",
+        "lastThirdOfTheNight": "2026-10-26T00:49:38Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-london-2026-10-25-etc-gmt-1",
+      "description": "London's coordinates in Etc/GMT-1 on 2026-10-25: the same instants as in Europe/London.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-25",
+        "timeZone": "Etc/GMT-1",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-25T04:49:29Z",
+        "sunrise": "2026-10-25T06:41:37Z",
+        "dhuhr": "2026-10-25T11:44:35Z",
+        "asr": "2026-10-25T14:16:16Z",
+        "sunset": "2026-10-25T16:46:46Z",
+        "maghrib": "2026-10-25T16:46:46Z",
+        "isha": "2026-10-25T18:32:17Z",
+        "middleOfTheNight": "2026-10-25T22:48:55Z",
+        "lastThirdOfTheNight": "2026-10-26T00:49:38Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-london-2026-10-26",
+      "description": "London in Europe/London on 2026-10-26, the day after the change from UTC+1 to UTC+0.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-26",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-26T04:51:05Z",
+        "sunrise": "2026-10-26T06:43:22Z",
+        "dhuhr": "2026-10-26T11:44:29Z",
+        "asr": "2026-10-26T14:14:44Z",
+        "sunset": "2026-10-26T16:44:49Z",
+        "maghrib": "2026-10-26T16:44:49Z",
+        "isha": "2026-10-26T18:30:30Z",
+        "middleOfTheNight": "2026-10-26T22:48:44Z",
+        "lastThirdOfTheNight": "2026-10-27T00:50:03Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-london-2026-10-26-etc-gmt",
+      "description": "London's coordinates in Etc/GMT on 2026-10-26: the same instants as in Europe/London.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-26",
+        "timeZone": "Etc/GMT",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-26T04:51:05Z",
+        "sunrise": "2026-10-26T06:43:22Z",
+        "dhuhr": "2026-10-26T11:44:29Z",
+        "asr": "2026-10-26T14:14:44Z",
+        "sunset": "2026-10-26T16:44:49Z",
+        "maghrib": "2026-10-26T16:44:49Z",
+        "isha": "2026-10-26T18:30:30Z",
+        "middleOfTheNight": "2026-10-26T22:48:44Z",
+        "lastThirdOfTheNight": "2026-10-27T00:50:03Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-03-07",
+      "description": "New York in America/New_York on 2026-03-07, the day before the change from UTC-5 to UTC-4.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-07",
+        "timeZone": "America/New_York",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-07T09:49:42Z",
+        "sunrise": "2026-03-07T11:20:29Z",
+        "dhuhr": "2026-03-07T17:06:58Z",
+        "asr": "2026-03-07T20:21:19Z",
+        "sunset": "2026-03-07T22:54:07Z",
+        "maghrib": "2026-03-07T22:54:07Z",
+        "isha": "2026-03-08T00:19:44Z",
+        "middleOfTheNight": "2026-03-08T04:21:06Z",
+        "lastThirdOfTheNight": "2026-03-08T06:10:06Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-03-07-etc-gmt+5",
+      "description": "New York's coordinates in Etc/GMT+5 on 2026-03-07: the same instants as in America/New_York.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-07",
+        "timeZone": "Etc/GMT+5",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-07T09:49:42Z",
+        "sunrise": "2026-03-07T11:20:29Z",
+        "dhuhr": "2026-03-07T17:06:58Z",
+        "asr": "2026-03-07T20:21:19Z",
+        "sunset": "2026-03-07T22:54:07Z",
+        "maghrib": "2026-03-07T22:54:07Z",
+        "isha": "2026-03-08T00:19:44Z",
+        "middleOfTheNight": "2026-03-08T04:21:06Z",
+        "lastThirdOfTheNight": "2026-03-08T06:10:06Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-03-08",
+      "description": "New York in America/New_York on 2026-03-08, the day of the change from UTC-5 to UTC-4.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-08",
+        "timeZone": "America/New_York",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-08T09:48:05Z",
+        "sunrise": "2026-03-08T11:18:53Z",
+        "dhuhr": "2026-03-08T17:06:44Z",
+        "asr": "2026-03-08T20:21:59Z",
+        "sunset": "2026-03-08T22:55:14Z",
+        "maghrib": "2026-03-08T22:55:14Z",
+        "isha": "2026-03-09T00:20:52Z",
+        "middleOfTheNight": "2026-03-09T04:20:51Z",
+        "lastThirdOfTheNight": "2026-03-09T06:09:23Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-03-08-etc-gmt+5",
+      "description": "New York's coordinates in Etc/GMT+5 on 2026-03-08: the same instants as in America/New_York.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-08",
+        "timeZone": "Etc/GMT+5",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-08T09:48:05Z",
+        "sunrise": "2026-03-08T11:18:53Z",
+        "dhuhr": "2026-03-08T17:06:44Z",
+        "asr": "2026-03-08T20:21:59Z",
+        "sunset": "2026-03-08T22:55:14Z",
+        "maghrib": "2026-03-08T22:55:14Z",
+        "isha": "2026-03-09T00:20:52Z",
+        "middleOfTheNight": "2026-03-09T04:20:51Z",
+        "lastThirdOfTheNight": "2026-03-09T06:09:23Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-03-08-etc-gmt+4",
+      "description": "New York's coordinates in Etc/GMT+4 on 2026-03-08: the same instants as in America/New_York.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-08",
+        "timeZone": "Etc/GMT+4",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-08T09:48:05Z",
+        "sunrise": "2026-03-08T11:18:53Z",
+        "dhuhr": "2026-03-08T17:06:44Z",
+        "asr": "2026-03-08T20:21:59Z",
+        "sunset": "2026-03-08T22:55:14Z",
+        "maghrib": "2026-03-08T22:55:14Z",
+        "isha": "2026-03-09T00:20:52Z",
+        "middleOfTheNight": "2026-03-09T04:20:51Z",
+        "lastThirdOfTheNight": "2026-03-09T06:09:23Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-03-09",
+      "description": "New York in America/New_York on 2026-03-09, the day after the change from UTC-5 to UTC-4.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-09",
+        "timeZone": "America/New_York",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-09T09:46:28Z",
+        "sunrise": "2026-03-09T11:17:17Z",
+        "dhuhr": "2026-03-09T17:06:29Z",
+        "asr": "2026-03-09T20:22:39Z",
+        "sunset": "2026-03-09T22:56:20Z",
+        "maghrib": "2026-03-09T22:56:20Z",
+        "isha": "2026-03-10T00:21:59Z",
+        "middleOfTheNight": "2026-03-10T04:20:34Z",
+        "lastThirdOfTheNight": "2026-03-10T06:08:39Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-03-09-etc-gmt+5",
+      "description": "New York's coordinates in Etc/GMT+5 on 2026-03-09: the same instants as in America/New_York.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-09",
+        "timeZone": "Etc/GMT+5",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-09T09:46:28Z",
+        "sunrise": "2026-03-09T11:17:17Z",
+        "dhuhr": "2026-03-09T17:06:29Z",
+        "asr": "2026-03-09T20:22:39Z",
+        "sunset": "2026-03-09T22:56:20Z",
+        "maghrib": "2026-03-09T22:56:20Z",
+        "isha": "2026-03-10T00:21:59Z",
+        "middleOfTheNight": "2026-03-10T04:20:34Z",
+        "lastThirdOfTheNight": "2026-03-10T06:08:39Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-10-31",
+      "description": "New York in America/New_York on 2026-10-31, the day before the change from UTC-4 to UTC-5.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-31",
+        "timeZone": "America/New_York",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-31T09:52:45Z",
+        "sunrise": "2026-10-31T11:25:17Z",
+        "dhuhr": "2026-10-31T16:39:38Z",
+        "asr": "2026-10-31T19:29:22Z",
+        "sunset": "2026-10-31T21:53:28Z",
+        "maghrib": "2026-10-31T21:53:28Z",
+        "isha": "2026-10-31T23:20:38Z",
+        "middleOfTheNight": "2026-11-01T03:53:37Z",
+        "lastThirdOfTheNight": "2026-11-01T05:53:40Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-10-31-etc-gmt+5",
+      "description": "New York's coordinates in Etc/GMT+5 on 2026-10-31: the same instants as in America/New_York.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-31",
+        "timeZone": "Etc/GMT+5",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-31T09:52:45Z",
+        "sunrise": "2026-10-31T11:25:17Z",
+        "dhuhr": "2026-10-31T16:39:38Z",
+        "asr": "2026-10-31T19:29:22Z",
+        "sunset": "2026-10-31T21:53:28Z",
+        "maghrib": "2026-10-31T21:53:28Z",
+        "isha": "2026-10-31T23:20:38Z",
+        "middleOfTheNight": "2026-11-01T03:53:37Z",
+        "lastThirdOfTheNight": "2026-11-01T05:53:40Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-11-01",
+      "description": "New York in America/New_York on 2026-11-01, the day of the change from UTC-4 to UTC-5.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-11-01",
+        "timeZone": "America/New_York",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-11-01T09:53:47Z",
+        "sunrise": "2026-11-01T11:26:27Z",
+        "dhuhr": "2026-11-01T16:39:36Z",
+        "asr": "2026-11-01T19:28:24Z",
+        "sunset": "2026-11-01T21:52:15Z",
+        "maghrib": "2026-11-01T21:52:15Z",
+        "isha": "2026-11-01T23:19:33Z",
+        "middleOfTheNight": "2026-11-02T03:53:32Z",
+        "lastThirdOfTheNight": "2026-11-02T05:53:57Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-11-01-etc-gmt+5",
+      "description": "New York's coordinates in Etc/GMT+5 on 2026-11-01: the same instants as in America/New_York.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-11-01",
+        "timeZone": "Etc/GMT+5",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-11-01T09:53:47Z",
+        "sunrise": "2026-11-01T11:26:27Z",
+        "dhuhr": "2026-11-01T16:39:36Z",
+        "asr": "2026-11-01T19:28:24Z",
+        "sunset": "2026-11-01T21:52:15Z",
+        "maghrib": "2026-11-01T21:52:15Z",
+        "isha": "2026-11-01T23:19:33Z",
+        "middleOfTheNight": "2026-11-02T03:53:32Z",
+        "lastThirdOfTheNight": "2026-11-02T05:53:57Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-11-01-etc-gmt+4",
+      "description": "New York's coordinates in Etc/GMT+4 on 2026-11-01: the same instants as in America/New_York.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-11-01",
+        "timeZone": "Etc/GMT+4",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-11-01T09:53:47Z",
+        "sunrise": "2026-11-01T11:26:27Z",
+        "dhuhr": "2026-11-01T16:39:36Z",
+        "asr": "2026-11-01T19:28:24Z",
+        "sunset": "2026-11-01T21:52:15Z",
+        "maghrib": "2026-11-01T21:52:15Z",
+        "isha": "2026-11-01T23:19:33Z",
+        "middleOfTheNight": "2026-11-02T03:53:32Z",
+        "lastThirdOfTheNight": "2026-11-02T05:53:57Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-11-02",
+      "description": "New York in America/New_York on 2026-11-02, the day after the change from UTC-4 to UTC-5.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-11-02",
+        "timeZone": "America/New_York",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-11-02T09:54:49Z",
+        "sunrise": "2026-11-02T11:27:37Z",
+        "dhuhr": "2026-11-02T16:39:35Z",
+        "asr": "2026-11-02T19:27:27Z",
+        "sunset": "2026-11-02T21:51:03Z",
+        "maghrib": "2026-11-02T21:51:03Z",
+        "isha": "2026-11-02T23:18:29Z",
+        "middleOfTheNight": "2026-11-03T03:53:27Z",
+        "lastThirdOfTheNight": "2026-11-03T05:54:15Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-new-york-2026-11-02-etc-gmt+5",
+      "description": "New York's coordinates in Etc/GMT+5 on 2026-11-02: the same instants as in America/New_York.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-11-02",
+        "timeZone": "Etc/GMT+5",
+        "coordinates": {
+          "latitude": 40.7128,
+          "longitude": -74.006
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-11-02T09:54:49Z",
+        "sunrise": "2026-11-02T11:27:37Z",
+        "dhuhr": "2026-11-02T16:39:35Z",
+        "asr": "2026-11-02T19:27:27Z",
+        "sunset": "2026-11-02T21:51:03Z",
+        "maghrib": "2026-11-02T21:51:03Z",
+        "isha": "2026-11-02T23:18:29Z",
+        "middleOfTheNight": "2026-11-03T03:53:27Z",
+        "lastThirdOfTheNight": "2026-11-03T05:54:15Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-04-04",
+      "description": "Sydney in Australia/Sydney on 2026-04-04, the day before the change from UTC+11 to UTC+10.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-04",
+        "timeZone": "Australia/Sydney",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-03T18:46:23Z",
+        "sunrise": "2026-04-03T20:09:16Z",
+        "dhuhr": "2026-04-04T01:58:16Z",
+        "asr": "2026-04-04T05:16:28Z",
+        "sunset": "2026-04-04T07:46:46Z",
+        "maghrib": "2026-04-04T07:46:46Z",
+        "isha": "2026-04-04T09:04:42Z",
+        "middleOfTheNight": "2026-04-04T13:16:57Z",
+        "lastThirdOfTheNight": "2026-04-04T15:07:00Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-04-04-etc-gmt-10",
+      "description": "Sydney's coordinates in Etc/GMT-10 on 2026-04-04: the same instants as in Australia/Sydney.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-04",
+        "timeZone": "Etc/GMT-10",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-03T18:46:23Z",
+        "sunrise": "2026-04-03T20:09:16Z",
+        "dhuhr": "2026-04-04T01:58:16Z",
+        "asr": "2026-04-04T05:16:28Z",
+        "sunset": "2026-04-04T07:46:46Z",
+        "maghrib": "2026-04-04T07:46:46Z",
+        "isha": "2026-04-04T09:04:42Z",
+        "middleOfTheNight": "2026-04-04T13:16:57Z",
+        "lastThirdOfTheNight": "2026-04-04T15:07:00Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-04-05",
+      "description": "Sydney in Australia/Sydney on 2026-04-05, the day of the change from UTC+11 to UTC+10.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-05",
+        "timeZone": "Australia/Sydney",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-04T18:47:07Z",
+        "sunrise": "2026-04-04T20:10:01Z",
+        "dhuhr": "2026-04-05T01:57:59Z",
+        "asr": "2026-04-05T05:15:32Z",
+        "sunset": "2026-04-05T07:45:27Z",
+        "maghrib": "2026-04-05T07:45:27Z",
+        "isha": "2026-04-05T09:03:24Z",
+        "middleOfTheNight": "2026-04-05T13:16:39Z",
+        "lastThirdOfTheNight": "2026-04-05T15:07:03Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-04-05-etc-gmt-10",
+      "description": "Sydney's coordinates in Etc/GMT-10 on 2026-04-05: the same instants as in Australia/Sydney.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-05",
+        "timeZone": "Etc/GMT-10",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-04T18:47:07Z",
+        "sunrise": "2026-04-04T20:10:01Z",
+        "dhuhr": "2026-04-05T01:57:59Z",
+        "asr": "2026-04-05T05:15:32Z",
+        "sunset": "2026-04-05T07:45:27Z",
+        "maghrib": "2026-04-05T07:45:27Z",
+        "isha": "2026-04-05T09:03:24Z",
+        "middleOfTheNight": "2026-04-05T13:16:39Z",
+        "lastThirdOfTheNight": "2026-04-05T15:07:03Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-04-05-etc-gmt-11",
+      "description": "Sydney's coordinates in Etc/GMT-11 on 2026-04-05: the same instants as in Australia/Sydney.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-05",
+        "timeZone": "Etc/GMT-11",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-04T18:47:07Z",
+        "sunrise": "2026-04-04T20:10:01Z",
+        "dhuhr": "2026-04-05T01:57:59Z",
+        "asr": "2026-04-05T05:15:32Z",
+        "sunset": "2026-04-05T07:45:27Z",
+        "maghrib": "2026-04-05T07:45:27Z",
+        "isha": "2026-04-05T09:03:24Z",
+        "middleOfTheNight": "2026-04-05T13:16:39Z",
+        "lastThirdOfTheNight": "2026-04-05T15:07:03Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-04-06",
+      "description": "Sydney in Australia/Sydney on 2026-04-06, the day after the change from UTC+11 to UTC+10.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-06",
+        "timeZone": "Australia/Sydney",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-05T18:47:51Z",
+        "sunrise": "2026-04-05T20:10:45Z",
+        "dhuhr": "2026-04-06T01:57:41Z",
+        "asr": "2026-04-06T05:14:35Z",
+        "sunset": "2026-04-06T07:44:08Z",
+        "maghrib": "2026-04-06T07:44:08Z",
+        "isha": "2026-04-06T09:02:06Z",
+        "middleOfTheNight": "2026-04-06T13:16:21Z",
+        "lastThirdOfTheNight": "2026-04-06T15:07:06Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-04-06-etc-gmt-10",
+      "description": "Sydney's coordinates in Etc/GMT-10 on 2026-04-06: the same instants as in Australia/Sydney.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-06",
+        "timeZone": "Etc/GMT-10",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-05T18:47:51Z",
+        "sunrise": "2026-04-05T20:10:45Z",
+        "dhuhr": "2026-04-06T01:57:41Z",
+        "asr": "2026-04-06T05:14:35Z",
+        "sunset": "2026-04-06T07:44:08Z",
+        "maghrib": "2026-04-06T07:44:08Z",
+        "isha": "2026-04-06T09:02:06Z",
+        "middleOfTheNight": "2026-04-06T13:16:21Z",
+        "lastThirdOfTheNight": "2026-04-06T15:07:06Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-10-03",
+      "description": "Sydney in Australia/Sydney on 2026-10-03, the day before the change from UTC+10 to UTC+11.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-03",
+        "timeZone": "Australia/Sydney",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-02T18:05:44Z",
+        "sunrise": "2026-10-02T19:30:07Z",
+        "dhuhr": "2026-10-03T01:44:19Z",
+        "asr": "2026-10-03T05:16:45Z",
+        "sunset": "2026-10-03T07:59:04Z",
+        "maghrib": "2026-10-03T07:59:04Z",
+        "isha": "2026-10-03T09:18:37Z",
+        "middleOfTheNight": "2026-10-03T13:01:39Z",
+        "lastThirdOfTheNight": "2026-10-03T14:42:30Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-10-03-etc-gmt-10",
+      "description": "Sydney's coordinates in Etc/GMT-10 on 2026-10-03: the same instants as in Australia/Sydney.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-03",
+        "timeZone": "Etc/GMT-10",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-02T18:05:44Z",
+        "sunrise": "2026-10-02T19:30:07Z",
+        "dhuhr": "2026-10-03T01:44:19Z",
+        "asr": "2026-10-03T05:16:45Z",
+        "sunset": "2026-10-03T07:59:04Z",
+        "maghrib": "2026-10-03T07:59:04Z",
+        "isha": "2026-10-03T09:18:37Z",
+        "middleOfTheNight": "2026-10-03T13:01:39Z",
+        "lastThirdOfTheNight": "2026-10-03T14:42:30Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-10-04",
+      "description": "Sydney in Australia/Sydney on 2026-10-04, the day of the change from UTC+10 to UTC+11.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-04",
+        "timeZone": "Australia/Sydney",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-03T18:04:13Z",
+        "sunrise": "2026-10-03T19:28:46Z",
+        "dhuhr": "2026-10-04T01:44:00Z",
+        "asr": "2026-10-04T05:16:54Z",
+        "sunset": "2026-10-04T07:59:48Z",
+        "maghrib": "2026-10-04T07:59:48Z",
+        "isha": "2026-10-04T09:19:29Z",
+        "middleOfTheNight": "2026-10-04T13:01:16Z",
+        "lastThirdOfTheNight": "2026-10-04T14:41:45Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-10-04-etc-gmt-10",
+      "description": "Sydney's coordinates in Etc/GMT-10 on 2026-10-04: the same instants as in Australia/Sydney.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-04",
+        "timeZone": "Etc/GMT-10",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-03T18:04:13Z",
+        "sunrise": "2026-10-03T19:28:46Z",
+        "dhuhr": "2026-10-04T01:44:00Z",
+        "asr": "2026-10-04T05:16:54Z",
+        "sunset": "2026-10-04T07:59:48Z",
+        "maghrib": "2026-10-04T07:59:48Z",
+        "isha": "2026-10-04T09:19:29Z",
+        "middleOfTheNight": "2026-10-04T13:01:16Z",
+        "lastThirdOfTheNight": "2026-10-04T14:41:45Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-10-04-etc-gmt-11",
+      "description": "Sydney's coordinates in Etc/GMT-11 on 2026-10-04: the same instants as in Australia/Sydney.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-04",
+        "timeZone": "Etc/GMT-11",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-03T18:04:13Z",
+        "sunrise": "2026-10-03T19:28:46Z",
+        "dhuhr": "2026-10-04T01:44:00Z",
+        "asr": "2026-10-04T05:16:54Z",
+        "sunset": "2026-10-04T07:59:48Z",
+        "maghrib": "2026-10-04T07:59:48Z",
+        "isha": "2026-10-04T09:19:29Z",
+        "middleOfTheNight": "2026-10-04T13:01:16Z",
+        "lastThirdOfTheNight": "2026-10-04T14:41:45Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-10-05",
+      "description": "Sydney in Australia/Sydney on 2026-10-05, the day after the change from UTC+10 to UTC+11.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-05",
+        "timeZone": "Australia/Sydney",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-04T18:02:43Z",
+        "sunrise": "2026-10-04T19:27:25Z",
+        "dhuhr": "2026-10-05T01:43:42Z",
+        "asr": "2026-10-05T05:17:03Z",
+        "sunset": "2026-10-05T08:00:33Z",
+        "maghrib": "2026-10-05T08:00:33Z",
+        "isha": "2026-10-05T09:20:22Z",
+        "middleOfTheNight": "2026-10-05T13:00:53Z",
+        "lastThirdOfTheNight": "2026-10-05T14:40:59Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-sydney-2026-10-05-etc-gmt-10",
+      "description": "Sydney's coordinates in Etc/GMT-10 on 2026-10-05: the same instants as in Australia/Sydney.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-10-05",
+        "timeZone": "Etc/GMT-10",
+        "coordinates": {
+          "latitude": -33.8688,
+          "longitude": 151.2093
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-10-04T18:02:43Z",
+        "sunrise": "2026-10-04T19:27:25Z",
+        "dhuhr": "2026-10-05T01:43:42Z",
+        "asr": "2026-10-05T05:17:03Z",
+        "sunset": "2026-10-05T08:00:33Z",
+        "maghrib": "2026-10-05T08:00:33Z",
+        "isha": "2026-10-05T09:20:22Z",
+        "middleOfTheNight": "2026-10-05T13:00:53Z",
+        "lastThirdOfTheNight": "2026-10-05T14:40:59Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-04-03",
+      "description": "Santiago in America/Santiago on 2026-04-03, the day before the change from UTC-3 to UTC-4.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-03",
+        "timeZone": "America/Santiago",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-03T09:33:49Z",
+        "sunrise": "2026-04-03T10:56:17Z",
+        "dhuhr": "2026-04-03T16:45:54Z",
+        "asr": "2026-04-03T20:04:36Z",
+        "sunset": "2026-04-03T22:35:00Z",
+        "maghrib": "2026-04-03T22:35:00Z",
+        "isha": "2026-04-03T23:52:33Z",
+        "middleOfTheNight": "2026-04-04T04:04:46Z",
+        "lastThirdOfTheNight": "2026-04-04T05:54:41Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-04-03-etc-gmt+4",
+      "description": "Santiago's coordinates in Etc/GMT+4 on 2026-04-03: the same instants as in America/Santiago.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-03",
+        "timeZone": "Etc/GMT+4",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-03T09:33:49Z",
+        "sunrise": "2026-04-03T10:56:17Z",
+        "dhuhr": "2026-04-03T16:45:54Z",
+        "asr": "2026-04-03T20:04:36Z",
+        "sunset": "2026-04-03T22:35:00Z",
+        "maghrib": "2026-04-03T22:35:00Z",
+        "isha": "2026-04-03T23:52:33Z",
+        "middleOfTheNight": "2026-04-04T04:04:46Z",
+        "lastThirdOfTheNight": "2026-04-04T05:54:41Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-04-04",
+      "description": "Santiago in America/Santiago on 2026-04-04, the day of the change from UTC-3 to UTC-4.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-04",
+        "timeZone": "America/Santiago",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-04T09:34:32Z",
+        "sunrise": "2026-04-04T10:57:01Z",
+        "dhuhr": "2026-04-04T16:45:36Z",
+        "asr": "2026-04-04T20:03:41Z",
+        "sunset": "2026-04-04T22:33:42Z",
+        "maghrib": "2026-04-04T22:33:42Z",
+        "isha": "2026-04-04T23:51:16Z",
+        "middleOfTheNight": "2026-04-05T04:04:28Z",
+        "lastThirdOfTheNight": "2026-04-05T05:54:44Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-04-04-etc-gmt+4",
+      "description": "Santiago's coordinates in Etc/GMT+4 on 2026-04-04: the same instants as in America/Santiago.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-04",
+        "timeZone": "Etc/GMT+4",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-04T09:34:32Z",
+        "sunrise": "2026-04-04T10:57:01Z",
+        "dhuhr": "2026-04-04T16:45:36Z",
+        "asr": "2026-04-04T20:03:41Z",
+        "sunset": "2026-04-04T22:33:42Z",
+        "maghrib": "2026-04-04T22:33:42Z",
+        "isha": "2026-04-04T23:51:16Z",
+        "middleOfTheNight": "2026-04-05T04:04:28Z",
+        "lastThirdOfTheNight": "2026-04-05T05:54:44Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-04-04-etc-gmt+3",
+      "description": "Santiago's coordinates in Etc/GMT+3 on 2026-04-04: the same instants as in America/Santiago.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-04",
+        "timeZone": "Etc/GMT+3",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-04T09:34:32Z",
+        "sunrise": "2026-04-04T10:57:01Z",
+        "dhuhr": "2026-04-04T16:45:36Z",
+        "asr": "2026-04-04T20:03:41Z",
+        "sunset": "2026-04-04T22:33:42Z",
+        "maghrib": "2026-04-04T22:33:42Z",
+        "isha": "2026-04-04T23:51:16Z",
+        "middleOfTheNight": "2026-04-05T04:04:28Z",
+        "lastThirdOfTheNight": "2026-04-05T05:54:44Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-04-05",
+      "description": "Santiago in America/Santiago on 2026-04-05, the day after the change from UTC-3 to UTC-4.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-05",
+        "timeZone": "America/Santiago",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-05T09:35:15Z",
+        "sunrise": "2026-04-05T10:57:44Z",
+        "dhuhr": "2026-04-05T16:45:19Z",
+        "asr": "2026-04-05T20:02:45Z",
+        "sunset": "2026-04-05T22:32:24Z",
+        "maghrib": "2026-04-05T22:32:24Z",
+        "isha": "2026-04-05T23:49:59Z",
+        "middleOfTheNight": "2026-04-06T04:04:11Z",
+        "lastThirdOfTheNight": "2026-04-06T05:54:46Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-04-05-etc-gmt+4",
+      "description": "Santiago's coordinates in Etc/GMT+4 on 2026-04-05: the same instants as in America/Santiago.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-04-05",
+        "timeZone": "Etc/GMT+4",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-04-05T09:35:15Z",
+        "sunrise": "2026-04-05T10:57:44Z",
+        "dhuhr": "2026-04-05T16:45:19Z",
+        "asr": "2026-04-05T20:02:45Z",
+        "sunset": "2026-04-05T22:32:24Z",
+        "maghrib": "2026-04-05T22:32:24Z",
+        "isha": "2026-04-05T23:49:59Z",
+        "middleOfTheNight": "2026-04-06T04:04:11Z",
+        "lastThirdOfTheNight": "2026-04-06T05:54:46Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-09-05",
+      "description": "Santiago in America/Santiago on 2026-09-05, the day before the change from UTC-4 to UTC-3.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-05",
+        "timeZone": "America/Santiago",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-05T09:32:48Z",
+        "sunrise": "2026-09-05T10:55:12Z",
+        "dhuhr": "2026-09-05T16:41:19Z",
+        "asr": "2026-09-05T19:58:32Z",
+        "sunset": "2026-09-05T22:27:54Z",
+        "maghrib": "2026-09-05T22:27:54Z",
+        "isha": "2026-09-05T23:45:36Z",
+        "middleOfTheNight": "2026-09-06T03:59:42Z",
+        "lastThirdOfTheNight": "2026-09-06T05:50:18Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-09-05-etc-gmt+4",
+      "description": "Santiago's coordinates in Etc/GMT+4 on 2026-09-05: the same instants as in America/Santiago.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-05",
+        "timeZone": "Etc/GMT+4",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-05T09:32:48Z",
+        "sunrise": "2026-09-05T10:55:12Z",
+        "dhuhr": "2026-09-05T16:41:19Z",
+        "asr": "2026-09-05T19:58:32Z",
+        "sunset": "2026-09-05T22:27:54Z",
+        "maghrib": "2026-09-05T22:27:54Z",
+        "isha": "2026-09-05T23:45:36Z",
+        "middleOfTheNight": "2026-09-06T03:59:42Z",
+        "lastThirdOfTheNight": "2026-09-06T05:50:18Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-09-06",
+      "description": "Santiago in America/Santiago on 2026-09-06, the day of the change from UTC-4 to UTC-3.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-06",
+        "timeZone": "America/Santiago",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-06T09:31:29Z",
+        "sunrise": "2026-09-06T10:53:52Z",
+        "dhuhr": "2026-09-06T16:40:58Z",
+        "asr": "2026-09-06T19:58:49Z",
+        "sunset": "2026-09-06T22:28:34Z",
+        "maghrib": "2026-09-06T22:28:34Z",
+        "isha": "2026-09-06T23:46:14Z",
+        "middleOfTheNight": "2026-09-07T03:59:22Z",
+        "lastThirdOfTheNight": "2026-09-07T05:49:38Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-09-06-etc-gmt+4",
+      "description": "Santiago's coordinates in Etc/GMT+4 on 2026-09-06: the same instants as in America/Santiago.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-06",
+        "timeZone": "Etc/GMT+4",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-06T09:31:29Z",
+        "sunrise": "2026-09-06T10:53:52Z",
+        "dhuhr": "2026-09-06T16:40:58Z",
+        "asr": "2026-09-06T19:58:49Z",
+        "sunset": "2026-09-06T22:28:34Z",
+        "maghrib": "2026-09-06T22:28:34Z",
+        "isha": "2026-09-06T23:46:14Z",
+        "middleOfTheNight": "2026-09-07T03:59:22Z",
+        "lastThirdOfTheNight": "2026-09-07T05:49:38Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-09-06-etc-gmt+3",
+      "description": "Santiago's coordinates in Etc/GMT+3 on 2026-09-06: the same instants as in America/Santiago.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-06",
+        "timeZone": "Etc/GMT+3",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-06T09:31:29Z",
+        "sunrise": "2026-09-06T10:53:52Z",
+        "dhuhr": "2026-09-06T16:40:58Z",
+        "asr": "2026-09-06T19:58:49Z",
+        "sunset": "2026-09-06T22:28:34Z",
+        "maghrib": "2026-09-06T22:28:34Z",
+        "isha": "2026-09-06T23:46:14Z",
+        "middleOfTheNight": "2026-09-07T03:59:22Z",
+        "lastThirdOfTheNight": "2026-09-07T05:49:38Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-09-07",
+      "description": "Santiago in America/Santiago on 2026-09-07, the day after the change from UTC-4 to UTC-3.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-07",
+        "timeZone": "America/Santiago",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-07T09:30:10Z",
+        "sunrise": "2026-09-07T10:52:32Z",
+        "dhuhr": "2026-09-07T16:40:38Z",
+        "asr": "2026-09-07T19:59:06Z",
+        "sunset": "2026-09-07T22:29:13Z",
+        "maghrib": "2026-09-07T22:29:13Z",
+        "isha": "2026-09-07T23:46:53Z",
+        "middleOfTheNight": "2026-09-08T03:59:01Z",
+        "lastThirdOfTheNight": "2026-09-08T05:48:58Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "dst-santiago-2026-09-07-etc-gmt+4",
+      "description": "Santiago's coordinates in Etc/GMT+4 on 2026-09-07: the same instants as in America/Santiago.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-07",
+        "timeZone": "Etc/GMT+4",
+        "coordinates": {
+          "latitude": -33.4489,
+          "longitude": -70.6693
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-07T09:30:10Z",
+        "sunrise": "2026-09-07T10:52:32Z",
+        "dhuhr": "2026-09-07T16:40:38Z",
+        "asr": "2026-09-07T19:59:06Z",
+        "sunset": "2026-09-07T22:29:13Z",
+        "maghrib": "2026-09-07T22:29:13Z",
+        "isha": "2026-09-07T23:46:53Z",
+        "middleOfTheNight": "2026-09-08T03:59:01Z",
+        "lastThirdOfTheNight": "2026-09-08T05:48:58Z"
+      },
+      "toleranceSeconds": 1
+    }
+  ]
+}

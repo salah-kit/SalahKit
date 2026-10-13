@@ -1,0 +1,3555 @@
+{
+  "schemaVersion": 1,
+  "kind": "prayerTimes",
+  "description": "Shafi'i and Hanafi Asr from the equator to the Arctic, in both hemispheres, with Muslim World League angles.",
+  "vectors": [
+    {
+      "id": "madhab-shafi-singapore-2026-03-20",
+      "description": "Shafi Asr at Singapore on 2026-03-20.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Asia/Singapore",
+        "coordinates": {
+          "latitude": 1.3521,
+          "longitude": 103.8198
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-19T22:00:22Z",
+        "sunrise": "2026-03-19T23:09:02Z",
+        "dhuhr": "2026-03-20T05:12:16Z",
+        "asr": "2026-03-20T08:15:08Z",
+        "sunset": "2026-03-20T11:15:31Z",
+        "maghrib": "2026-03-20T11:15:31Z",
+        "isha": "2026-03-20T12:20:12Z",
+        "middleOfTheNight": "2026-03-20T16:37:46Z",
+        "lastThirdOfTheNight": "2026-03-20T18:25:11Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-singapore-2026-03-20",
+      "description": "Hanafi Asr at Singapore on 2026-03-20.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Asia/Singapore",
+        "coordinates": {
+          "latitude": 1.3521,
+          "longitude": 103.8198
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-19T22:00:22Z",
+        "sunrise": "2026-03-19T23:09:02Z",
+        "dhuhr": "2026-03-20T05:12:16Z",
+        "asr": "2026-03-20T09:27:06Z",
+        "sunset": "2026-03-20T11:15:31Z",
+        "maghrib": "2026-03-20T11:15:31Z",
+        "isha": "2026-03-20T12:20:12Z",
+        "middleOfTheNight": "2026-03-20T16:37:46Z",
+        "lastThirdOfTheNight": "2026-03-20T18:25:11Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-singapore-2026-06-21",
+      "description": "Shafi Asr at Singapore on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Asia/Singapore",
+        "coordinates": {
+          "latitude": 1.3521,
+          "longitude": 103.8198
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-20T21:45:11Z",
+        "sunrise": "2026-06-20T23:00:27Z",
+        "dhuhr": "2026-06-21T05:06:29Z",
+        "asr": "2026-06-21T08:32:45Z",
+        "sunset": "2026-06-21T11:12:32Z",
+        "maghrib": "2026-06-21T11:12:32Z",
+        "isha": "2026-06-21T12:23:23Z",
+        "middleOfTheNight": "2026-06-21T16:28:58Z",
+        "lastThirdOfTheNight": "2026-06-21T18:14:26Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-singapore-2026-06-21",
+      "description": "Hanafi Asr at Singapore on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Asia/Singapore",
+        "coordinates": {
+          "latitude": 1.3521,
+          "longitude": 103.8198
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-20T21:45:11Z",
+        "sunrise": "2026-06-20T23:00:27Z",
+        "dhuhr": "2026-06-21T05:06:29Z",
+        "asr": "2026-06-21T09:30:09Z",
+        "sunset": "2026-06-21T11:12:32Z",
+        "maghrib": "2026-06-21T11:12:32Z",
+        "isha": "2026-06-21T12:23:23Z",
+        "middleOfTheNight": "2026-06-21T16:28:58Z",
+        "lastThirdOfTheNight": "2026-06-21T18:14:26Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-singapore-2026-09-23",
+      "description": "Shafi Asr at Singapore on 2026-09-23.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Asia/Singapore",
+        "coordinates": {
+          "latitude": 1.3521,
+          "longitude": 103.8198
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-22T21:45:16Z",
+        "sunrise": "2026-09-22T22:53:56Z",
+        "dhuhr": "2026-09-23T04:57:11Z",
+        "asr": "2026-09-23T07:59:53Z",
+        "sunset": "2026-09-23T11:00:25Z",
+        "maghrib": "2026-09-23T11:00:25Z",
+        "isha": "2026-09-23T12:05:05Z",
+        "middleOfTheNight": "2026-09-23T16:22:41Z",
+        "lastThirdOfTheNight": "2026-09-23T18:10:07Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-singapore-2026-09-23",
+      "description": "Hanafi Asr at Singapore on 2026-09-23.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Asia/Singapore",
+        "coordinates": {
+          "latitude": 1.3521,
+          "longitude": 103.8198
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-22T21:45:16Z",
+        "sunrise": "2026-09-22T22:53:56Z",
+        "dhuhr": "2026-09-23T04:57:11Z",
+        "asr": "2026-09-23T09:11:57Z",
+        "sunset": "2026-09-23T11:00:25Z",
+        "maghrib": "2026-09-23T11:00:25Z",
+        "isha": "2026-09-23T12:05:05Z",
+        "middleOfTheNight": "2026-09-23T16:22:41Z",
+        "lastThirdOfTheNight": "2026-09-23T18:10:07Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-singapore-2026-12-21",
+      "description": "Shafi Asr at Singapore on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Asia/Singapore",
+        "coordinates": {
+          "latitude": 1.3521,
+          "longitude": 103.8198
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-20T21:46:14Z",
+        "sunrise": "2026-12-20T23:01:14Z",
+        "dhuhr": "2026-12-21T05:02:39Z",
+        "asr": "2026-12-21T08:27:46Z",
+        "sunset": "2026-12-21T11:04:04Z",
+        "maghrib": "2026-12-21T11:04:04Z",
+        "isha": "2026-12-21T12:14:41Z",
+        "middleOfTheNight": "2026-12-21T16:25:24Z",
+        "lastThirdOfTheNight": "2026-12-21T18:12:30Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-singapore-2026-12-21",
+      "description": "Hanafi Asr at Singapore on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Asia/Singapore",
+        "coordinates": {
+          "latitude": 1.3521,
+          "longitude": 103.8198
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-20T21:46:14Z",
+        "sunrise": "2026-12-20T23:01:14Z",
+        "dhuhr": "2026-12-21T05:02:39Z",
+        "asr": "2026-12-21T09:23:16Z",
+        "sunset": "2026-12-21T11:04:04Z",
+        "maghrib": "2026-12-21T11:04:04Z",
+        "isha": "2026-12-21T12:14:41Z",
+        "middleOfTheNight": "2026-12-21T16:25:24Z",
+        "lastThirdOfTheNight": "2026-12-21T18:12:30Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-makkah-2026-03-20",
+      "description": "Shafi Asr at Makkah on 2026-03-20.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T02:11:04Z",
+        "sunrise": "2026-03-20T03:24:58Z",
+        "dhuhr": "2026-03-20T09:28:11Z",
+        "asr": "2026-03-20T12:53:02Z",
+        "sunset": "2026-03-20T15:31:43Z",
+        "maghrib": "2026-03-20T15:31:43Z",
+        "isha": "2026-03-20T16:41:22Z",
+        "middleOfTheNight": "2026-03-20T20:50:55Z",
+        "lastThirdOfTheNight": "2026-03-20T22:37:19Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-makkah-2026-03-20",
+      "description": "Hanafi Asr at Makkah on 2026-03-20.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T02:11:04Z",
+        "sunrise": "2026-03-20T03:24:58Z",
+        "dhuhr": "2026-03-20T09:28:11Z",
+        "asr": "2026-03-20T13:50:17Z",
+        "sunset": "2026-03-20T15:31:43Z",
+        "maghrib": "2026-03-20T15:31:43Z",
+        "isha": "2026-03-20T16:41:22Z",
+        "middleOfTheNight": "2026-03-20T20:50:55Z",
+        "lastThirdOfTheNight": "2026-03-20T22:37:19Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-makkah-2026-06-21",
+      "description": "Shafi Asr at Makkah on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T01:13:54Z",
+        "sunrise": "2026-06-21T02:39:18Z",
+        "dhuhr": "2026-06-21T09:22:30Z",
+        "asr": "2026-06-21T12:42:22Z",
+        "sunset": "2026-06-21T16:05:42Z",
+        "maghrib": "2026-06-21T16:05:42Z",
+        "isha": "2026-06-21T17:25:52Z",
+        "middleOfTheNight": "2026-06-21T20:39:55Z",
+        "lastThirdOfTheNight": "2026-06-21T22:11:19Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-makkah-2026-06-21",
+      "description": "Hanafi Asr at Makkah on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T01:13:54Z",
+        "sunrise": "2026-06-21T02:39:18Z",
+        "dhuhr": "2026-06-21T09:22:30Z",
+        "asr": "2026-06-21T14:01:31Z",
+        "sunset": "2026-06-21T16:05:42Z",
+        "maghrib": "2026-06-21T16:05:42Z",
+        "isha": "2026-06-21T17:25:52Z",
+        "middleOfTheNight": "2026-06-21T20:39:55Z",
+        "lastThirdOfTheNight": "2026-06-21T22:11:19Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-makkah-2026-09-23",
+      "description": "Shafi Asr at Makkah on 2026-09-23.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T01:55:42Z",
+        "sunrise": "2026-09-23T03:09:41Z",
+        "dhuhr": "2026-09-23T09:13:06Z",
+        "asr": "2026-09-23T12:37:41Z",
+        "sunset": "2026-09-23T15:16:12Z",
+        "maghrib": "2026-09-23T15:16:12Z",
+        "isha": "2026-09-23T16:25:47Z",
+        "middleOfTheNight": "2026-09-23T20:36:06Z",
+        "lastThirdOfTheNight": "2026-09-23T22:22:44Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-makkah-2026-09-23",
+      "description": "Hanafi Asr at Makkah on 2026-09-23.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T01:55:42Z",
+        "sunrise": "2026-09-23T03:09:41Z",
+        "dhuhr": "2026-09-23T09:13:06Z",
+        "asr": "2026-09-23T13:34:52Z",
+        "sunset": "2026-09-23T15:16:12Z",
+        "maghrib": "2026-09-23T15:16:12Z",
+        "isha": "2026-09-23T16:25:47Z",
+        "middleOfTheNight": "2026-09-23T20:36:06Z",
+        "lastThirdOfTheNight": "2026-09-23T22:22:44Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-makkah-2026-12-21",
+      "description": "Shafi Asr at Makkah on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T02:34:21Z",
+        "sunrise": "2026-12-21T03:53:49Z",
+        "dhuhr": "2026-12-21T09:18:43Z",
+        "asr": "2026-12-21T12:22:45Z",
+        "sunset": "2026-12-21T14:43:36Z",
+        "maghrib": "2026-12-21T14:43:36Z",
+        "isha": "2026-12-21T15:58:31Z",
+        "middleOfTheNight": "2026-12-21T20:39:14Z",
+        "lastThirdOfTheNight": "2026-12-21T22:37:46Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-makkah-2026-12-21",
+      "description": "Hanafi Asr at Makkah on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T02:34:21Z",
+        "sunrise": "2026-12-21T03:53:49Z",
+        "dhuhr": "2026-12-21T09:18:43Z",
+        "asr": "2026-12-21T13:07:49Z",
+        "sunset": "2026-12-21T14:43:36Z",
+        "maghrib": "2026-12-21T14:43:36Z",
+        "isha": "2026-12-21T15:58:31Z",
+        "middleOfTheNight": "2026-12-21T20:39:14Z",
+        "lastThirdOfTheNight": "2026-12-21T22:37:46Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-karachi-2026-03-20",
+      "description": "Shafi Asr at Karachi on 2026-03-20.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Asia/Karachi",
+        "coordinates": {
+          "latitude": 24.8607,
+          "longitude": 67.0011
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T00:20:25Z",
+        "sunrise": "2026-03-20T01:36:18Z",
+        "dhuhr": "2026-03-20T07:39:31Z",
+        "asr": "2026-03-20T11:05:44Z",
+        "sunset": "2026-03-20T13:43:05Z",
+        "maghrib": "2026-03-20T13:43:05Z",
+        "isha": "2026-03-20T14:54:37Z",
+        "middleOfTheNight": "2026-03-20T19:01:13Z",
+        "lastThirdOfTheNight": "2026-03-20T20:47:15Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-karachi-2026-03-20",
+      "description": "Hanafi Asr at Karachi on 2026-03-20.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Asia/Karachi",
+        "coordinates": {
+          "latitude": 24.8607,
+          "longitude": 67.0011
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T00:20:25Z",
+        "sunrise": "2026-03-20T01:36:18Z",
+        "dhuhr": "2026-03-20T07:39:31Z",
+        "asr": "2026-03-20T12:01:30Z",
+        "sunset": "2026-03-20T13:43:05Z",
+        "maghrib": "2026-03-20T13:43:05Z",
+        "isha": "2026-03-20T14:54:37Z",
+        "middleOfTheNight": "2026-03-20T19:01:13Z",
+        "lastThirdOfTheNight": "2026-03-20T20:47:15Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-karachi-2026-06-21",
+      "description": "Shafi Asr at Karachi on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Asia/Karachi",
+        "coordinates": {
+          "latitude": 24.8607,
+          "longitude": 67.0011
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-20T23:14:08Z",
+        "sunrise": "2026-06-21T00:43:17Z",
+        "dhuhr": "2026-06-21T07:33:47Z",
+        "asr": "2026-06-21T10:55:14Z",
+        "sunset": "2026-06-21T14:24:18Z",
+        "maghrib": "2026-06-21T14:24:18Z",
+        "isha": "2026-06-21T15:47:54Z",
+        "middleOfTheNight": "2026-06-21T18:49:19Z",
+        "lastThirdOfTheNight": "2026-06-21T20:17:40Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-karachi-2026-06-21",
+      "description": "Hanafi Asr at Karachi on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Asia/Karachi",
+        "coordinates": {
+          "latitude": 24.8607,
+          "longitude": 67.0011
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-20T23:14:08Z",
+        "sunrise": "2026-06-21T00:43:17Z",
+        "dhuhr": "2026-06-21T07:33:47Z",
+        "asr": "2026-06-21T12:16:30Z",
+        "sunset": "2026-06-21T14:24:18Z",
+        "maghrib": "2026-06-21T14:24:18Z",
+        "isha": "2026-06-21T15:47:54Z",
+        "middleOfTheNight": "2026-06-21T18:49:19Z",
+        "lastThirdOfTheNight": "2026-06-21T20:17:40Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-karachi-2026-09-23",
+      "description": "Shafi Asr at Karachi on 2026-09-23.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Asia/Karachi",
+        "coordinates": {
+          "latitude": 24.8607,
+          "longitude": 67.0011
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T00:04:53Z",
+        "sunrise": "2026-09-23T01:20:53Z",
+        "dhuhr": "2026-09-23T07:24:26Z",
+        "asr": "2026-09-23T10:50:23Z",
+        "sunset": "2026-09-23T13:27:37Z",
+        "maghrib": "2026-09-23T13:27:37Z",
+        "isha": "2026-09-23T14:39:03Z",
+        "middleOfTheNight": "2026-09-23T18:46:27Z",
+        "lastThirdOfTheNight": "2026-09-23T20:32:44Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-karachi-2026-09-23",
+      "description": "Hanafi Asr at Karachi on 2026-09-23.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Asia/Karachi",
+        "coordinates": {
+          "latitude": 24.8607,
+          "longitude": 67.0011
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T00:04:53Z",
+        "sunrise": "2026-09-23T01:20:53Z",
+        "dhuhr": "2026-09-23T07:24:26Z",
+        "asr": "2026-09-23T11:46:06Z",
+        "sunset": "2026-09-23T13:27:37Z",
+        "maghrib": "2026-09-23T13:27:37Z",
+        "isha": "2026-09-23T14:39:03Z",
+        "middleOfTheNight": "2026-09-23T18:46:27Z",
+        "lastThirdOfTheNight": "2026-09-23T20:32:44Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-karachi-2026-12-21",
+      "description": "Shafi Asr at Karachi on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Asia/Karachi",
+        "coordinates": {
+          "latitude": 24.8607,
+          "longitude": 67.0011
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T00:50:36Z",
+        "sunrise": "2026-12-21T02:12:08Z",
+        "dhuhr": "2026-12-21T07:29:58Z",
+        "asr": "2026-12-21T10:28:09Z",
+        "sunset": "2026-12-21T12:47:49Z",
+        "maghrib": "2026-12-21T12:47:49Z",
+        "isha": "2026-12-21T14:04:42Z",
+        "middleOfTheNight": "2026-12-21T18:49:27Z",
+        "lastThirdOfTheNight": "2026-12-21T20:50:00Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-karachi-2026-12-21",
+      "description": "Hanafi Asr at Karachi on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Asia/Karachi",
+        "coordinates": {
+          "latitude": 24.8607,
+          "longitude": 67.0011
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T00:50:36Z",
+        "sunrise": "2026-12-21T02:12:08Z",
+        "dhuhr": "2026-12-21T07:29:58Z",
+        "asr": "2026-12-21T11:11:49Z",
+        "sunset": "2026-12-21T12:47:49Z",
+        "maghrib": "2026-12-21T12:47:49Z",
+        "isha": "2026-12-21T14:04:42Z",
+        "middleOfTheNight": "2026-12-21T18:49:27Z",
+        "lastThirdOfTheNight": "2026-12-21T20:50:00Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-cairo-2026-03-20",
+      "description": "Shafi Asr at Cairo on 2026-03-20.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Africa/Cairo",
+        "coordinates": {
+          "latitude": 30.0444,
+          "longitude": 31.2357
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T02:39:28Z",
+        "sunrise": "2026-03-20T03:59:10Z",
+        "dhuhr": "2026-03-20T10:02:33Z",
+        "asr": "2026-03-20T13:29:50Z",
+        "sunset": "2026-03-20T16:06:22Z",
+        "maghrib": "2026-03-20T16:06:22Z",
+        "isha": "2026-03-20T17:21:31Z",
+        "middleOfTheNight": "2026-03-20T21:22:17Z",
+        "lastThirdOfTheNight": "2026-03-20T23:07:35Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-cairo-2026-03-20",
+      "description": "Hanafi Asr at Cairo on 2026-03-20.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Africa/Cairo",
+        "coordinates": {
+          "latitude": 30.0444,
+          "longitude": 31.2357
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T02:39:28Z",
+        "sunrise": "2026-03-20T03:59:10Z",
+        "dhuhr": "2026-03-20T10:02:33Z",
+        "asr": "2026-03-20T14:23:47Z",
+        "sunset": "2026-03-20T16:06:22Z",
+        "maghrib": "2026-03-20T16:06:22Z",
+        "isha": "2026-03-20T17:21:31Z",
+        "middleOfTheNight": "2026-03-20T21:22:17Z",
+        "lastThirdOfTheNight": "2026-03-20T23:07:35Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-cairo-2026-06-21",
+      "description": "Shafi Asr at Cairo on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Africa/Cairo",
+        "coordinates": {
+          "latitude": 30.0444,
+          "longitude": 31.2357
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T01:17:41Z",
+        "sunrise": "2026-06-21T02:54:22Z",
+        "dhuhr": "2026-06-21T09:56:52Z",
+        "asr": "2026-06-21T13:32:24Z",
+        "sunset": "2026-06-21T16:59:22Z",
+        "maghrib": "2026-06-21T16:59:22Z",
+        "isha": "2026-06-21T18:29:53Z",
+        "middleOfTheNight": "2026-06-21T21:08:38Z",
+        "lastThirdOfTheNight": "2026-06-21T22:31:43Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-cairo-2026-06-21",
+      "description": "Hanafi Asr at Cairo on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Africa/Cairo",
+        "coordinates": {
+          "latitude": 30.0444,
+          "longitude": 31.2357
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T01:17:41Z",
+        "sunrise": "2026-06-21T02:54:22Z",
+        "dhuhr": "2026-06-21T09:56:52Z",
+        "asr": "2026-06-21T14:50:08Z",
+        "sunset": "2026-06-21T16:59:22Z",
+        "maghrib": "2026-06-21T16:59:22Z",
+        "isha": "2026-06-21T18:29:53Z",
+        "middleOfTheNight": "2026-06-21T21:08:38Z",
+        "lastThirdOfTheNight": "2026-06-21T22:31:43Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-cairo-2026-09-23",
+      "description": "Shafi Asr at Cairo on 2026-09-23.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Africa/Cairo",
+        "coordinates": {
+          "latitude": 30.0444,
+          "longitude": 31.2357
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T02:24:00Z",
+        "sunrise": "2026-09-23T03:43:50Z",
+        "dhuhr": "2026-09-23T09:47:27Z",
+        "asr": "2026-09-23T13:14:19Z",
+        "sunset": "2026-09-23T15:50:38Z",
+        "maghrib": "2026-09-23T15:50:38Z",
+        "isha": "2026-09-23T17:05:38Z",
+        "middleOfTheNight": "2026-09-23T21:07:37Z",
+        "lastThirdOfTheNight": "2026-09-23T22:53:17Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-cairo-2026-09-23",
+      "description": "Hanafi Asr at Cairo on 2026-09-23.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Africa/Cairo",
+        "coordinates": {
+          "latitude": 30.0444,
+          "longitude": 31.2357
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T02:24:00Z",
+        "sunrise": "2026-09-23T03:43:50Z",
+        "dhuhr": "2026-09-23T09:47:27Z",
+        "asr": "2026-09-23T14:08:11Z",
+        "sunset": "2026-09-23T15:50:38Z",
+        "maghrib": "2026-09-23T15:50:38Z",
+        "isha": "2026-09-23T17:05:38Z",
+        "middleOfTheNight": "2026-09-23T21:07:37Z",
+        "lastThirdOfTheNight": "2026-09-23T22:53:17Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-cairo-2026-12-21",
+      "description": "Shafi Asr at Cairo on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Africa/Cairo",
+        "coordinates": {
+          "latitude": 30.0444,
+          "longitude": 31.2357
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T03:21:08Z",
+        "sunrise": "2026-12-21T04:46:44Z",
+        "dhuhr": "2026-12-21T09:53:05Z",
+        "asr": "2026-12-21T12:40:58Z",
+        "sunset": "2026-12-21T14:59:26Z",
+        "maghrib": "2026-12-21T14:59:26Z",
+        "isha": "2026-12-21T16:20:11Z",
+        "middleOfTheNight": "2026-12-21T21:10:32Z",
+        "lastThirdOfTheNight": "2026-12-21T23:14:14Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-cairo-2026-12-21",
+      "description": "Hanafi Asr at Cairo on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Africa/Cairo",
+        "coordinates": {
+          "latitude": 30.0444,
+          "longitude": 31.2357
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T03:21:08Z",
+        "sunrise": "2026-12-21T04:46:44Z",
+        "dhuhr": "2026-12-21T09:53:05Z",
+        "asr": "2026-12-21T13:22:33Z",
+        "sunset": "2026-12-21T14:59:26Z",
+        "maghrib": "2026-12-21T14:59:26Z",
+        "isha": "2026-12-21T16:20:11Z",
+        "middleOfTheNight": "2026-12-21T21:10:32Z",
+        "lastThirdOfTheNight": "2026-12-21T23:14:14Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-istanbul-2026-03-20",
+      "description": "Shafi Asr at Istanbul on 2026-03-20.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Europe/Istanbul",
+        "coordinates": {
+          "latitude": 41.0082,
+          "longitude": 28.9784
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T02:35:43Z",
+        "sunrise": "2026-03-20T04:07:50Z",
+        "dhuhr": "2026-03-20T10:11:34Z",
+        "asr": "2026-03-20T13:36:53Z",
+        "sunset": "2026-03-20T16:16:00Z",
+        "maghrib": "2026-03-20T16:16:00Z",
+        "isha": "2026-03-20T17:42:51Z",
+        "middleOfTheNight": "2026-03-20T21:24:58Z",
+        "lastThirdOfTheNight": "2026-03-20T23:07:57Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-istanbul-2026-03-20",
+      "description": "Hanafi Asr at Istanbul on 2026-03-20.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Europe/Istanbul",
+        "coordinates": {
+          "latitude": 41.0082,
+          "longitude": 28.9784
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T02:35:43Z",
+        "sunrise": "2026-03-20T04:07:50Z",
+        "dhuhr": "2026-03-20T10:11:34Z",
+        "asr": "2026-03-20T14:28:10Z",
+        "sunset": "2026-03-20T16:16:00Z",
+        "maghrib": "2026-03-20T16:16:00Z",
+        "isha": "2026-03-20T17:42:51Z",
+        "middleOfTheNight": "2026-03-20T21:24:58Z",
+        "lastThirdOfTheNight": "2026-03-20T23:07:57Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-istanbul-2026-06-21",
+      "description": "Shafi Asr at Istanbul on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Europe/Istanbul",
+        "coordinates": {
+          "latitude": 41.0082,
+          "longitude": 28.9784
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T00:24:09Z",
+        "sunrise": "2026-06-21T02:32:02Z",
+        "dhuhr": "2026-06-21T10:05:54Z",
+        "asr": "2026-06-21T14:06:50Z",
+        "sunset": "2026-06-21T17:39:46Z",
+        "maghrib": "2026-06-21T17:39:46Z",
+        "isha": "2026-06-21T19:38:13Z",
+        "middleOfTheNight": "2026-06-21T21:02:05Z",
+        "lastThirdOfTheNight": "2026-06-21T22:09:31Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-istanbul-2026-06-21",
+      "description": "Hanafi Asr at Istanbul on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Europe/Istanbul",
+        "coordinates": {
+          "latitude": 41.0082,
+          "longitude": 28.9784
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T00:24:09Z",
+        "sunrise": "2026-06-21T02:32:02Z",
+        "dhuhr": "2026-06-21T10:05:54Z",
+        "asr": "2026-06-21T15:20:52Z",
+        "sunset": "2026-06-21T17:39:46Z",
+        "maghrib": "2026-06-21T17:39:46Z",
+        "isha": "2026-06-21T19:38:13Z",
+        "middleOfTheNight": "2026-06-21T21:02:05Z",
+        "lastThirdOfTheNight": "2026-06-21T22:09:31Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-istanbul-2026-09-23",
+      "description": "Shafi Asr at Istanbul on 2026-09-23.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Europe/Istanbul",
+        "coordinates": {
+          "latitude": 41.0082,
+          "longitude": 28.9784
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T02:20:02Z",
+        "sunrise": "2026-09-23T03:52:22Z",
+        "dhuhr": "2026-09-23T09:56:29Z",
+        "asr": "2026-09-23T13:21:07Z",
+        "sunset": "2026-09-23T15:59:55Z",
+        "maghrib": "2026-09-23T15:59:55Z",
+        "isha": "2026-09-23T17:26:30Z",
+        "middleOfTheNight": "2026-09-23T21:10:32Z",
+        "lastThirdOfTheNight": "2026-09-23T22:54:05Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-istanbul-2026-09-23",
+      "description": "Hanafi Asr at Istanbul on 2026-09-23.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Europe/Istanbul",
+        "coordinates": {
+          "latitude": 41.0082,
+          "longitude": 28.9784
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T02:20:02Z",
+        "sunrise": "2026-09-23T03:52:22Z",
+        "dhuhr": "2026-09-23T09:56:29Z",
+        "asr": "2026-09-23T14:12:17Z",
+        "sunset": "2026-09-23T15:59:55Z",
+        "maghrib": "2026-09-23T15:59:55Z",
+        "isha": "2026-09-23T17:26:30Z",
+        "middleOfTheNight": "2026-09-23T21:10:32Z",
+        "lastThirdOfTheNight": "2026-09-23T22:54:05Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-istanbul-2026-12-21",
+      "description": "Shafi Asr at Istanbul on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Europe/Istanbul",
+        "coordinates": {
+          "latitude": 41.0082,
+          "longitude": 28.9784
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T03:46:04Z",
+        "sunrise": "2026-12-21T05:25:25Z",
+        "dhuhr": "2026-12-21T10:02:07Z",
+        "asr": "2026-12-21T12:21:14Z",
+        "sunset": "2026-12-21T14:38:48Z",
+        "maghrib": "2026-12-21T14:38:48Z",
+        "isha": "2026-12-21T16:12:38Z",
+        "middleOfTheNight": "2026-12-21T21:12:41Z",
+        "lastThirdOfTheNight": "2026-12-21T23:23:59Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-istanbul-2026-12-21",
+      "description": "Hanafi Asr at Istanbul on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Europe/Istanbul",
+        "coordinates": {
+          "latitude": 41.0082,
+          "longitude": 28.9784
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T03:46:04Z",
+        "sunrise": "2026-12-21T05:25:25Z",
+        "dhuhr": "2026-12-21T10:02:07Z",
+        "asr": "2026-12-21T12:58:00Z",
+        "sunset": "2026-12-21T14:38:48Z",
+        "maghrib": "2026-12-21T14:38:48Z",
+        "isha": "2026-12-21T16:12:38Z",
+        "middleOfTheNight": "2026-12-21T21:12:41Z",
+        "lastThirdOfTheNight": "2026-12-21T23:23:59Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-london-2026-03-20",
+      "description": "Shafi Asr at London on 2026-03-20. Fajr is bounded (the angle alone gives 2026-03-20 04:10 local). Isha is bounded (the angle alone gives 2026-03-20 20:00 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T04:21:45Z",
+        "sunrise": "2026-03-20T06:03:24Z",
+        "dhuhr": "2026-03-20T12:07:58Z",
+        "asr": "2026-03-20T15:25:46Z",
+        "sunset": "2026-03-20T18:13:33Z",
+        "maghrib": "2026-03-20T18:13:33Z",
+        "isha": "2026-03-20T19:54:38Z",
+        "middleOfTheNight": "2026-03-20T23:16:48Z",
+        "lastThirdOfTheNight": "2026-03-21T00:57:52Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-london-2026-03-20",
+      "description": "Hanafi Asr at London on 2026-03-20. Fajr is bounded (the angle alone gives 2026-03-20 04:10 local). Isha is bounded (the angle alone gives 2026-03-20 20:00 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T04:21:45Z",
+        "sunrise": "2026-03-20T06:03:24Z",
+        "dhuhr": "2026-03-20T12:07:58Z",
+        "asr": "2026-03-20T16:15:37Z",
+        "sunset": "2026-03-20T18:13:33Z",
+        "maghrib": "2026-03-20T18:13:33Z",
+        "isha": "2026-03-20T19:54:38Z",
+        "middleOfTheNight": "2026-03-20T23:16:48Z",
+        "lastThirdOfTheNight": "2026-03-21T00:57:52Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-london-2026-06-21",
+      "description": "Shafi Asr at London on 2026-06-21. Fajr's angle isn't reached (sunStaysAbove); the bound gives the time. Isha's angle isn't reached (sunStaysAbove); the bound gives the time.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T02:39:59Z",
+        "sunrise": "2026-06-21T03:43:05Z",
+        "dhuhr": "2026-06-21T12:02:21Z",
+        "asr": "2026-06-21T16:25:12Z",
+        "sunset": "2026-06-21T20:21:35Z",
+        "maghrib": "2026-06-21T20:21:35Z",
+        "isha": "2026-06-21T21:24:42Z",
+        "middleOfTheNight": "2026-06-21T23:30:54Z",
+        "lastThirdOfTheNight": "2026-06-22T00:34:01Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-london-2026-06-21",
+      "description": "Hanafi Asr at London on 2026-06-21. Fajr's angle isn't reached (sunStaysAbove); the bound gives the time. Isha's angle isn't reached (sunStaysAbove); the bound gives the time.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T02:39:59Z",
+        "sunrise": "2026-06-21T03:43:05Z",
+        "dhuhr": "2026-06-21T12:02:21Z",
+        "asr": "2026-06-21T17:39:56Z",
+        "sunset": "2026-06-21T20:21:35Z",
+        "maghrib": "2026-06-21T20:21:35Z",
+        "isha": "2026-06-21T21:24:42Z",
+        "middleOfTheNight": "2026-06-21T23:30:54Z",
+        "lastThirdOfTheNight": "2026-06-22T00:34:01Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-london-2026-09-23",
+      "description": "Shafi Asr at London on 2026-09-23. Fajr is bounded (the angle alone gives 2026-09-23 04:54 local). Isha is bounded (the angle alone gives 2026-09-23 20:43 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T04:06:47Z",
+        "sunrise": "2026-09-23T05:48:04Z",
+        "dhuhr": "2026-09-23T11:52:53Z",
+        "asr": "2026-09-23T15:09:27Z",
+        "sunset": "2026-09-23T17:56:42Z",
+        "maghrib": "2026-09-23T17:56:42Z",
+        "isha": "2026-09-23T19:38:33Z",
+        "middleOfTheNight": "2026-09-23T23:02:16Z",
+        "lastThirdOfTheNight": "2026-09-24T00:44:07Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-london-2026-09-23",
+      "description": "Hanafi Asr at London on 2026-09-23. Fajr is bounded (the angle alone gives 2026-09-23 04:54 local). Isha is bounded (the angle alone gives 2026-09-23 20:43 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T04:06:47Z",
+        "sunrise": "2026-09-23T05:48:04Z",
+        "dhuhr": "2026-09-23T11:52:53Z",
+        "asr": "2026-09-23T15:59:07Z",
+        "sunset": "2026-09-23T17:56:42Z",
+        "maghrib": "2026-09-23T17:56:42Z",
+        "isha": "2026-09-23T19:38:33Z",
+        "middleOfTheNight": "2026-09-23T23:02:16Z",
+        "lastThirdOfTheNight": "2026-09-24T00:44:07Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-london-2026-12-21",
+      "description": "Shafi Asr at London on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T05:59:22Z",
+        "sunrise": "2026-12-21T08:03:44Z",
+        "dhuhr": "2026-12-21T11:58:35Z",
+        "asr": "2026-12-21T13:37:33Z",
+        "sunset": "2026-12-21T15:53:25Z",
+        "maghrib": "2026-12-21T15:53:25Z",
+        "isha": "2026-12-21T17:51:06Z",
+        "middleOfTheNight": "2026-12-21T22:56:39Z",
+        "lastThirdOfTheNight": "2026-12-22T01:17:43Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-london-2026-12-21",
+      "description": "Hanafi Asr at London on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T05:59:22Z",
+        "sunrise": "2026-12-21T08:03:44Z",
+        "dhuhr": "2026-12-21T11:58:35Z",
+        "asr": "2026-12-21T14:07:09Z",
+        "sunset": "2026-12-21T15:53:25Z",
+        "maghrib": "2026-12-21T15:53:25Z",
+        "isha": "2026-12-21T17:51:06Z",
+        "middleOfTheNight": "2026-12-21T22:56:39Z",
+        "lastThirdOfTheNight": "2026-12-22T01:17:43Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-oslo-2026-03-20",
+      "description": "Shafi Asr at Oslo on 2026-03-20. Fajr is bounded (the angle alone gives 2026-03-20 03:54 local). Isha is bounded (the angle alone gives 2026-03-20 20:47 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 59.9139,
+          "longitude": 10.7522
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T03:37:31Z",
+        "sunrise": "2026-03-20T05:18:56Z",
+        "dhuhr": "2026-03-20T11:24:28Z",
+        "asr": "2026-03-20T14:31:06Z",
+        "sunset": "2026-03-20T17:31:22Z",
+        "maghrib": "2026-03-20T17:31:22Z",
+        "isha": "2026-03-20T19:12:01Z",
+        "middleOfTheNight": "2026-03-20T22:33:19Z",
+        "lastThirdOfTheNight": "2026-03-21T00:13:58Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-oslo-2026-03-20",
+      "description": "Hanafi Asr at Oslo on 2026-03-20. Fajr is bounded (the angle alone gives 2026-03-20 03:54 local). Isha is bounded (the angle alone gives 2026-03-20 20:47 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 59.9139,
+          "longitude": 10.7522
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T03:37:31Z",
+        "sunrise": "2026-03-20T05:18:56Z",
+        "dhuhr": "2026-03-20T11:24:28Z",
+        "asr": "2026-03-20T15:20:05Z",
+        "sunset": "2026-03-20T17:31:22Z",
+        "maghrib": "2026-03-20T17:31:22Z",
+        "isha": "2026-03-20T19:12:01Z",
+        "middleOfTheNight": "2026-03-20T22:33:19Z",
+        "lastThirdOfTheNight": "2026-03-21T00:13:58Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-oslo-2026-06-21",
+      "description": "Shafi Asr at Oslo on 2026-06-21. Fajr's angle isn't reached (sunStaysAbove); the bound gives the time. Isha's angle isn't reached (sunStaysAbove); the bound gives the time.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 59.9139,
+          "longitude": 10.7522
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T01:09:26Z",
+        "sunrise": "2026-06-21T01:53:43Z",
+        "dhuhr": "2026-06-21T11:18:49Z",
+        "asr": "2026-06-21T16:00:28Z",
+        "sunset": "2026-06-21T20:43:54Z",
+        "maghrib": "2026-06-21T20:43:54Z",
+        "isha": "2026-06-21T21:28:12Z",
+        "middleOfTheNight": "2026-06-21T22:56:47Z",
+        "lastThirdOfTheNight": "2026-06-21T23:41:05Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-oslo-2026-06-21",
+      "description": "Hanafi Asr at Oslo on 2026-06-21. Fajr's angle isn't reached (sunStaysAbove); the bound gives the time. Isha's angle isn't reached (sunStaysAbove); the bound gives the time.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 59.9139,
+          "longitude": 10.7522
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T01:09:26Z",
+        "sunrise": "2026-06-21T01:53:43Z",
+        "dhuhr": "2026-06-21T11:18:49Z",
+        "asr": "2026-06-21T17:19:29Z",
+        "sunset": "2026-06-21T20:43:54Z",
+        "maghrib": "2026-06-21T20:43:54Z",
+        "isha": "2026-06-21T21:28:12Z",
+        "middleOfTheNight": "2026-06-21T22:56:47Z",
+        "lastThirdOfTheNight": "2026-06-21T23:41:05Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-oslo-2026-09-23",
+      "description": "Shafi Asr at Oslo on 2026-09-23. Fajr is bounded (the angle alone gives 2026-09-23 04:37 local). Isha is bounded (the angle alone gives 2026-09-23 21:29 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 59.9139,
+          "longitude": 10.7522
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T03:22:27Z",
+        "sunrise": "2026-09-23T05:03:21Z",
+        "dhuhr": "2026-09-23T11:09:22Z",
+        "asr": "2026-09-23T14:14:27Z",
+        "sunset": "2026-09-23T17:14:01Z",
+        "maghrib": "2026-09-23T17:14:01Z",
+        "isha": "2026-09-23T18:55:41Z",
+        "middleOfTheNight": "2026-09-23T22:19:01Z",
+        "lastThirdOfTheNight": "2026-09-24T00:00:42Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-oslo-2026-09-23",
+      "description": "Hanafi Asr at Oslo on 2026-09-23. Fajr is bounded (the angle alone gives 2026-09-23 04:37 local). Isha is bounded (the angle alone gives 2026-09-23 21:29 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 59.9139,
+          "longitude": 10.7522
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T03:22:27Z",
+        "sunrise": "2026-09-23T05:03:21Z",
+        "dhuhr": "2026-09-23T11:09:22Z",
+        "asr": "2026-09-23T15:03:15Z",
+        "sunset": "2026-09-23T17:14:01Z",
+        "maghrib": "2026-09-23T17:14:01Z",
+        "isha": "2026-09-23T18:55:41Z",
+        "middleOfTheNight": "2026-09-23T22:19:01Z",
+        "lastThirdOfTheNight": "2026-09-24T00:00:42Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-oslo-2026-12-21",
+      "description": "Shafi Asr at Oslo on 2026-12-21. Fajr is bounded (the angle alone gives 2026-12-21 06:32 local). Isha is bounded (the angle alone gives 2026-12-21 17:49 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 59.9139,
+          "longitude": 10.7522
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T05:42:52Z",
+        "sunrise": "2026-12-21T08:18:05Z",
+        "dhuhr": "2026-12-21T11:15:03Z",
+        "asr": "2026-12-21T12:07:25Z",
+        "sunset": "2026-12-21T14:12:00Z",
+        "maghrib": "2026-12-21T14:12:00Z",
+        "isha": "2026-12-21T16:47:13Z",
+        "middleOfTheNight": "2026-12-21T21:57:41Z",
+        "lastThirdOfTheNight": "2026-12-22T00:32:54Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-oslo-2026-12-21",
+      "description": "Hanafi Asr at Oslo on 2026-12-21. Fajr is bounded (the angle alone gives 2026-12-21 06:32 local). Isha is bounded (the angle alone gives 2026-12-21 17:49 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 59.9139,
+          "longitude": 10.7522
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T05:42:52Z",
+        "sunrise": "2026-12-21T08:18:05Z",
+        "dhuhr": "2026-12-21T11:15:03Z",
+        "asr": "2026-12-21T12:25:42Z",
+        "sunset": "2026-12-21T14:12:00Z",
+        "maghrib": "2026-12-21T14:12:00Z",
+        "isha": "2026-12-21T16:47:13Z",
+        "middleOfTheNight": "2026-12-21T21:57:41Z",
+        "lastThirdOfTheNight": "2026-12-22T00:32:54Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-reykjavik-2026-03-20",
+      "description": "Shafi Asr at Reykjavik on 2026-03-20. Fajr is bounded (the angle alone gives 2026-03-20 04:36 local). Isha is bounded (the angle alone gives 2026-03-20 22:24 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Atlantic/Reykjavik",
+        "coordinates": {
+          "latitude": 64.1466,
+          "longitude": -21.9426
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T05:47:27Z",
+        "sunrise": "2026-03-20T07:28:37Z",
+        "dhuhr": "2026-03-20T13:35:13Z",
+        "asr": "2026-03-20T16:34:13Z",
+        "sunset": "2026-03-20T19:43:29Z",
+        "maghrib": "2026-03-20T19:43:29Z",
+        "isha": "2026-03-20T21:23:42Z",
+        "middleOfTheNight": "2026-03-21T00:44:09Z",
+        "lastThirdOfTheNight": "2026-03-21T02:24:23Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-reykjavik-2026-03-20",
+      "description": "Hanafi Asr at Reykjavik on 2026-03-20. Fajr is bounded (the angle alone gives 2026-03-20 04:36 local). Isha is bounded (the angle alone gives 2026-03-20 22:24 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Atlantic/Reykjavik",
+        "coordinates": {
+          "latitude": 64.1466,
+          "longitude": -21.9426
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T05:47:27Z",
+        "sunrise": "2026-03-20T07:28:37Z",
+        "dhuhr": "2026-03-20T13:35:13Z",
+        "asr": "2026-03-20T17:22:45Z",
+        "sunset": "2026-03-20T19:43:29Z",
+        "maghrib": "2026-03-20T19:43:29Z",
+        "isha": "2026-03-20T21:23:42Z",
+        "middleOfTheNight": "2026-03-21T00:44:09Z",
+        "lastThirdOfTheNight": "2026-03-21T02:24:23Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-reykjavik-2026-06-21",
+      "description": "Shafi Asr at Reykjavik on 2026-06-21. Fajr's angle isn't reached (sunStaysAbove); the bound gives the time. Isha's angle isn't reached (sunStaysAbove); the bound gives the time. Isha falls after local midnight, at 2026-06-22 00:28.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Atlantic/Reykjavik",
+        "coordinates": {
+          "latitude": 64.1466,
+          "longitude": -21.9426
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T02:30:41Z",
+        "sunrise": "2026-06-21T02:55:09Z",
+        "dhuhr": "2026-06-21T13:29:37Z",
+        "asr": "2026-06-21T18:22:32Z",
+        "sunset": "2026-06-22T00:04:03Z",
+        "maghrib": "2026-06-22T00:04:03Z",
+        "isha": "2026-06-22T00:28:32Z",
+        "middleOfTheNight": "2026-06-22T01:17:30Z",
+        "lastThirdOfTheNight": "2026-06-22T01:41:58Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-reykjavik-2026-06-21",
+      "description": "Hanafi Asr at Reykjavik on 2026-06-21. Fajr's angle isn't reached (sunStaysAbove); the bound gives the time. Isha's angle isn't reached (sunStaysAbove); the bound gives the time. Isha falls after local midnight, at 2026-06-22 00:28.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Atlantic/Reykjavik",
+        "coordinates": {
+          "latitude": 64.1466,
+          "longitude": -21.9426
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T02:30:41Z",
+        "sunrise": "2026-06-21T02:55:09Z",
+        "dhuhr": "2026-06-21T13:29:37Z",
+        "asr": "2026-06-21T19:45:41Z",
+        "sunset": "2026-06-22T00:04:03Z",
+        "maghrib": "2026-06-22T00:04:03Z",
+        "isha": "2026-06-22T00:28:32Z",
+        "middleOfTheNight": "2026-06-22T01:17:30Z",
+        "lastThirdOfTheNight": "2026-06-22T01:41:58Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-reykjavik-2026-09-23",
+      "description": "Shafi Asr at Reykjavik on 2026-09-23. Fajr is bounded (the angle alone gives 2026-09-23 04:20 local). Isha is bounded (the angle alone gives 2026-09-23 22:04 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Atlantic/Reykjavik",
+        "coordinates": {
+          "latitude": 64.1466,
+          "longitude": -21.9426
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T05:32:49Z",
+        "sunrise": "2026-09-23T07:13:30Z",
+        "dhuhr": "2026-09-23T13:20:07Z",
+        "asr": "2026-09-23T16:16:53Z",
+        "sunset": "2026-09-23T19:25:05Z",
+        "maghrib": "2026-09-23T19:25:05Z",
+        "isha": "2026-09-23T21:06:42Z",
+        "middleOfTheNight": "2026-09-24T00:29:56Z",
+        "lastThirdOfTheNight": "2026-09-24T02:11:32Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-reykjavik-2026-09-23",
+      "description": "Hanafi Asr at Reykjavik on 2026-09-23. Fajr is bounded (the angle alone gives 2026-09-23 04:20 local). Isha is bounded (the angle alone gives 2026-09-23 22:04 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Atlantic/Reykjavik",
+        "coordinates": {
+          "latitude": 64.1466,
+          "longitude": -21.9426
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T05:32:49Z",
+        "sunrise": "2026-09-23T07:13:30Z",
+        "dhuhr": "2026-09-23T13:20:07Z",
+        "asr": "2026-09-23T17:05:07Z",
+        "sunset": "2026-09-23T19:25:05Z",
+        "maghrib": "2026-09-23T19:25:05Z",
+        "isha": "2026-09-23T21:06:42Z",
+        "middleOfTheNight": "2026-09-24T00:29:56Z",
+        "lastThirdOfTheNight": "2026-09-24T02:11:32Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-reykjavik-2026-12-21",
+      "description": "Shafi Asr at Reykjavik on 2026-12-21. Fajr is bounded (the angle alone gives 2026-12-21 07:53 local). Isha is bounded (the angle alone gives 2026-12-21 18:48 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Atlantic/Reykjavik",
+        "coordinates": {
+          "latitude": 64.1466,
+          "longitude": -21.9426
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T08:31:51Z",
+        "sunrise": "2026-12-21T11:22:19Z",
+        "dhuhr": "2026-12-21T13:25:52Z",
+        "asr": "2026-12-21T13:47:02Z",
+        "sunset": "2026-12-21T15:29:25Z",
+        "maghrib": "2026-12-21T15:29:25Z",
+        "isha": "2026-12-21T18:19:54Z",
+        "middleOfTheNight": "2026-12-22T00:00:52Z",
+        "lastThirdOfTheNight": "2026-12-22T02:51:21Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-reykjavik-2026-12-21",
+      "description": "Hanafi Asr at Reykjavik on 2026-12-21. Fajr is bounded (the angle alone gives 2026-12-21 07:53 local). Isha is bounded (the angle alone gives 2026-12-21 18:48 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Atlantic/Reykjavik",
+        "coordinates": {
+          "latitude": 64.1466,
+          "longitude": -21.9426
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T08:31:51Z",
+        "sunrise": "2026-12-21T11:22:19Z",
+        "dhuhr": "2026-12-21T13:25:52Z",
+        "asr": "2026-12-21T13:55:13Z",
+        "sunset": "2026-12-21T15:29:25Z",
+        "maghrib": "2026-12-21T15:29:25Z",
+        "isha": "2026-12-21T18:19:54Z",
+        "middleOfTheNight": "2026-12-22T00:00:52Z",
+        "lastThirdOfTheNight": "2026-12-22T02:51:21Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-tromso-2026-03-20",
+      "description": "Shafi Asr at Tromsø on 2026-03-20. Fajr is bounded (the angle alone gives 2026-03-20 01:46 local). Isha is bounded (the angle alone gives 2026-03-20 21:42 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 69.65,
+          "longitude": 18.96
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T03:02:59Z",
+        "sunrise": "2026-03-20T04:43:53Z",
+        "dhuhr": "2026-03-20T10:51:38Z",
+        "asr": "2026-03-20T13:37:13Z",
+        "sunset": "2026-03-20T17:01:35Z",
+        "maghrib": "2026-03-20T17:01:35Z",
+        "isha": "2026-03-20T18:41:15Z",
+        "middleOfTheNight": "2026-03-20T22:00:37Z",
+        "lastThirdOfTheNight": "2026-03-20T23:40:18Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-tromso-2026-03-20",
+      "description": "Hanafi Asr at Tromsø on 2026-03-20. Fajr is bounded (the angle alone gives 2026-03-20 01:46 local). Isha is bounded (the angle alone gives 2026-03-20 21:42 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 69.65,
+          "longitude": 18.96
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T03:02:59Z",
+        "sunrise": "2026-03-20T04:43:53Z",
+        "dhuhr": "2026-03-20T10:51:38Z",
+        "asr": "2026-03-20T14:24:42Z",
+        "sunset": "2026-03-20T17:01:35Z",
+        "maghrib": "2026-03-20T17:01:35Z",
+        "isha": "2026-03-20T18:41:15Z",
+        "middleOfTheNight": "2026-03-20T22:00:37Z",
+        "lastThirdOfTheNight": "2026-03-20T23:40:18Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-tromso-2026-06-21",
+      "description": "Shafi Asr at Tromsø on 2026-06-21. Doesn't occur: fajr (sunStaysAbove), sunrise (sunStaysAbove), sunset (sunStaysAbove), maghrib (sunStaysAbove), isha (sunStaysAbove), middleOfTheNight (sunStaysAbove), lastThirdOfTheNight (sunStaysAbove).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 69.65,
+          "longitude": 18.96
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": {
+          "doesNotOccur": "sunStaysAbove"
+        },
+        "sunrise": {
+          "doesNotOccur": "sunStaysAbove"
+        },
+        "dhuhr": "2026-06-21T10:45:59Z",
+        "asr": "2026-06-21T15:57:47Z",
+        "sunset": {
+          "doesNotOccur": "sunStaysAbove"
+        },
+        "maghrib": {
+          "doesNotOccur": "sunStaysAbove"
+        },
+        "isha": {
+          "doesNotOccur": "sunStaysAbove"
+        },
+        "middleOfTheNight": {
+          "doesNotOccur": "sunStaysAbove"
+        },
+        "lastThirdOfTheNight": {
+          "doesNotOccur": "sunStaysAbove"
+        }
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-tromso-2026-06-21",
+      "description": "Hanafi Asr at Tromsø on 2026-06-21. Doesn't occur: fajr (sunStaysAbove), sunrise (sunStaysAbove), sunset (sunStaysAbove), maghrib (sunStaysAbove), isha (sunStaysAbove), middleOfTheNight (sunStaysAbove), lastThirdOfTheNight (sunStaysAbove).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 69.65,
+          "longitude": 18.96
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": {
+          "doesNotOccur": "sunStaysAbove"
+        },
+        "sunrise": {
+          "doesNotOccur": "sunStaysAbove"
+        },
+        "dhuhr": "2026-06-21T10:45:59Z",
+        "asr": "2026-06-21T17:29:57Z",
+        "sunset": {
+          "doesNotOccur": "sunStaysAbove"
+        },
+        "maghrib": {
+          "doesNotOccur": "sunStaysAbove"
+        },
+        "isha": {
+          "doesNotOccur": "sunStaysAbove"
+        },
+        "middleOfTheNight": {
+          "doesNotOccur": "sunStaysAbove"
+        },
+        "lastThirdOfTheNight": {
+          "doesNotOccur": "sunStaysAbove"
+        }
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-tromso-2026-09-23",
+      "description": "Shafi Asr at Tromsø on 2026-09-23. Fajr is bounded (the angle alone gives 2026-09-23 02:26 local). Isha is bounded (the angle alone gives 2026-09-23 22:18 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 69.65,
+          "longitude": 18.96
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T02:47:47Z",
+        "sunrise": "2026-09-23T04:27:48Z",
+        "dhuhr": "2026-09-23T10:36:33Z",
+        "asr": "2026-09-23T13:19:54Z",
+        "sunset": "2026-09-23T16:43:09Z",
+        "maghrib": "2026-09-23T16:43:09Z",
+        "isha": "2026-09-23T18:24:22Z",
+        "middleOfTheNight": "2026-09-23T21:46:48Z",
+        "lastThirdOfTheNight": "2026-09-23T23:28:01Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-tromso-2026-09-23",
+      "description": "Hanafi Asr at Tromsø on 2026-09-23. Fajr is bounded (the angle alone gives 2026-09-23 02:26 local). Isha is bounded (the angle alone gives 2026-09-23 22:18 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 69.65,
+          "longitude": 18.96
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T02:47:47Z",
+        "sunrise": "2026-09-23T04:27:48Z",
+        "dhuhr": "2026-09-23T10:36:33Z",
+        "asr": "2026-09-23T14:07:07Z",
+        "sunset": "2026-09-23T16:43:09Z",
+        "maghrib": "2026-09-23T16:43:09Z",
+        "isha": "2026-09-23T18:24:22Z",
+        "middleOfTheNight": "2026-09-23T21:46:48Z",
+        "lastThirdOfTheNight": "2026-09-23T23:28:01Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-tromso-2026-12-21",
+      "description": "Shafi Asr at Tromsø on 2026-12-21. Doesn't occur: sunrise (sunStaysBelow), asr (sunStaysBelow), sunset (sunStaysBelow), maghrib (sunStaysBelow), middleOfTheNight (sunStaysBelow), lastThirdOfTheNight (sunStaysBelow).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 69.65,
+          "longitude": 18.96
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T05:28:18Z",
+        "sunrise": {
+          "doesNotOccur": "sunStaysBelow"
+        },
+        "dhuhr": "2026-12-21T10:42:12Z",
+        "asr": {
+          "doesNotOccur": "sunStaysBelow"
+        },
+        "sunset": {
+          "doesNotOccur": "sunStaysBelow"
+        },
+        "maghrib": {
+          "doesNotOccur": "sunStaysBelow"
+        },
+        "isha": "2026-12-21T15:43:49Z",
+        "middleOfTheNight": {
+          "doesNotOccur": "sunStaysBelow"
+        },
+        "lastThirdOfTheNight": {
+          "doesNotOccur": "sunStaysBelow"
+        }
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-tromso-2026-12-21",
+      "description": "Hanafi Asr at Tromsø on 2026-12-21. Doesn't occur: sunrise (sunStaysBelow), asr (sunStaysBelow), sunset (sunStaysBelow), maghrib (sunStaysBelow), middleOfTheNight (sunStaysBelow), lastThirdOfTheNight (sunStaysBelow).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Europe/Oslo",
+        "coordinates": {
+          "latitude": 69.65,
+          "longitude": 18.96
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T05:28:18Z",
+        "sunrise": {
+          "doesNotOccur": "sunStaysBelow"
+        },
+        "dhuhr": "2026-12-21T10:42:12Z",
+        "asr": {
+          "doesNotOccur": "sunStaysBelow"
+        },
+        "sunset": {
+          "doesNotOccur": "sunStaysBelow"
+        },
+        "maghrib": {
+          "doesNotOccur": "sunStaysBelow"
+        },
+        "isha": "2026-12-21T15:43:49Z",
+        "middleOfTheNight": {
+          "doesNotOccur": "sunStaysBelow"
+        },
+        "lastThirdOfTheNight": {
+          "doesNotOccur": "sunStaysBelow"
+        }
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-cape-town-2026-03-20",
+      "description": "Shafi Asr at Cape Town on 2026-03-20.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Africa/Johannesburg",
+        "coordinates": {
+          "latitude": -33.9249,
+          "longitude": 18.4241
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T03:25:53Z",
+        "sunrise": "2026-03-20T04:49:24Z",
+        "dhuhr": "2026-03-20T10:53:47Z",
+        "asr": "2026-03-20T14:20:49Z",
+        "sunset": "2026-03-20T16:57:37Z",
+        "maghrib": "2026-03-20T16:57:37Z",
+        "isha": "2026-03-20T18:16:02Z",
+        "middleOfTheNight": "2026-03-20T22:12:10Z",
+        "lastThirdOfTheNight": "2026-03-20T23:57:01Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-cape-town-2026-03-20",
+      "description": "Hanafi Asr at Cape Town on 2026-03-20.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "Africa/Johannesburg",
+        "coordinates": {
+          "latitude": -33.9249,
+          "longitude": 18.4241
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T03:25:53Z",
+        "sunrise": "2026-03-20T04:49:24Z",
+        "dhuhr": "2026-03-20T10:53:47Z",
+        "asr": "2026-03-20T15:13:43Z",
+        "sunset": "2026-03-20T16:57:37Z",
+        "maghrib": "2026-03-20T16:57:37Z",
+        "isha": "2026-03-20T18:16:02Z",
+        "middleOfTheNight": "2026-03-20T22:12:10Z",
+        "lastThirdOfTheNight": "2026-03-20T23:57:01Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-cape-town-2026-06-21",
+      "description": "Shafi Asr at Cape Town on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Africa/Johannesburg",
+        "coordinates": {
+          "latitude": -33.9249,
+          "longitude": 18.4241
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T04:21:49Z",
+        "sunrise": "2026-06-21T05:51:20Z",
+        "dhuhr": "2026-06-21T10:48:07Z",
+        "asr": "2026-06-21T13:26:59Z",
+        "sunset": "2026-06-21T15:44:55Z",
+        "maghrib": "2026-06-21T15:44:55Z",
+        "isha": "2026-06-21T17:09:24Z",
+        "middleOfTheNight": "2026-06-21T22:03:28Z",
+        "lastThirdOfTheNight": "2026-06-22T00:09:39Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-cape-town-2026-06-21",
+      "description": "Hanafi Asr at Cape Town on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "Africa/Johannesburg",
+        "coordinates": {
+          "latitude": -33.9249,
+          "longitude": 18.4241
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T04:21:49Z",
+        "sunrise": "2026-06-21T05:51:20Z",
+        "dhuhr": "2026-06-21T10:48:07Z",
+        "asr": "2026-06-21T14:06:59Z",
+        "sunset": "2026-06-21T15:44:55Z",
+        "maghrib": "2026-06-21T15:44:55Z",
+        "isha": "2026-06-21T17:09:24Z",
+        "middleOfTheNight": "2026-06-21T22:03:28Z",
+        "lastThirdOfTheNight": "2026-06-22T00:09:39Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-cape-town-2026-09-23",
+      "description": "Shafi Asr at Cape Town on 2026-09-23.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Africa/Johannesburg",
+        "coordinates": {
+          "latitude": -33.9249,
+          "longitude": 18.4241
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T03:11:12Z",
+        "sunrise": "2026-09-23T04:34:34Z",
+        "dhuhr": "2026-09-23T10:38:41Z",
+        "asr": "2026-09-23T14:06:16Z",
+        "sunset": "2026-09-23T16:43:20Z",
+        "maghrib": "2026-09-23T16:43:20Z",
+        "isha": "2026-09-23T18:01:56Z",
+        "middleOfTheNight": "2026-09-23T21:56:32Z",
+        "lastThirdOfTheNight": "2026-09-23T23:40:55Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-cape-town-2026-09-23",
+      "description": "Hanafi Asr at Cape Town on 2026-09-23.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "Africa/Johannesburg",
+        "coordinates": {
+          "latitude": -33.9249,
+          "longitude": 18.4241
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T03:11:12Z",
+        "sunrise": "2026-09-23T04:34:34Z",
+        "dhuhr": "2026-09-23T10:38:41Z",
+        "asr": "2026-09-23T14:59:16Z",
+        "sunset": "2026-09-23T16:43:20Z",
+        "maghrib": "2026-09-23T16:43:20Z",
+        "isha": "2026-09-23T18:01:56Z",
+        "middleOfTheNight": "2026-09-23T21:56:32Z",
+        "lastThirdOfTheNight": "2026-09-23T23:40:55Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-cape-town-2026-12-21",
+      "description": "Shafi Asr at Cape Town on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Africa/Johannesburg",
+        "coordinates": {
+          "latitude": -33.9249,
+          "longitude": 18.4241
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T01:47:16Z",
+        "sunrise": "2026-12-21T03:31:48Z",
+        "dhuhr": "2026-12-21T10:44:21Z",
+        "asr": "2026-12-21T14:29:27Z",
+        "sunset": "2026-12-21T17:56:54Z",
+        "maghrib": "2026-12-21T17:56:54Z",
+        "isha": "2026-12-21T19:34:33Z",
+        "middleOfTheNight": "2026-12-21T21:52:20Z",
+        "lastThirdOfTheNight": "2026-12-21T23:10:48Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-cape-town-2026-12-21",
+      "description": "Hanafi Asr at Cape Town on 2026-12-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "Africa/Johannesburg",
+        "coordinates": {
+          "latitude": -33.9249,
+          "longitude": 18.4241
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T01:47:16Z",
+        "sunrise": "2026-12-21T03:31:48Z",
+        "dhuhr": "2026-12-21T10:44:21Z",
+        "asr": "2026-12-21T15:45:21Z",
+        "sunset": "2026-12-21T17:56:54Z",
+        "maghrib": "2026-12-21T17:56:54Z",
+        "isha": "2026-12-21T19:34:33Z",
+        "middleOfTheNight": "2026-12-21T21:52:20Z",
+        "lastThirdOfTheNight": "2026-12-21T23:10:48Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-ushuaia-2026-03-20",
+      "description": "Shafi Asr at Ushuaia on 2026-03-20. Fajr is bounded (the angle alone gives 2026-03-20 05:30 local). Isha is bounded (the angle alone gives 2026-03-20 21:41 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "America/Argentina/Ushuaia",
+        "coordinates": {
+          "latitude": -54.8,
+          "longitude": -68.3
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T08:53:36Z",
+        "sunrise": "2026-03-20T10:34:31Z",
+        "dhuhr": "2026-03-20T16:40:36Z",
+        "asr": "2026-03-20T19:53:53Z",
+        "sunset": "2026-03-20T22:45:33Z",
+        "maghrib": "2026-03-20T22:45:33Z",
+        "isha": "2026-03-21T00:27:07Z",
+        "middleOfTheNight": "2026-03-21T03:50:14Z",
+        "lastThirdOfTheNight": "2026-03-21T05:31:47Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-ushuaia-2026-03-20",
+      "description": "Hanafi Asr at Ushuaia on 2026-03-20. Fajr is bounded (the angle alone gives 2026-03-20 05:30 local). Isha is bounded (the angle alone gives 2026-03-20 21:41 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-03-20",
+        "timeZone": "America/Argentina/Ushuaia",
+        "coordinates": {
+          "latitude": -54.8,
+          "longitude": -68.3
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-03-20T08:53:36Z",
+        "sunrise": "2026-03-20T10:34:31Z",
+        "dhuhr": "2026-03-20T16:40:36Z",
+        "asr": "2026-03-20T20:43:20Z",
+        "sunset": "2026-03-20T22:45:33Z",
+        "maghrib": "2026-03-20T22:45:33Z",
+        "isha": "2026-03-21T00:27:07Z",
+        "middleOfTheNight": "2026-03-21T03:50:14Z",
+        "lastThirdOfTheNight": "2026-03-21T05:31:47Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-ushuaia-2026-06-21",
+      "description": "Shafi Asr at Ushuaia on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "America/Argentina/Ushuaia",
+        "coordinates": {
+          "latitude": -54.8,
+          "longitude": -68.3
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T10:41:58Z",
+        "sunrise": "2026-06-21T12:58:50Z",
+        "dhuhr": "2026-06-21T16:35:04Z",
+        "asr": "2026-06-21T17:57:44Z",
+        "sunset": "2026-06-21T20:11:19Z",
+        "maghrib": "2026-06-21T20:11:19Z",
+        "isha": "2026-06-21T22:20:58Z",
+        "middleOfTheNight": "2026-06-22T03:26:44Z",
+        "lastThirdOfTheNight": "2026-06-22T05:51:52Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-ushuaia-2026-06-21",
+      "description": "Hanafi Asr at Ushuaia on 2026-06-21.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-06-21",
+        "timeZone": "America/Argentina/Ushuaia",
+        "coordinates": {
+          "latitude": -54.8,
+          "longitude": -68.3
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-06-21T10:41:58Z",
+        "sunrise": "2026-06-21T12:58:50Z",
+        "dhuhr": "2026-06-21T16:35:04Z",
+        "asr": "2026-06-21T18:23:49Z",
+        "sunset": "2026-06-21T20:11:19Z",
+        "maghrib": "2026-06-21T20:11:19Z",
+        "isha": "2026-06-21T22:20:58Z",
+        "middleOfTheNight": "2026-06-22T03:26:44Z",
+        "lastThirdOfTheNight": "2026-06-22T05:51:52Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-ushuaia-2026-09-23",
+      "description": "Shafi Asr at Ushuaia on 2026-09-23. Fajr is bounded (the angle alone gives 2026-09-23 05:15 local). Isha is bounded (the angle alone gives 2026-09-23 21:29 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "America/Argentina/Ushuaia",
+        "coordinates": {
+          "latitude": -54.8,
+          "longitude": -68.3
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T08:37:48Z",
+        "sunrise": "2026-09-23T10:18:52Z",
+        "dhuhr": "2026-09-23T16:25:30Z",
+        "asr": "2026-09-23T19:40:43Z",
+        "sunset": "2026-09-23T22:33:15Z",
+        "maghrib": "2026-09-23T22:33:15Z",
+        "isha": "2026-09-24T00:13:42Z",
+        "middleOfTheNight": "2026-09-24T03:34:34Z",
+        "lastThirdOfTheNight": "2026-09-24T05:15:00Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-ushuaia-2026-09-23",
+      "description": "Hanafi Asr at Ushuaia on 2026-09-23. Fajr is bounded (the angle alone gives 2026-09-23 05:15 local). Isha is bounded (the angle alone gives 2026-09-23 21:29 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-09-23",
+        "timeZone": "America/Argentina/Ushuaia",
+        "coordinates": {
+          "latitude": -54.8,
+          "longitude": -68.3
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-09-23T08:37:48Z",
+        "sunrise": "2026-09-23T10:18:52Z",
+        "dhuhr": "2026-09-23T16:25:30Z",
+        "asr": "2026-09-23T20:30:29Z",
+        "sunset": "2026-09-23T22:33:15Z",
+        "maghrib": "2026-09-23T22:33:15Z",
+        "isha": "2026-09-24T00:13:42Z",
+        "middleOfTheNight": "2026-09-24T03:34:34Z",
+        "lastThirdOfTheNight": "2026-09-24T05:15:00Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-ushuaia-2026-12-21",
+      "description": "Shafi Asr at Ushuaia on 2026-12-21. Fajr's angle isn't reached (sunStaysAbove); the bound gives the time. Isha's angle isn't reached (sunStaysAbove); the bound gives the time.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "America/Argentina/Ushuaia",
+        "coordinates": {
+          "latitude": -54.8,
+          "longitude": -68.3
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T06:54:11Z",
+        "sunrise": "2026-12-21T07:51:25Z",
+        "dhuhr": "2026-12-21T16:31:22Z",
+        "asr": "2026-12-21T21:01:18Z",
+        "sunset": "2026-12-22T01:11:19Z",
+        "maghrib": "2026-12-22T01:11:19Z",
+        "isha": "2026-12-22T02:08:33Z",
+        "middleOfTheNight": "2026-12-22T04:03:00Z",
+        "lastThirdOfTheNight": "2026-12-22T05:00:14Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-ushuaia-2026-12-21",
+      "description": "Hanafi Asr at Ushuaia on 2026-12-21. Fajr's angle isn't reached (sunStaysAbove); the bound gives the time. Isha's angle isn't reached (sunStaysAbove); the bound gives the time.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-12-21",
+        "timeZone": "America/Argentina/Ushuaia",
+        "coordinates": {
+          "latitude": -54.8,
+          "longitude": -68.3
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "none"
+        }
+      },
+      "expected": {
+        "fajr": "2026-12-21T06:54:11Z",
+        "sunrise": "2026-12-21T07:51:25Z",
+        "dhuhr": "2026-12-21T16:31:22Z",
+        "asr": "2026-12-21T22:17:15Z",
+        "sunset": "2026-12-22T01:11:19Z",
+        "maghrib": "2026-12-22T01:11:19Z",
+        "isha": "2026-12-22T02:08:33Z",
+        "middleOfTheNight": "2026-12-22T04:03:00Z",
+        "lastThirdOfTheNight": "2026-12-22T05:00:14Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-makkah-2026-05-01-nearest",
+      "description": "Shafi Asr at Makkah on 2026-05-01, rounded to the nearest minute.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-05-01",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "nearest"
+        }
+      },
+      "expected": {
+        "fajr": "2026-05-01T01:31:00Z",
+        "sunrise": "2026-05-01T02:50:00Z",
+        "dhuhr": "2026-05-01T09:18:00Z",
+        "asr": "2026-05-01T12:39:00Z",
+        "sunset": "2026-05-01T15:46:00Z",
+        "maghrib": "2026-05-01T15:46:00Z",
+        "isha": "2026-05-01T17:00:00Z",
+        "middleOfTheNight": "2026-05-01T20:38:00Z",
+        "lastThirdOfTheNight": "2026-05-01T22:16:00Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-makkah-2026-05-01-nearest",
+      "description": "Hanafi Asr at Makkah on 2026-05-01, rounded to the nearest minute.",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-05-01",
+        "timeZone": "Asia/Riyadh",
+        "coordinates": {
+          "latitude": 21.4225,
+          "longitude": 39.8262
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "nearest"
+        }
+      },
+      "expected": {
+        "fajr": "2026-05-01T01:31:00Z",
+        "sunrise": "2026-05-01T02:50:00Z",
+        "dhuhr": "2026-05-01T09:18:00Z",
+        "asr": "2026-05-01T13:51:00Z",
+        "sunset": "2026-05-01T15:46:00Z",
+        "maghrib": "2026-05-01T15:46:00Z",
+        "isha": "2026-05-01T17:00:00Z",
+        "middleOfTheNight": "2026-05-01T20:38:00Z",
+        "lastThirdOfTheNight": "2026-05-01T22:16:00Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-shafi-london-2026-05-01-nearest",
+      "description": "Shafi Asr at London on 2026-05-01, rounded to the nearest minute. Fajr is bounded (the angle alone gives 2026-05-01 03:03 local). Isha is bounded (the angle alone gives 2026-05-01 22:42 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-05-01",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "shafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "nearest"
+        }
+      },
+      "expected": {
+        "fajr": "2026-05-01T03:14:00Z",
+        "sunrise": "2026-05-01T04:33:00Z",
+        "dhuhr": "2026-05-01T11:58:00Z",
+        "asr": "2026-05-01T16:00:00Z",
+        "sunset": "2026-05-01T19:24:00Z",
+        "maghrib": "2026-05-01T19:24:00Z",
+        "isha": "2026-05-01T20:42:00Z",
+        "middleOfTheNight": "2026-05-01T23:18:00Z",
+        "lastThirdOfTheNight": "2026-05-02T00:36:00Z"
+      },
+      "toleranceSeconds": 1
+    },
+    {
+      "id": "madhab-hanafi-london-2026-05-01-nearest",
+      "description": "Hanafi Asr at London on 2026-05-01, rounded to the nearest minute. Fajr is bounded (the angle alone gives 2026-05-01 03:03 local). Isha is bounded (the angle alone gives 2026-05-01 22:42 local).",
+      "source": "SalahTimes reference implementation (Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "date": "2026-05-01",
+        "timeZone": "Europe/London",
+        "coordinates": {
+          "latitude": 51.5074,
+          "longitude": -0.1278
+        },
+        "parameters": {
+          "fajr": {
+            "angle": 18
+          },
+          "maghrib": "sunset",
+          "isha": {
+            "angle": 17
+          },
+          "madhab": "hanafi",
+          "highLatitudeRule": "recommended",
+          "nightSpan": "sunsetToFajr",
+          "rounding": "nearest"
+        }
+      },
+      "expected": {
+        "fajr": "2026-05-01T03:14:00Z",
+        "sunrise": "2026-05-01T04:33:00Z",
+        "dhuhr": "2026-05-01T11:58:00Z",
+        "asr": "2026-05-01T17:05:00Z",
+        "sunset": "2026-05-01T19:24:00Z",
+        "maghrib": "2026-05-01T19:24:00Z",
+        "isha": "2026-05-01T20:42:00Z",
+        "middleOfTheNight": "2026-05-01T23:18:00Z",
+        "lastThirdOfTheNight": "2026-05-02T00:36:00Z"
+      },
+      "toleranceSeconds": 1
+    }
+  ]
+}
