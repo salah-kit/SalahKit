@@ -32,7 +32,7 @@ The MUIS board shows the same sentence in its footer, in English in both languag
 
 MUIS publishes begin times only: no iqama and no Jumu'ah. The board adds both as this mosque's own settings, and its footer says so. In the code, both are in `MosqueBoard/Board.swift`:
 
-- `Board.muisIqama`, an `IqamaRules`: Fajr 20 minutes after it begins, Dhuhr, Asr and Isha 10, Maghrib 5, and Jumu'ah 30 minutes after Zohor begins.
+- `Board.muisIqama`, an `IqamaRules`: Fajr 20 minutes after it begins, Dhuhr, Asr and Isha 10, Maghrib 5, and Jumu'ah 30 minutes after Dhuhr begins.
 - `DeclaredJumuahSource`, a small `PrayerSource` that wraps the `TimetableSource` and declares `.jumuah` on every Friday's Dhuhr. SalahCore never infers Jumu'ah from the weekday, so the app declares it. The published times pass through unchanged.
 
 The Edinburgh timetable publishes its own iqama and declares Jumu'ah on every Friday, so that board uses the timetable as it is.

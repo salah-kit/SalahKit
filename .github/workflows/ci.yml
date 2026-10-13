@@ -159,7 +159,7 @@ jobs:
 
       - name: Upload the test results
         if: failure()
-        uses: actions/upload-artifact@v4 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        uses: actions/upload-artifact@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
         with:
           name: MosqueBoard.xcresult
           path: Examples/MosqueBoard/.derived/MosqueBoard.xcresult
