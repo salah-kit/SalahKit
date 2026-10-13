@@ -45,10 +45,14 @@ Adopters' targets may default to `MainActor` isolation, so the package must buil
 
 ```sh
 swift build --build-tests
-swift build --build-tests -Xswiftc -default-isolation -Xswiftc MainActor
+SALAHKIT_DEFAULT_ISOLATION=MainActor swift build --build-tests --build-path .build/mainactor
 ```
 
-Public types are `nonisolated` and `Sendable`, so they behave the same under either setting.
+The variable makes the manifest apply `MainActor` default isolation to SalahKit's own targets,
+tests included; SalahTimes builds as it does in an app. Don't pass `-Xswiftc -default-isolation`
+instead: it reaches SalahTimes too and makes its types main-actor-isolated (RFC 0001, section
+6.3). A separate build path keeps the two configurations from sharing a cache. Public types are
+`nonisolated` and `Sendable`, so they behave the same under either setting.
 
 ## Format
 
@@ -102,6 +106,6 @@ python3 -m http.server --directory /tmp/salahkit-docs 8000
 
 - Small fixes: open a pull request. CI must pass.
 - Public API and behavior: write or amend an RFC in [`docs/rfcs/`](docs/rfcs/) first. RFC 0001
-  covers SalahCore and SalahFixtures. Public API stays small and needs a consumer that justifies
-  it.
+  covers SalahCore and SalahFixtures, RFC 0002 SalahCalculation. Public API stays small and needs
+  a consumer that justifies it.
 - Record user-visible changes in `CHANGELOG.md` under Unreleased.

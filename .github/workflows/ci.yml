@@ -100,7 +100,10 @@ jobs:
           ISOLATION: ${{ matrix.isolation }}
         run: |
           if [ "${ISOLATION}" = "MainActor" ]; then
-            swift build --build-tests -Xswiftc -default-isolation -Xswiftc MainActor
+            # The manifest applies MainActor default isolation to SalahKit's own targets only.
+            # `-Xswiftc -default-isolation` would reach SalahTimes too and make its types
+            # main-actor-isolated, which no app sees (docs/rfcs/0001-core.md, section 6.3).
+            SALAHKIT_DEFAULT_ISOLATION=MainActor swift build --build-tests
           else
             swift build --build-tests
           fi

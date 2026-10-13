@@ -4,9 +4,10 @@ import Testing
 
 /// Calls the public API from nonisolated code.
 ///
-/// CI also builds the tests with `-default-isolation MainActor` (RFC 0001, section 6.3). In that
-/// build this file compiles only while every public type and member stays nonisolated, which is
-/// what an app whose targets default to the main actor needs.
+/// CI also builds the tests with `SALAHKIT_DEFAULT_ISOLATION=MainActor`, which defaults SalahKit's
+/// targets to the main actor (RFC 0001, section 6.3). In that build this file compiles only while
+/// every public type and member stays nonisolated, which is what an app whose targets default to
+/// the main actor needs.
 @Suite struct NonisolatedAPITests {
   @Test func thePublicAPIIsCallableFromNonisolatedCode() async throws {
     let summary = try await Task.detached { try exercisePublicAPI() }.value
