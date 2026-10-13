@@ -7,6 +7,9 @@ nonisolated public enum RefreshStrategy: Hashable, Sendable {
   case stateChanges
   /// Also an entry every `fine` near each prayer (within `window` of it) and every `coarse`
   /// elsewhere, for views that draw static text.
+  ///
+  /// Both steps must be at least a second. A window longer than
+  /// ``PrayerSchedule/maximumQueryDays`` days counts as that long.
   case steps(fine: Duration, coarse: Duration, window: Duration)
 }
 
@@ -45,7 +48,7 @@ nonisolated public enum RefreshPlanError: Error, Hashable, Sendable {
   case nonPositiveHorizon
   /// The limit is below 2, leaving no room for an initial entry and the cutoff.
   case limitTooSmall
-  /// A `steps` strategy has a step that isn't positive, or a negative window.
+  /// A `steps` strategy has a step shorter than a second, or a negative window.
   case invalidStrategy
 }
 
@@ -76,7 +79,7 @@ nonisolated extension PrayerSchedule {
     guard Gregorian.clamped(end) > start else { throw .nonPositiveHorizon }
     guard limit >= 2 else { throw .limitTooSmall }
     if case .steps(let fine, let coarse, let window) = strategy,
-      fine <= .zero || coarse <= .zero || window < .zero
+      fine < .seconds(1) || coarse < .seconds(1) || window < .zero
     {
       throw .invalidStrategy
     }
@@ -115,14 +118,17 @@ nonisolated extension PrayerSchedule {
     add(transitions)
 
     if case .steps(let fine, let coarse, let window) = strategy {
+      // The prayers within the window of the horizon, read past the query limit of a single
+      // `events` call so that a long horizon keeps its last days' prayers.
+      let window = min(window.seconds, TimeInterval(Self.maximumQueryDays) * 86_400)
+      let low = start.addingTimeInterval(-window)
+      let high = end.addingTimeInterval(window)
+      let prayers = engine.context(at: low, through: high).prayers.map(\.time)
+        .filter { $0 >= low && $0 <= high }
       add(
         Self.stepDates(
-          prayers: events(
-            from: start.addingTimeInterval(-window.nonNegativeSeconds),
-            through: end.addingTimeInterval(window.nonNegativeSeconds)
-          ).events.filter(\.kind.isPrayer).map(\.time),
-          start: start, end: end, fine: fine.seconds, coarse: coarse.seconds,
-          window: window.seconds, limit: limit, cutoff: cutoff()))
+          prayers: prayers, start: start, end: end, fine: fine.seconds, coarse: coarse.seconds,
+          window: window, limit: limit, cutoff: cutoff()))
     }
 
     let fits = dates.count + 1 <= limit
@@ -137,11 +143,13 @@ nonisolated extension PrayerSchedule {
   /// `coarse` from `start` except within `window` of a prayer.
   ///
   /// Only the plan's first `limit` dates matter, so the grid stops at `cutoff` and keeps no
-  /// more than its own `limit` smallest dates.
+  /// more than its own `limit` smallest dates. Steps of at least a second and a window within
+  /// the query limit keep every step count far below 2^53, so each step moves the date.
   static func stepDates(
     prayers: [Date], start: Date, end: Date, fine: TimeInterval, coarse: TimeInterval,
     window: TimeInterval, limit: Int, cutoff: Date
   ) -> [Date] {
+    let prayers = prayers.sorted()
     var last = min(end, cutoff)
     var dates: [Date] = []
     func trim() {
@@ -149,8 +157,10 @@ nonisolated extension PrayerSchedule {
       if dates.count == limit, let largest = dates.last { last = min(last, largest) }
     }
 
+    // Fine dates: each prayer's grid starts at the last step at or before `start`, so at most
+    // one step per prayer adds no date before the loop reaches `last` or the budget.
     let reach = (window / fine).rounded(.down)
-    for prayer in prayers.sorted() {
+    for prayer in prayers {
       guard prayer.addingTimeInterval(-window) < last else { break }
       var step = max(-reach, (start.timeIntervalSince(prayer) / fine).rounded(.down))
       var produced = 0
@@ -163,18 +173,27 @@ nonisolated extension PrayerSchedule {
         }
         step += 1
       }
-      if dates.count >= 2 * limit { trim() }
+      if dates.count - limit >= limit { trim() }
     }
 
+    // Coarse dates: a date within the window of a prayer jumps past that window, so the loop
+    // makes about one pass per prayer and one per date it keeps.
     var step = 1.0
     var produced = 0
+    var index = 0
     while produced < limit {
       let date = start.addingTimeInterval(step * coarse)
       guard date < last else { break }
-      if !prayers.contains(where: { abs(date.timeIntervalSince($0)) <= window }) {
-        dates.append(date)
-        produced += 1
+      while index < prayers.count, date.timeIntervalSince(prayers[index]) > window {
+        index += 1
       }
+      if index < prayers.count, prayers[index].timeIntervalSince(date) <= window {
+        let past = ((prayers[index].timeIntervalSince(start) + window) / coarse).rounded(.down)
+        step = max(step + 1, past + 1)
+        continue
+      }
+      dates.append(date)
+      produced += 1
       step += 1
     }
     trim()

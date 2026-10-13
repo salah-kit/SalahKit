@@ -30,10 +30,12 @@ nonisolated public struct WallClockTime: Codable, Hashable, Sendable, LosslessSt
     var dayOffset = 0
     if let plus = text.firstIndex(of: "+") {
       let offsetText = text[text.index(after: plus)...]
-      guard !offsetText.isEmpty, offsetText.allSatisfy({ $0.isASCII && $0.isNumber }),
-        let parsed = Int(offsetText)
-      else { return nil }
-      dayOffset = parsed
+      guard !offsetText.isEmpty, offsetText.allSatisfy({ $0.isASCII && $0.isNumber }) else {
+        return nil
+      }
+      // The shape is all that's checked here: an offset too long for `Int` is still a wall
+      // time, just not a valid one.
+      dayOffset = Int(offsetText) ?? .max
       text = text[..<plus]
     }
     let parts = text.split(separator: ":", omittingEmptySubsequences: false)

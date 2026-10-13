@@ -6,12 +6,12 @@ import Testing
 /// Schedule behavior outside the vectors' reach: day starts, coding, query limits on refresh
 /// plans and the cost of large queries.
 @Suite struct ScheduleTests {
-  static let singapore = TimeZone(identifier: "Asia/Singapore") ?? .gmt
-  static let london = TimeZone(identifier: "Europe/London") ?? .gmt
-  static let firstDay = CivilDay(year: 2026, month: 1, day: 1)
+  nonisolated static let singapore = TimeZone(identifier: "Asia/Singapore") ?? .gmt
+  nonisolated static let london = TimeZone(identifier: "Europe/London") ?? .gmt
+  nonisolated static let firstDay = CivilDay(year: 2026, month: 1, day: 1)
 
   /// A timetable with the same six times every day for `count` days from 2026-01-01.
-  static func yearly(count: Int) -> TimetableSource {
+  nonisolated static func yearly(count: Int) -> TimetableSource {
     let times: [PrayerKind: TimetableTime] = [
       .fajr: .local(WallClockTime(hour: 5, minute: 40)),
       .sunrise: .local(WallClockTime(hour: 7, minute: 2)),
@@ -25,7 +25,7 @@ import Testing
       expectedKinds: Set(PrayerKind.allCases))
   }
 
-  static let schedule = PrayerSchedule(
+  nonisolated static let schedule = PrayerSchedule(
     source: yearly(count: 420),
     location: PrayerLocation(latitude: 1.35, longitude: 103.82, timeZone: singapore))
 
@@ -103,6 +103,20 @@ import Testing
     #expect(!encoded.contains("observances"))
   }
 
+  @Test func anOverlongDayOffsetInvalidatesOnlyItsDay() throws {
+    let json = #"""
+      {"expectedKinds": ["fajr"], "rows": [
+        {"day": "2026-10-15", "times": {"fajr": "05:31"}},
+        {"day": "2026-10-16", "times": {"fajr": "05:31+99999999999999999999"}}]}
+      """#
+    let source = try JSONDecoder().decode(TimetableSource.self, from: Data(json.utf8))
+    let location = PrayerLocation(latitude: 1.35, longitude: 103.82, timeZone: Self.singapore)
+    #expect(source.prayerDay(CivilDay(year: 2026, month: 10, day: 15), at: location).day != nil)
+    #expect(
+      source.prayerDay(CivilDay(year: 2026, month: 10, day: 16), at: location)
+        == .unavailable(.invalidData))
+  }
+
   @Test func malformedValuesFailDecoding() {
     for json in [
       #"{"expectedKinds": ["fajr"], "rows": [{"day": "16-10-2026", "times": {}}]}"#,
@@ -174,6 +188,21 @@ import Testing
     #expect(throws: RefreshPlanError.nonPositiveHorizon) {
       try Self.schedule.refreshPlan(from: infinity, through: nan)
     }
+  }
+
+  @Test func aFractionalApproachingDurationStillChangesTheState() throws {
+    // 0.1 s isn't exact in binary: the flag must turn on at the same instant `changesAt` names.
+    let policy = StatePolicy(approaching: .milliseconds(100), justStarted: .fixed(.zero))
+    let noon = Self.firstDay.start(in: Self.singapore).addingTimeInterval(12 * 3_600)
+    let dhuhr = Self.firstDay.start(in: Self.singapore).addingTimeInterval((13 * 60 + 4) * 60)
+    let state = Self.schedule.state(
+      at: noon, through: noon.addingTimeInterval(86_400), policy: policy)
+    let changesAt = try #require(state.changesAt)
+    #expect(changesAt < dhuhr)
+    #expect(abs(dhuhr.timeIntervalSince(changesAt) - 0.1) < 1e-6)
+    let approaching = Self.schedule.state(
+      at: changesAt, through: noon.addingTimeInterval(86_400), policy: policy)
+    #expect(approaching.prayerState?.isApproaching == true)
   }
 
   @Test func stateAccessorsMatchTheCase() {

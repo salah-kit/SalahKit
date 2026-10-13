@@ -4,7 +4,9 @@ import Foundation
 /// approaching, and how long it counts as just started.
 ///
 /// Durations below zero count as zero. The policy encodes durations as seconds:
-/// `{"approaching": 900, "justStarted": {"untilIqama": {"fallback": 900}}}`.
+/// `{"approaching": 900, "justStarted": {"untilIqama": {"fallback": 900}}}`. Decoding rejects a
+/// number that isn't finite and clamps a larger one to about 2.7 million years, the span that
+/// schedule dates can reach.
 nonisolated public struct StatePolicy: Codable, Hashable, Sendable {
   /// How long a prayer counts as just started.
   ///
@@ -27,11 +29,11 @@ nonisolated public struct StatePolicy: Codable, Hashable, Sendable {
     /// Decodes `{"fixed": seconds}` or `{"untilIqama": {"fallback": seconds}}`.
     public init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
-      if let seconds = try container.decodeIfPresent(Double.self, forKey: .fixed) {
-        self = .fixed(.seconds(seconds))
+      if let fixed = try container.decodeDurationIfPresent(forKey: .fixed) {
+        self = .fixed(fixed)
       } else if container.contains(.untilIqama) {
         let nested = try container.nestedContainer(keyedBy: FallbackKeys.self, forKey: .untilIqama)
-        self = .untilIqama(fallback: .seconds(try nested.decode(Double.self, forKey: .fallback)))
+        self = .untilIqama(fallback: try nested.decodeDuration(forKey: .fallback))
       } else {
         throw DecodingError.dataCorrupted(
           DecodingError.Context(
@@ -79,8 +81,8 @@ nonisolated public struct StatePolicy: Codable, Hashable, Sendable {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     let defaults = StatePolicy()
     self.init(
-      approaching: try container.decodeIfPresent(Double.self, forKey: .approaching)
-        .map { .seconds($0) } ?? defaults.approaching,
+      approaching: try container.decodeDurationIfPresent(forKey: .approaching)
+        ?? defaults.approaching,
       justStarted: try container.decodeIfPresent(JustStarted.self, forKey: .justStarted)
         ?? defaults.justStarted)
   }
@@ -90,6 +92,26 @@ nonisolated public struct StatePolicy: Codable, Hashable, Sendable {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(approaching.seconds, forKey: .approaching)
     try container.encode(justStarted, forKey: .justStarted)
+  }
+}
+
+nonisolated extension KeyedDecodingContainer {
+  /// A duration encoded as seconds. A number that isn't finite is an error; a larger one is
+  /// clamped to the date limit, because `Duration.seconds(_:)` traps beyond about 1.7e20.
+  fileprivate func decodeDuration(forKey key: Key) throws -> Duration {
+    try duration(seconds: decode(Double.self, forKey: key), forKey: key)
+  }
+
+  fileprivate func decodeDurationIfPresent(forKey key: Key) throws -> Duration? {
+    try decodeIfPresent(Double.self, forKey: key).map { try duration(seconds: $0, forKey: key) }
+  }
+
+  private func duration(seconds: Double, forKey key: Key) throws -> Duration {
+    guard seconds.isFinite else {
+      throw DecodingError.dataCorruptedError(
+        forKey: key, in: self, debugDescription: "Expected a finite number of seconds.")
+    }
+    return .seconds(Gregorian.clampedSeconds(seconds))
   }
 }
 

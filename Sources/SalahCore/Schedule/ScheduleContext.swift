@@ -131,40 +131,43 @@ nonisolated struct ScheduleContext {
 
   /// The state's event fields at `date`, looking ahead through `bound` (section 4.7).
   func snapshot(at date: Date, through bound: Date, policy: StatePolicy) -> Snapshot {
-    let previous = events.last { $0.time <= date }.flatMap { event in
+    // Events are in time order: the ones after `date` start at the first later instant.
+    let eventsAfter = events.partitioningIndex { $0.time > date }
+    let prayersAfter = prayers.partitioningIndex { $0.time > date }
+    let previous = events[..<eventsAfter].last.flatMap { event in
       opensBefore(date, after: event.time, prayersOnly: false) ? nil : event
     }
-    let latestPrayer = prayers.last { $0.time <= date }.flatMap { event in
+    let latestPrayer = prayers[..<prayersAfter].last.flatMap { event in
       opensBefore(date, after: event.time, prayersOnly: true) ? nil : event
     }
-    let next = events.first { $0.time > date }.flatMap { event in
+    let next = events[eventsAfter...].first.flatMap { event in
       event.time <= bound && !opensAfter(date, before: event.time, prayersOnly: false)
         ? event : nil
     }
-    let nextPrayer = prayers.first { $0.time > date }.flatMap { event in
+    let nextPrayer = prayers[prayersAfter...].first.flatMap { event in
       event.time <= bound && !opensAfter(date, before: event.time, prayersOnly: true)
         ? event : nil
     }
     let justStarted = latestPrayer.flatMap { event in
       date < Self.justStartedEnd(of: event, policy: policy) ? event : nil
     }
-    let isApproaching = nextPrayer.map {
-      $0.time.timeIntervalSince(date) <= policy.approaching.nonNegativeSeconds
-    }
+    // The same instant `changeCandidates` uses, so the flag turns on exactly at a candidate.
+    let isApproaching = nextPrayer.map { date >= Self.approachingStart(of: $0, policy: policy) }
     return Snapshot(
       previous: previous, latestPrayer: latestPrayer, next: next, nextPrayer: nextPrayer,
       justStarted: justStarted, isApproaching: isApproaching ?? false,
       openGaps: windows.filter { $0.lower <= date && date < $0.upper }.map(\.gap))
   }
 
-  /// The instants in `(date, bound]` at which a state can change: event instants, gap bounds,
-  /// approaching thresholds, just-started window ends and the starts of the context days.
-  func changeCandidates(after date: Date, through bound: Date, policy: StatePolicy) -> [Date] {
+  /// The instants at which a state can change, sorted and without repeats: event instants,
+  /// gap bounds, approaching thresholds, just-started window ends and the starts of the
+  /// context days.
+  func changeCandidates(policy: StatePolicy) -> [Date] {
     var candidates = dayStarts
     for event in events {
       candidates.append(event.time)
       if event.kind.isPrayer {
-        candidates.append(event.time.addingTimeInterval(-policy.approaching.nonNegativeSeconds))
+        candidates.append(Self.approachingStart(of: event, policy: policy))
         candidates.append(Self.justStartedEnd(of: event, policy: policy))
       }
     }
@@ -172,7 +175,7 @@ nonisolated struct ScheduleContext {
       candidates.append(window.lower)
       candidates.append(window.upper)
     }
-    return Set(candidates.filter { $0 > date && $0 <= bound }).sorted()
+    return Set(candidates).sorted()
   }
 
   /// Whether a window that has opened by `date` ends after `instant`, so an event at `instant`
@@ -188,6 +191,10 @@ nonisolated struct ScheduleContext {
     windows.contains { window in
       (!prayersOnly || window.holdsPrayer) && window.lower < instant && window.upper > date
     }
+  }
+
+  static func approachingStart(of event: PrayerEvent, policy: StatePolicy) -> Date {
+    event.time.addingTimeInterval(-policy.approaching.nonNegativeSeconds)
   }
 
   static func justStartedEnd(of event: PrayerEvent, policy: StatePolicy) -> Date {
@@ -234,5 +241,25 @@ nonisolated struct Snapshot {
       && next?.id == other.next?.id && nextPrayer?.id == other.nextPrayer?.id
       && justStarted?.id == other.justStarted?.id && isApproaching == other.isApproaching
       && Set(openGaps) == Set(other.openGaps)
+  }
+}
+
+nonisolated extension RandomAccessCollection {
+  /// The index of the first element for which `isAfter` is true, in a collection where every
+  /// such element follows every other one; `endIndex` when there's none. A binary search.
+  func partitioningIndex(where isAfter: (Element) -> Bool) -> Index {
+    var low = startIndex
+    var count = self.count
+    while count > 0 {
+      let half = count / 2
+      let middle = index(low, offsetBy: half)
+      if isAfter(self[middle]) {
+        count = half
+      } else {
+        low = index(after: middle)
+        count -= half + 1
+      }
+    }
+    return low
   }
 }

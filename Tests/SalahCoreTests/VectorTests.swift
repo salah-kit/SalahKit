@@ -15,7 +15,8 @@ import Testing
 
   @Test func everyFileLoads() {
     #expect(VectorCase.loadErrors.isEmpty, "\(VectorCase.loadErrors)")
-    #expect(VectorCase.all.count >= 148)
+    // RFC 0001 §7 records 159 vectors; a missing or renamed file must fail here.
+    #expect(VectorCase.all.count == 159)
     let ids = VectorCase.all.map(\.id)
     #expect(Set(ids).count == ids.count, "vector ids must be unique")
   }

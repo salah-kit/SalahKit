@@ -207,6 +207,8 @@ import Testing
     #expect(WallClockTime("23:60")?.isValid == false)
     #expect(WallClockTime("23:59+2")?.isValid == false)
     #expect(WallClockTime("00:00+1")?.isValid == true)
+    // An offset too long for `Int` still has the shape, so it decodes and is invalid.
+    #expect(WallClockTime("00:15+99999999999999999999")?.isValid == false)
   }
 
   @Test func timetableTimeCodesLocalAndInstantTimes() throws {
@@ -261,5 +263,41 @@ import Testing
     #expect(
       try JSONDecoder().decode(StatePolicy.self, from: Data(fractional.utf8)).approaching
         == .milliseconds(500))
+  }
+
+  @Test func statePolicyDecodingClampsHugeDurationsAndRejectsNonFiniteOnes() throws {
+    let limit = TimeInterval(Gregorian.dayLimit) * 86_400
+    let huge = #"{"approaching": 1e300, "justStarted": {"untilIqama": {"fallback": -1e300}}}"#
+    let policy = try JSONDecoder().decode(StatePolicy.self, from: Data(huge.utf8))
+    #expect(policy.approaching.seconds == limit)
+    guard case .untilIqama(let fallback) = policy.justStarted else {
+      Issue.record("expected untilIqama, got \(policy.justStarted)")
+      return
+    }
+    #expect(fallback.seconds == -limit)
+    let fixed = #"{"justStarted": {"fixed": 1e300}}"#
+    #expect(
+      try JSONDecoder().decode(StatePolicy.self, from: Data(fixed.utf8)).justStarted
+        == .fixed(.seconds(limit)))
+
+    // The decoded policy works: every prayer within the clamped duration is approaching.
+    let noon = ScheduleTests.firstDay.start(in: ScheduleTests.singapore)
+      .addingTimeInterval(12 * 3_600)
+    let state = ScheduleTests.schedule.state(
+      at: noon, through: noon.addingTimeInterval(86_400), policy: policy)
+    #expect(state.prayerState?.isApproaching == true)
+
+    let decoder = JSONDecoder()
+    decoder.nonConformingFloatDecodingStrategy = .convertFromString(
+      positiveInfinity: "inf", negativeInfinity: "-inf", nan: "nan")
+    for json in [
+      #"{"approaching": "nan"}"#, #"{"approaching": "inf"}"#,
+      #"{"justStarted": {"fixed": "-inf"}}"#,
+      #"{"justStarted": {"untilIqama": {"fallback": "nan"}}}"#,
+    ] {
+      #expect(throws: DecodingError.self, "\(json)") {
+        try decoder.decode(StatePolicy.self, from: Data(json.utf8))
+      }
+    }
   }
 }
