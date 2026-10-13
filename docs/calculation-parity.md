@@ -13,7 +13,7 @@ All differences are signed: SalahCalculation minus Salah, in minutes. A "kind-da
   - **The middle-of-the-night rule** moves Isha on a few days a year where the Sun barely reaches the Isha angle: by up to 24 minutes at London, 29 to 32 at Stockholm, Oslo, Reykjavik and Ushuaia, and 41 at Tromsø (class D). Where adhan-swift's single correction step put Isha up to two and a half hours early, Isha moves later by up to 144 minutes (class G). Fajr moves by up to 4 minutes at 51° to 64°, 6 at Ushuaia, and −21 to +32 at Tromsø.
   - **The twilight-angle rule** moves Fajr by up to 3 minutes at 51° to 64° and −14 to +21 at Tromsø. Isha stays within a minute except at Reykjavik (up to 66 minutes later on one day) and Tromsø (−7 to +13).
   - **Umm al-Qura and Qatar** lose Isha on 13 days at Reykjavik under the middle-of-the-night rule, and on 5 to 11 days at Tromsø: their 90-minute Isha falls after the next day's Fajr.
-  - **The Moonsighting Committee** moves Fajr by up to 67 minutes and Isha by up to 25 south of 55° S, and Fajr by up to 4 minutes at Tromsø (6 and 9 on two days, with class G).
+  - **The Moonsighting Committee** moves Fajr by up to 67 minutes and Isha by up to 25 south of 55° S, and Fajr at Tromsø by −6 to +4 on 49 days a year, and +9 on 26 July (with class G).
   - **User adjustments** move both sides' times by the same minutes. At high latitudes they can push a time out of order, and SalahCalculation then reports it missing: with Tehran, Isha is missing on 50 days at Stockholm instead of 40.
 - **Ramadan.** With Salah's delayed-Isha toggle (on by default) mapped to `.interval(minutes: 120, hijriDayOffset:)`, the two agree on every day, for Hijri offsets −1, 0, 1 and 2, at Makkah, Riyadh and Doha.
 - **Every difference over a minute has an identified cause**: 39,336 kind-days over the 320 parity configurations, in seven classes (table below). Each cause is either a documented SalahTimes rule that differs from adhan-swift's, or an adhan-swift approximation that SalahTimes doesn't make. None is a defect in SalahCalculation. With adhan-swift's behaviors switched on, the attribution model reproduces Salah within a minute on all 638,873 kind-days on which both sides give a time. Nothing was left unexplained.
@@ -21,15 +21,15 @@ All differences are signed: SalahCalculation minus Salah, in minutes. A "kind-da
 
 | Class | Kinds | Kind-days over 1 min | Where | Largest | Intended change |
 |---|---|---:|---|---|---|
-| [A. Asr's noon shadow](#a-asrs-noon-shadow) | Asr | 23,643 | 54.8° and beyond | −7 to +6 min | Yes: correct definition |
-| [B. Asr when the noon Sun is low](#b-asr-when-the-noon-sun-is-low) | Asr | 1,783 | Tromsø, 19 January–6 February and 3–22 November | −2279 to +104 min: adhan-swift's Asr is up to 38 hours off | Yes: fixes wrong times |
-| [C. Fajr's night for the high-latitude bound](#c-fajrs-night-for-the-high-latitude-bound) | Fajr | 11,507 (+115 with G) | 51.5° and beyond, rule-dependent | −14 to +12 min (with G, Tromsø: −137 to +32) | Yes: documented |
+| [A. Asr's noon shadow](#a-asrs-noon-shadow) | Asr | 24,019 | 54.8° and beyond | −7 to +10 min | Yes: correct definition |
+| [B. Asr when the noon Sun is low](#b-asr-when-the-noon-sun-is-low) | Asr | 1,407 | Tromsø, 19 January–6 February and 11–22 November | −2279 to +104 min: adhan-swift's Asr is up to 38 hours off | Yes: fixes wrong times |
+| [C. Fajr's night for the high-latitude bound](#c-fajrs-night-for-the-high-latitude-bound) | Fajr | 11,565 (+57 with G) | 51.5° and beyond, rule-dependent | −137 to +12 min (with G, Tromsø: +9 to +32) | Yes: documented |
 | [D. Crossings only one library finds](#d-crossings-only-one-library-finds) | Isha, Fajr, Maghrib | 98 (+4 with E) | 51.5° and beyond, middle-of-the-night rule | Isha −41 to +20, Fajr −4, Maghrib +14 min (with E, Maghrib +108 and +113) | Yes: more accurate |
 | [E. Tehran's Maghrib at high latitudes](#e-tehrans-maghrib-at-high-latitudes) | Maghrib | 1,016 (+25 with G, +4 with D) | 54.8° and beyond, Tehran only | −52 to +142 min | Yes: documented |
-| [F. The Moonsighting Committee's 55° rule](#f-the-moonsighting-committees-55-rule) | Fajr, Isha | 473 (+10 with G) | Puerto Toro (55.08° S), Tromsø | Fajr −4 to +67, Isha −25 to −2 min | Yes: documented |
-| [G. One correction step at slow crossings](#g-one-correction-step-at-slow-crossings) | Isha, Maghrib, Fajr, sunrise | 662 (+150 with C, E or F) | 51.5° and beyond | Isha −7 to +144, Maghrib −8 to +16, Fajr −6 to +7, sunrise +7 min | Yes: more accurate |
+| [F. The Moonsighting Committee's 55° rule](#f-the-moonsighting-committees-55-rule) | Fajr, Isha | 478 (+5 with G) | Puerto Toro (55.08° S), Tromsø | Fajr −6 to +67, Isha −25 to −2 min | Yes: documented |
+| [G. One correction step at slow crossings](#g-one-correction-step-at-slow-crossings) | Isha, Maghrib, Fajr, sunrise | 662 (+87 with C, E or F) | 51.5° and beyond | Isha −7 to +144, Maghrib −8 to +16, Fajr −6 to +7, sunrise +7 min | Yes: more accurate |
 
-The counts add up over configurations, so a place that appears in several configurations is counted in each. A kind-day that needs two classes together appears in parentheses in both rows ("+115 with G" under C, and among the 150 under G), and counts once in the total of 39,336. A behavior that adds less than a minute to a kind-day doesn't name its class (see "How differences were attributed"). The country-suggestion comparison (section 4) compares different methods on purpose, and isn't in these counts.
+The counts add up over configurations, so a place that appears in several configurations is counted in each. A kind-day that needs two classes together appears in parentheses in both rows ("+57 with G" under C, and among the 87 under G), and counts once in the total of 39,336. A behavior that adds less than a minute to a kind-day, or works against its difference, doesn't name its class (see "How differences were attributed"). The country-suggestion comparison (section 4) compares different methods on purpose, and isn't in these counts.
 
 ## What was compared
 
@@ -133,18 +133,18 @@ A throwaway Swift package outside SalahKit, not committed, at `.worktrees/B1-par
 - `Common`: the places, Salah's `MethodPreference` with `detect(forCountry:)` copied verbatim, the preferences with Salah's defaults, and an independent solar model used only to attribute differences (below).
 - `SalahSide` (imports `Adhan`): the reproduction of Salah's calculation described above.
 - `KitSide` (imports `SalahCalculation`, `SalahCore`, `SalahTimes`): the mapping above. It calls `CalculationSource(settings).prayerDay(_:at:)` with a `PrayerLocation` carrying the place's coordinates, time zone and country code, and records each missing kind's `ScheduleGapReason` with SalahTimes' own `NonOccurrence` behind it. For a time the adapter leaves out, it records which documented rule applied, and for a time after an event of a later day, whether that day was the next one. It also computes the same day with SalahTimes directly with rounding off, for comparisons before rounding.
-- `parity` (executable): the configurations, the comparison and the attribution. It writes a summary table, every kind-day over a minute as CSV with its cause and any minor contribution, the counts and ranges by class, the one-minute counts, every kind-day with a time on one side only, the summary of every method under the two rules, the adjustment runs against the same settings without adjustments, the configurations reused, and each configuration's settings.
+- `parity` (executable): the configurations, the comparison and the attribution. It writes a summary table, every kind-day over a minute as CSV with its cause and any minor contribution, the counts and ranges by class, the one-minute counts, every kind-day with a time on one side only, the summary of every method under the two rules, the adjustment runs against the same settings without adjustments, every change a user sees per place, method, rule and kind (`d1-changes.tsv`, which the last section is checked against), the configurations reused, and each configuration's settings. It exits with an error if any kind-day is unexplained or classed against the attribution rule below.
 
 ```sh
 cd .worktrees/B1-parity-harness
 swift build -j 4
-.build/debug/parity <output-dir>              # all 323 configurations, about 90 seconds
+.build/debug/parity <output-dir>              # all 323 configurations, about 100 seconds
 .build/debug/parity dump Tromso 2026-01-14 2026-01-20 [method] [rule]   # both sides' times, day by day
 .build/debug/parity deltas London             # largest difference before rounding, per kind
 .build/debug/parity probe London 2026-07-15 17 after   # adhan-swift's existence test for a crossing
 ```
 
-Two runs wrote byte-identical output, in about 90 seconds each.
+Two runs wrote byte-identical output, in about 100 seconds each.
 
 ### How differences were attributed
 
@@ -162,8 +162,9 @@ For each kind-day, the harness compares Salah's time with SalahCalculation's. Bo
 
   Behaviors 5, 6 and 7 are applied with the harness's own solar model, written from NOAA's "General Solar Position Calculations" and Meeus (*Astronomical Algorithms*, p. 102), independent of both libraries. For 6, it runs adhan-swift's one-step procedure and a converged search with that model, and moves SalahTimes' crossing by the difference. For 7, it evaluates the same existence test with that model. Where the test fails, the crossing is dropped and the kind falls back as in adhan-swift. Where the test passes and SalahTimes finds no crossing, the model takes adhan-swift's one-step time. With 5 and 6 together, Asr is adhan-swift's whole procedure: the shadow altitude from the declination at 0 h UTC, found with one step.
 - The harness first finds the smallest set of behaviors that brings the model within 45 seconds of Salah's unrounded instant: single behaviors first, then pairs, then larger sets. Salah's unrounded instants come from adhan-swift with `rounding = .none`, with Dhuhr's extra minute removed when comparing instants. A one-minute difference whose instants differ by under 60 seconds is rounding.
-- Within that set, a behavior names the class only if it moves the kind-day by a minute or more: the model with the whole set against the model without that behavior. A behavior that adds less is recorded as a minor contribution, and the class sections give its size. So a difference is classed by the mechanisms that make it, not by which set first crosses 45 seconds.
-- Each behavior but the first is a class: 5 is A, 2 is C, 7 is D, 4 is E, 3 is F and 6 is G. Behavior 1 only ever makes a one-minute difference. Class B is Asr on a day when the Sun rises less than 6° at noon, where behavior 6, the single correction step, moves Asr by a minute or more.
+- Within that set, the harness takes e, the difference the model explains: the model with the whole set minus SalahCalculation's unrounded instant. A behavior's contribution x is the model with the whole set minus the model without that behavior. The behavior names the class only if x has the same sign as e and is at least a minute. A behavior that adds less, or works against the difference, is recorded as a minor contribution, and the class sections give its size along the difference (negative when it works against it). A behavior without which the kind has no time at all decides it, and counts in e's direction. If no behavior qualified, the one with the largest contribution in e's direction would name the class; in this run every kind-day had at least one that qualified. So a difference is classed by the mechanisms that make it, not by which set first crosses 45 seconds.
+- The harness checks the rule on every classed kind-day and fails the run if a behavior that names a class works against the difference. That count is 0.
+- Each behavior but the first is a class: 5 is A, 2 is C, 7 is D, 4 is E, 3 is F and 6 is G. Behavior 1 only ever makes a one-minute difference. Class B is Asr on a day when the Sun rises less than 6° at noon, where behavior 6, the single correction step, names the class: it moves Asr by a minute or more, in the direction of the difference.
 
 With every applicable behavior switched on, the model lands within a minute of Salah on all 638,873 kind-days on which both sides give a time (of 673,260 kind-days in the parity configurations). No kind-day needed a cause outside the seven behaviors.
 
@@ -272,18 +273,18 @@ No difference exceeds a minute. The one-minute Dhuhr differences with `egyptian`
 | qatar | Reykjavik | 365 | −1 to 1 | 0 to 1 | 0 to 1 | −6 to 5 | −1 to 1 | −1 to 1 | 176 | 435 | 0 | 0 | 30 | 114 | A 176 |
 | singapore | Reykjavik | 365 | −1 to 1 | 0 to 1 | 0 to 1 | −6 to 5 | 0 to 1 | 0 to 1 | 179 | 464 | 0 | 0 | 0 | 116 | A 179 |
 | tehran | Reykjavik | 365 | −1 to 1 | 0 to 1 | 0 to 1 | −6 to 5 | 0 to 54 | −1 to 1 | 263 | 435 | 0 | 88 | 0 | 114 | A 176, E 87 |
-| egyptian | Tromsø | 365 | −131 to 9 | 0 to 7 | −1 to 0 | −2279 to 104 | −7 to 15 | −6 to 13 | 259 | 511 | 118 | 425 | 0 | 108 | A 106, B 39, C 100, C+G 3, G 11 |
-| karachi | Tromsø | 365 | −113 to 9 | 0 to 7 | −1 to 0 | −2279 to 104 | −7 to 15 | −6 to 13 | 259 | 511 | 118 | 425 | 0 | 108 | A 106, B 39, C 100, C+G 3, G 11 |
-| northAmerica | Tromsø | 365 | −77 to 9 | 0 to 7 | −1 to 0 | −2279 to 104 | −7 to 15 | −6 to 13 | 259 | 511 | 118 | 425 | 0 | 108 | A 106, B 39, C 100, C+G 3, G 11 |
-| muslimWorldLeague (defaults) | Tromsø | 365 | −113 to 9 | 0 to 7 | −1 to 0 | −2279 to 104 | −7 to 15 | −6 to 13 | 259 | 511 | 118 | 425 | 0 | 108 | A 106, B 39, C 100, C+G 3, G 11 |
-| ummAlQura | Tromsø | 365 | −119 to 9 | 0 to 7 | 0 to 1 | −2279 to 104 | −7 to 15 | −7 to 1 | 255 | 268 | 118 | 479 | 30 | 108 | A 106, B 39, C 100, C+G 3, G 7 |
-| gulf | Tromsø | 365 | −115 to 9 | 0 to 7 | 0 to 1 | −2279 to 104 | −7 to 15 | −6 to 13 | 258 | 266 | 118 | 428 | 0 | 108 | A 106, B 39, C 100, C+G 3, G 10 |
-| moonsightingCommittee | Tromsø | 365 | −6 to 9 | 0 to 7 | 0 to 1 | −73 to 30 | −7 to 15 | −7 to 13 | 201 | 195 | 118 | 432 | 0 | 108 | A 106, B 34, F 48, F+G 2, G 11 |
-| custom | Tromsø | 365 | −113 to 9 | 0 to 7 | 0 to 1 | −2279 to 104 | −7 to 15 | −6 to 13 | 259 | 266 | 118 | 425 | 0 | 108 | A 106, B 39, C 100, C+G 3, G 11 |
-| kuwait | Tromsø | 365 | −113 to 9 | 0 to 7 | 0 to 1 | −2279 to 104 | −7 to 15 | −6 to 13 | 259 | 266 | 118 | 425 | 0 | 108 | A 106, B 39, C 100, C+G 3, G 11 |
-| qatar | Tromsø | 365 | −113 to 9 | 0 to 7 | 0 to 1 | −2279 to 104 | −7 to 15 | −7 to 1 | 255 | 268 | 118 | 479 | 30 | 108 | A 106, B 39, C 100, C+G 3, G 7 |
-| singapore | Tromsø | 365 | −137 to 9 | 0 to 7 | 0 to 1 | −2278 to 57 | −8 to 16 | −6 to 14 | 273 | 265 | 118 | 426 | 0 | 116 | A 103, B 38, C 119, C+G 3, G 10 |
-| tehran | Tromsø | 365 | −110 to 9 | 0 to 7 | 0 to 1 | −2279 to 104 | 0 to 60 | −6 to 1 | 305 | 242 | 118 | 433 | 0 | 108 | A 106, B 39, C 100, C+G 3, E 50, E+G 5, G 2 |
+| egyptian | Tromsø | 365 | −131 to 9 | 0 to 7 | −1 to 0 | −2279 to 104 | −7 to 15 | −6 to 13 | 259 | 511 | 118 | 425 | 0 | 108 | A 114, B 31, C 102, C+G 1, G 11 |
+| karachi | Tromsø | 365 | −113 to 9 | 0 to 7 | −1 to 0 | −2279 to 104 | −7 to 15 | −6 to 13 | 259 | 511 | 118 | 425 | 0 | 108 | A 114, B 31, C 102, C+G 1, G 11 |
+| northAmerica | Tromsø | 365 | −77 to 9 | 0 to 7 | −1 to 0 | −2279 to 104 | −7 to 15 | −6 to 13 | 259 | 511 | 118 | 425 | 0 | 108 | A 114, B 31, C 102, C+G 1, G 11 |
+| muslimWorldLeague (defaults) | Tromsø | 365 | −113 to 9 | 0 to 7 | −1 to 0 | −2279 to 104 | −7 to 15 | −6 to 13 | 259 | 511 | 118 | 425 | 0 | 108 | A 114, B 31, C 102, C+G 1, G 11 |
+| ummAlQura | Tromsø | 365 | −119 to 9 | 0 to 7 | 0 to 1 | −2279 to 104 | −7 to 15 | −7 to 1 | 255 | 268 | 118 | 479 | 30 | 108 | A 114, B 31, C 102, C+G 1, G 7 |
+| gulf | Tromsø | 365 | −115 to 9 | 0 to 7 | 0 to 1 | −2279 to 104 | −7 to 15 | −6 to 13 | 258 | 266 | 118 | 428 | 0 | 108 | A 114, B 31, C 102, C+G 1, G 10 |
+| moonsightingCommittee | Tromsø | 365 | −6 to 9 | 0 to 7 | 0 to 1 | −73 to 30 | −7 to 15 | −7 to 13 | 201 | 195 | 118 | 432 | 0 | 108 | A 114, B 26, F 49, F+G 1, G 11 |
+| custom | Tromsø | 365 | −113 to 9 | 0 to 7 | 0 to 1 | −2279 to 104 | −7 to 15 | −6 to 13 | 259 | 266 | 118 | 425 | 0 | 108 | A 114, B 31, C 102, C+G 1, G 11 |
+| kuwait | Tromsø | 365 | −113 to 9 | 0 to 7 | 0 to 1 | −2279 to 104 | −7 to 15 | −6 to 13 | 259 | 266 | 118 | 425 | 0 | 108 | A 114, B 31, C 102, C+G 1, G 11 |
+| qatar | Tromsø | 365 | −113 to 9 | 0 to 7 | 0 to 1 | −2279 to 104 | −7 to 15 | −7 to 1 | 255 | 268 | 118 | 479 | 30 | 108 | A 114, B 31, C 102, C+G 1, G 7 |
+| singapore | Tromsø | 365 | −137 to 9 | 0 to 7 | 0 to 1 | −2278 to 57 | −8 to 16 | −6 to 14 | 273 | 265 | 118 | 426 | 0 | 116 | A 111, B 30, C 121, C+G 1, G 10 |
+| tehran | Tromsø | 365 | −110 to 9 | 0 to 7 | 0 to 1 | −2279 to 104 | 0 to 60 | −6 to 1 | 305 | 242 | 118 | 433 | 0 | 108 | A 114, B 31, C 102, C+G 1, E 50, E+G 5, G 2 |
 | egyptian | Ushuaia | 365 | −1 to 1 | 0 to 1 | −1 to 0 | −2 to 2 | 0 to 1 | −1 to 1 | 77 | 773 | 0 | 0 | 0 | 100 | A 77 |
 | karachi | Ushuaia | 365 | −1 to 1 | 0 to 1 | −1 to 0 | −2 to 2 | 0 to 1 | −1 to 1 | 77 | 733 | 0 | 0 | 0 | 100 | A 77 |
 | northAmerica | Ushuaia | 365 | −1 to 1 | 0 to 1 | −1 to 0 | −2 to 2 | 0 to 1 | −1 to 1 | 77 | 698 | 0 | 0 | 0 | 100 | A 77 |
@@ -300,7 +301,7 @@ No difference exceeds a minute. The one-minute Dhuhr differences with `egyptian`
 The Muslim World League rows are Salah's defaults (section 1), and the Moonsighting Committee rows at Stockholm, Oslo, Reykjavik and Ushuaia are the committee's runs in section 3. They're listed again here, not run twice.
 
 - **Stockholm, Oslo and Ushuaia:** every method but Tehran differs only in Asr (class A). Singapore's counts differ a little because both libraries round its times up.
-- **Reykjavik:** Asr only (class A), for every method.
+- **Reykjavik:** Asr (class A) for every method, and Tehran's Maghrib and Isha (below).
 - **Tromsø:** every method shows classes A, B and G, and class C, or class F for the Moonsighting Committee. With Umm al-Qura and Qatar, SalahCalculation gives no Isha on 5 days where Salah has one (15–17 May, 26–27 July): the 90-minute Isha falls after the next day's Fajr. With Gulf and the Moonsighting Committee it gives no Isha on 17 May, and with the Committee and Singapore no Asr on a few days in January and November (see "Times one side doesn't give").
 - **Tehran, at Stockholm, Oslo, Reykjavik and Tromsø:** on summer nights Maghrib is up to 51 to 60 minutes later, and SalahCalculation gives no Isha on 40, 48, 88 and 55 days (class E). At Ushuaia the 4.5° time always comes before the bound, and nothing differs beyond class A.
 
@@ -361,8 +362,8 @@ These 144 runs (the 12 methods, two rules, six places) are summarized here; the 
 | Oslo | twilight angle | −2 to 2 | 0 to 1 | −2 to 2 | −39 to 1 | −1 to 1 | 1,735 | A 1,131, C 503, E 101 |
 | Reykjavik | middle of the night | −4 to 4 | 0 to 1 | −6 to 5 | −1 to 130 | −32 to 144 | 3,630 | A 2,115, C 1,409, D 12, D+E 1, E 49, G 44 |
 | Reykjavik | twilight angle | −3 to 3 | 0 to 1 | −6 to 5 | −47 to 24 | −1 to 66 | 3,592 | A 2,115, C 1,347, E 127, G 3 |
-| Tromsø | middle of the night | −21 to 32 | 0 to 7 | −2279 to 104 | −8 to 142 | −41 to 65 | 3,122 | A 1,269, B 462, C 1,129, C+G 33, D 19, D+E 1, E 23, E+G 5, F 48, F+G 2, G 131 |
-| Tromsø | twilight angle | −14 to 21 | 0 to 7 | −2279 to 104 | −52 to 26 | −7 to 13 | 3,385 | A 1,269, B 462, C 1,380, C+G 22, E 92, E+G 5, F 48, F+G 2, G 105 |
+| Tromsø | middle of the night | −21 to 32 | 0 to 7 | −2279 to 104 | −8 to 142 | −41 to 65 | 3,122 | A 1,365, B 366, C 1,140, C+G 22, D 19, D+E 1, E 23, E+G 5, F 49, F+G 1, G 131 |
+| Tromsø | twilight angle | −14 to 21 | 0 to 7 | −2279 to 104 | −52 to 26 | −7 to 13 | 3,385 | A 1,365, B 366, C 1,391, C+G 11, E 92, E+G 5, F 49, F+G 1, G 105 |
 | Ushuaia | middle of the night | −6 to 3 | 0 to 1 | −2 to 2 | 0 to 1 | −32 to 26 | 1,336 | A 931, C 346, D 14, G 45 |
 | Ushuaia | twilight angle | −2 to 2 | 0 to 1 | −2 to 2 | −9 to 1 | −1 to 1 | 1,091 | A 931, C 106, E 54 |
 
@@ -370,30 +371,30 @@ The second table gives, for each method and rule, the largest difference of each
 
 | Method | Rule | Largest Fajr | Largest Maghrib | Largest Isha | Kind-days > 1 min | By class | One side only (kind-days) |
 |---|---|---|---|---|---:|---|---|
-| egyptian | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +144 (Reykjavik, 1 Sep) | 1,074 | A 520, B 39, C 471, C+G 3, D 7, G 34 | Tromsø Asr 8 |
-| egyptian | twilight angle | +21 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +66 (Reykjavik, 1 Sep) | 977 | A 520, B 39, C 405, C+G 2, G 11 | Tromsø Asr 8 |
-| karachi | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +64 (Tromsø, 17 Sep) | 1,031 | A 520, B 39, C 428, C+G 3, D 11, G 30 | Tromsø Asr 8 |
-| karachi | twilight angle | +20 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +11 (Tromsø, 26 Jul) | 907 | A 520, B 39, C 338, C+G 2, G 8 | Tromsø Asr 8 |
-| northAmerica | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +42 (Reykjavik, 25 Aug) | 928 | A 520, B 39, C 332, C+G 3, D 5, G 29 | Tromsø Asr 8 |
-| northAmerica | twilight angle | +16 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +12 (Tromsø, 26 Jul) | 796 | A 520, B 39, C 225, C+G 2, G 10 | Tromsø Asr 8 |
-| muslimWorldLeague | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | −35 (Tromsø, 14 Sep) | 1,030 | A 520, B 39, C 428, C+G 3, D 11, G 29 | Tromsø Asr 8 |
-| muslimWorldLeague | twilight angle | +20 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +11 (Tromsø, 26 Jul) | 908 | A 520, B 39, C 338, C+G 2, G 9 | Tromsø Asr 8 |
-| ummAlQura | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | −7 (Tromsø, 15 Jan) | 1,011 | A 520, B 39, C 442, C+G 3, G 7 | Reykjavik Isha 13, Tromsø Asr 8, Tromsø Isha 11 |
-| ummAlQura | twilight angle | +19 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | −7 (Tromsø, 15 Jan) | 937 | A 520, B 39, C 369, C+G 2, G 7 | Tromsø Asr 8, Tromsø Isha 7 |
-| gulf | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +43 (Reykjavik, 3 Sep) | 1,037 | A 520, B 39, C 432, C+G 3, D 8, G 35 | Tromsø Asr 8 |
-| gulf | twilight angle | +20 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +11 (Tromsø, 26 Jul) | 919 | A 520, B 39, C 348, C+G 2, G 10 | Tromsø Asr 8 |
-| moonsightingCommittee | middle of the night | +9 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +13 (Tromsø, 26 Jul) | 615 | A 520, B 34, F 48, F+G 2, G 11 | Tromsø Asr 13, Tromsø Isha 1 |
-| moonsightingCommittee | twilight angle | +9 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +13 (Tromsø, 26 Jul) | 615 | A 520, B 34, F 48, F+G 2, G 11 | Tromsø Asr 13, Tromsø Isha 1 |
-| custom | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +144 (Reykjavik, 1 Sep) | 1,032 | A 520, B 39, C 428, C+G 3, D 8, G 34 | Tromsø Asr 8 |
-| custom | twilight angle | +20 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +66 (Reykjavik, 1 Sep) | 910 | A 520, B 39, C 338, C+G 2, G 11 | Tromsø Asr 8 |
-| kuwait | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +144 (Reykjavik, 1 Sep) | 1,032 | A 520, B 39, C 428, C+G 3, D 8, G 34 | Tromsø Asr 8 |
-| kuwait | twilight angle | +20 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +66 (Reykjavik, 1 Sep) | 910 | A 520, B 39, C 338, C+G 2, G 11 | Tromsø Asr 8 |
-| qatar | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | −7 (Tromsø, 15 Jan) | 999 | A 520, B 39, C 428, C+G 3, D 1, G 8 | Reykjavik Isha 13, Tromsø Asr 8, Tromsø Isha 11 |
-| qatar | twilight angle | +20 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | −7 (Tromsø, 15 Jan) | 906 | A 520, B 39, C 338, C+G 2, G 7 | Tromsø Asr 8, Tromsø Isha 7 |
-| singapore | middle of the night | +32 (Tromsø, 26 Jul) | +16 (Tromsø, 26 Jul) | +65 (Tromsø, 17 Sep) | 1,095 | A 513, B 38, C 499, C+G 3, D 10, G 32 | Tromsø Asr 9 |
-| singapore | twilight angle | +21 (Tromsø, 26 Jul) | +16 (Tromsø, 26 Jul) | +11 (Tromsø, 26 Jul) | 978 | A 513, B 38, C 415, C+G 2, G 10 | Tromsø Asr 9 |
-| tehran | middle of the night | +32 (Tromsø, 26 Jul) | +142 (Tromsø, 8 Aug) | +83 (Reykjavik, 22 Aug) | 1,089 | A 520, B 39, C 419, C+G 3, D 9, D+E 2, E 72, E+G 5, G 20 | Reykjavik Isha 50, Tromsø Asr 8, Tromsø Isha 29 |
-| tehran | twilight angle | +19 (Tromsø, 26 Jul) | −52 (Tromsø, 14 Aug) | +12 (Tromsø, 26 Jul) | 1,367 | A 520, B 39, C 328, C+G 2, E 470, E+G 5, G 3 | Tromsø Asr 8 |
+| egyptian | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +144 (Reykjavik, 1 Sep) | 1,074 | A 528, B 31, C 472, C+G 2, D 7, G 34 | Tromsø Asr 8 |
+| egyptian | twilight angle | +21 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +66 (Reykjavik, 1 Sep) | 977 | A 528, B 31, C 406, C+G 1, G 11 | Tromsø Asr 8 |
+| karachi | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +64 (Tromsø, 17 Sep) | 1,031 | A 528, B 31, C 429, C+G 2, D 11, G 30 | Tromsø Asr 8 |
+| karachi | twilight angle | +20 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +11 (Tromsø, 26 Jul) | 907 | A 528, B 31, C 339, C+G 1, G 8 | Tromsø Asr 8 |
+| northAmerica | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +42 (Reykjavik, 25 Aug) | 928 | A 528, B 31, C 333, C+G 2, D 5, G 29 | Tromsø Asr 8 |
+| northAmerica | twilight angle | +16 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +12 (Tromsø, 26 Jul) | 796 | A 528, B 31, C 226, C+G 1, G 10 | Tromsø Asr 8 |
+| muslimWorldLeague | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | −35 (Tromsø, 14 Sep) | 1,030 | A 528, B 31, C 429, C+G 2, D 11, G 29 | Tromsø Asr 8 |
+| muslimWorldLeague | twilight angle | +20 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +11 (Tromsø, 26 Jul) | 908 | A 528, B 31, C 339, C+G 1, G 9 | Tromsø Asr 8 |
+| ummAlQura | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | −7 (Tromsø, 15 Jan) | 1,011 | A 528, B 31, C 443, C+G 2, G 7 | Reykjavik Isha 13, Tromsø Asr 8, Tromsø Isha 11 |
+| ummAlQura | twilight angle | +19 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | −7 (Tromsø, 15 Jan) | 937 | A 528, B 31, C 370, C+G 1, G 7 | Tromsø Asr 8, Tromsø Isha 7 |
+| gulf | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +43 (Reykjavik, 3 Sep) | 1,037 | A 528, B 31, C 433, C+G 2, D 8, G 35 | Tromsø Asr 8 |
+| gulf | twilight angle | +20 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +11 (Tromsø, 26 Jul) | 919 | A 528, B 31, C 349, C+G 1, G 10 | Tromsø Asr 8 |
+| moonsightingCommittee | middle of the night | +9 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +13 (Tromsø, 26 Jul) | 615 | A 528, B 26, F 49, F+G 1, G 11 | Tromsø Asr 13, Tromsø Isha 1 |
+| moonsightingCommittee | twilight angle | +9 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +13 (Tromsø, 26 Jul) | 615 | A 528, B 26, F 49, F+G 1, G 11 | Tromsø Asr 13, Tromsø Isha 1 |
+| custom | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +144 (Reykjavik, 1 Sep) | 1,032 | A 528, B 31, C 429, C+G 2, D 8, G 34 | Tromsø Asr 8 |
+| custom | twilight angle | +20 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +66 (Reykjavik, 1 Sep) | 910 | A 528, B 31, C 339, C+G 1, G 11 | Tromsø Asr 8 |
+| kuwait | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +144 (Reykjavik, 1 Sep) | 1,032 | A 528, B 31, C 429, C+G 2, D 8, G 34 | Tromsø Asr 8 |
+| kuwait | twilight angle | +20 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | +66 (Reykjavik, 1 Sep) | 910 | A 528, B 31, C 339, C+G 1, G 11 | Tromsø Asr 8 |
+| qatar | middle of the night | +32 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | −7 (Tromsø, 15 Jan) | 999 | A 528, B 31, C 429, C+G 2, D 1, G 8 | Reykjavik Isha 13, Tromsø Asr 8, Tromsø Isha 11 |
+| qatar | twilight angle | +20 (Tromsø, 26 Jul) | +15 (Tromsø, 26 Jul) | −7 (Tromsø, 15 Jan) | 906 | A 528, B 31, C 339, C+G 1, G 7 | Tromsø Asr 8, Tromsø Isha 7 |
+| singapore | middle of the night | +32 (Tromsø, 26 Jul) | +16 (Tromsø, 26 Jul) | +65 (Tromsø, 17 Sep) | 1,095 | A 521, B 30, C 500, C+G 2, D 10, G 32 | Tromsø Asr 9 |
+| singapore | twilight angle | +21 (Tromsø, 26 Jul) | +16 (Tromsø, 26 Jul) | +11 (Tromsø, 26 Jul) | 978 | A 521, B 30, C 416, C+G 1, G 10 | Tromsø Asr 9 |
+| tehran | middle of the night | +32 (Tromsø, 26 Jul) | +142 (Tromsø, 8 Aug) | +83 (Reykjavik, 22 Aug) | 1,089 | A 528, B 31, C 420, C+G 2, D 9, D+E 2, E 72, E+G 5, G 20 | Reykjavik Isha 50, Tromsø Asr 8, Tromsø Isha 29 |
+| tehran | twilight angle | +19 (Tromsø, 26 Jul) | −52 (Tromsø, 14 Aug) | +12 (Tromsø, 26 Jul) | 1,367 | A 528, B 31, C 329, C+G 1, E 470, E+G 5, G 3 | Tromsø Asr 8 |
 
 In every row the classes are the same ones as in the rest of the report. Class D appears only under the middle-of-the-night rule, and class E only with Tehran.
 
@@ -407,7 +408,7 @@ In every row the classes are the same ones as in the rest of the report. Class D
 | moonsightingCommittee | Ushuaia | 365 | −1 to 1 | 0 to 1 | 0 | −2 to 2 | 0 to 1 | 0 to 1 | 77 | 229 | 0 | 0 | 0 | 100 |
 | moonsightingCommittee | Puerto Toro | 365 | 0 to 67 | 0 to 1 | 0 to 1 | −2 to 2 | 0 to 1 | −25 to 1 | 311 | 246 | 0 | 0 | 0 | 103 |
 
-North of 55°, the committee's two formulations, adhan-swift's and SalahTimes', differ by at most a minute in 2026 at Stockholm, Oslo and Reykjavik. At Tromsø (section 2) Fajr differs by up to 4 minutes on 48 days, and south of 55° the two differ more (class F).
+North of 55°, the committee's two formulations, adhan-swift's and SalahTimes', differ by at most a minute in 2026 at Stockholm, Oslo and Reykjavik. At Tromsø (section 2) Fajr differs by −6 to +4 minutes on 49 days, and south of 55° the two differ more (class F).
 
 **Adjustments**
 
@@ -420,22 +421,22 @@ North of 55°, the committee's two formulations, adhan-swift's and SalahTimes', 
 
 User adjustments move both sides' times by the same minutes. Nothing differs by more than a minute.
 
-**Adjustments at high latitudes.** The same adjustments with the Muslim World League, Tehran, Umm al-Qura, the Moonsighting Committee and Gulf, under the automatic and the middle-of-the-night rules, at Stockholm, Reykjavik, Tromsø and Ushuaia: 40 configurations. The harness compares each with the same settings without adjustments. On every kind-day both sides give, the differences over a minute and their classes are the same, and the attribution model reproduces Salah exactly. But an adjustment can push a time out of order on a short night or near polar night, and SalahCalculation then reports it missing under the adapter's documented rule. Every change against the unadjusted runs, leaving out the Tromsø days on which adhan-swift gives no times:
+**Adjustments at high latitudes.** The same adjustments with the Muslim World League, Tehran, Umm al-Qura, the Moonsighting Committee and Gulf, under the automatic and the middle-of-the-night rules, at Stockholm, Reykjavik, Tromsø and Ushuaia: 40 configurations. The harness compares each with the same settings without adjustments, kind-day by kind-day. Apart from the days in the table below, every difference over a minute and its class is the same, and the attribution model reproduces Salah within a minute on every kind-day both sides give, as without adjustments (on 389 kind-days it is a minute off, 377 later and 12 earlier). But an adjustment can push a time out of order on a short night or near polar night, and SalahCalculation then reports it missing under the adapter's documented rule. Every change against the unadjusted runs, leaving out the Tromsø days on which adhan-swift gives no times:
 
 | Settings | Place | Change against the same settings without adjustments |
 |---|---|---|
 | Tehran, automatic rule | Stockholm | Isha missing on 10 more days, 27–31 May and 11–15 July (50 in all). Salah's own times are out of order on the same 10 days, against none without adjustments |
 | Tehran, automatic rule | Reykjavik | Isha missing on 4 more days, 6–7 May and 4–5 August (92 in all). Salah's own times are out of order on 5 days (6–7 May, 3–5 August) instead of 1 |
 | Tehran, middle of the night | Reykjavik | Salah's own times are out of order on 27 May |
-| Tehran, automatic rule | Tromsø | Isha missing on 4 more days, 18–19 April and 22–23 August (59 in all) |
+| Tehran, automatic rule | Tromsø | Isha missing on 4 more days, 18–19 April and 22–23 August (59 in all). Salah's own times are out of order on 18 days instead of 12: those 4, 17 May and 15 November |
 | Umm al-Qura, middle of the night | Reykjavik | Isha given on 14–26 June, which it isn't without adjustments: with Isha −3 and Fajr +2, the 90-minute Isha no longer falls after the next Fajr |
-| Umm al-Qura, automatic rule | Tromsø | Isha given on 15 May and 27 July, for the same reason |
+| Umm al-Qura, automatic rule | Tromsø | Isha given on 15 May and 27 July, for the same reason. On 27 July it differs by +2 (class G); on 15 May it agrees within a minute |
 | Muslim World League, Tehran, Umm al-Qura and Gulf, both rules | Tromsø | Asr missing on 19 January and 22 November: an Asr minutes after the transit, plus 1 minute, isn't after Dhuhr plus 3 |
 | Moonsighting Committee, both rules | Tromsø | Asr missing on 21–22 January and 19 November, besides its 5 days without adjustments |
-| Muslim World League, automatic rule | Tromsø | Isha missing on 17 May: with Maghrib +2 and Isha −3 it isn't after Maghrib |
+| Muslim World League, automatic rule | Tromsø | Isha missing on 17 May, where it differs by +7 (class G) without adjustments: with Maghrib +2 and Isha −3 it isn't after Maghrib |
 | Gulf, automatic rule | Tromsø | Sunrise missing on 26 July: with sunrise −1 on top of Gulf's −3 it isn't after Fajr |
 
-Because Asr or Isha goes missing on those days, the Tromsø runs have 1 to 3 fewer kind-days over a minute than without adjustments. Salah's own times there are out of order on up to 2 more days.
+Because Asr or Isha goes missing on those days, the Tromsø runs have 1 to 3 fewer kind-days over a minute than without adjustments; the one exception the other way is Umm al-Qura's 27 July. Salah's own times there are out of order on up to 2 more days (17 May, 15 November), and with Tehran under the automatic rule on 6 more.
 
 **The custom method**
 
@@ -540,37 +541,37 @@ The Dhuhr minute is systematic, not rounding: SalahCalculation's Dhuhr is a minu
 
 ### A. Asr's noon shadow
 
-**What users see.** Asr moves by up to 2 minutes at Oslo, Stockholm, Ushuaia and Puerto Toro, and by up to 6 at Reykjavik and 7 at Tromsø. It moves earlier in the half of the year when days lengthen and later when they shorten. With defaults: Oslo 95, Stockholm 66, Reykjavik 176, Tromsø 106 and Ushuaia 77 days a year over a minute. The method and the high-latitude rule hardly change these counts. At lower latitudes the same effect stays under a minute: up to 25 seconds at Makkah and about a minute at London.
+**What users see.** Asr moves by up to 2 minutes at Oslo, Stockholm, Ushuaia and Puerto Toro, and by up to 6 at Reykjavik and 10 at Tromsø. It moves earlier in the half of the year when days lengthen and later when they shorten. With defaults: Oslo 95, Stockholm 66, Reykjavik 176, Tromsø 114 and Ushuaia 77 days a year over a minute. Tromsø's largest values come just outside class B's days: −6 and −7 on 7–11 February, and +6 to +10 on 2–10 November. The method and the high-latitude rule hardly change these counts. At lower latitudes the same effect stays under a minute: up to 25 seconds at Makkah and about a minute at London.
 
 **Cause.** Asr begins when an object's shadow equals its length plus its noon shadow. The noon shadow depends on the Sun's declination at noon. SalahTimes takes the declination at the transit (`docs/algorithm.md` §7, "Asr"). adhan-swift takes it from the solar coordinates at 0 h UTC of the date (`SolarTime.swift:40–50` sets the hour to 0; `:88–95` uses `solar.declination`). Near the equinoxes the declination changes by about 0.4° a day. By the transit, about 10½ to 16½ hours after 0 h UTC at these places, the two values differ by up to about 0.3°. At high latitudes the Sun descends slowly in the afternoon, so that changes Asr by minutes.
 
-**Evidence.** Switching on behavior 5 alone, computed with the independent solar model, brings the model within 45 seconds of Salah on 23,314 of the 23,643 kind-days. On the other 329, at Reykjavik on 3–6 December and at Tromsø on 7–8 February and 2 November, when the noon Sun is low, behavior 5 alone misses by just over 45 seconds. The single correction step (behavior 6) adds 46 to 55 seconds there and closes the gap, while behavior 5 moves Asr by 4 to 7 minutes. These kind-days are class A. SalahTimes' self-consistency check confirms its Asr against an independent model within 0.0128° of altitude (`docs/validation.md`, "Self-consistency").
+**Evidence.** Switching on behavior 5 alone, computed with the independent solar model, brings the model within 45 seconds of Salah on 23,314 of the 24,019 kind-days. On the other 705, all when the noon Sun is low, the single correction step (behavior 6) is needed to land within 45 seconds but is minor. At Tromsø on 7–8 February it adds 48 to 55 seconds to the difference. At Reykjavik on 3–6 December it works against the difference by 46 to 47 seconds, and at Tromsø on 2–10 November by 51 to 401 seconds: there behavior 5 alone overshoots, and the step brings the model back. Behavior 5 makes the 4 to 10 minutes on all of these days, so they are class A. SalahTimes' self-consistency check confirms its Asr against an independent model within 0.0128° of altitude (`docs/validation.md`, "Self-consistency").
 
 **Intended.** Yes. SalahTimes computes the shadow the way the definition states.
 
 ### B. Asr when the noon Sun is low
 
-**What users see.** In Tromsø, from 15 January to 6 February and from 3 to 26 November, Salah's Asr is wrong:
+**What users see.** In Tromsø, from 15 January to 6 February and from 11 to 26 November, Salah's Asr is wrong:
 - **Out of order** on 18 days with Salah's defaults. On 15 to 20 January Salah's Asr falls after Maghrib; on 19 January it is the morning of 21 January, 38 hours late. On 15 November it equals Dhuhr (both 11:30), and from 16 to 26 November it falls before Dhuhr.
-- **In order but far off** on the days around them. On 21 January Salah shows Asr at 13:14, before its Maghrib at 13:23; SalahCalculation gives 12:01 (−73). Then −48 on 22 January, −35 on 23 January, and −27 to −8 through 6 February. From 3 to 14 November Salah's Asr comes after Dhuhr and SalahCalculation's is 6 to 14 minutes later.
+- **In order but far off** on the days around them. On 21 January Salah shows Asr at 13:14, before its Maghrib at 13:23; SalahCalculation gives 12:01 (−73). Then −48 on 22 January, −35 on 23 January, and −27 to −8 through 6 February. From 11 to 14 November Salah's Asr comes after Dhuhr and SalahCalculation's is 10 to 14 minutes later.
 
-SalahCalculation puts Asr minutes after Dhuhr, or reports it missing (below). With Salah's defaults, 39 kind-days are in this class (19 January–6 February, 3–22 November); over the 47 Tromsø configurations, 1,783. On the days just outside it (7–11 February, 2 November), Asr still moves by 6 or 7 minutes, as class A.
+SalahCalculation puts Asr minutes after Dhuhr, or reports it missing (below). With Salah's defaults, 31 kind-days are in this class (19 January–6 February, 11–22 November); over the 47 Tromsø configurations, 1,407. On the days just outside it Asr still moves, as class A: −6 and −7 on 7–11 February, and +6 to +10 on 2–10 November, where Salah's times are in order.
 
 **Cause.** When the noon Sun is only a few degrees up, the Asr altitude, `atan(1 / (k + tan z))`, is barely below the noon altitude, so Asr comes soon after the transit, where the Sun's altitude hardly changes. adhan-swift takes that altitude from the declination at 0 h UTC (behavior 5; with the noon zenith distance at 0 h UTC beyond 90°, it computes an Asr altitude below the horizon, `SolarTime.swift:88–95`). It then finds the crossing with one correction step from an estimate made at 0 h UTC (behavior 6, `Astronomical.swift:175–193`), and one step can't land on a crossing that close to the transit. SalahTimes reports Asr as not occurring when the Sun is below the horizon at the transit. Otherwise it finds the crossing by iteration, with bisection as a fallback (`docs/algorithm.md` §6 and §7). `docs/validation.md` ("Known limitations", "Dhuhr and Asr before polar night") describes the expected behavior: Asr seconds to minutes after the transit.
 
-**Evidence.** With behaviors 5 and 6 together, adhan-swift's whole Asr procedure, the model reproduces Salah within 45 seconds on all 1,783 kind-days, 19 January's 38-hour error included. On each of them the noon altitude is below 6° (the harness's geometry check), and the single step contributes a minute or more: the model with behaviors 5 and 6 differs from the model with 5 alone by at least that. That threshold sets the class's edges: on 7–8 February and 2 November the step adds under a minute, and those days are class A.
+**Evidence.** With behaviors 5 and 6 together, adhan-swift's whole Asr procedure, the model reproduces Salah within 45 seconds on all 1,407 kind-days, 19 January's 38-hour error included. On each of them the noon altitude is below 6° (the harness's geometry check), and the single step contributes a minute or more in the direction of the difference: the model with behaviors 5 and 6 differs from the model with 5 alone by at least that, the same way. On 30–31 January the step alone accounts for it, and behavior 5 works against the difference (94 kind-days). The rule sets the class's edges: on 7–8 February the step adds under a minute, and on 2–10 November it works against the difference, so those days are class A.
 
-**Intended.** Yes. It replaces impossible times, and times up to 73 minutes off.
+**Intended.** Yes. It corrects times up to 73 minutes off, and replaces impossible ones: with an Asr minutes after the transit, or with none where the Sun stays below the horizon at noon (8 of the 18 out-of-order days with the defaults).
 
 ### C. Fajr's night for the high-latitude bound
 
-**What users see.** Under the middle-of-the-night rule, Fajr differs by up to 2 minutes at London, 3 at Oslo, Stockholm and Ushuaia, 4 at Reykjavik and 14 at Tromsø. Under the twilight-angle rule: up to 2 minutes at London, Oslo, Stockholm and Ushuaia, 3 at Reykjavik and 10 at Tromsø. Under the seventh-of-the-night rule (Salah's automatic choice beyond 48°) it stays within a minute everywhere except Tromsø, which has 100 to 119 days a year of up to 5 minutes, depending on the method. Fajr is earlier in spring and later in autumn. With defaults, only Tromsø is affected. These figures hold for every method but the Moonsighting Committee, whose Fajr follows its own rule (class F).
+**What users see.** Under the middle-of-the-night rule, Fajr differs by up to 2 minutes at London, 3 at Oslo, Stockholm and Ushuaia, 4 at Reykjavik and −21 to +12 at Tromsø. Under the twilight-angle rule: up to 2 minutes at London, Oslo, Stockholm and Ushuaia, 3 at Reykjavik and −14 to +10 at Tromsø. Under the seventh-of-the-night rule (Salah's automatic choice beyond 48°) it stays within a minute everywhere except Tromsø, which has 100 to 119 days a year of −4 to +5 minutes, depending on the method, and 15 January and 17 May (below). Fajr is earlier in spring and later in autumn. With defaults, only Tromsø is affected. These figures hold for every method but the Moonsighting Committee, whose Fajr follows its own rule (class F).
 
 **Cause.** A high-latitude rule keeps Fajr no earlier than sunrise minus a portion of the night. adhan-swift measures that night from the day's sunset to the next sunrise (`PrayerTimes.swift:87` and `:104–107`), a night that comes after the Fajr it bounds. SalahTimes uses the night that ends at Fajr's own sunrise (`docs/algorithm.md` §8 and §8.1, and RFC 0001 §6, "Each prayer uses its own night"). The two nights differ by the night's day-to-day change, several minutes a day at these latitudes around the equinoxes. The bounds then differ by that change times the portion (1/2, 1/7, or the angle over 60). Isha's bound uses the night after its sunset in both, so Isha agrees.
 
-The largest case is Tromsø on 15 January, the first sunrise after polar night: Salah 08:07, SalahCalculation 06:14 with the defaults (−113 minutes; −77 to −137 depending on the method's Fajr angle). 14 January has no sunset, so Fajr's own night doesn't exist. SalahTimes then leaves the angle's time unbounded (`docs/algorithm.md` §8.1, "if nightBefore is undefined: return raw", and §9). adhan-swift bounds it with the following night, from a sunrise that is itself 7 minutes off (class G). The same pair moves Fajr at Tromsø by −21 to +32 minutes on 17 May and 26–27 July, the edges of the midnight sun.
+The largest case is Tromsø on 15 January, the first sunrise after polar night: Salah 08:07, SalahCalculation 06:14 with the defaults (−113 minutes; −77 to −137 depending on the method's Fajr angle). 14 January has no sunset, so Fajr's own night doesn't exist. SalahTimes then leaves the angle's time unbounded (`docs/algorithm.md` §8.1, "if nightBefore is undefined: return raw", and §9). adhan-swift bounds it with the following night, from a sunrise that is itself 7 minutes off (class G). That sunrise works against the difference, by 345 seconds, so the day is class C. At the edges of the midnight sun, Fajr moves by −6 on 17 May with the defaults (−21 under the middle-of-the-night rule), class C, and by +9 to +32 on 26–27 July, where the single step adds more than a minute (class C with G).
 
-**Evidence.** Behavior 2 explains 11,507 kind-days: alone on 11,490, and on 17 at Tromsø (16 May, 27 July, −14 to +10) with the single step adding 45 to 56 seconds. With class G, 115 more at Tromsø (15 January, 17 May, 26–27 July), where the single step adds more than a minute.
+**Evidence.** Behavior 2 explains 11,565 kind-days: alone on 11,490, and on 75 at Tromsø with the single step minor. The step works against the difference on 15 January and 16–17 May (by 56 to 345 seconds), and adds 45 to 46 seconds on 27 July. With class G, 57 more at Tromsø (26–27 July), where the single step adds more than a minute in the direction of the difference.
 
 **Intended.** Yes. Using one night for both prayers can put a bounded Fajr before the previous evening's bounded Isha when nights lengthen quickly (adhan-swift issue #102, cited in SalahTimes RFC 0001 §6).
 
@@ -579,7 +580,7 @@ The largest case is Tromsø on 15 January, the first sunrise after polar night: 
 **What users see.** Only under the middle-of-the-night rule, on one or two days a year for most methods, at the start and end of the season in which the Sun no longer gets as low as the Isha angle. On these days its lowest point is within about a third of a degree of that angle. The two libraries then disagree on whether the Sun reaches it at all:
 - **adhan-swift misses a crossing that happens** (62 kind-days). Salah shows Isha at the middle of the night; SalahCalculation shows the real crossing, earlier: by 18 to 24 minutes at London (15–22 July), 13 to 31 at Stockholm (6–20 August), 12 to 29 at Oslo (8–21 August), 11 to 32 at Reykjavik (21 August–2 September), 24 to 41 at Tromsø (6–17 September) and 11 to 32 at Ushuaia (14 January–1 February). For example, London on 15 July with the Muslim World League: Salah 01:07, SalahCalculation 00:49 (−18).
 - **adhan-swift finds a crossing that doesn't happen** (36 kind-days). Salah shows Isha minutes before the middle of the night; SalahCalculation shows the middle of the night: 3 to 20 minutes later, from 26 March to 22 May and at Ushuaia on 9 and 13 November. For example, Oslo on 24 April with the Muslim World League: Salah 01:01, SalahCalculation 01:15 (+14). The same happens to Tehran's 4.5° Maghrib at Tromsø on 3 May (+14, two configurations). Fajr at Tromsø on 17 September, in six configurations, is a borderline case: adhan-swift finds a crossing at 00:44 (22:44 UTC on 16 September) and Salah shows it; SalahCalculation shows the bound, 00:40 (−4). There the Sun's lowest point is within about 0.002° of 18° below the horizon (below).
-- **With Tehran's Maghrib** (4 kind-days, two in each of two configurations, with class E): at Reykjavik on 16 July and Tromsø on 9 August, adhan-swift's test says the Sun doesn't reach 4.5° below the horizon, so Salah keeps Maghrib at sunset (23:21 and 22:22). SalahCalculation's Maghrib is the real 4.5° crossing, 01:09 and 00:15, which comes before the bound: +108 and +113 minutes.
+- **With Tehran's Maghrib** (4 kind-days, one in each of four configurations: Tehran under the middle-of-the-night rule at Reykjavik and at Tromsø, each with and without adjustments; with class E): at Reykjavik on 16 July and Tromsø on 9 August, adhan-swift's test says the Sun doesn't reach 4.5° below the horizon, so Salah keeps Maghrib at sunset (23:21 and 22:22). SalahCalculation's Maghrib is the real 4.5° crossing, 01:09 and 00:15, which comes before the bound: +108 and +113 minutes.
 
 Under the seventh-of-the-night and twilight-angle rules the bound comes long before such a late crossing and decides Isha on both sides, so this class doesn't appear. Salah's defaults don't show it.
 
@@ -608,11 +609,11 @@ Salah's defaults use Tehran only in Iran, where nothing differs. A user anywhere
 
 ### F. The Moonsighting Committee's 55° rule
 
-**What users see.** At Puerto Toro (55.08° S), Fajr is 2 to 67 minutes later on 162 days, and Isha 2 to 25 minutes earlier on 71 days. Both are largest at the December solstice. At Tromsø (69.6° N), Fajr differs by up to 4 minutes on 48 days a year: earlier on days between 22 March and 16 May, later on days between 27 July and 18 September. With class G it differs by −6 on 17 May and +9 on 26 July. The user's high-latitude rule doesn't change this, since the committee's own rule decides Fajr and Isha on both sides.
+**What users see.** At Puerto Toro (55.08° S), Fajr is 2 to 67 minutes later on 162 days, and Isha 2 to 25 minutes earlier on 71 days. Both are largest at the December solstice. At Tromsø (69.6° N), Fajr differs on 49 days a year: by up to 4 minutes on 48 of them, earlier on days between 22 March and 16 May and later on days between 27 July and 18 September, and by −6 on 17 May. With class G it differs by +9 on 26 July. The user's high-latitude rule doesn't change this, since the committee's own rule decides Fajr and Isha on both sides.
 
 **Cause.** The committee bounds Fajr and Isha by the seventh of the night from 55° of latitude. SalahTimes applies that from 55° of absolute latitude, in both hemispheres, as the committee's own timetable generator does (`docs/algorithm.md` §8.2 and §8.4; `METHODS.md`, "Moonsighting Committee Worldwide", "From 55°", and "Differences from adhan-swift's presets"). adhan-swift tests `coordinates.latitude >= 55` (`PrayerTimes.swift:94` and `:123`), so it never applies the rule in the south. In the north both apply it, but adhan-swift measures Fajr's seventh over the night after the day (`PrayerTimes.swift:87, 94–96`), and SalahTimes over Fajr's own night, as in class C. At Stockholm, Oslo and Reykjavik that changed nothing by more than a minute in 2026; at Tromsø it did. SalahTimes also keeps the 18° time as one of the bounds where adhan-swift replaces it; in 2026 that changed nothing by more than a minute anywhere.
 
-**Evidence.** Behavior 3 alone explains all 473 kind-days (233 at Puerto Toro, 48 in each of the five Tromsø runs), and 10 more at Tromsø with class G. With the committee's Fajr bound measured over the night after the day, as a check, every Tromsø difference disappears: there it's the choice of night, not the 18° time.
+**Evidence.** Behavior 3 explains 478 kind-days (233 at Puerto Toro, 49 in each of the five Tromsø runs): alone on 473, and on 17 May at Tromsø with the single step working against the difference by 82 seconds. With class G, 5 more at Tromsø (26 July). With the committee's Fajr bound measured over the night after the day, as a check, every Tromsø difference disappears: there it's the choice of night, not the 18° time.
 
 **Intended.** Yes.
 
@@ -622,11 +623,11 @@ Salah's defaults use Tehran only in Iran, where nothing differs. A user anywhere
 - **Isha under the middle-of-the-night rule,** on days near those of class D, when adhan-swift does find the crossing but lands minutes to hours from it: London 2 to 4 minutes later, Oslo, Stockholm and Ushuaia mostly 2 to 26. The largest cases are crossings just before the middle of the night: Stockholm +58 on 18 August (Egyptian, Kuwait, custom), Reykjavik +83 on 22 August (Tehran) and +144 on 1 September (Egyptian, Kuwait, custom: Salah 22:24, SalahCalculation 00:48), and Tromsø +64 and +65 on 17 September (Karachi, Singapore). Under the twilight-angle rule the same day at Reykjavik gives +66.
 - **Tromsø, at the edges of polar night and the midnight sun** (15 January, 16–17 May, 26–27 July) and of its twilight seasons: sunrise +7 on 15 January, Maghrib −8 to +16, Isha −7 to +14 after a moved sunset, and Fajr +7 on 15 January.
 - **Fajr under the middle-of-the-night rule** at Ushuaia (2 to 6 minutes earlier, late January and early February) and Stockholm (−4 on 23 April), and Tehran's Maghrib at Reykjavik under that rule on 26 May and 17 July (+4).
-- **With other classes:** Fajr at Tromsø with class C (−137 to +32), Tehran's Maghrib with class E (+8 to +64), and the committee's Fajr with class F (−6 and +9). Where the step adds less than a minute to a difference that another behavior makes, the kind-day belongs to that other class: 329 in class A, 17 in C and 5 in E, with the step adding 45 to 56 seconds.
+- **With other classes:** Fajr at Tromsø with class C (+9 to +32, 26–27 July), Tehran's Maghrib with class E (+8 to +64), and the committee's Fajr with class F (+9, 26 July). Where the step adds less than a minute to a difference that another behavior makes, or works against it, the kind-day belongs to that other class: 705 in class A, 75 in C, 5 in E and 5 in F. Its size there runs from 401 seconds against the difference to 56 seconds with it.
 
 **Cause.** adhan-swift finds each crossing with one correction step from an estimate made with the declination at 0 h UTC (`Astronomical.swift:175–193`, after Meeus, *Astronomical Algorithms*, p. 102). The step divides the altitude error by the rate at which the altitude changes (`:189–191`). Where that rate is low, near the antitransit for an Isha the Sun barely reaches, or for the first and last sunrises around polar night, one step leaves an error of minutes, and of hours when the estimate lies near the antitransit. SalahTimes iterates each crossing to under a millisecond and bisects when the iteration can't settle (`docs/algorithm.md` §6). Near polar transitions its times agree with JPL Horizons within 30 to 82 seconds (`docs/validation.md`, "Astronomy cross-checks").
 
-**Evidence.** Running adhan-swift's one-step procedure and a converged search with the harness's independent solar model, and moving SalahTimes' crossing by the difference, reproduces Salah within 45 seconds on all 662 kind-days, and on 150 more together with class C, E or F. On these days both libraries find the crossing: at Reykjavik on 1 September, Isha at 17.5°, the test gives −0.9998, the one step lands at 22:24 and the converged crossing is at 00:48.
+**Evidence.** Running adhan-swift's one-step procedure and a converged search with the harness's independent solar model, and moving SalahTimes' crossing by the difference, reproduces Salah within 45 seconds on all 662 kind-days, and on 87 more together with class C, E or F. On these days both libraries find the crossing: at Reykjavik on 1 September, Isha at 17.5°, the test gives −0.9998, the one step lands at 22:24 and the converged crossing is at 00:48.
 
 **Intended.** Yes. More accurate times.
 
@@ -651,13 +652,32 @@ On every day where SalahCalculation reports a kind missing and SalahTimes comput
 
 ## What Salah's users will see after D1
 
-- **Everywhere:** with the Muslim World League, Egyptian, Karachi or North America method, Dhuhr is a minute earlier. Other times move by at most a minute, through rounding.
-- **At 54.8° and beyond:** Asr moves by 1 to 2 minutes on some days, and by up to 6 minutes at Reykjavik (class A). At Tromsø it moves by up to 7 minutes in spring and autumn (class A), and around polar night by far more (class B): with Salah's defaults, on 35 days a year when Salah's own times look plausible, by 6 to 73 minutes (21 January–11 February, 2–14 November), and on 18 more days Salah's Asr was out of order.
-- **Users who chose the middle-of-the-night or twilight-angle rule at high latitudes:** Fajr moves by up to 4 minutes at 51° to 64° and 6 at Ushuaia in spring and autumn (classes C and G), and at Tromsø by up to 14 minutes, and by −21 to +32 at the edges of the midnight sun (classes C and G). Under the middle-of-the-night rule, Isha moves on a few days a year: by up to 41 minutes where the libraries disagree on whether the Sun reaches the Isha angle (class D), and by up to 144 minutes where adhan-swift's single correction step put it hours early (class G).
-- **Tehran users at high latitudes:** Maghrib follows the high-latitude rule (class E). Under Salah's own automatic rule, at Stockholm, Oslo, Reykjavik and Tromsø, Maghrib moves up to an hour later on summer nights and Isha disappears, tied with Maghrib: on 40 to 88 days a year. Under the middle-of-the-night rule that happens at Reykjavik (50 days) and Tromsø (29), with Maghrib up to 142 minutes later. Under the twilight-angle rule Maghrib moves by between 52 minutes earlier and 26 minutes later (with class G, up to 21 minutes later on 5 more days at Tromsø), and Isha stays.
-- **Umm al-Qura and Qatar users beyond 64°:** Isha disappears on the days its 90 minutes after sunset reach past the next Fajr: at Reykjavik under the middle-of-the-night rule (13 days, 14–26 June), and at Tromsø on 5 to 11 days around the midnight sun, depending on the rule.
-- **Gulf, Moonsighting Committee and Singapore users at Tromsø:** on 1 to 6 days a year, Isha (17 May) or Asr (around polar night) is missing. On those days Salah showed Asr out of order, or Isha 2 minutes after Maghrib.
-- **Moonsighting Committee users south of 55° S:** the seventh-of-the-night bound now applies (class F). At Tromsø, Fajr moves by up to 4 minutes on 48 days.
-- **Users with adjustments at high latitudes:** times move by the adjustments on both sides. On short nights and near polar night an adjustment can push a time out of order, and SalahCalculation then reports it missing: with Tehran, Isha on 10 more days at Stockholm, 4 at Reykjavik and 4 at Tromsø; at Tromsø, Asr on 19 January and 22 November, and a few single days (section 3).
-- **Near and beyond the polar circle:** days that Salah couldn't compute become partial days with the missing prayers named, and Salah's wrong Asr times around polar night are replaced (class B, and the table above).
+Grouped by place and high-latitude rule. "Automatic" is Salah's automatic rule, its default: the seventh of the night beyond 48°. The ranges cover every method compared at the place unless a method is named. The harness writes the full list behind them, per place, method, rule and kind, with every date, and checks this list against it: every difference over a minute and every change in missing kinds falls under a bullet below, and every range and count here equals the data.
+
+- **Everywhere:** with the Muslim World League, Egyptian, Karachi or North America method, Dhuhr is a minute earlier. Other times move by at most a minute, through rounding, except as listed below. At the places below 51.5° in this comparison, nothing else differs by more than a minute.
+- **London (51.5° N):**
+  - Automatic: nothing differs by more than a minute.
+  - Middle of the night: Fajr −2 to +2 (class C); Isha −24 to +7 on a few days in May and July (D, G).
+  - Twilight angle: Fajr +2 on a few days in August with Egyptian and Singapore (C).
+- **Stockholm and Oslo (59° to 60° N):** Asr −2 to +2 under every rule (A).
+  - Automatic: with Tehran, Maghrib 44 to 51 minutes later on summer nights, and no Isha on those nights: Stockholm 40 days (1 June–10 July), Oslo 48 (28 May–14 July) (E).
+  - Middle of the night: Fajr −4 to +3 (C, G); Isha −31 to +58 on a few days in April, May and August (D, G).
+  - Twilight angle: Fajr −2 to +2 (C); with Tehran, Maghrib 2 to 39 minutes earlier in summer (E).
+- **Reykjavik (64.1° N):** Asr −6 to +5 under every rule (A).
+  - Automatic: with Tehran, Maghrib 24 to 54 minutes later, and no Isha on 88 days (8 May–3 August) (E).
+  - Middle of the night: Fajr −4 to +4 (C); Isha −32 to +144 on a few days in April and from late August to early September (D, G). With Tehran, Maghrib +4 to +130 and no Isha on 50 days (27 May–15 July) (E, with D and G). With Umm al-Qura and Qatar, no Isha on 13 days (14–26 June): their 90 minutes after sunset reach past the next Fajr.
+  - Twilight angle: Fajr −3 to +3 (C); Isha +66 on 1 September with Egyptian, Kuwait and custom (G); with Tehran, Maghrib −47 to +24 (E).
+- **Tromsø (69.6° N), under every rule, Salah's defaults included:**
+  - **Polar night and midnight sun:** the 118 days on which Salah computes nothing become partial days with the missing prayers named (see "Times one side doesn't give").
+  - **Asr:** −7 to +10 in spring and autumn (A). Around polar night −2279 to +104 (B): with the defaults, on 35 days a year when Salah's times look plausible, Asr moves by 6 to 73 minutes (class B on 21 January–6 February and 11–14 November, class A on 7–11 February and 2–10 November). On 18 more days Salah's Asr is out of order. On 8 of those (15–18 January, 23–26 November) the Sun is below the horizon at noon and SalahCalculation gives no Asr; with the Moonsighting Committee that's 13 days and with Singapore 9, because an Asr minutes after the transit isn't after their Dhuhr minutes.
+  - **Fajr:** automatic: −4 to +5 on 100 to 119 days a year, depending on the method (C); on 15 January −113 with the defaults, −77 to −137 depending on the Fajr angle (C); −6 on 17 May (C); +9 on 26 July (C with G); so −137 to +9 in all. Middle of the night: −21 to +32. Twilight angle: −14 to +21. With the Moonsighting Committee, −6 to +4 and +9 on 26 July (F).
+  - **Sunrise:** +7 on 15 January (G).
+  - **Maghrib:** −8 to +16 on 15 January, 16–17 May and 26–27 July (G; −7 to +15 with the defaults). With Tehran (E): up to 60 minutes later under the automatic rule, 142 under the middle-of-the-night rule, and between 52 minutes earlier and 26 later under the twilight-angle rule. So −8 to +60, −8 to +142 and −52 to +26 by rule.
+  - **Isha:** automatic: −7 to +14 on 15 January, 16–17 May and 26–27 July (G; −6 to +13 with the defaults). Middle of the night: −41 to +65 (D, G). Twilight angle: −7 to +13 (G). Isha is missing with Umm al-Qura and Qatar after the next day's Fajr (5 days under the automatic rule, 11 under the middle-of-the-night rule, 7 under the twilight-angle rule); with Tehran, tied with Maghrib (55 days automatic, 29 middle of the night); and on 17 May with Gulf under the automatic rule and the Moonsighting Committee under every rule.
+- **Ushuaia (54.8° S):** Asr −2 to +2 under every rule (A).
+  - Automatic: nothing else.
+  - Middle of the night: Fajr −6 to +3 (C, G); Isha −32 to +26 on a few days in January, February and November (D, G).
+  - Twilight angle: Fajr −2 to +2 (C); with Tehran, Maghrib 2 to 9 minutes earlier around the December solstice (E).
+- **Puerto Toro (55.08° S), Moonsighting Committee:** Fajr 2 to 67 minutes later, Isha 2 to 25 earlier (F), Asr −2 to +2 (A).
+- **With adjustments at high latitudes** (section 3): the same as without, except where an adjustment pushes a time out of order and SalahCalculation reports it missing. With Tehran under the automatic rule, Isha is missing on 50 days at Stockholm, 92 at Reykjavik and 59 at Tromsø. At Tromsø, Asr is missing on 19 January and 22 November with the Muslim World League, Tehran, Umm al-Qura and Gulf, and on 21–22 January and 19 November too with the Moonsighting Committee. There, Isha is missing on 17 May with the Muslim World League under the automatic rule, and sunrise on 26 July with Gulf under the automatic rule. The other way round, Umm al-Qura's Isha is given again at Reykjavik on 14–26 June (middle of the night) and at Tromsø on 15 May and 27 July (automatic; +2 on 27 July).
 - **Ramadan delayed Isha** behaves as before.
