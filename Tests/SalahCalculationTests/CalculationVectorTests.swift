@@ -19,7 +19,7 @@ import Testing
   @Test func everyFileLoads() {
     #expect(CalculationVector.loadErrors.isEmpty, "\(CalculationVector.loadErrors)")
     // A missing or renamed file must fail here.
-    #expect(CalculationVector.all.count == 93)
+    #expect(CalculationVector.all.count == 94)
     let ids = CalculationVector.all.map(\.id)
     #expect(Set(ids).count == ids.count, "vector ids must be unique")
     #expect(ids.allSatisfy { $0.hasPrefix("calculation.") })

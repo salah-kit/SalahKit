@@ -145,6 +145,8 @@ add(F, "day.polar-isha-after-fajr-two-days-later", "81.7° S, 180° on UTC−4 (
     LATER, polar, FUZZ, {"type": "day", "day": "2056-04-12"})
 add(F, "day.polar-day-between-is-unavailable", "The same place and settings, 2056-04-13: every time is after 04-14's Fajr (18:39 on 04-13), so nothing is left and the day is unavailable with calculationUnavailable.",
     LATER, polar, FUZZ, {"type": "day", "day": "2056-04-13"})
+add(F, "day.dhuhr-after-next-fajr-near-the-bound", "Makkah, Umm al-Qura with user adjustments of Fajr −1014, Asr −300, Maghrib −400 and Isha −480 minutes, 2026-10-13: Asr, Maghrib and Isha fall before Dhuhr, so they are missing, and Dhuhr (12:07) is the latest time left, 7 minutes after start(10-14) − 12 h. 10-14's Fajr falls at 12:06 on 10-13, before it, so Dhuhr gives way too: a later day is calculated whenever its start minus 12 hours is before the day's latest time.",
+    LATER, makkah, P("ummAlQura", adjustments={"fajr": -1014, "asr": -300, "maghrib": -400, "isha": -480}), {"type": "day", "day": "2026-10-13"})
 
 # failures ------------------------------------------------------------------------------------
 

@@ -1021,6 +1021,61 @@
         "query": {"type": "day", "day": "2056-04-13"}
       },
       "expected": {"availability": "unavailable", "reason": "calculationUnavailable"}
+    },
+    {
+      "id": "calculation.ordering.day.dhuhr-after-next-fajr-near-the-bound",
+      "description": "Makkah, Umm al-Qura with user adjustments of Fajr −1014, Asr −300, Maghrib −400 and Isha −480 minutes, 2026-10-13: Asr, Maghrib and Isha fall before Dhuhr, so they are missing, and Dhuhr (12:07) is the latest time left, 7 minutes after start(10-14) − 12 h. 10-14's Fajr falls at 12:06 on 10-13, before it, so Dhuhr gives way too: a later day is calculated whenever its start minus 12 hours is before the day's latest time.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 3 (every later day whose times can come first, past a day without times); RFC 0001 §4.3 rule 6; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "adjustments": {"fajr": -1014, "asr": -300, "maghrib": -400, "isha": -480},
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-10-13"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {
+          "partial": {
+            "dhuhr": "calculationUnavailable",
+            "asr": "calculationUnavailable",
+            "maghrib": "calculationUnavailable",
+            "isha": "calculationUnavailable"
+          }
+        },
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-10-13",
+            "kind": "fajr",
+            "time": "2026-10-12T12:05:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "sunrise",
+            "time": "2026-10-13T06:16:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
     }
   ]
 }
