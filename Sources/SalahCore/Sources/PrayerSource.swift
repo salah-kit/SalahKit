@@ -62,7 +62,7 @@ nonisolated public enum PrayerDayAvailability: Hashable, Sendable {
 ///   never comes before its owning day; a calculated Fajr can, where the clock runs behind the
 ///   Sun.
 /// - Instants strictly increase in canonical kind order within a day, and no event of a day
-///   occurs after an event of the next day (equal instants are allowed).
+///   occurs after an event of a later day (equal instants are allowed).
 /// - Coverage names exactly the expected kinds that are missing, with their reasons.
 /// - A source never fills a day or kind from another day or a computed fallback, and never
 ///   infers Jumu'ah: ``PrayerObservance/jumuah`` appears only on a declared Friday Dhuhr.

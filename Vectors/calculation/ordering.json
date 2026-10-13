@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "description": "Kinds the contract can't hold in order: a tie (Maghrib and Isha at one instant), an inverted pair (Fajr after sunrise, Isha before Maghrib), and an Isha after the next day's first event.",
+  "description": "Kinds the contract can't hold in order: a tie (Maghrib and Isha at one instant), an inverted pair (Fajr after sunrise, Isha before Maghrib), and times after an event of a later day: the next day's first event, or the first event of the day after a day without times.",
   "vectors": [
     {
       "id": "calculation.ordering.day.oslo-tehran-tie",
@@ -888,6 +888,139 @@
           }
         ]
       }
+    },
+    {
+      "id": "calculation.ordering.day.apia-fajr-after-skipped-date",
+      "description": "Apia, Muslim World League with Fajr adjusted by −600 minutes, 2011-12-29: 12-30 is skipped and has no times, so 12-31 is the next day that does. Its Fajr falls at 19:42 on 12-29, before 12-29's Maghrib (19:57) and Isha (21:12), so they are missing: no event of a day follows an event of a later day.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 3 (every later day whose times can come first, past a day without times); RFC 0001 §4.3 rule 6; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": -13.8333,
+          "longitude": -171.7667,
+          "timeZone": "Pacific/Apia",
+          "countryCode": "WS",
+          "name": "Apia"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "adjustments": {"fajr": -600},
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2011-12-29"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {"partial": {"maghrib": "calculationUnavailable", "isha": "calculationUnavailable"}},
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2011-12-29",
+            "kind": "fajr",
+            "time": "2011-12-28T19:42:00-10:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-29",
+            "kind": "sunrise",
+            "time": "2011-12-29T07:01:00-10:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-29",
+            "kind": "dhuhr",
+            "time": "2011-12-29T13:29:00-10:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2011-12-29",
+            "kind": "asr",
+            "time": "2011-12-29T16:55:00-10:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordering.day.polar-isha-after-fajr-two-days-later",
+      "description": "81.7° S, 180° on UTC−4 (Etc/GMT+4), Hanafi, the middle-of-the-night rule, rounding up and user adjustments from Fajr −826 to Isha +720 minutes, 2056-04-12, a case found by fuzzing: every time of 04-13 is after 04-14's Fajr (18:39 on 04-13), so 04-13 is unavailable. 04-12's Isha (19:15 on 04-13) is after that Fajr too, so it is missing, although 04-13 has nothing left to compare it with.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 3 (every later day whose times can come first, past a day without times); RFC 0001 §4.3 rule 6; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {"latitude": -81.73368, "longitude": -180, "timeZone": "Etc/GMT+4"},
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17.5},
+            "maghrib": {"angle": 4},
+            "madhab": "hanafi",
+            "highLatitudeRule": "middleOfTheNight",
+            "nightSpan": "sunsetToSunrise",
+            "adjustments": {"fajr": -826, "sunrise": -10, "dhuhr": 4, "asr": -24, "maghrib": 25, "isha": 720},
+            "rounding": "up"
+          }
+        },
+        "query": {"type": "day", "day": "2056-04-12"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {
+          "partial": {
+            "fajr": "calculationUnavailable",
+            "sunrise": "calculationUnavailable",
+            "asr": "calculationUnavailable",
+            "isha": "calculationUnavailable"
+          }
+        },
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2056-04-12",
+            "kind": "dhuhr",
+            "time": "2056-04-12T20:05:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2056-04-12",
+            "kind": "maghrib",
+            "time": "2056-04-12T23:49:00-04:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.ordering.day.polar-day-between-is-unavailable",
+      "description": "The same place and settings, 2056-04-13: every time is after 04-14's Fajr (18:39 on 04-13), so nothing is left and the day is unavailable with calculationUnavailable.",
+      "provenance": "RFC 0002 §4.2, §4.3 step 3 (every later day whose times can come first, past a day without times); RFC 0001 §4.3 rule 6; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {"latitude": -81.73368, "longitude": -180, "timeZone": "Etc/GMT+4"},
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18},
+            "isha": {"angle": 17.5},
+            "maghrib": {"angle": 4},
+            "madhab": "hanafi",
+            "highLatitudeRule": "middleOfTheNight",
+            "nightSpan": "sunsetToSunrise",
+            "adjustments": {"fajr": -826, "sunrise": -10, "dhuhr": 4, "asr": -24, "maghrib": 25, "isha": 720},
+            "rounding": "up"
+          }
+        },
+        "query": {"type": "day", "day": "2056-04-13"}
+      },
+      "expected": {"availability": "unavailable", "reason": "calculationUnavailable"}
     }
   ]
 }

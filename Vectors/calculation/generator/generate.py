@@ -61,7 +61,7 @@ DESCRIPTIONS = {
     "ordinary": "Ordinary calculated days at several places and methods: complete days whose instants are SalahTimes' unchanged, and the day, dayContaining, events and state queries over them.",
     "owning-days": "Owning days across midnight in both directions: an Isha after midnight that belongs to the evening before (Kashgar), and a Fajr before midnight that belongs to the next day within the 12-hour lead (Kazan, and a user adjustment at Makkah).",
     "polar": "Polar day and night at Tromsø, and a disabled high-latitude rule at Oslo: the kinds that don't occur are missing with calculationUnavailable, and the schedule's windows cover them.",
-    "ordering": "Kinds the contract can't hold in order: a tie (Maghrib and Isha at one instant), an inverted pair (Fajr after sunrise, Isha before Maghrib), and an Isha after the next day's first event.",
+    "ordering": "Kinds the contract can't hold in order: a tie (Maghrib and Isha at one instant), an inverted pair (Fajr after sunrise, Isha before Maghrib), and times after an event of a later day: the next day's first event, or the first event of the day after a day without times.",
     "failures": "Every failure of RFC 0002 §4.5: invalid coordinates and parameters, unsupported years, an invalid date, a date the zone skips, a day with nothing left, and a kind outside the owning span.",
     "opt-ins": "The opt-in Ramadan Isha rule, and a Friday whose Dhuhr stays ordinary because a calculated source never declares Jumu'ah.",
     "clock-changes": "Days on which the clock changes: spring forward and fall back in London and New York, and Beirut's skipped midnight.",

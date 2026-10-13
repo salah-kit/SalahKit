@@ -134,6 +134,17 @@ add(F, "state.rovaniemi-after-maghrib", "State at 00:30 on 06-02 at 66.5° N: Ma
     f"RFC 0001 §4.7; {NEXT}", rovaniemi, UQ, {"type": "state", "at": local(rovaniemi, 2026, 6, 2, 0, 30)})
 add(F, "day.makkah-isha-adjusted-into-next-day", "Makkah, Umm al-Qura with a user adjustment of +1440 minutes on Isha, 2026-10-13: Isha falls at 19:28 on 10-14, inside the owning span but after 10-14's Fajr, so it is missing.",
     NEXT, makkah, P("ummAlQura", adjustments={"isha": 1440}), {"type": "day", "day": "2026-10-13"})
+LATER = f"{R2} step 3 (every later day whose times can come first, past a day without times); RFC 0001 §4.3 rule 6; {REF}"
+add(F, "day.apia-fajr-after-skipped-date", "Apia, Muslim World League with Fajr adjusted by −600 minutes, 2011-12-29: 12-30 is skipped and has no times, so 12-31 is the next day that does. Its Fajr falls at 19:42 on 12-29, before 12-29's Maghrib (19:57) and Isha (21:12), so they are missing: no event of a day follows an event of a later day.",
+    LATER, apia, P("muslimWorldLeague", adjustments={"fajr": -600}), {"type": "day", "day": "2011-12-29"})
+polar = Location(-81.73368, -180, "Etc/GMT+4")
+FUZZ = P("muslimWorldLeague", fajr={"angle": 18}, maghrib={"angle": 4}, isha={"angle": 17.5}, madhab="hanafi",
+         highLatitudeRule="middleOfTheNight", nightSpan="sunsetToSunrise", rounding="up",
+         adjustments={"fajr": -826, "sunrise": -10, "dhuhr": 4, "asr": -24, "maghrib": 25, "isha": 720})
+add(F, "day.polar-isha-after-fajr-two-days-later", "81.7° S, 180° on UTC−4 (Etc/GMT+4), Hanafi, the middle-of-the-night rule, rounding up and user adjustments from Fajr −826 to Isha +720 minutes, 2056-04-12, a case found by fuzzing: every time of 04-13 is after 04-14's Fajr (18:39 on 04-13), so 04-13 is unavailable. 04-12's Isha (19:15 on 04-13) is after that Fajr too, so it is missing, although 04-13 has nothing left to compare it with.",
+    LATER, polar, FUZZ, {"type": "day", "day": "2056-04-12"})
+add(F, "day.polar-day-between-is-unavailable", "The same place and settings, 2056-04-13: every time is after 04-14's Fajr (18:39 on 04-13), so nothing is left and the day is unavailable with calculationUnavailable.",
+    LATER, polar, FUZZ, {"type": "day", "day": "2056-04-13"})
 
 # failures ------------------------------------------------------------------------------------
 
@@ -172,6 +183,10 @@ add(F, "day.nothing-left", "Method and user adjustments of +1440 minutes each on
     f"{R2} step 4; RFC 0002 §4.5 (no kind left); {REF}", makkah, P("ummAlQura", methodAdjustments=ALL, adjustments=ALL), {"type": "day", "day": "2026-10-13"})
 add(F, "day.fajr-before-lead", "Makkah, Umm al-Qura with Fajr adjusted by −1100 minutes, 2026-10-13: Fajr would fall at 10:39 on 10-12, before start(D) − 12 h (12:00 on 10-12), so it is missing; the rest of the day is kept.",
     f"{R2} step 4 (before start(X) − L); RFC 0002 §4.4; {REF}", makkah, P("ummAlQura", adjustments={"fajr": -1100}), {"type": "day", "day": "2026-10-13"})
+add(F, "day.fajr-at-lead", "Makkah, Umm al-Qura with Fajr adjusted by −1019 minutes, 2026-10-13: Fajr falls at 12:00 on 10-12, exactly start(D) − 12 h. The bound is inclusive, so it is kept. 10-14's Fajr falls at 12:01 on 10-13, before 10-13's Dhuhr (12:07), so Dhuhr, Asr, Maghrib and Isha give way.",
+    f"{R2} steps 3-4 (start(X) − L is inside the span); RFC 0002 §4.4; {REF}", makkah, P("ummAlQura", adjustments={"fajr": -1019}), {"type": "day", "day": "2026-10-13"})
+add(F, "day.fajr-a-minute-before-lead", "Makkah, Umm al-Qura with Fajr adjusted by −1020 minutes, 2026-10-13: Fajr would fall at 11:59 on 10-12, a minute before start(D) − 12 h, so it is missing. 10-14's Fajr falls at 12:00 on 10-13, exactly on its own bound, so it is kept, and 10-13's Dhuhr, Asr, Maghrib and Isha, after it, give way: only sunrise is left.",
+    f"{R2} steps 3-4 (before start(X) − L); RFC 0002 §4.4; {REF}", makkah, P("ummAlQura", adjustments={"fajr": -1020}), {"type": "day", "day": "2026-10-13"})
 
 # opt-ins ---------------------------------------------------------------------------------------
 

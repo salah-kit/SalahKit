@@ -29,7 +29,9 @@ Add the package with Swift Package Manager:
 
 ```swift
 dependencies: [
-  .package(url: "https://github.com/salah-kit/SalahKit.git", from: "0.1.0")
+  .package(url: "https://github.com/salah-kit/SalahKit.git", from: "0.1.0"),
+  // For calculated times, when your code names a method or another calculation rule.
+  .package(url: "https://github.com/salah-kit/SalahTimes.git", .upToNextMinor(from: "0.1.0")),
 ],
 targets: [
   .target(
@@ -38,11 +40,12 @@ targets: [
       .product(name: "SalahCore", package: "SalahKit"),
       // For calculated times. A timetable app needs only SalahCore.
       .product(name: "SalahCalculation", package: "SalahKit"),
+      .product(name: "SalahTimes", package: "SalahTimes"),
     ])
 ]
 ```
 
-In Xcode, choose File > Add Package Dependencies, enter `https://github.com/salah-kit/SalahKit.git`, and add the products you use. SalahCalculation brings SalahTimes along; `import SalahTimes` where your code names a method or another calculation rule.
+SalahCalculation doesn't re-export SalahTimes, so a package that writes `import SalahTimes` lists it, as above, in the range SalahKit uses. In Xcode, choose File > Add Package Dependencies, enter `https://github.com/salah-kit/SalahKit.git`, and add the products you use; SalahCalculation brings the SalahTimes module along, so an app target can `import SalahTimes` without adding it.
 
 ## Quick start
 

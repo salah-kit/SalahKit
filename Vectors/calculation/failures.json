@@ -729,6 +729,110 @@
           }
         ]
       }
+    },
+    {
+      "id": "calculation.failures.day.fajr-at-lead",
+      "description": "Makkah, Umm al-Qura with Fajr adjusted by −1019 minutes, 2026-10-13: Fajr falls at 12:00 on 10-12, exactly start(D) − 12 h. The bound is inclusive, so it is kept. 10-14's Fajr falls at 12:01 on 10-13, before 10-13's Dhuhr (12:07), so Dhuhr, Asr, Maghrib and Isha give way.",
+      "provenance": "RFC 0002 §4.2, §4.3 steps 3-4 (start(X) − L is inside the span); RFC 0002 §4.4; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "adjustments": {"fajr": -1019},
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-10-13"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {
+          "partial": {
+            "dhuhr": "calculationUnavailable",
+            "asr": "calculationUnavailable",
+            "maghrib": "calculationUnavailable",
+            "isha": "calculationUnavailable"
+          }
+        },
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-10-13",
+            "kind": "fajr",
+            "time": "2026-10-12T12:00:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          },
+          {
+            "day": "2026-10-13",
+            "kind": "sunrise",
+            "time": "2026-10-13T06:16:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calculation.failures.day.fajr-a-minute-before-lead",
+      "description": "Makkah, Umm al-Qura with Fajr adjusted by −1020 minutes, 2026-10-13: Fajr would fall at 11:59 on 10-12, a minute before start(D) − 12 h, so it is missing. 10-14's Fajr falls at 12:00 on 10-13, exactly on its own bound, so it is kept, and 10-13's Dhuhr, Asr, Maghrib and Isha, after it, give way: only sunrise is left.",
+      "provenance": "RFC 0002 §4.2, §4.3 steps 3-4 (before start(X) − L); RFC 0002 §4.4; instants from SalahTimes' Python reference (SalahTimes 0.1.0, Vectors/reference/salahtimes_reference.py)",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh",
+          "countryCode": "SA",
+          "name": "Makkah"
+        },
+        "settings": {
+          "parameters": {
+            "fajr": {"angle": 18.5},
+            "isha": {"minutesAfterMaghrib": 90},
+            "maghrib": "sunset",
+            "madhab": "shafi",
+            "highLatitudeRule": "recommended",
+            "nightSpan": "sunsetToFajr",
+            "adjustments": {"fajr": -1020},
+            "rounding": "nearest"
+          }
+        },
+        "query": {"type": "day", "day": "2026-10-13"}
+      },
+      "expected": {
+        "availability": "available",
+        "coverage": {
+          "partial": {
+            "fajr": "calculationUnavailable",
+            "dhuhr": "calculationUnavailable",
+            "asr": "calculationUnavailable",
+            "maghrib": "calculationUnavailable",
+            "isha": "calculationUnavailable"
+          }
+        },
+        "isFriday": false,
+        "events": [
+          {
+            "day": "2026-10-13",
+            "kind": "sunrise",
+            "time": "2026-10-13T06:16:00+03:00",
+            "iqama": null,
+            "observance": "ordinary"
+          }
+        ]
+      }
     }
   ]
 }

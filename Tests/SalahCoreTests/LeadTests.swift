@@ -82,6 +82,14 @@ import Testing
     #expect(negative.day(Self.sunday) == .unavailable(.invalidData))
   }
 
+  /// A negative lead counts as zero, so an event shortly after its day starts is still kept.
+  @Test func aLeadBelowZeroCountsAsZero() {
+    let afterMidnight = Self.at(Self.sunday, 0, 5)
+    let negative = Self.schedule(
+      lead: .seconds(-600), [Self.sunday: Self.complete(Self.sunday, fajr: afterMidnight)])
+    #expect(negative.day(Self.sunday).day?[.fajr]?.time == afterMidnight)
+  }
+
   @Test func aLeadAboveTwelveHoursCountsAsTwelve() {
     let elevenHours = Self.at(Self.sunday, -11, 0)
     let thirteenHours = Self.at(Self.sunday, -13, 0)
@@ -162,6 +170,42 @@ import Testing
     #expect(gaps.map(\.day) == [Self.sunday])
     #expect(gaps.first?.kinds == Set(PrayerKind.allCases))
     #expect(gaps.first?.reason == .noPublishedData)
+  }
+
+  /// Sunday has no events, and Monday's early Fajr comes before Saturday's late Isha: the days on
+  /// either side cross (section 4.3, rule 6). The schedule compares them and reports the
+  /// crossing as an invalid-data gap, so it asserts neither event while they contradict.
+  @Test func daysThatCrossPastADayWithoutEventsBecomeAGap() {
+    let lateIsha = Self.at(Self.sunday, 23, 59)
+    let earlyFajr = Self.at(Self.sunday, 12, 30)
+    var saturday = Self.events(on: Self.saturday)
+    saturday[5] = PrayerEvent(scheduleDay: Self.saturday, kind: .isha, time: lateIsha)
+    let schedule = Self.schedule([
+      Self.saturday: .available(
+        PrayerDay(day: Self.saturday, timeZone: Self.zone, events: saturday), coverage: .complete),
+      Self.sunday: .unavailable(.calculationUnavailable),
+      Self.monday: Self.complete(Self.monday, fajr: earlyFajr),
+    ])
+    // Each day holds the contract on its own.
+    #expect(schedule.day(Self.saturday).day?[.isha]?.time == lateIsha)
+    #expect(schedule.day(Self.monday).day?[.fajr]?.time == earlyFajr)
+
+    let result = schedule.events(
+      from: Self.sunday.start(in: Self.zone), through: Self.monday.start(in: Self.zone))
+    #expect(
+      result.events.map { "\($0.scheduleDay)/\($0.kind)" } == [
+        "2026-06-22/fajr", "2026-06-20/isha",
+      ])
+    let gaps = result.coverage.gaps
+    #expect(gaps.count == 1)
+    #expect(gaps.first?.interval == DateInterval(start: earlyFajr, end: lateIsha))
+    #expect(gaps.first?.day == Self.saturday)
+    #expect(gaps.first?.kinds == [.isha])
+    #expect(gaps.first?.reason == .invalidData)
+
+    let state = schedule.state(at: Self.at(Self.sunday, 13, 0), through: lateIsha)
+    #expect(state.prayerState == nil)
+    #expect(state.coverage.gaps.map(\.reason) == [.invalidData])
   }
 
   @Test func aRefreshPlanChangesAtTheEarlyFajr() throws {

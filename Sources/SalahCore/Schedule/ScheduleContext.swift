@@ -74,17 +74,20 @@ nonisolated struct ScheduleContext {
       }
     }
 
-    // Two available days whose events cross (section 4.3, rule 6) keep their events, and the
-    // contradiction becomes an invalid-data gap.
-    for index in days.indices.dropLast() {
-      guard let last = known[index].map(\.time).max(),
-        let first = known[index + 1].map(\.time).min(), last > first
+    // A day whose events cross those of the next day with events (section 4.3, rule 6) keeps
+    // its events, and the contradiction becomes an invalid-data gap. With a lead, that day can
+    // be two days later, past a day without events. Checking each such pair covers every pair.
+    var earlier: Int?
+    for index in days.indices where !known[index].isEmpty {
+      defer { earlier = index }
+      guard let previous = earlier, let last = known[previous].map(\.time).max(),
+        let first = known[index].map(\.time).min(), last > first
       else { continue }
-      let kinds = Set(known[index].filter { $0.time > first }.map(\.kind))
+      let kinds = Set(known[previous].filter { $0.time > first }.map(\.kind))
       windows.append(
         Window(
           gap: ScheduleGap(
-            interval: DateInterval(start: first, end: last), day: days[index], kinds: kinds,
+            interval: DateInterval(start: first, end: last), day: days[previous], kinds: kinds,
             reason: .invalidData),
           lower: first, upper: last, holdsPrayer: kinds.contains(where: \.isPrayer)))
     }

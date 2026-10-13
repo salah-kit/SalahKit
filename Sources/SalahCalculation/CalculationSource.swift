@@ -12,18 +12,20 @@ import SalahTimes
 /// For each owning day, the source computes the six kinds with ``settings``, in the location's
 /// time zone, and reports what SalahCore's source contract can hold. It never invents, moves or
 /// reorders a time:
-/// - A kind that doesn't occur, such as Isha when the Sun stays above 18° all night with
+/// - A kind that doesn't occur, such as Isha when the Sun never gets 18° below the horizon with
 ///   `HighLatitudeRule.disabled`, or sunset during polar day, is missing with
 ///   `ScheduleGapReason.calculationUnavailable`.
 /// - So is a time the contract can't place: one earlier than ``maximumLead`` before the start of
 ///   its day or not before the start of the day after the next, one that isn't strictly after
 ///   the kind before it (the later kind of an equal or inverted pair is missing, such as an Isha
-///   that a high-latitude bound puts at Maghrib's instant), and one after the next day's first
-///   event (such as an interval Isha after the next Fajr near the polar circles).
-/// - A day with nothing left, and a date that its time zone skips, is unavailable with
-///   `ScheduleGapReason.calculationUnavailable`, as is a year outside the range
-///   SalahTimes calculates. Coordinates or parameters that SalahTimes rejects make every day
-///   unavailable with `ScheduleGapReason.invalidData`.
+///   that a high-latitude bound puts at Maghrib's instant), and one after an event of a later
+///   day (such as an interval Isha after the next Fajr near the polar circles).
+/// - A day with nothing left is unavailable with `ScheduleGapReason.calculationUnavailable`,
+///   and so is a date its time zone skips. Otherwise a day SalahTimes refuses is unavailable
+///   for the first problem it finds, in this order: coordinates it rejects
+///   (`ScheduleGapReason.invalidData`), a year outside the range it calculates
+///   (`ScheduleGapReason.calculationUnavailable`), then parameters it rejects
+///   (`ScheduleGapReason.invalidData`).
 ///
 /// An event belongs to the day it was computed for, even when it occurs on a neighboring civil
 /// date: Isha after midnight belongs to the evening before, and where the clock runs behind the
@@ -67,9 +69,9 @@ nonisolated public struct CalculationSource: PrayerSource, Hashable, Sendable {
     case .failure(let unavailable): return .unavailable(unavailable.reason)
     }
 
-    // No event of a day may follow an event of the next day; the earlier day gives way.
-    if case .success(let next) = calculate(day.adding(days: 1), at: location),
-      let first = next.times.values.min()
+    // No event of a day may follow an event of a later day; the earlier day gives way.
+    if let latest = calculated.times.values.max(),
+      let first = earliestLaterTime(after: day, before: latest, at: location)
     {
       for (kind, time) in calculated.times where time > first {
         calculated.times[kind] = nil
@@ -101,8 +103,31 @@ nonisolated public struct CalculationSource: PrayerSource, Hashable, Sendable {
     var reason: ScheduleGapReason
   }
 
+  /// The earliest time calculated for a day after `day` that could come before `latest`, the
+  /// latest time of `day`.
+  ///
+  /// A later day's times start at most 12 hours before it begins, so only the days that begin
+  /// less than 12 hours after `latest` count: normally the next day, and the one after it when
+  /// `latest` is late on the next day. That way a later day without events, such as a date its
+  /// zone skips, doesn't hide the day after it.
+  private func earliestLaterTime(
+    after day: CivilDay, before latest: Date, at location: PrayerLocation
+  ) -> Date? {
+    var earliest: Date?
+    var later = day.adding(days: 1)
+    while later.start(in: location.timeZone).addingTimeInterval(-Self.leadSeconds) < latest {
+      if case .success(let calculated) = calculate(later, at: location),
+        let first = calculated.times.values.min()
+      {
+        earliest = min(earliest ?? first, first)
+      }
+      later = later.adding(days: 1)
+    }
+    return earliest
+  }
+
   /// The times SalahTimes computes for `day`, without the ones outside the day's span or out
-  /// of order. The check against the next day is the caller's.
+  /// of order. The check against later days is the caller's.
   private func calculate(
     _ day: CivilDay, at location: PrayerLocation
   ) -> Result<Calculated, Unavailable> {

@@ -215,15 +215,27 @@ class CalculationSource:
         _, kept, missing, _ = today
         kept = dict(kept)
         missing = dict(missing)
-        try:
-            following = calculate(D + timedelta(days=1), loc, self.params)
-        except OverflowError:
-            following = ("fail", "calculationUnavailable")
         check_rounding(today[3], self.params, f"{loc.name} {D}", list(kept))
-        if following[0] == "ok" and following[1]:
-            first = min(following[1].values())
-            first_kind = min(following[1], key=following[1].get)
-            check_rounding(following[3], self.params, f"{loc.name} {D + timedelta(days=1)}", [first_kind])
+        # Step 3: no time of D after a time of a later day. A later day's times start at
+        # start - LEAD, so only the days that start less than LEAD after D's latest time count.
+        first = None
+        latest = max(kept.values()) if kept else None
+        offset = 1
+        while latest is not None:
+            try:
+                later = D + timedelta(days=offset)
+                if start(later, loc.zone) - LEAD >= latest:
+                    break
+                following = calculate(later, loc, self.params)
+            except OverflowError:
+                break
+            if following[0] == "ok" and following[1]:
+                first_kind = min(following[1], key=following[1].get)
+                check_rounding(following[3], self.params, f"{loc.name} {later}", [first_kind])
+                value = following[1][first_kind]
+                first = value if first is None else min(first, value)
+            offset += 1
+        if first is not None:
             for kind in list(kept):
                 if kept[kind] > first:
                     del kept[kind]
@@ -378,16 +390,16 @@ class Schedule:
                 groups.setdefault((lo, hi, reason), set()).add(kind)
             for (lo, hi, reason), kinds in groups.items():
                 gaps.append(Gap(lo, hi, d, kinds, reason))
-        # Overlap gaps (rule 6).
-        for i in range(len(days) - 1):
-            x, y = answers[days[i]], answers[days[i + 1]]
-            if x[0] == "available" and y[0] == "available":
-                first_next = min(e.time for e in y[1])
-                last_this = max(e.time for e in x[1])
-                if last_this > first_next:
-                    raise AssertionError(f"a calculated source overlaps {days[i]} and {days[i + 1]}")
-                    kinds = {e.kind for e in x[1] if e.time > first_next}
-                    gaps.append(Gap(first_next, last_this, days[i], kinds, "invalidData"))
+        # Overlap gaps (rule 6): each available day against the next available one.
+        available = [d for d in days if answers[d][0] == "available"]
+        for this_day, next_day in zip(available, available[1:]):
+            x, y = answers[this_day], answers[next_day]
+            first_next = min(e.time for e in y[1])
+            last_this = max(e.time for e in x[1])
+            if last_this > first_next:
+                raise AssertionError(f"a calculated source overlaps {this_day} and {next_day}")
+                kinds = {e.kind for e in x[1] if e.time > first_next}
+                gaps.append(Gap(first_next, last_this, this_day, kinds, "invalidData"))
         return events, gaps
 
     def coverage(self, a, b, gaps):

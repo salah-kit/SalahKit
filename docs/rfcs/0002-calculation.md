@@ -59,7 +59,7 @@ nonisolated extension CalculationMethod {
 }
 ```
 
-SalahCalculation doesn't re-export SalahTimes. An app that names SalahTimes types (`CalculationMethod`, `Madhab`, `HighLatitudeRule`, …) imports SalahTimes too; the types reach it through SalahCalculation's dependency. A package that does so lists the SalahTimes product in its own target's dependencies.
+SalahCalculation doesn't re-export SalahTimes. An app that names SalahTimes types (`CalculationMethod`, `Madhab`, `HighLatitudeRule`, …) imports SalahTimes too. A package that does so depends on SalahTimes in SalahKit's range (`.upToNextMinor(from: "0.1.0")`) and lists its product, as the README shows, which also passes SwiftPM's `--explicit-target-dependency-import-check error`. An Xcode app target gets the module through SalahCalculation's dependency without adding it, as CalculatedPhone does.
 
 ## 4. Behavior
 
@@ -76,7 +76,7 @@ SalahCalculation doesn't re-export SalahTimes. An app that names SalahTimes type
 
 1. **Invalid date.** `D` isn't a real Gregorian date: `.unavailable(.invalidData)`.
 2. **Calculate `D`** (the steps of §4.3). If that fails, `.unavailable(reason)` with its reason.
-3. **The next day.** Calculate `D + 1` with the steps of §4.3 (this step doesn't apply to it). If it succeeds and has at least one time, let `first` be its earliest. Every time of `D` later than `first` is removed and its kind is missing with `.calculationUnavailable`. Equal instants stay. (Core §4.3 rule 6: no event of a day after an event of the next day. The earlier day gives way, because its late event, typically an interval Isha near the polar circles, is the one the rules can't place.)
+3. **Later days.** Let `latest` be the latest time `D` has left. Calculate each later day `X = D + 1, D + 2, …` while `start(X) − L < latest`, with the steps of §4.3 (this step doesn't apply to them): normally `D + 1` alone, and `D + 2` too when `latest` comes within 12 hours of `D + 2`'s start. Let `first` be the earliest time of those that succeed with at least one time. Every time of `D` later than `first` is removed and its kind is missing with `.calculationUnavailable`. Equal instants stay. (Core §4.3 rule 6: no event of a day after an event of a later day. A later day's times can't come before its `start(X) − L`, so no other day can conflict. `D + 2` matters when `D + 1` has no times, because its date is skipped or because all of them follow `D + 2`'s Fajr. The earlier day gives way, because its late event, typically an interval Isha near the polar circles, is the one the rules can't place.)
 4. **Nothing left:** `.unavailable(.calculationUnavailable)`.
 5. **Otherwise** `.available(PrayerDay(day: D, timeZone: Z, events:), coverage:)`, with one event per remaining kind: `scheduleDay` `D`, `observance` `.ordinary`, `iqama` `nil`. Coverage is `.complete` when all six kinds remain, else `.partial(missing:)` with every missing kind and its reason.
 
@@ -85,7 +85,7 @@ SalahCalculation doesn't re-export SalahTimes. An app that names SalahTimes type
 To calculate day `X`:
 
 1. **A date the zone skips.** If `start(X + 1) <= start(X)`, the date has no time on the clock (Pacific/Apia, 2011-12-30): fail with `.calculationUnavailable`. SalahTimes would otherwise give it the next date's solar day, and the same instants would appear twice.
-2. **The year.** If `GregorianDay(year:month:day:)` rejects `X`'s fields (a year beyond ±999,999), fail with `.calculationUnavailable`.
+2. **The year.** If `GregorianDay(year:month:day:)` rejects `X`'s fields, fail with `.calculationUnavailable`. It accepts years up to ±999,999 and §4.2 step 1 admits years 1 to 9999, so this is only a guard.
 3. **SalahTimes.** `PrayerTimes(coordinates: (location.latitude, location.longitude), day: X, timeZone: Z, parameters: settings.parameters)`.
    - `CalculationError.unsupportedDate` (years outside 1000–3000): fail with `.calculationUnavailable`. The calculation can't produce the day.
    - `CalculationError.invalidCoordinates` or `.invalidParameters`: fail with `.invalidData`. The input contradicts the contract.
@@ -102,7 +102,7 @@ The steps never move an instant, never take one from another day, and never infe
 
 A calculated event belongs to the day it was computed for. SalahTimes picks that day's solar day by the transit nearest local noon (SalahTimes RFC 0001, decision 1), so:
 - an Isha after midnight belongs to the evening before (Kashgar on Beijing time, high latitudes in summer);
-- where the clock runs behind the Sun, a Fajr near the middle of the night belongs to the next day but falls before it begins. In 2026 this happens on 96 days in Kazan and Naberezhnye Chelny under the middle-of-the-night rule (in Kazan from 5 May to 8 August, between 23:40 and 23:52 the evening before), on 45 in Oskemen, and on 19 to 31 in Jiamusi under the default rule with the Egyptian or MUIS method. Near the polar circles, sunrise can too.
+- where the clock runs behind the Sun, a Fajr near the middle of the night belongs to the next day but falls before it begins. In 2026 this happens on 96 days in Kazan and Naberezhnye Chelny under the middle-of-the-night rule (in Kazan from 5 May to 8 August, between 23:40 and 23:52 the evening before), on 45 in Oskemen with the Muslim World League's angles, and on 19 to 31 in Jiamusi under the default rule with the Egyptian or MUIS method. Near the polar circles, sunrise can too.
 
 SalahCore 0.1 accepts such events through `PrayerSource.maximumLead` (Core §4.3 rule 4, §10). `CalculationSource` declares 12 hours, SalahCore's maximum, which covers every place's clock offset and leaves room for large user adjustments. An instant earlier than that is missing (§4.3 step 4).
 
@@ -111,10 +111,14 @@ SalahCore 0.1 accepts such events through `PrayerSource.maximumLead` (Core §4.3
 | Situation | Answer |
 |---|---|
 | `D` isn't a real date | `.unavailable(.invalidData)` |
-| Invalid coordinates or parameters | `.unavailable(.invalidData)` for every day |
-| A year SalahTimes doesn't calculate, or a date the zone skips | `.unavailable(.calculationUnavailable)` |
-| A kind that doesn't occur, lies outside `[start(D) − 12 h, start(D + 2))`, ties or inverts with the kind before it, or follows the next day's first event | that kind missing with `.calculationUnavailable` |
+| A date the zone skips | `.unavailable(.calculationUnavailable)` |
+| Coordinates SalahTimes rejects | `.unavailable(.invalidData)` |
+| A year SalahTimes doesn't calculate | `.unavailable(.calculationUnavailable)` |
+| Parameters SalahTimes rejects | `.unavailable(.invalidData)` |
+| A kind that doesn't occur, lies outside `[start(D) − 12 h, start(D + 2))`, ties or inverts with the kind before it, or follows an event of a later day | that kind missing with `.calculationUnavailable` |
 | No kind left | `.unavailable(.calculationUnavailable)` |
+
+For a whole day, the first row that applies wins: the date's own checks come first, then SalahTimes', which checks coordinates, then the year, then the parameters. So invalid parameters give `.calculationUnavailable` on a day outside 1000 to 3000, and invalid coordinates give `.invalidData` there.
 
 `.noPublishedData` and `.unresolvedWallTime` never come from a calculated source.
 
@@ -170,4 +174,4 @@ SalahTimes' own vectors (`Vectors/times/`, copied into `Tests/Data/SalahTimes-0.
 
 ## 10. Changes after review
 
-None yet.
+1. **Later days in §4.2 step 3** (2026-10-13, session B1, from review). Step 3 compared `D` with `D + 1` only. When `D + 1` had no times, a time of `D` could follow `D + 2`'s Fajr, and the schedule listed them out of order with no gap. Fuzzing found a case at 81.7° S with user adjustments of more than 12 hours, and Apia's skipped 2011-12-30 gives another with Fajr adjusted by −600 minutes. Step 3 now reads every later day whose times can come first, and Core rule 6 covers every later day (RFC 0001 §10, item 2). Five vectors were added and none changed: those two cases, the day between in the first, and Fajr on and a minute before the 12-hour bound.

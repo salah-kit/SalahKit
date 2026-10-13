@@ -132,7 +132,7 @@ Some days have no time for some prayers:
   day's Fajr near the polar circles. SalahCore needs strict order, so the later one is missing.
 
 Each such kind is missing with `ScheduleGapReason.calculationUnavailable`. Coordinates or
-parameters SalahTimes rejects make every day unavailable with `invalidData`. Show the reason
+parameters SalahTimes rejects make the day unavailable with `invalidData`. Show the reason
 instead of a time:
 
 ```swift

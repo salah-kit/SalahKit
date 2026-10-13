@@ -12,7 +12,7 @@ import Testing
 /// tolerance, or its kind is missing with `.calculationUnavailable` for a reason of RFC 0002,
 /// section 4.5 that the vector's data shows: the event doesn't occur, it lies outside
 /// `[start(D) − 12 h, start(D + 2))`, it isn't strictly after the kind kept before it, or it is
-/// after the next day's first event. The next day is calculated with SalahTimes directly.
+/// after an event of a later day. Later days are calculated with SalahTimes directly.
 @Suite struct GoldenTests {
   @Test(arguments: GoldenVectors.fileNames)
   func file(_ name: String) {
@@ -105,7 +105,7 @@ nonisolated enum GoldenVectors {
     case doesNotOccur
     case outsideOwningSpan
     case notAfterPreviousKind
-    case afterNextDaysFirstEvent
+    case afterLaterDaysEvent
     case skippedDate
   }
 
@@ -203,7 +203,7 @@ nonisolated enum GoldenVectors {
     let tolerance = vector.tolerance
     let low = vector.day.start(in: zone).addingTimeInterval(-lead)
     let high = vector.day.adding(days: 2).start(in: zone)
-    let nextFirst = firstEvent(of: vector.day.adding(days: 1), vector)
+    let laterFirst = laterFirstEvent(after: vector.day, before: high, vector)
     var result: [PrayerKind: Justification] = [:]
     var lastKept: Date?
     for kind in PrayerKind.allCases {
@@ -214,13 +214,13 @@ nonisolated enum GoldenVectors {
       let outside =
         time.timeIntervalSince(low) < tolerance || high.timeIntervalSince(time) <= tolerance
       let notAfter = lastKept.map { time.timeIntervalSince($0) <= tolerance } ?? false
-      let afterNext = nextFirst.map { time.timeIntervalSince($0) > -tolerance } ?? false
+      let afterLater = laterFirst.map { time.timeIntervalSince($0) > -tolerance } ?? false
       if outside {
         result[kind] = .outsideOwningSpan
       } else if notAfter {
         result[kind] = .notAfterPreviousKind
-      } else if afterNext {
-        result[kind] = .afterNextDaysFirstEvent
+      } else if afterLater {
+        result[kind] = .afterLaterDaysEvent
       }
       // The chain of kept kinds follows the exact rule, without the tolerance.
       if time >= low, time < high, lastKept.map({ time > $0 }) ?? true {
@@ -228,6 +228,19 @@ nonisolated enum GoldenVectors {
       }
     }
     return result
+  }
+
+  /// The earliest event the source keeps for a day after `day` whose span starts before `end`,
+  /// the end of `day`'s span: the next day, and the one after it (RFC 0002, section 4.2).
+  static func laterFirstEvent(after day: CivilDay, before end: Date, _ vector: Vector) -> Date? {
+    let zone = vector.location.timeZone
+    var first: Date?
+    var later = day.adding(days: 1)
+    while later.start(in: zone).addingTimeInterval(-lead) < end {
+      if let time = firstEvent(of: later, vector) { first = min(first ?? time, time) }
+      later = later.adding(days: 1)
+    }
+    return first
   }
 
   /// The earliest event the source keeps for `day`, calculated with SalahTimes directly and
