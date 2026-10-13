@@ -133,7 +133,7 @@ A throwaway Swift package outside SalahKit, not committed, at `.worktrees/B1-par
 - `Common`: the places, Salah's `MethodPreference` with `detect(forCountry:)` copied verbatim, the preferences with Salah's defaults, and an independent solar model used only to attribute differences (below).
 - `SalahSide` (imports `Adhan`): the reproduction of Salah's calculation described above.
 - `KitSide` (imports `SalahCalculation`, `SalahCore`, `SalahTimes`): the mapping above. It calls `CalculationSource(settings).prayerDay(_:at:)` with a `PrayerLocation` carrying the place's coordinates, time zone and country code, and records each missing kind's `ScheduleGapReason` with SalahTimes' own `NonOccurrence` behind it. For a time the adapter leaves out, it records which documented rule applied, and for a time after an event of a later day, whether that day was the next one. It also computes the same day with SalahTimes directly with rounding off, for comparisons before rounding.
-- `parity` (executable): the configurations, the comparison and the attribution. It writes a summary table, every kind-day over a minute as CSV with its cause and any minor contribution, the counts and ranges by class, the one-minute counts, every kind-day with a time on one side only, the summary of every method under the two rules, the adjustment runs against the same settings without adjustments, every change a user sees per place, method, rule and kind, with Salah's own out-of-order days (`d1-changes.tsv`; a separate script, not the harness, checks hand-written claims about the last section against it, method by method), the configurations reused, and each configuration's settings. It exits with an error if any kind-day is unexplained or classed against the attribution rule below.
+- `parity` (executable): the configurations, the comparison and the attribution. It writes a summary table, every kind-day over a minute as CSV with its cause and any minor contribution, the counts and ranges by class, the one-minute counts, every kind-day with a time on one side only, the summary of every method under the two rules, the adjustment runs against the same settings without adjustments, every change a user sees per place, method, rule and kind, with Salah's own out-of-order days (`d1-changes.tsv`, which the last section was checked against), the configurations reused, and each configuration's settings. It exits with an error if any kind-day is unexplained or classed against the attribution rule below.
 
 ```sh
 cd .worktrees/B1-parity-harness
@@ -654,14 +654,7 @@ On every day where SalahCalculation reports a kind missing and SalahTimes comput
 
 ## What Salah's users will see after D1
 
-Grouped by place and high-latitude rule. "Automatic" is Salah's automatic rule, its default: the seventh of the night beyond 48°. In the bullets, a range is the extreme over every method compared at the place, unless a method is named; the table after the list gives each method's own range. A script checks this section against the harness's table of changes (`d1-changes.tsv`: one row per place, method, rule, adjustment setting and kind, with every date). It doesn't read the prose. It checks claims written by hand for the sentences of the list:
-- every kind-day in the table is covered by exactly one claim (other claims may restate some of them, such as the range with the defaults);
-- the ranges, dates, counts, methods and classes a claim gives equal the data, and a named method's range is that method's alone;
-- each claim's phrase appears in its sentence and holds the same set of numbers as the claim;
-- every number in the bullets is in some claim's phrase or is a fixed fact such as a latitude;
-- every cell of the table below equals that method's own range.
-
-The order of the numbers within a phrase, the months written with them, and the words were checked by reading, not by the script.
+Grouped by place and high-latitude rule. "Automatic" is Salah's automatic rule, its default: the seventh of the night beyond 48°. In the bullets, a range is the extreme over every method compared at the places the bullet names, unless it names a method or Salah's defaults; the table after the list gives each method's own range. The list and the table were checked against the harness's table of changes (`d1-changes.tsv`: one row per place, method, rule, adjustment setting and kind, with every date), with a script and by reading.
 
 - **Everywhere:** with the Muslim World League, Egyptian, Karachi or North America method, Dhuhr is a minute earlier. Other times move by at most a minute, through rounding, except as listed below. At the places below 51.5° in this comparison, nothing else differs by more than a minute.
 - **London (51.5° N):**
