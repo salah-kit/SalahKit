@@ -104,3 +104,63 @@ jobs:
           else
             swift build --build-tests
           fi
+
+  mosqueboard:
+    name: MosqueBoard (generate, build, journeys)
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          persist-credentials: false
+
+      # Hosted runners don't offer Xcode 27, so CI uses the newest installed Xcode 26
+      # (docs/rfcs/0001-core.md, section 6.4). The project stays compatible with it.
+      - name: Select the newest Xcode 26
+        run: scripts/select-xcode.sh
+
+      # The committed project must be exactly what project.yml generates (STANDARD.md, Apps).
+      - name: Check the generated project
+        run: |
+          brew install xcodegen
+          (cd Examples/MosqueBoard && xcodegen --quiet)
+          git diff --exit-code -- Examples/MosqueBoard
+
+      # The app builds under both default-isolation settings (proposal section 3.1).
+      - name: Build (MainActor and nonisolated)
+        run: |
+          for isolation in MainActor nonisolated; do
+            echo "::group::${isolation}"
+            xcodebuild build-for-testing \
+              -project Examples/MosqueBoard/MosqueBoard.xcodeproj -scheme MosqueBoard \
+              -destination 'generic/platform=iOS Simulator' \
+              -derivedDataPath "Examples/MosqueBoard/.derived/${isolation}" \
+              SWIFT_DEFAULT_ACTOR_ISOLATION="${isolation}" CODE_SIGNING_ALLOWED=NO
+            echo "::endgroup::"
+          done
+
+      # The journeys need an iPad simulator. The runner's images name them differently over
+      # time, so the step picks the first available iPad; without one, the job stays build-only
+      # and says so (STANDARD.md, CI).
+      - name: Unit tests and journeys on an iPad simulator
+        run: |
+          udid="$(xcrun simctl list devices available | grep -E '^ +iPad' | head -n 1 \
+            | grep -oE '[0-9A-F]{8}-([0-9A-F]{4}-){3}[0-9A-F]{12}' || true)"
+          if [[ -z "${udid}" ]]; then
+            echo "::warning::No iPad simulator is available on this runner; MosqueBoard is build-only here."
+            exit 0
+          fi
+          xcrun simctl list devices available | grep "${udid}"
+          xcodebuild test \
+            -project Examples/MosqueBoard/MosqueBoard.xcodeproj -scheme MosqueBoard \
+            -destination "id=${udid}" \
+            -derivedDataPath Examples/MosqueBoard/.derived/test \
+            -resultBundlePath Examples/MosqueBoard/.derived/MosqueBoard.xcresult
+
+      - name: Upload the test results
+        if: failure()
+        uses: actions/upload-artifact@v4 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          name: MosqueBoard.xcresult
+          path: Examples/MosqueBoard/.derived/MosqueBoard.xcresult
+          if-no-files-found: ignore
