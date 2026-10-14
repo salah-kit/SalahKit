@@ -89,8 +89,13 @@
       return renderer.cgImage
     }
 
-    /// Why two images differ, or `nil` when every pixel's channels are within 2 of each other
-    /// on at least 99.9 % of the pixels.
+    /// The most pixels that may differ from a reference: a few anti-aliased edge pixels. One
+    /// changed digit in the smallest text the galleries draw changes several dozen pixels at
+    /// scale 2 (`SnapshotComparisonTests`).
+    static let maximumDifferingPixels = 8
+
+    /// Why two images differ, or `nil` when no more than ``maximumDifferingPixels`` pixels have
+    /// a channel that differs by more than 2.
     static func compare(_ image: CGImage, _ reference: CGImage) -> String? {
       guard image.width == reference.width, image.height == reference.height else {
         return
@@ -111,9 +116,13 @@
         largest = max(largest, worst)
         if worst > 2 { differing += 1 }
       }
-      let total = image.width * image.height
-      guard Double(differing) > Double(total) * 0.001 else { return nil }
-      return "\(differing) of \(total) pixels differ, by up to \(largest)"
+      guard differing > maximumDifferingPixels else {
+        if differing > 0 {
+          print("snapshot noise: \(differing) pixels differ, by up to \(largest)")
+        }
+        return nil
+      }
+      return "\(differing) of \(image.width * image.height) pixels differ, by up to \(largest)"
     }
 
     /// The image's pixels as 8-bit RGBA in the sRGB space.

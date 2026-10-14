@@ -58,11 +58,13 @@
     public func observe(_ handler: @escaping @MainActor () -> Void) -> Observation {
       let delivery = Delivery(handler: handler)
       var token: Int32 = 0
-      // The main queue isn't always on the main thread (a tool that calls `dispatchMain()`
-      // services it from another thread), so the handler hops to the main actor instead of
-      // assuming it. The hop holds the delivery weakly: a signal that arrives just before the
-      // observation ends doesn't call the handler after it.
-      let status = notify_register_dispatch(name, &token, .main) { @Sendable [weak delivery] _ in
+      // notify(3) calls back on a private queue, and the handler hops to the main actor from
+      // there: the main queue isn't always the main thread (a tool that calls `dispatchMain()`
+      // services it from another one), so nothing assumes it. The hop holds the delivery weakly,
+      // so a signal that arrives while the main actor is busy doesn't call the handler after the
+      // observation ends.
+      let status = notify_register_dispatch(name, &token, Self.queue) {
+        @Sendable [weak delivery] _ in
         Task { @MainActor [weak delivery] in delivery?.handler() }
       }
       guard status == UInt32(NOTIFY_STATUS_OK) else {
@@ -70,6 +72,9 @@
       }
       return Observation(token: token, delivery: delivery)
     }
+
+    /// The queue notify(3) calls back on.
+    private static let queue = DispatchQueue(label: "io.github.salah-kit.DarwinSignal")
 
     /// The handler of one observation, which only the observation keeps alive.
     @MainActor

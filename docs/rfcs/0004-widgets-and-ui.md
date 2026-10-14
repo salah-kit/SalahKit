@@ -220,13 +220,13 @@ Distinct states, distinct meanings (§7.3):
 - a source gap is a `.schedule(...)` state inside the timeline: partial (known previous, unknown next) or `.unavailable` with its coverage. A reload can't fill it;
 - `.expired` is the end of this timeline's validity, even for a calculated source with no end of its own.
 
-With `.stateChanges` and the default policy, a 48-hour timeline has 34 entries (three a prayer, plus sunrise, plus the start and the expired entry). One-minute steps within 30 minutes of each prayer fill 96 entries in three to five hours; the timeline is then truncated and reloads after half of that.
+With `.stateChanges` and the default policy, a 48-hour timeline has 34 entries (three a prayer, plus sunrise, plus the start and the expired entry; 33 to 35 depending on the start). One-minute steps within 30 minutes of each prayer fill 96 entries in two to ten hours, depending on the start (the night after Isha has only coarse steps); the timeline is then truncated and reloads after half of that. Such entries are closer than WidgetKit's guidance of about five minutes.
 
 ### 4.3 `DarwinSignal`
 
 - `post()` is `notify_post(name)`; it returns whether the system accepted the post, not whether anyone observed it.
-- `observe` registers with `notify_register_dispatch` on the main queue and calls the handler through `Task { @MainActor in … }`. The main queue isn't always the main thread: a process that calls `dispatchMain()` services it from another thread, where `MainActor.assumeIsolated` traps and a block that inherits main-actor isolation fails the runtime's check (§6.2). The registration block is `@Sendable` for that reason.
-- The block holds the handler weakly through an object only the observation owns, so after `cancel()` or release, a signal that already arrived calls nothing. `cancel()` is idempotent; `isActive` is `false` when registration failed or after cancel.
+- `observe` registers with `notify_register_dispatch` on a private serial queue and calls the handler through `Task { @MainActor in … }`. Nothing assumes the main queue is the main thread: a process that calls `dispatchMain()` services the main queue from another thread, where `MainActor.assumeIsolated` traps and a block that inherits main-actor isolation fails the runtime's check (§6.3). The registration block is `@Sendable` for that reason.
+- The hop holds the handler weakly through an object only the observation owns, so after `cancel()` or release, a signal that arrived while the main actor was busy calls nothing. `cancel()` is idempotent; `isActive` is `false` when registration failed or after cancel.
 - No payload, no queueing, no launch: posts while nothing observes are lost, and close posts may coalesce. The receiver acts on the signal, not on a value stored beside it, which can lag across processes (Salah's stop button, §7.3 "Live state").
 - Apple platforms only (`canImport(notify)`).
 
@@ -240,8 +240,8 @@ With `.stateChanges` and the default policy, a 48-hour timeline has 34 entries (
 ### 4.5 Styles
 
 - The style protocols follow `ButtonStyle`: `@MainActor`, a `makeBody(configuration:)` and a `Configuration` alias. `prayerRowStyle(_:)` and `nextPrayerStyle(_:)` store a type-erased style in the environment, so a style applies to every list or view below it; without one, the plain style draws.
-- `PlainPrayerRowStyle`: name leading; countdown, time and day offset trailing; next row semibold in the tint color, just-started semibold, passed rows secondary, rows without a status neutral; vertical padding of 3 points; one accessibility element.
-- `PlainNextPrayerStyle`: just-started name in the tint color (caption), name (headline) and time (subheadline, secondary), a dash for each when unknown, then the countdown (title 2, semibold) when known; one accessibility element.
+- `PlainPrayerRowStyle`: name leading; countdown, time and day offset trailing; next row semibold in the tint color, just-started semibold, passed rows secondary, rows without a status neutral; vertical padding of 3 points; one accessibility element (name, countdown, time, offset). The countdown and the time never wrap; in a narrow row the name truncates instead.
+- `PlainNextPrayerStyle`: just-started name in the tint color (caption), name (headline) and time (subheadline, secondary), a dash for each when unknown, then the countdown (title 2, semibold) when known; one accessibility element. Each line stays one line and shrinks to fit (to 70 %, the countdown to 50 %).
 - The default styles use only text styles, so they follow Dynamic Type, and only stacks, so they mirror for right-to-left layouts.
 
 ### 4.6 Theme tools
@@ -298,13 +298,14 @@ The first `observe` called `MainActor.assumeIsolated` inside the main-queue bloc
 
 ## 7. Tests and evidence
 
-- `SharedValueTests`: round trip, gating (an unchanged save doesn't rewrite the stored bytes), removal, undecodable data, encoding failure, an unavailable suite, independent keys, and the privacy manifest's contents.
+- `SharedValueTests`: round trip, gating (an unchanged save doesn't rewrite the stored bytes), removal (also of an object that isn't data), undecodable data, encoding failure, an unavailable suite, independent keys, and the privacy manifest's contents.
 - `PrayerTimelineBuilderTests`: entries equal the plan's plus the expired entry, the 48-hour default and halfway reload, truncation at the first change left out, `steps` dates, an empty source, errors, and the WidgetKit timeline and its fallback.
 - `SevenDayTimelineTests`: successive timelines over seven days with a fixed clock, through a model of the provider's host (`WidgetHost`): calculated (Makkah), `steps` (truncated timelines), high latitude (Tromsø with the rule disabled, Kazan's Fajr before midnight), a timetable with a partial row, a missing day and an end, initial missing data followed by an app reload, a provider call late by 30 hours (the expired entry shows exactly until it), and late calls within the slack. Each checks, every five minutes and a second either side of every entry and event, that the shown state equals the schedule's. Mutants (reload at `validUntil`, a dropped entry) fail them.
-- `DarwinSignalTests`: a helper process posts and this one observes; this one posts and the helper observes (from a `dispatchMain()` process); cancel and release stop delivery, including of a signal already in flight; other names don't arrive.
+- `DarwinSignalTests`: a helper process posts and this one observes; this one posts and the helper observes (from a `dispatchMain()` process); cancel and release stop delivery, including of a signal that arrived while the main actor was busy (a hop that holds the handler strongly fails both); other names don't arrive.
 - `ThemeColorTests` and `ContrastCheck` tests: equality with Salah's code (copied into the test) on an 11-step grid and Salah's palette, for luminance, contrast, distance and the contrast fix at 3 and 4.5; ends of the scale; WCAG's #767676; clamping; thresholds.
 - `DisplayContentTests`: statuses, countdown placement, the schedule's zone across a clock change, day offsets both ways and in Arabic digits, declared Jumu'ah, and no countdown or name for an unknown next prayer.
-- `SnapshotTests`: the default styles at every SalahFixtures moment in English (left to right) and Arabic (right to left), Reykjavik's times after midnight and a declared Jumu'ah, and two device time zones that must render the same image as the schedule's own zone. References are kept per macOS major version.
+- `SnapshotTests`: the default styles at every SalahFixtures moment in English (left to right) and Arabic (right to left), Reykjavik's times after midnight and a declared Jumu'ah, and SwiftUI time zones that must render the same image. References are kept per macOS major version; an image fails when more than 8 pixels differ by more than 2 in a channel, and `SnapshotComparisonTests` shows that one changed digit, even a caption's `+1`, changes 110 pixels or more. CI runs the suite again in a process at UTC+14, whose images must equal the references rendered at UTC: formatting in the device's zone fails 18 of the 20 cases.
+- `NarrowLayoutTests`: the plain styles at 140 and 56 points keep every time and countdown on one line.
 - Documentation: every Swift block of the two articles and of the README's widget and UI sections is compiled and run by tests.
 - `Examples/PhoneWidgets` and `Examples/WatchComplication` exercise both products in real extensions (§9).
 
@@ -323,4 +324,4 @@ To be completed from `Examples/PhoneWidgets` and `Examples/WatchComplication`.
 
 ## 10. Changes after review
 
-None yet.
+1. **Review round R1** (2026-10-14, session C1). The snapshot comparison allowed 0.1 % of an image to differ, which let a time a minute late pass; it now allows 8 pixels. The test of a device in another zone set only SwiftUI's environment, and the Mac that recorded the references was at Makkah's offset; CI now reruns the snapshots at UTC+14. The plain row style let a countdown or a time wrap mid-number in a narrow row ("4:14:0"); numbers no longer wrap. DarwinSignal now receives notify(3)'s callbacks on a private queue, which makes the weak hop testable: a signal that arrives while the main actor is busy no longer reaches a cancelled observation. `save(nil)` removes an object under the key that isn't data. The figures for `steps` timelines were corrected (two to ten hours, not three to five).

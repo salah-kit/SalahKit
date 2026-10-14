@@ -40,6 +40,11 @@ jobs:
       - name: Test
         run: swift test
 
+      # SalahUI shows times in the schedule's zone, never the device's: the snapshots rendered in
+      # a process at UTC+14 must equal the references rendered on a runner at UTC.
+      - name: Snapshots in another time zone
+        run: TZ=Pacific/Kiritimati swift test --filter SnapshotTests
+
       # SalahUI's snapshot tests leave the image they rendered wherever a reference is missing
       # or differs, so it can be compared or, for a new macOS version, recorded.
       - name: Upload the snapshot failures

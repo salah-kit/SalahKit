@@ -135,7 +135,10 @@ countdown as static text needs an entry every minute near a prayer: use
 ``PrayerTimelineBuilder/limit`` entries (96 by default) counting the expired one. When the dates
 don't fit, the timeline ends at the first change it can't hold: ``PrayerTimeline/validUntil``
 is that date, ``PrayerTimeline/isTruncated`` is `true`, and the reload comes sooner. One-minute
-steps within half an hour of each prayer fill 96 entries in about three to five hours.
+steps within half an hour of each prayer fill 96 entries in two to ten hours, depending on the
+time of day: the night after Isha has only coarse steps. Entries a minute apart also go below
+WidgetKit's guidance, so it may show some of them late; a live countdown keeps the entries far
+apart and the countdown exact.
 
 To inspect the entries, or to choose another reload policy, call
 ``PrayerTimelineBuilder/timeline(from:horizon:)``, which returns a ``PrayerTimeline`` and throws

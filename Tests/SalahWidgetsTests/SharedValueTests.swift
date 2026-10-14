@@ -104,6 +104,18 @@ struct SharedValueTests {
     #expect(fixture.log.all == [["prayers"], ["prayers"]])
   }
 
+  @Test("saving nil removes whatever is stored under the key, even if it isn't data")
+  func removesOtherObjects() throws {
+    let fixture = Fixture()
+    let shared = fixture.value()
+    fixture.defaults?.set("not JSON data", forKey: "settings.v1")
+
+    #expect(shared.load() == nil)
+    #expect(try shared.save(nil, reloading: ["prayers"]))
+    #expect(fixture.defaults?.object(forKey: "settings.v1") == nil)
+    #expect(fixture.log.all == [["prayers"]])
+  }
+
   @Test("stored data that doesn't decode reads as nil and counts as a change")
   func undecodableData() throws {
     let fixture = Fixture()

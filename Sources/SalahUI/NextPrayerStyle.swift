@@ -65,29 +65,40 @@
   /// time and countdown, stacked, in the system's fonts.
   ///
   /// Where the next prayer isn't known, the name and time read as a dash and no countdown is
-  /// shown. The view reads as one element in VoiceOver.
+  /// shown. Each line stays one line and shrinks to fit a narrow space. The view reads as one
+  /// element in VoiceOver.
   public struct PlainNextPrayerStyle: NextPrayerStyle {
     /// Creates the plain next-prayer style.
     public init() {}
 
     public func makeBody(configuration: Configuration) -> some View {
+      // Each line stays one line and shrinks to fit, so a narrow complication never breaks a
+      // time or a countdown in the middle.
       VStack(alignment: .leading, spacing: 2) {
         if let justStarted = configuration.justStarted {
           justStarted
             .font(.caption)
             .foregroundStyle(.tint)
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
         }
         (configuration.name ?? Text(verbatim: "–"))
           .font(.headline)
+          .lineLimit(1)
+          .minimumScaleFactor(0.7)
         (configuration.time ?? Text(verbatim: "–"))
           .font(.subheadline)
           .monospacedDigit()
           .foregroundStyle(.secondary)
+          .lineLimit(1)
+          .minimumScaleFactor(0.7)
         if let countdown = configuration.countdown {
           countdown
             .font(.title2)
             .fontWeight(.semibold)
             .monospacedDigit()
+            .lineLimit(1)
+            .minimumScaleFactor(0.5)
         }
       }
       .accessibilityElement(children: .combine)

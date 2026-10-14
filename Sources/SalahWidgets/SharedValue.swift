@@ -91,8 +91,9 @@ nonisolated public struct SharedValue<Value: Codable & Equatable & Sendable>: Se
   /// widget kinds only if the stored value changed.
   ///
   /// The stored value changes when no value was stored, when the stored one differs from
-  /// `value` by `==`, or when the stored data no longer decodes. An unchanged value isn't
-  /// written again and reloads nothing.
+  /// `value` by `==`, or when the stored data no longer decodes. Saving `nil` changes it when
+  /// anything is stored under the key. An unchanged value isn't written again and reloads
+  /// nothing.
   ///
   /// - Parameters:
   ///   - value: The value to store, or `nil` to remove it.
@@ -122,7 +123,8 @@ nonisolated public struct SharedValue<Value: Codable & Equatable & Sendable>: Se
       }
       defaults.set(data, forKey: key)
     } else {
-      guard stored != nil else { return false }
+      // Anything under the key counts, even an object another version wrote that isn't data.
+      guard defaults.object(forKey: key) != nil else { return false }
       defaults.removeObject(forKey: key)
     }
     if !widgetKinds.isEmpty {

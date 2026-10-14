@@ -54,12 +54,16 @@
         named: "\(id)-\(direction.rawValue)")
     }
 
-    /// A device set to Los Angeles or Tokyo shows Makkah's schedule on Makkah's clock: the
-    /// image is the reference of the device in Makkah's own zone.
+    /// SwiftUI's time zone doesn't change the times: with the environment set to Los Angeles or
+    /// Tokyo, Makkah's schedule still reads Makkah's clock, the reference image.
+    ///
+    /// The device's own zone is checked by running the whole suite in a process whose zone is
+    /// another one: CI runs `TZ=Pacific/Kiritimati swift test --filter SnapshotTests` (UTC+14),
+    /// and every image must still equal its reference.
     @Test(
-      "a device time zone other than the schedule's changes nothing",
+      "SwiftUI's time zone doesn't change the times",
       arguments: ["America/Los_Angeles", "Asia/Tokyo"])
-    func deviceTimeZone(_ identifier: String) throws {
+    func environmentTimeZone(_ identifier: String) throws {
       let zone = try #require(TimeZone(identifier: identifier))
       let moment = PrayerFixtures.approaching
       Snapshot.check(

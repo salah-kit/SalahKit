@@ -76,6 +76,44 @@
       other.cancel()
     }
 
+    /// The signal arrives while the main actor is busy, so its handler call is still queued for
+    /// the main actor when the observation ends; it must not run after that. (A handler held
+    /// strongly by the hop fails both tests.)
+    @Test("a signal already delivered but not handled doesn't call the handler after cancel")
+    func inFlightCancel() async throws {
+      let signal = DarwinSignal(name: Self.uniqueName())
+      let received = Counter()
+      let observation = signal.observe { received.increment() }
+      #expect(signal.post())
+      keepBusy(seconds: 0.3)
+      observation.cancel()
+
+      let witness = Counter()
+      let other = signal.observe { witness.increment() }
+      #expect(try Helper.run("post", signal.name).terminationStatus == 0)
+      #expect(await witness.waitUntil { $0 >= 1 })
+      #expect(received.value == 0)
+      other.cancel()
+    }
+
+    @Test("a signal already delivered but not handled doesn't call the handler after release")
+    func inFlightRelease() async throws {
+      let signal = DarwinSignal(name: Self.uniqueName())
+      let received = Counter()
+      var observation: DarwinSignal.Observation? = signal.observe { received.increment() }
+      #expect(signal.post())
+      keepBusy(seconds: 0.3)
+      observation = nil
+      #expect(observation == nil)
+
+      let witness = Counter()
+      let other = signal.observe { witness.increment() }
+      #expect(try Helper.run("post", signal.name).terminationStatus == 0)
+      #expect(await witness.waitUntil { $0 >= 1 })
+      #expect(received.value == 0)
+      other.cancel()
+    }
+
     @Test("signals with other names don't reach the handler")
     func otherNamesAreIgnored() async throws {
       let signal = DarwinSignal(name: Self.uniqueName())
@@ -91,6 +129,11 @@
       observation.cancel()
       otherObservation.cancel()
     }
+  }
+
+  /// Blocks the calling thread without yielding, so work queued for the main actor waits.
+  func keepBusy(seconds: TimeInterval) {
+    Thread.sleep(forTimeInterval: seconds)
   }
 
   /// A count the main actor updates and the test waits on.

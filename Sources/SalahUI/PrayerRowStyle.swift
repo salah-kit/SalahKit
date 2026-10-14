@@ -73,10 +73,11 @@
   ///
   /// The next event is bold in the tint color, a prayer that just started is bold, and events
   /// that have passed are secondary. A time on another civil date than its owning day carries
-  /// its offset, such as `+1`. The row reads as one element in VoiceOver: the name, the time and,
-  /// on the next event's row, the countdown. Statuses are visual only, because saying "next" or
-  /// "passed" takes interface text, which is your app's; a style that announces them adds its
-  /// own words with `accessibilityValue(_:)`.
+  /// its offset, such as `+1`. The countdown and the time never wrap; in a narrow row the name
+  /// truncates instead. The row reads as one element in VoiceOver: the name,
+  /// the countdown on the next event's row, then the time and its offset. Statuses are visual
+  /// only, because saying "next" or "passed" takes interface text, which is your app's; a style
+  /// that announces them adds its own words with `accessibilityValue(_:)`.
   public struct PlainPrayerRowStyle: PrayerRowStyle {
     /// Creates the plain row style.
     public init() {}
@@ -98,13 +99,17 @@
         emphasized = false
         foreground = AnyShapeStyle(.primary)
       }
+      // Numbers never wrap: "4:14:00" broken over two lines could read as "4:14:0". When the
+      // row is too narrow, the name truncates instead.
       return HStack(alignment: .firstTextBaseline, spacing: 8) {
         configuration.name
+          .lineLimit(1)
         Spacer(minLength: 8)
         if let countdown = configuration.countdown {
           countdown
             .font(.footnote)
             .monospacedDigit()
+            .fixedSize()
         }
         HStack(alignment: .firstTextBaseline, spacing: 2) {
           configuration.time
@@ -114,6 +119,7 @@
               .font(.caption2)
           }
         }
+        .fixedSize()
       }
       .fontWeight(emphasized ? .semibold : .regular)
       .foregroundStyle(foreground)
