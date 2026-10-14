@@ -1,8 +1,8 @@
 import Foundation
 import SalahCore
 
-/// A bounded widget timeline: the entries from a refresh plan, a final timeline-expired entry,
-/// and the date to ask for the next timeline.
+/// A bounded widget timeline: refresh-plan entries, optional civil-day boundary entries,
+/// a final timeline-expired entry, and the date to ask for the next timeline.
 ///
 /// ``PrayerTimelineBuilder`` makes it. WidgetKit's `Timeline` is built from it by
 /// ``PrayerTimelineBuilder/timeline(from:horizon:entry:)``; use this value directly to inspect

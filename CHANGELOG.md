@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-14
+
 ### Added
 
 - `PrayerTimesList(missing:)` includes missing expected kinds in canonical order, with their
@@ -215,7 +217,8 @@ apps that prove them through the public API.
   that it links no calculation code) and CalculatedPhone; documentation published to GitHub
   Pages.
 
-[Unreleased]: https://github.com/salah-kit/SalahKit/compare/0.3.0...HEAD
+[Unreleased]: https://github.com/salah-kit/SalahKit/compare/0.4.0...HEAD
+[0.4.0]: https://github.com/salah-kit/SalahKit/compare/0.3.0...0.4.0
 [0.3.0]: https://github.com/salah-kit/SalahKit/releases/tag/0.3.0
 [0.2.0]: https://github.com/salah-kit/SalahKit/releases/tag/0.2.0
 [0.1.0]: https://github.com/salah-kit/SalahKit/releases/tag/0.1.0

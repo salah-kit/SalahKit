@@ -32,7 +32,7 @@ Add the package with Swift Package Manager:
 
 ```swift
 dependencies: [
-  .package(url: "https://github.com/salah-kit/SalahKit.git", from: "0.3.0"),
+  .package(url: "https://github.com/salah-kit/SalahKit.git", from: "0.4.0"),
   // For calculated times, when your code names a method or another calculation rule.
   .package(url: "https://github.com/salah-kit/SalahTimes.git", .upToNextMinor(from: "0.1.0")),
 ],
@@ -194,6 +194,13 @@ nonisolated func prayerTimeline(from now: Date) throws -> PrayerTimeline? {
 
 The app calls `SharedValue.prayers.save(settings, reloading: ["prayers"])` when the settings change; an unchanged value reloads nothing. The article "Building widget timelines without daily app launches" shows the whole provider and the states a widget has to word. `Examples/PhoneWidgets` is an iPhone app with Home Screen and Lock Screen widgets built this way, and `Examples/WatchComplication` gives a watch complication its own copy of the inputs over WatchConnectivity. `Examples/MenuBar` has a desktop widget with a Stop button that reaches the running app through a `DarwinSignal`; the article "Lessons from Salah" says why the app acts on the signal rather than on the stored value.
 
+For day lists, set `PrayerTimelineBuilder(includeDayBoundaries: true)` so the bounded timeline
+changes at civil-day starts as well as prayer-state changes. PhoneWidgets and MenuBar use it.
+An always-running alert consumer can pass `engine.handledOccurrences` to
+`planner.notificationPlan(_:from:budget:excluding:)` when replanning after a clock change.
+The in-memory record prevents a handled occurrence returning after a rollback within its
+one-day retention; MenuBar demonstrates the scheduler and engine ordering.
+
 ### Your own look
 
 SalahUI's components decide which prayer is next, which rows have passed and whether a countdown can be shown; your styles decide how they look:
@@ -207,7 +214,7 @@ PrayerTimesList(day: day, state: state, names: names)
   .prayerRowStyle(LanternRow())
 ```
 
-In 0.4, pass a partial day's `missing:` dictionary to `PrayerTimesList` to keep unknown kinds
+Pass a partial day's `missing:` dictionary to `PrayerTimesList` to keep unknown kinds
 visible. Its `rows` view fits an app's own stack. `NextPrayerView` accepts
 `selection: .justStartedOrNextEvent` for a just-started count-up followed by the next event,
 sunrise included; `PrayerFocus` shares that selection with non-view surfaces. CalculatedPhone

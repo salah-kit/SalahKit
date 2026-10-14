@@ -1,6 +1,6 @@
 # RFC 0004: SalahWidgets and SalahUI
 
-- **Status:** Draft, shipped in 0.2.0. The 0.2 consumers, `PhoneWidgets` and `WatchComplication`, and the 0.3 consumer, `MenuBar`, have reported: their findings are in §9. Open to findings from Salah's migration and other adopters until 1.0 (STANDARD.md, Releases).
+- **Status:** Draft, shipped in 0.2.0. The 0.2 consumers, `PhoneWidgets` and `WatchComplication`, and the 0.3 consumer, `MenuBar`, have reported: their findings are in §9. The 0.4 amendments add shared focus selection, missing rows and civil-day entries used by Salah 1.1.0 and the examples. Open to findings from other adopters until 1.0 (STANDARD.md, Releases).
 - **Products:** SalahWidgets, SalahUI.
 - **Discussion:** [salah-kit/SalahKit#9](https://github.com/salah-kit/SalahKit/discussions/9).
 - **Started:** 2026-10-14.
@@ -312,8 +312,8 @@ The first `observe` called `MainActor.assumeIsolated` inside the main-queue bloc
 
 ## 8. Open questions
 
-1. **Count-up for a just-started prayer.** Salah counts up for 15 minutes after a prayer starts. The configuration names the just-started prayer, and a style can build its own timer from `state.justStarted`; whether `PrayerCountdown` should count up too waits for a consumer that needs it (Salah's migration).
-2. **Rows for missing kinds.** The list shows known events only; CalculatedPhone shows a row with the reason for a kind that can't be calculated. A list option for such rows waits for a second consumer.
+1. **Count-up for a just-started prayer. Resolved in 0.4.** `NextPrayerView(selection:)` supplies the chosen focus and count-up text; Salah and MenuBar use it (§10.1).
+2. **Rows for missing kinds. Resolved in 0.4.** `PrayerTimesList(missing:)` supplies explicit missing rows to Salah and CalculatedPhone (§10.1).
 3. **Wording for gaps.** Every consumer turns `ScheduleGapReason` into a sentence. A summary of an unavailable state's coverage (Core §9 #8) would shorten that.
 4. **Timeline size.** WidgetKit documents no entry limit. The default of 96 is Core's; a device run may show whether long timelines are cut.
 5. **One writer per key.** `SharedValue` doesn't lock. If an extension needs to write a value the app also writes (an optimistic stop), a compare-and-swap API may be needed.
