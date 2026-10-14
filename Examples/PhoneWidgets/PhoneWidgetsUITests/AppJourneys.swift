@@ -77,6 +77,9 @@ nonisolated final class AppJourneys: JourneyCase {
     // In the app the countdown is the time left at the entry's moment: 14:00 to Asr at 15:27.
     XCTAssertTrue(text("widget.next.countdown", in: normal).contains("27"))
     XCTAssertTrue(text("widget.row.fajr", in: normal).hasPrefix("Fajr"))
+    // Every family names the next prayer in full for VoiceOver, the circular one too, although
+    // it shows only the abbreviation ("A").
+    assertNamesPrayer("Asr", in: "normal", of: app)
 
     // Tromsø's partial day: the known times, what can't be calculated, and a real countdown to
     // the known next prayer.
@@ -128,6 +131,7 @@ nonisolated final class AppJourneys: JourneyCase {
     let normal = state("normal", .medium, in: app)
     XCTAssertEqual(text("widget.next.name", in: normal), "العصر")
     XCTAssertEqual(text("widget.place", in: normal), "مكة المكرمة")
+    assertNamesPrayer("العصر", in: "normal", of: app)
     screenshot("07-states-arabic")
     let unknown = state("unknownNext", .large, in: app)
     XCTAssertEqual(text("widget.next.unknown", in: unknown), "الصلاة التالية غير معروفة")
@@ -153,6 +157,19 @@ nonisolated final class AppJourneys: JourneyCase {
     let container = element("states.\(id).\(family.rawValue)", in: app)
     XCTAssertTrue(container.waitForExistence(timeout: 10), "states.\(id).\(family.rawValue)")
     return container
+  }
+
+  /// Asserts that VoiceOver reads the prayer's full name in every family of a state: some
+  /// element of each family's sample has a label that contains it.
+  @MainActor
+  private func assertNamesPrayer(_ name: String, in id: String, of app: XCUIApplication) {
+    for family in [Family.small, .medium, .large, .circular, .rectangular, .inline] {
+      let container = state(id, family, in: app)
+      let named = container.descendants(matching: .any)
+        .matching(NSPredicate(format: "label CONTAINS %@", name)).firstMatch
+      XCTAssertTrue(
+        named.exists, "\(family.rawValue) doesn't read \(name): \(container.debugDescription)")
+    }
   }
 
   @MainActor

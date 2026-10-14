@@ -29,7 +29,7 @@ Times are always in the place's time zone, whatever the device's, because SalahU
 | `systemSmall` | The place and `NextPrayerView` with the app's card style: the just-started prayer, the next prayer's name and time, the live countdown |
 | `systemMedium` | The card, and the day's `PrayerTimesList` with the app's row style |
 | `systemLarge` | The card, the day's list, and the note for anything unknown |
-| `accessoryCircular` | `NextPrayerView` with a circular style: the next prayer's abbreviation over its countdown |
+| `accessoryCircular` | `NextPrayerView` with a circular style: the next prayer's abbreviation over its countdown; VoiceOver reads the full name |
 | `accessoryRectangular` | The next prayer's name and time, then the countdown or the note |
 | `accessoryInline` | The next prayer and its time on one line |
 
@@ -165,7 +165,7 @@ The time is the provider's work alone (`ContinuousClock` around `PrayerTimelineP
 
 ## Accessibility and languages
 
-Every control has a VoiceOver label, text uses Dynamic Type styles, and Arabic lays the app and the widget out right to left with Arabic-Indic digits. The Home Screen colors (`WidgetPalette`, light and dark) pass SalahUI's `ContrastCheck`: 4.5:1 for text, 3:1 for the problem symbols, and the accent stays clear of the system's alert red; a unit test checks them. Lock Screen widgets use the system's tint. UI strings are in `Shared/Localizable.xcstrings` in English and Arabic; the Arabic strings are machine-drafted and marked as needing review.
+Every control has a VoiceOver label, and every widget family names the next prayer in full for VoiceOver, the circular one too (a journey checks it on the Widget states screen). Text uses Dynamic Type styles, and Arabic lays the app and the widget out right to left with Arabic-Indic digits. The Home Screen colors (`WidgetPalette`, light and dark) pass SalahUI's `ContrastCheck`: 4.5:1 for text, 3:1 for the problem symbols, and the accent stays clear of the system's alert red; a unit test checks them. Lock Screen widgets use the system's tint. UI strings are in `Shared/Localizable.xcstrings` in English and Arabic; the Arabic strings are machine-drafted and marked as needing review.
 
 ## Pending
 
