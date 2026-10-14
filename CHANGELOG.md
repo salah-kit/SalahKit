@@ -55,6 +55,16 @@ All notable changes to this project are documented here. The format follows
   confirmed, and an XCUITest journey that allows notifications through Springboard, watches an
   alert arrive with the app closed, and reads the requests back after a time change and an
   injected failure.
+- **Examples/PhoneWidgets**, an iPhone app and widget extension sharing an App Group, with a
+  calculated source: Home Screen and Lock Screen widgets with a live countdown, setup-required,
+  partial, unavailable and expired views in English and Arabic, a log of every timeline the
+  extension builds (for a device soak), fixed-clock tests over seven days of timelines, and
+  journeys that add the widget to the Home Screen and check the catalog lookup and reload
+  gating in the real extension.
+- **Examples/WatchComplication**, a watch app and complication with a companion iPhone app that
+  sends calculated or published inputs over WatchConnectivity: the watch keeps its own copy,
+  shows missing-settings, ended-timetable and expired views, and keeps working with the iPhone
+  app closed; checked on a paired iPhone and Watch simulator pair.
 
 ## [0.1.0] - 2026-10-13
 

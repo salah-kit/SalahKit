@@ -8,7 +8,9 @@ import SalahCore
 /// - ``schedule(_:)`` carries what the schedule knows. Its state can be complete, partial (a
 ///   known previous prayer with an unknown next one) or `ScheduleState.unavailable`
 ///   when the source has no usable data, such as a timetable that ended. Reloading the widget
-///   can't fix a source gap; only new data from the app can.
+///   can't fix a source gap; only new data from the app can. A calculation that can't produce
+///   a kind, such as Maghrib in a polar summer, leaves the state unavailable across that
+///   kind's whole window, so the partial state comes from a published timetable that ends.
 /// - ``expired(knownThrough:)`` means the timeline ran out before WidgetKit asked for a new one.
 ///   The source may be fine, even a calculation that never ends. Show that the times need
 ///   refreshing, never a countdown that would be stale.

@@ -141,9 +141,14 @@ coarse steps. Entries a minute apart also go below
 WidgetKit's guidance, so it may show some of them late; a live countdown keeps the entries far
 apart and the countdown exact.
 
-To inspect the entries, or to choose another reload policy, call
+Nothing in the schedule's state changes at midnight, so the timeline has no entry there. A
+widget that shows the day's list needs one at each midnight in the place's zone, with the state
+of the entry before it, which still holds; the `PhoneWidgets` example adds them.
+
+To inspect the entries, log them, or choose another reload policy, call
 ``PrayerTimelineBuilder/timeline(from:horizon:)``, which returns a ``PrayerTimeline`` and throws
-for a horizon that isn't positive, a limit below 2 or an invalid `steps` strategy.
+for a horizon that isn't positive, a limit below 2 or an invalid `steps` strategy, and build
+the `Timeline` from its entries and ``PrayerTimeline/reloadDate``.
 
 ### Show each state honestly
 
@@ -196,7 +201,10 @@ reloads a day for a widget people often look at, reloads that don't count when t
 the foreground, and entries that may appear later than their dates. So:
 
 - A timeline never assumes it will be replaced on time: its expired entry covers a late reload.
-- The app reloads only on real changes, which is what ``SharedValue`` gates.
+- The app reloads only on real changes, which is what ``SharedValue`` gates. On an iOS 27
+  simulator, WidgetKit ran the first reload a foreground app asked for at once and held later
+  ones until the app went to the background or about 90 seconds passed, so check reloads with
+  the app in the background.
 - Tests check the entries a timeline supplies, never WidgetKit's timing.
 
 Test the timelines with a fixed clock: start at a known instant, ask for a timeline, ask again

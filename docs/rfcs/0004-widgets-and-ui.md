@@ -1,6 +1,6 @@
 # RFC 0004: SalahWidgets and SalahUI
 
-- **Status:** Draft for 0.2.0. Open to findings from Salah's migration and other adopters until 1.0 (STANDARD.md, Releases).
+- **Status:** Draft for 0.2.0. Both 0.2 consumers, `PhoneWidgets` and `WatchComplication`, have reported: their findings are in §9. Open to findings from Salah's migration and other adopters until 1.0 (STANDARD.md, Releases).
 - **Products:** SalahWidgets, SalahUI.
 - **Started:** 2026-10-14.
 - **Supersedes:** the sketches in the SalahKit proposal, §7.3 and §7.4.
@@ -320,7 +320,17 @@ The first `observe` called `MainActor.assumeIsolated` inside the main-queue bloc
 
 ## 9. Consumer findings
 
-To be completed from `Examples/PhoneWidgets` and `Examples/WatchComplication`.
+`Examples/PhoneWidgets` (an iPhone app and widget extension with a calculated source) and `Examples/WatchComplication` (a watch app and complication, with a companion iPhone app sending calculated or published inputs) use both products through the public API, in real extensions on simulators: PhoneWidgets' widget was added to the Home Screen by XCUITest, and the complication ran from the watch's Smart Stack. Their extensions built a timeline in 4.7 to 125 ms (median 7.5 ms, 36 entries) at a footprint of 7.4 to 18.5 MiB (iPhone 17 simulator, iOS 27), and under 30 ms at 12 to 15 MB (Apple Watch Series 11 simulator, watchOS 27), which answers the proposal's §14 risk for simulators; the oldest supported iPhone is still to measure. What they found:
+
+1. **Main-actor targets need `nonisolated` declarations** (both): the shared value, its extension, the provider and the entry. Handled in the documentation (§4.1).
+2. **Inspecting the timeline WidgetKit gets** (both). A `Timeline`'s reload policy can't be read back, so an extension that logs `validUntil`, `reloadDate` or `isTruncated` calls `timeline(from:horizon:)` and builds the `Timeline` itself, with its own handling of the errors. That's the documented path; a converter would save a line or two, and waits for a third use.
+3. **No entry at midnight** (PhoneWidgets). `.stateChanges` adds no entry where only the civil date changes, so a widget that lists today's times would show yesterday's list until the next change, near Fajr. PhoneWidgets adds an entry at each midnight in the place's zone, with the state that holds then. A builder option, or day boundaries in Core's refresh plan, is a candidate for 0.3; the article tells adopters meanwhile.
+4. **WidgetKit holds reloads while the app is in the foreground** (PhoneWidgets, iOS 27 simulator). The first request ran at once; later ones waited until the app went to the background or about 90 seconds passed. The article says so.
+5. **Wording a source gap** (both). To say "timetable ended" rather than "can't be calculated", a widget finds the gap containing the entry's date and reads its reason, and the gaps of neighboring days overlap. The same need as Core §9 #7 and #8: a summary of the current gap would help both products.
+6. **An unknown next prayer from a calculation** (PhoneWidgets). A kind a calculation can't produce, such as Tromsø's Maghrib in June, leaves the state unavailable for its whole window, so "latest known, next unknown" comes only from a published timetable that ends. `PrayerTimelineState`'s documentation says so.
+7. **Text for sentences** (both). Configurations give `Text`, so an app sentence in its own word order ("Asr has started") or an inline "Asr 12m" composes `Text`s or reads `state` with `PrayerNames`. Waits for a consumer that needs strings.
+8. **A fixed moment's live countdown** (PhoneWidgets). The app's widget-states screen draws entries at fixed moments, where a live timer would count from the wall clock; it uses `.staticText`. The test-only freeze stays internal.
+9. **Bugs the journeys found in the examples' own code**: PhoneWidgets created its settings store in a view's initializer, which applied the launch arguments again after a language change; WatchComplication rebuilt its timeline from the clock on every redraw and never settled. Both are fixed, with regression journeys.
 
 ## 10. Changes after review
 
