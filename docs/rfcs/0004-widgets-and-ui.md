@@ -1,6 +1,6 @@
 # RFC 0004: SalahWidgets and SalahUI
 
-- **Status:** Draft, shipped in 0.2.0. The 0.2 consumers, `PhoneWidgets` and `WatchComplication`, and the 0.3 consumer, `MenuBar`, have reported: their findings are in §9. The 0.4 amendments add shared focus selection, missing rows and civil-day entries used by Salah 1.1.0 and the examples. Open to findings from other adopters until 1.0 (STANDARD.md, Releases).
+- **Status:** Draft, shipped in 0.2.0. The 0.2 consumers, `PhoneWidgets` and `WatchComplication`, and the 0.3 consumer, `MenuBar`, have reported: their findings are in §9. The shared focus selection, missing rows and civil-day entries ship in 0.4.0, used by Salah 1.1.0 and the examples. Open to findings from other adopters until 1.0 (STANDARD.md, Releases).
 - **Products:** SalahWidgets, SalahUI.
 - **Discussion:** [salah-kit/SalahKit#9](https://github.com/salah-kit/SalahKit/discussions/9).
 - **Started:** 2026-10-14.
