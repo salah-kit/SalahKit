@@ -32,7 +32,7 @@ Add the package with Swift Package Manager:
 
 ```swift
 dependencies: [
-  .package(url: "https://github.com/salah-kit/SalahKit.git", from: "0.2.0"),
+  .package(url: "https://github.com/salah-kit/SalahKit.git", from: "0.3.0"),
   // For calculated times, when your code names a method or another calculation rule.
   .package(url: "https://github.com/salah-kit/SalahTimes.git", .upToNextMinor(from: "0.1.0")),
 ],
@@ -124,7 +124,7 @@ case .unavailable(let coverage, _):
 }
 ```
 
-`Examples/MosqueBoard` is a complete iPad app built this way, with a real published timetable, overnight times, a clock change and declared Jumu'ah.
+`Examples/MosqueBoard` is a complete iPad and Apple TV app built this way, from one shared codebase, with a real published timetable, overnight times, a clock change and declared Jumu'ah.
 
 ### Prayer alerts
 
@@ -154,7 +154,7 @@ let report = try await scheduler.apply(plan) { alert in
 print("Alerts confirmed until", report.confirmedCoveredUntil ?? now)
 ```
 
-iOS keeps a limited number of pending notification requests per app, so the plan spends a budget (60 by default): every alert of the next two days, then prayer-time alerts as far as the budget reaches. The plan and the report say until when the alerts are complete; a missing prayer time, a failed request or denied permission shortens that, and nothing is invented. Ask for notification permission yourself, and replan when your app launches or becomes active and when the settings change. An always-running app also gives the whole schedule to `InProcessAlertEngine`, which reports every alert when it's due, reminders the plan left out included. `Examples/CalculatedPhone` schedules its alerts this way.
+iOS keeps a limited number of pending notification requests per app, so the plan spends a budget (60 by default): every alert of the next two days, then prayer-time alerts as far as the budget reaches. The plan and the report say until when the alerts are complete; a missing prayer time, a failed request or denied permission shortens that, and nothing is invented. Ask for notification permission yourself, and replan when your app launches or becomes active and when the settings change. An always-running app also gives the whole schedule to `InProcessAlertEngine`, which reports every alert when it's due, reminders the plan left out included. `Examples/CalculatedPhone` schedules its alerts this way, and `Examples/MenuBar`, a macOS menu-bar app, also follows every alert with the engine, plays a generated tone for the alert the engine's default precedence picks, and catches up after the Mac wakes or the clock changes.
 
 ### A widget that doesn't need its app
 
@@ -187,7 +187,7 @@ func prayerTimeline(from now: Date) throws -> PrayerTimeline? {
 }
 ```
 
-The app calls `SharedValue.prayers.save(settings, reloading: ["prayers"])` when the settings change; an unchanged value reloads nothing. The article "Building widget timelines without daily app launches" shows the whole provider and the states a widget has to word. `Examples/PhoneWidgets` is an iPhone app with Home Screen and Lock Screen widgets built this way, and `Examples/WatchComplication` gives a watch complication its own copy of the inputs over WatchConnectivity.
+The app calls `SharedValue.prayers.save(settings, reloading: ["prayers"])` when the settings change; an unchanged value reloads nothing. The article "Building widget timelines without daily app launches" shows the whole provider and the states a widget has to word. `Examples/PhoneWidgets` is an iPhone app with Home Screen and Lock Screen widgets built this way, and `Examples/WatchComplication` gives a watch complication its own copy of the inputs over WatchConnectivity. `Examples/MenuBar` has a desktop widget with a Stop button that reaches the running app through a `DarwinSignal`; the article "Lessons from Salah" says why the app acts on the signal rather than on the stored value.
 
 ### Your own look
 
@@ -206,7 +206,17 @@ A `PrayerRowStyle` or `NextPrayerStyle` gets ready-made text for the name, the t
 
 ## Documentation
 
-The DocC documentation is at <https://salah-kit.github.io/SalahKit/>. Start with "A calculated prayer app with Core and Calculation", "Using a mosque timetable with iqama and incomplete coverage" or "Alerts within the 64-notification limit", then "Building widget timelines without daily app launches" and "Styling rows and cards". The design and its contracts are in [RFC 0001](docs/rfcs/0001-core.md) (SalahCore), [RFC 0002](docs/rfcs/0002-calculation.md) (SalahCalculation), [RFC 0003](docs/rfcs/0003-alerts.md) (SalahAlerts) and [RFC 0004](docs/rfcs/0004-widgets-and-ui.md) (SalahWidgets and SalahUI); the behavior every implementation must reproduce is in [`Vectors/`](Vectors/README.md). [`docs/calculation-parity.md`](docs/calculation-parity.md) compares SalahCalculation with the times Salah computed with adhan-swift.
+The DocC documentation is at <https://salah-kit.github.io/SalahKit/>. Start with "A calculated prayer app with Core and Calculation", "Using a mosque timetable with iqama and incomplete coverage" or "Alerts within the 64-notification limit", then "Building widget timelines without daily app launches", "Styling rows and cards" and "Lessons from Salah". The design and its contracts are in [RFC 0001](docs/rfcs/0001-core.md) (SalahCore), [RFC 0002](docs/rfcs/0002-calculation.md) (SalahCalculation), [RFC 0003](docs/rfcs/0003-alerts.md) (SalahAlerts) and [RFC 0004](docs/rfcs/0004-widgets-and-ui.md) (SalahWidgets and SalahUI); the behavior every implementation must reproduce is in [`Vectors/`](Vectors/README.md). [`docs/calculation-parity.md`](docs/calculation-parity.md) compares SalahCalculation with the times Salah computed with adhan-swift.
+
+The examples are complete apps on the public API, each with its own README, tests and CI job:
+
+| Example | Platform | What it shows |
+|---|---|---|
+| [CalculatedPhone](Examples/CalculatedPhone) | iPhone | Calculated times with every parameter, the state across midnight, polar days, and alerts within the notification limit |
+| [MosqueBoard](Examples/MosqueBoard) | iPad, Apple TV | A mosque's published timetable with iqama, clock changes, declared Jumu'ah and incomplete coverage, with no calculation code |
+| [PhoneWidgets](Examples/PhoneWidgets) | iPhone | Home Screen and Lock Screen widgets that build their own timelines from shared inputs |
+| [WatchComplication](Examples/WatchComplication) | Apple Watch, iPhone | A complication with its own copy of the inputs, which keeps working with the iPhone app closed |
+| [MenuBar](Examples/MenuBar) | Mac | An app that keeps running: a menu-bar title refreshed with `.steps`, in-process alerts with a generated tone, and a desktop widget whose Stop button reaches the app |
 
 ## Supported platforms
 
@@ -217,13 +227,13 @@ The DocC documentation is at <https://salah-kit.github.io/SalahKit/>. Start with
 
 ## Status and versioning
 
-SalahKit is pre-1.0 and follows [Semantic Versioning](https://semver.org). Until 1.0, a minor release may change the API; every change goes through an RFC in [`docs/rfcs/`](docs/rfcs/) and is listed in [CHANGELOG.md](CHANGELOG.md). Version 1.0 waits for two shipped apps that differ in platform and data source, at least one maintained outside this organization, and for native-speaker review of the prayer names.
+SalahKit is pre-1.0 and follows [Semantic Versioning](https://semver.org). Until 1.0, a minor release may change the API; every change goes through an RFC in [`docs/rfcs/`](docs/rfcs/), discussed in [GitHub Discussions](https://github.com/salah-kit/SalahKit/discussions), and is listed in [CHANGELOG.md](CHANGELOG.md). Version 1.0 waits for two shipped apps that differ in platform and data source, at least one maintained outside this organization, and for native-speaker review of the prayer names.
 
 Prayer names come from a String Catalog seeded from the Salah app. English, Arabic and French are reviewed; Urdu, Persian, Bengali, Turkish, Indonesian and Malay are marked `needs_review` until a native speaker checks them. Corrections are welcome.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). The org-wide code of conduct and security policy live in [salah-kit/.github](https://github.com/salah-kit/.github).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for building, testing and formatting, and for the RFC process that public API changes go through. Questions and RFC discussions are in [GitHub Discussions](https://github.com/salah-kit/SalahKit/discussions). The org-wide code of conduct and security policy live in [salah-kit/.github](https://github.com/salah-kit/.github).
 
 ## License
 

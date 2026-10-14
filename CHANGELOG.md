@@ -6,6 +6,40 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Examples/MenuBar**, a macOS menu-bar app that keeps running: the next prayer in the menu
+  bar, refreshed at the dates of a `.steps` refresh plan; prayer alerts with
+  `InProcessAlertEngine` following the uncapped `AlertSchedule`, `NotificationScheduler`
+  installing the budgeted `NotificationPlan`, and the engine's default audio precedence for a
+  generated tone; catch-up and replanning after a wake, a clock change and a time zone change;
+  and a desktop widget whose Stop button follows the live-state pattern: the intent clears the
+  shared value and posts a `DarwinSignal`, and the app acts on the signal and republishes.
+  `MenuBarStopHarness`, signed and sandboxed like the widget extension, runs the intent's own
+  code in a separate process against the running app, which closes the widget-to-app stop
+  round trip that 0.2.0 left pending. Unit tests with a manual clock and injected notification
+  centers, and XCUITest journeys on the Mac.
+- **MosqueBoard for tvOS** (`MosqueBoardTV`, tvOS 17): the same board on a mosque's Apple TV,
+  built from the iPad app's shared code. It links only SalahCore, fits the whole board inside
+  the TV's safe area and keeps the screen saver off. Its unit tests and journeys (a normal day,
+  Jumu'ah, the expired timetable, Isha after midnight, a partial row, Arabic) run on an Apple TV
+  simulator.
+- The DocC article "Lessons from Salah": acting on the Darwin signal instead of the stored
+  flag, reloading widgets only for real changes, and keeping the language's digits.
+- Governance: an RFC process in CONTRIBUTING.md, a GitHub Discussion for each RFC, and
+  CODEOWNERS for each product.
+- `.spi.yml`, which points the Swift Package Index to the documentation on GitHub Pages.
+- CI for MenuBar (the generation check, both isolation builds, the unit tests, the round
+  trip and the journeys, unsigned) and for MosqueBoard on tvOS (both isolation builds, the
+  check that it links no calculation code, and its tests on an Apple TV simulator).
+
+### Changed
+
+- MosqueBoard's code, String Catalog and timetables moved to `Examples/MosqueBoard/Shared`,
+  which the iPad and tvOS apps both compile.
+- RFC 0003 and RFC 0004 record MenuBar's evidence and findings, and every RFC links its
+  discussion.
+
 ## [0.2.0] - 2026-10-14
 
 Widgets that build their own timelines, SwiftUI building blocks you restyle, and prayer
