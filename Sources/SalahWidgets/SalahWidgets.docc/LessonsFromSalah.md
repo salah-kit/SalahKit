@@ -123,7 +123,7 @@ components follow it.
 
 A widget extension runs in the system's language, not the language the user chose in your app.
 Put the chosen language in the shared inputs, and build the locale from it in the extension,
-as the widget examples do.
+as PhoneWidgets and MenuBar do.
 
 ## See Also
 

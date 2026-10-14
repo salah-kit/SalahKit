@@ -179,7 +179,7 @@ nonisolated extension SharedValue where Value == PrayerSettings {
 }
 
 // In the extension: two days of entries, ending with one that says the times ran out.
-func prayerTimeline(from now: Date) throws -> PrayerTimeline? {
+nonisolated func prayerTimeline(from now: Date) throws -> PrayerTimeline? {
   guard let settings = SharedValue.prayers.load() else { return nil }
   let schedule = PrayerSchedule(
     source: CalculationSource(settings.calculation), location: settings.location)

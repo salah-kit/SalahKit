@@ -31,11 +31,19 @@ nonisolated extension SharedValue where Value == PrayerSettings {
 }
 
 // In the extension: two days of entries, ending with one that says the times ran out.
-func prayerTimeline(from now: Date) throws -> PrayerTimeline? {
+nonisolated func prayerTimeline(from now: Date) throws -> PrayerTimeline? {
   guard let settings = SharedValue.prayers.load() else { return nil }
   let schedule = PrayerSchedule(
     source: CalculationSource(settings.calculation), location: settings.location)
   return try PrayerTimelineBuilder(schedule: schedule).timeline(from: now)
+}
+
+/// A widget provider's `getTimeline` isn't on the main actor. In a module that defaults to the
+/// main actor, this compiles only while the README's helper is `nonisolated`.
+nonisolated struct ProviderCall {
+  func timeline(from now: Date) throws -> PrayerTimeline? {
+    try prayerTimeline(from: now)
+  }
 }
 
 func saveForWidgets(_ settings: PrayerSettings) {
@@ -140,7 +148,7 @@ struct WidgetsDocumentationExamples {
     saveForWidgets(settings)
     #expect(SharedValue.prayers.load() == settings)
     #expect(try SharedValue.prayers.save(settings, reloading: ["prayers"]) == false)
-    let timeline = try #require(try prayerTimeline(from: now))
+    let timeline = try #require(try ProviderCall().timeline(from: now))
     #expect(timeline.entries.first?.state.prayerState?.nextPrayer?.kind == .maghrib)
     #expect(timeline.entries.last?.state == .expired(knownThrough: timeline.validUntil))
   }

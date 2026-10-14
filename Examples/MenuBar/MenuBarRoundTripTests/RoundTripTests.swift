@@ -31,6 +31,15 @@ struct RoundTripTests {
     "-language", "en", "-alerts", "off", "-tone", "on", "-AppleLanguages", "(en)",
   ]
 
+  /// The tone plays, and the app has recorded publishing it: the app saves what plays before
+  /// it records "published", and the records after this state must not include that one.
+  static func playing(_ state: Harness.Output) -> Bool {
+    state.nowPlaying != nil
+      && state.records.contains {
+        $0.event == "published" && $0.detail?.hasPrefix("playing=true") == true
+      }
+  }
+
   // MARK: - The stop round trip (proposal §7.3, Live state)
 
   /// The 0.3.0 gate: the widget intent's code, run in a separate process, stops the running
@@ -40,7 +49,7 @@ struct RoundTripTests {
   func widgetStop() async throws {
     let app = try await RunningApp.launch(Self.quiet + ["-playTestTone", "repeating"])
     defer { app.quit() }
-    let playing = try await Harness.waitForState(of: app) { $0.nowPlaying != nil }
+    let playing = try await Harness.waitForState(of: app, Self.playing)
     #expect(playing.widget?.showsStopButton == true)
 
     _ = try Harness.run("stop")
@@ -63,7 +72,7 @@ struct RoundTripTests {
   func signalAlone() async throws {
     let app = try await RunningApp.launch(Self.quiet + ["-playTestTone", "repeating"])
     defer { app.quit() }
-    let playing = try await Harness.waitForState(of: app) { $0.nowPlaying != nil }
+    let playing = try await Harness.waitForState(of: app, Self.playing)
 
     let signalled = try Harness.run("signal")
     #expect(signalled.signalAccepted == true)
