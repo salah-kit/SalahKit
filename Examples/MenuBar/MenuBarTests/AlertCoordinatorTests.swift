@@ -281,6 +281,14 @@ struct AlertCoordinatorTests {
     #expect(!rig.center.pendingIdentifiers.contains(request))
     #expect(rig.center.deliveredIdentifiers == [request])
     #expect(rig.player.plays.count == 1)
+
+    // The exclusion must survive the next settings/periodic replan and an ordinary wake.
+    rig.coordinator.replan()
+    await rig.coordinator.waitForApply()
+    #expect(!rig.center.pendingIdentifiers.contains(request))
+    rig.workspaceCenter.post(name: SystemEventObserver.didWake, object: nil)
+    await rig.coordinator.waitForApply()
+    #expect(!rig.center.pendingIdentifiers.contains(request))
   }
 
   @Test(

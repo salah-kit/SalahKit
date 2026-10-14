@@ -1,7 +1,8 @@
 import Foundation
-import SalahAlerts
 import SalahCore
 import Testing
+
+@testable import SalahAlerts
 
 /// Checks that the Swift code of the DocC article "Alerts within the 64-notification limit", and
 /// the README's blocks that import SalahAlerts, is the code `AlertsDocumentationExamples`
@@ -85,11 +86,14 @@ import Testing
     clock.now = fireDate.addingTimeInterval(-0.5)
     let ordinary = AlertsDocumentationExamples.ordinaryPlan(alerts, engine: engine, now: clock.now)
     #expect(ordinary.alerts == alerts.alerts)
-    // A clock-change snapshot excludes it regardless of the relation to its report time.
+    // A clock-change mark excludes it regardless of the relation to its report time.
     let clockChange = AlertsDocumentationExamples.planAfterClockChange(
       alerts, engine: engine, now: clock.now)
     #expect(clockChange.alerts.isEmpty)
     #expect(clockChange.coveredUntil == Fixture.date(13, 0))
+    let laterOrdinary = AlertsDocumentationExamples.ordinaryPlan(
+      alerts, engine: engine, now: clock.now)
+    #expect(laterOrdinary.alerts.isEmpty, "the engine retains the mark for later replans")
   }
 
   /// The contents of a document's fenced Swift blocks, in order.

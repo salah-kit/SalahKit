@@ -105,17 +105,17 @@ nonisolated public struct CatchUpPolicy: Hashable, Sendable {
   private let clock: any AlertClock
   private let onDue: @MainActor ([PlannedAlert]) -> Void
   private var alerts: [PlannedAlert] = []
+  /// Explicit notification exclusions, valid only while their handled records are retained.
+  private var notificationExcluded: Set<AlertOccurrenceID> = []
   /// The occurrences reported to `onDue`, with the instant each was reported.
   ///
   /// Records are added before `onDue` runs and pruned on each update or resync once they are
-  /// a day old (longer for a grace longer than a day). On a clock change, snapshot its keys
-  /// before resyncing and pass that set to
-  /// ``AlertPlanner/notificationPlan(_:from:budget:excluding:)``. An ordinary replan excludes
-  /// only keys reported after its planning instant, preserving pending requests in the early
-  /// delivery window. Newly due reports remain eligible during the event's replan.
+  /// a day old (longer for a grace longer than a day). Call
+  /// ``excludeHandledOccurrencesFromNotifications()`` on a clock change before checking due
+  /// alerts, then use ``notificationExclusions(at:)`` for every notification plan.
   ///
   /// This is an in-memory record of the engine's reports, not proof of system delivery.
-  public private(set) var handledOccurrences: [AlertOccurrenceID: Date] = [:]
+  private(set) var handledOccurrences: [AlertOccurrenceID: Date] = [:]
 
   /// Creates an engine.
   ///
@@ -148,6 +148,38 @@ nonisolated public struct CatchUpPolicy: Hashable, Sendable {
     check(at: now ?? clock.now)
   }
 
+  /// Excludes already handled occurrences from notification plans for their remaining
+  /// retention, including plans rebuilt by ordinary refreshes and wakes.
+  ///
+  /// Call this only for an explicit clock change, before ``update(_:)`` or ``resync(now:)``.
+  /// It records only unexpired handled keys, without checking or delivering due alerts, so
+  /// a new early report made during the subsequent check keeps its future system request.
+  /// Wakes, activation and time-zone changes don't mark exclusions.
+  public func excludeHandledOccurrencesFromNotifications() {
+    notificationExcluded.formUnion(retainedHandled(at: clock.now).keys)
+  }
+
+  /// The exact occurrences to exclude from a notification plan at `now`.
+  ///
+  /// Pass this set to ``AlertPlanner/notificationPlan(_:from:budget:excluding:)`` on every
+  /// replan. It includes explicit exclusions marked by
+  /// ``excludeHandledOccurrencesFromNotifications()`` and retained records reported after
+  /// `now`, preserving future system requests for ordinary early reports. Expired records
+  /// never contribute, even before another update or resync prunes them. `nil` uses the
+  /// engine's clock. This state lives in memory and doesn't prove system presentation.
+  public func notificationExclusions(at now: Date? = nil) -> Set<AlertOccurrenceID> {
+    let now = now ?? clock.now
+    let retained = retainedHandled(at: now)
+    return notificationExcluded.intersection(retained.keys)
+      .union(retained.filter { now < $0.value }.keys)
+  }
+
+  /// Records younger than the retention at the queried instant; a rollback keeps future ones.
+  private func retainedHandled(at now: Date) -> [AlertOccurrenceID: Date] {
+    let horizon = now.addingTimeInterval(-catchUp.retention)
+    return handledOccurrences.filter { $0.value > horizon }
+  }
+
   /// The alert whose sound the engine's default precedence plays, among alerts due together.
   ///
   /// The latest fire date wins. At one instant an at-time alert beats a before-reminder,
@@ -164,8 +196,8 @@ nonisolated public struct CatchUpPolicy: Hashable, Sendable {
   }
 
   private func check(at now: Date) {
-    let horizon = now.addingTimeInterval(-catchUp.retention)
-    handledOccurrences = handledOccurrences.filter { $0.value > horizon }
+    handledOccurrences = retainedHandled(at: now)
+    notificationExcluded.formIntersection(handledOccurrences.keys)
     let due = alerts.filter {
       handledOccurrences[$0.occurrenceID] == nil && catchUp.isDue($0, at: now)
     }

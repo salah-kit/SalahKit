@@ -1,7 +1,8 @@
 import Foundation
-import SalahAlerts
 import SalahCore
 import Testing
+
+@testable import SalahAlerts
 
 /// The in-process engine (RFC 0003 §4.6) with an injected clock: timers, sleep and wake, clock
 /// changes, changed fire times and the reminders a notification plan leaves out.
@@ -177,6 +178,125 @@ import Testing
     clock.now = reportedAt.addingTimeInterval(2 * 86_400 + 60)
     engine.resync()
     #expect(engine.handledOccurrences.isEmpty)
+  }
+
+  @Test func notificationExclusionsSurviveOrdinaryUpdatesAndResyncs() throws {
+    let fireDate = Fixture.time(.dhuhr)
+    let (engine, clock, recorder) = engine(at: fireDate.addingTimeInterval(-1))
+    let schedule = try Fixture.alerts(
+      from: Fixture.date(12, 0), to: Fixture.date(13, 0),
+      settings: Fixture.settings(AlertSettings(), for: [.dhuhr]))
+    let occurrence = try #require(schedule.alerts.first).occurrenceID
+    engine.update(schedule)
+    #expect(engine.notificationExclusions().isEmpty, "an ordinary early report stays eligible")
+    clock.now = fireDate.addingTimeInterval(-0.5)
+    engine.excludeHandledOccurrencesFromNotifications()
+    for _ in 0..<3 {
+      engine.update(schedule)
+      engine.resync()
+      let exclusions = engine.notificationExclusions(at: clock.now)
+      #expect(exclusions == [occurrence])
+      let plan = AlertPlanner().notificationPlan(schedule, from: clock.now, excluding: exclusions)
+      #expect(plan.alerts.isEmpty)
+      #expect(plan.coveredUntil == Fixture.date(13, 0))
+    }
+    #expect(recorder.batches.count == 1)
+  }
+
+  @Test func markingDoesNotReportDueAlertsOrExcludeNewEarlyReports() throws {
+    let fireDate = Fixture.time(.dhuhr)
+    let (engine, clock, recorder) = engine(at: fireDate.addingTimeInterval(-60))
+    let schedule = try Fixture.alerts(
+      from: Fixture.date(12, 0), to: Fixture.date(13, 0),
+      settings: Fixture.settings(AlertSettings(), for: [.dhuhr]))
+    engine.update(schedule)
+    let armed = clock.armed
+    clock.now = fireDate.addingTimeInterval(-1)
+    engine.excludeHandledOccurrencesFromNotifications()
+    #expect(recorder.batches.isEmpty)
+    #expect(clock.armed == armed, "marking doesn't check or re-arm the engine")
+    engine.resync()
+    #expect(recorder.batches.count == 1)
+    #expect(engine.notificationExclusions().isEmpty)
+    #expect(
+      AlertPlanner().notificationPlan(
+        schedule, from: clock.now, excluding: engine.notificationExclusions()
+      ).alerts
+        == schedule.alerts)
+  }
+
+  @Test func notificationExclusionsUseTheQueriedPlanningInstant() throws {
+    let reportedAt = Fixture.time(.dhuhr).addingTimeInterval(30)
+    let (engine, clock, _) = engine(at: reportedAt)
+    let schedule = try Fixture.alerts(
+      from: Fixture.date(12, 0), to: Fixture.date(13, 0),
+      settings: Fixture.settings(AlertSettings(), for: [.dhuhr]))
+    let occurrence = try #require(schedule.alerts.first).occurrenceID
+    engine.update(schedule)
+    clock.now = Fixture.date(12, 0)
+    #expect(engine.notificationExclusions() == [occurrence])
+    #expect(engine.notificationExclusions(at: reportedAt).isEmpty)
+    #expect(engine.notificationExclusions(at: reportedAt.addingTimeInterval(1)).isEmpty)
+  }
+
+  @Test func notificationExclusionsExpireBeforeAnotherCheck() throws {
+    let reportedAt = Fixture.time(.dhuhr).addingTimeInterval(-1)
+    let (engine, _, _) = engine(at: reportedAt)
+    let schedule = try Fixture.alerts(
+      from: Fixture.date(12, 0), to: Fixture.date(13, 0),
+      settings: Fixture.settings(AlertSettings(), for: [.dhuhr]))
+    let occurrence = try #require(schedule.alerts.first).occurrenceID
+    engine.update(schedule)
+    engine.excludeHandledOccurrencesFromNotifications()
+    #expect(
+      engine.notificationExclusions(at: reportedAt.addingTimeInterval(86_399)) == [occurrence])
+    #expect(engine.notificationExclusions(at: reportedAt.addingTimeInterval(86_400)).isEmpty)
+    #expect(engine.handledOccurrences.count == 1, "no check has pruned the stored record yet")
+  }
+
+  @Test func markingCannotLatchAnExpiredRecordBeforeAnotherCheck() throws {
+    let reportedAt = Fixture.time(.dhuhr).addingTimeInterval(-1)
+    let (engine, clock, _) = engine(at: reportedAt)
+    let schedule = try Fixture.alerts(
+      from: Fixture.date(12, 0), to: Fixture.date(13, 0),
+      settings: Fixture.settings(AlertSettings(), for: [.dhuhr]))
+    engine.update(schedule)
+    clock.now = reportedAt.addingTimeInterval(86_400)
+    engine.excludeHandledOccurrencesFromNotifications()
+    #expect(engine.handledOccurrences.count == 1, "marking doesn't deliver or prune due state")
+    clock.now = reportedAt.addingTimeInterval(0.5)
+    #expect(engine.notificationExclusions().isEmpty, "the expired record wasn't marked")
+  }
+
+  @Test func aChangedOccurrenceAndARelaunchDoNotInheritNotificationExclusions() throws {
+    let fireDate = Fixture.time(.dhuhr)
+    let (engine, clock, recorder) = engine(at: fireDate.addingTimeInterval(-1))
+    let settings = Fixture.settings(AlertSettings(), for: [.dhuhr])
+    let original = try Fixture.alerts(
+      from: Fixture.date(12, 0), to: Fixture.date(13, 0), settings: settings)
+    engine.update(original)
+    engine.excludeHandledOccurrencesFromNotifications()
+    let moved = try Fixture.alerts(
+      from: Fixture.date(12, 0), to: Fixture.date(13, 0),
+      schedule: PrayerSchedule(source: movedDhuhr(), location: Fixture.location), settings: settings
+    )
+    engine.update(moved)
+    #expect(
+      AlertPlanner().notificationPlan(
+        moved, from: clock.now, excluding: engine.notificationExclusions()
+      ).alerts == moved.alerts)
+    let relaunched = InProcessAlertEngine(clock: clock) { _ in }
+    #expect(relaunched.notificationExclusions().isEmpty)
+    #expect(
+      AlertPlanner().notificationPlan(
+        original, from: clock.now, excluding: relaunched.notificationExclusions()
+      ).alerts
+        == original.alerts)
+    #expect(recorder.batches.count == 1)
+    clock.now = fireDate.addingTimeInterval(86_400)
+    engine.resync()
+    clock.now = fireDate.addingTimeInterval(-0.5)
+    #expect(engine.notificationExclusions().isEmpty, "pruning removed the mark with its record")
   }
 
   @Test func aClockSetForwardCatchesUp() throws {

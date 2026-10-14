@@ -139,10 +139,11 @@ nonisolated public struct AlertPlanner: Sendable {
   ///
   /// Every exact occurrence in `handledOccurrences` is excluded before selection: it consumes
   /// no capacity and doesn't shorten coverage. A changed fire date is a new occurrence;
-  /// source gaps remain unknown. The caller chooses the excluded set. On a clock change,
-  /// snapshot ``InProcessAlertEngine/handledOccurrences``'s keys before resyncing; during an
-  /// ordinary replan, exclude only records whose report times are after `now`, preserving a
-  /// still-future system request for an alert reported in the engine's early window.
+  /// source gaps remain unknown. The caller chooses the excluded set. An in-process app uses
+  /// ``InProcessAlertEngine/notificationExclusions(at:)`` on every replan; it calls
+  /// ``InProcessAlertEngine/excludeHandledOccurrencesFromNotifications()`` on an explicit clock
+  /// change before resyncing. The engine retains those exclusions while preserving future
+  /// requests for newly reported alerts in its early window.
   ///
   /// Each kind's coverage ends at its first alert left out, at the first instant a gap could
   /// hide one (a gap that holds `now` ends it at `now`; one entirely before `now` doesn't

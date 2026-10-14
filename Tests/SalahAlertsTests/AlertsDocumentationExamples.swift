@@ -72,22 +72,21 @@ nonisolated enum AlertsDocumentationExamples {
     _ alerts: AlertSchedule, engine: InProcessAlertEngine, now: Date
   ) -> NotificationPlan {
     let planner = AlertPlanner()
-    let handledAfterNow = engine.handledOccurrences.filter { now < $0.value }
     let normalPlan = planner.notificationPlan(
-      alerts, from: now, excluding: Set(handledAfterNow.keys))
+      alerts, from: now, excluding: engine.notificationExclusions(at: now))
     return normalPlan
   }
 
-  /// A clock change snapshots the engine's prior reports before resync marks new ones due.
+  /// A clock change marks the engine's prior reports before resync marks new ones due.
   @MainActor
   static func planAfterClockChange(
     _ alerts: AlertSchedule, engine: InProcessAlertEngine, now: Date
   ) -> NotificationPlan {
     let planner = AlertPlanner()
-    let previouslyHandled = Set(engine.handledOccurrences.keys)
+    engine.excludeHandledOccurrencesFromNotifications()
     engine.resync(now: now)
     let refreshedPlan = planner.notificationPlan(
-      alerts, from: now, excluding: previouslyHandled)
+      alerts, from: now, excluding: engine.notificationExclusions(at: now))
     return refreshedPlan
   }
 

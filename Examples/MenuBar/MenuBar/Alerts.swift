@@ -92,20 +92,17 @@ final class AlertCoordinator {
   /// meanwhile, then the app replans from the new moment.
   func handle(_ event: SystemEvent) {
     logger.log("System event: \(String(describing: event), privacy: .public)")
-    // A previously reported early alert may have been delivered before a small rollback,
-    // even when the new instant remains after its report time. Snapshot before resync so
-    // newly due alerts in the early window still keep their future system requests.
-    let previouslyHandled: Set<AlertOccurrenceID> =
-      event == .clockChange ? Set((engine?.handledOccurrences ?? [:]).keys) : []
+    // A previously early-reported alert may have delivered before a small rollback. The
+    // engine retains this mark across every later replan; new early reports stay eligible.
+    if event == .clockChange { engine?.excludeHandledOccurrencesFromNotifications() }
     engine?.resync()
-    replan(excluding: previouslyHandled)
+    replan()
   }
 
   /// Plans the engine's schedule and the notification plan from the clock's moment, and applies
-  /// the plan. Clock changes pass the handled keys captured before resync; ordinary replans
-  /// exclude records only while the clock is earlier than their report times. With alerts off,
+  /// the plan. Every replan uses the engine's retained notification exclusions. With alerts off,
   /// both are empty, which removes the app's pending requests.
-  func replan(excluding previouslyHandled: Set<AlertOccurrenceID> = []) {
+  func replan() {
     let now = clock.now
     replanCount += 1
     let planner = AlertPlanner()
@@ -122,10 +119,9 @@ final class AlertCoordinator {
       let longSchedule = try planner.schedule(
         schedule, namespace: Self.namespace, from: now, to: now.addingTimeInterval(14 * 86_400),
         settings: preferences.settings(for:))
-      let handledAfterNow = (engine?.handledOccurrences ?? [:]).filter { now < $0.value }
       let plan = planner.notificationPlan(
         longSchedule, from: now, budget: budget,
-        excluding: previouslyHandled.union(handledAfterNow.keys))
+        excluding: engine?.notificationExclusions(at: now) ?? [])
       self.plan = plan
       planningError = nil
       diagnostics?.record(

@@ -175,46 +175,47 @@ finishes. After a sleep, the system can still hold a caught-up alert's request a
 has passed, and the alert gets no notification. After the `apply`, `deliver` posts it, or skips
 it when the system delivered it meanwhile. `Examples/MenuBar` does this.
 
-During an ordinary replan, select occurrences from
-``InProcessAlertEngine/handledOccurrences`` whose report times are after the planning instant:
+On every replan, obtain the engine's retained notification exclusions and pass them to the
+planner:
 
 ```swift
-let handledAfterNow = engine.handledOccurrences.filter { now < $0.value }
 let normalPlan = planner.notificationPlan(
-  alerts, from: now, excluding: Set(handledAfterNow.keys))
+  alerts, from: now, excluding: engine.notificationExclusions(at: now))
 ```
 
-This preserves a future system request when the engine reported its alert up to 1.5 seconds
-early. Wake, activation and time-zone events use this ordinary selection too.
-
-For a clock change, capture all previously reported keys **before** calling `resync` or
-`update`, then exclude those exact occurrences while rebuilding the system plan:
+For an explicit clock-change event, mark already handled occurrences **before** calling
+`resync` or `update`, then plan using the same query:
 
 ```swift
-let previouslyHandled = Set(engine.handledOccurrences.keys)
+engine.excludeHandledOccurrencesFromNotifications()
 engine.resync(now: now)
 let refreshedPlan = planner.notificationPlan(
-  alerts, from: now, excluding: previouslyHandled)
+  alerts, from: now, excluding: engine.notificationExclusions(at: now))
 ```
 
 An alert reported at `T − 1 second`, delivered by the system at `T`, can become future again
 when the clock rolls back to `T − 0.5 seconds`. That instant is after the report time, so a
-timestamp comparison alone would reinstall its request. The snapshot prevents this replay;
-alerts newly reported during the resync remain eligible so their future requests survive.
-`Examples/MenuBar` uses this distinction on every replan.
+timestamp comparison alone would reinstall its request. The engine owns the retained mark,
+which survives every subsequent ordinary replan, wake and time-zone refresh. Apps keep no
+separate handled record or exclusion set. `Examples/MenuBar` uses these two methods.
+
+Marking never checks or reports due alerts. A new early report made during the subsequent
+resync remains eligible, preserving its future system request. Wake, activation and time-zone
+events don't mark exclusions; their normal query preserves ordinary early pending requests.
+Without an explicit mark, the query also excludes retained occurrences whose report times
+are after `now`, covering a clock moved back past a report.
 
 The planner excludes every exact occurrence supplied by the caller, before allocating
 requests or computing coverage. Exclusions consume no budget and create no coverage hole. A
-changed fire date stays eligible, and source gaps still shorten coverage. The engine's record
-maps exact occurrences (identity and fire date) to their report times; the planner takes a set
-of keys and never infers which records an app wants excluded.
+changed fire date stays eligible, and source gaps still shorten coverage.
 
-The engine records the report before its callback and keeps it for one day after reporting
-(longer for a grace longer than a day), pruning it on updates and resyncs. It is in memory and
-doesn't establish system delivery. A relaunch or a rollback after the record expired can't use
-it to prevent replay. A clock-change snapshot can exclude a previously reported early alert
-whose system request has not delivered yet: the record proves the engine reported it, not
-that a banner was presented. Keep delivering due alerts after the latest `apply`, as above.
+The engine keeps report and exclusion state in memory for one day after a report (longer
+for a grace longer than a day). Marking and querying ignore expired records even before the
+next update or resync; checks prune them and their marks together. Querying at the exact
+retention boundary returns no exclusion. A relaunch starts with no handled or excluded
+occurrences. The record establishes engine reporting, not system presentation; a clock-change
+mark can exclude an early-reported occurrence whose system request hasn't delivered yet.
+Keep delivering due alerts after the latest `apply`, as above.
 
 ### What the package doesn't promise
 
