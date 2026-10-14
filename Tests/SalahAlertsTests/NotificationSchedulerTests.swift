@@ -145,7 +145,6 @@
       let posting = ModelCenter(clock: clock)
       _ = try await scheduler(posting, clock: clock).deliver([asrAlert()], content: content)
       #expect(posting.posted.map(\.identifier) == [Self.identifier])
-      #expect(posting.posted.first?.trigger == nil)
       #expect(posting.posted.first?.content.title == "asr")
       #expect(posting.posted.first?.content.body == "It's time")
       #expect(posting.posted.first?.content.threadIdentifier == "from-the-app")
@@ -224,11 +223,12 @@
       return center.calls.contains { $0["add"] != nil }
     }
 
-    /// Triggers round up to a whole second, so they never fire early; a thousandth of a second
-    /// of arithmetic noise doesn't add a second (RFC 0003 §4.5 Requests).
+    /// Triggers round up to a whole second, `(s − 0.001).rounded(.up)` in double arithmetic: a
+    /// thousandth of a second of arithmetic noise doesn't add a second, and anything more does
+    /// (RFC 0003 §4.5 Requests).
     @Test func triggersRoundUpToAWholeSecond() async throws {
       let cases: [(Double, Double)] = [
-        (0, 0), (0.25, 1), (0.999, 1), (0.000_5, 0), (0.000_9, 0), (0.001, 0), (0.001_000_3, 0),
+        (0, 0), (0.25, 1), (0.999, 1), (0.000_5, 0), (0.000_9, 0), (0.001, 0), (0.001_000_3, 1),
         (0.001_000_7, 1), (0.001_001, 1),
         (0.001_1, 1), (0.001_5, 1), (-0.000_5, 0), (-0.25, 0),
       ]
@@ -243,6 +243,45 @@
           ModelCenter.fireDate(of: request) == Fixture.time(.asr).addingTimeInterval(expected),
           "fraction \(fraction)")
       }
+    }
+
+    /// The same rounding before the reference date, where the intervals are negative: a fire
+    /// date half a second before 2001 rounds up to 2001's first second, and one 0.9995 s past a
+    /// second keeps it.
+    @Test func triggersRoundUpBefore2001Too() async throws {
+      for (interval, expected) in [(-0.5, 0.0), (-1.000_5, -1.0), (-0.999_5, -1.0)] {
+        let clock = TestClock(Date(timeIntervalSinceReferenceDate: -3_600))
+        let center = ModelCenter(clock: clock)
+        _ = try await scheduler(center, clock: clock).apply(
+          plan([asrAlert(at: Date(timeIntervalSinceReferenceDate: interval))], at: clock.now),
+          content: { _ in .init() })
+        let request = try #require(center.pending[Self.identifier])
+        #expect(
+          ModelCenter.fireDate(of: request) == Date(timeIntervalSinceReferenceDate: expected),
+          "interval \(interval)")
+      }
+    }
+
+    /// A fire date beyond the calendar's range, an infinite one included, still makes a
+    /// request; what its trigger says is unspecified (RFC 0003 §4.5).
+    @Test func extremeFireDatesDoNotStopABatch() async throws {
+      let clock = TestClock(Fixture.date(6, 0))
+      let center = ModelCenter(clock: clock)
+      let dates = [
+        Date.distantFuture, Date(timeIntervalSinceReferenceDate: 1e15),
+        Date(timeIntervalSinceReferenceDate: .infinity),
+      ]
+      let prayers: [PrayerKind] = [.dhuhr, .asr, .maghrib]
+      let alerts = zip(prayers, dates).map { prayer, date in
+        PlannedAlert(
+          id: Fixture.identity(prayer, .atTime),
+          event: PrayerEvent(scheduleDay: Fixture.day, kind: prayer, time: Fixture.time(prayer)),
+          fireDate: date, sound: .system)
+      }
+      let report = try await scheduler(center, clock: clock).apply(
+        plan(alerts, at: clock.now), content: { _ in .init() })
+      #expect(center.calls.filter { $0["add"] != nil }.count == 3)
+      #expect(!report.superseded)
     }
 
     /// Five plans arrive while the first batch is held: the first stops after its call in

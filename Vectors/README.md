@@ -298,6 +298,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 }
 ```
 
+- Instants carry at most millisecond digits, and none is exactly a millisecond past a second: the scheduler's rounding there depends on the double's magnitude and is pinned by its Swift tests.
 - One report per step. Failures are keyed by the identity without its namespace and hold the case name: `notAuthorized`, `addFailed` (its message isn't compared) or `unconfirmed`.
 - `confirmed`, `posted` and `skipped` are ordered lists; `failures` is a map; `pending` is ordered by identifier and compared field by field; `delivered` and `calls` are ordered lists. An `add`'s `fireDate` is its trigger's instant.
 

@@ -1355,6 +1355,15 @@ def reconciliation_vectors():
           [{"deliver": [], "now": "2026-06-02T15:36:00+03:00"}],
           center={"pending": [pend(rid(f"{D}/maghrib/atTime"), MAGHRIB, "maghrib", "v1 atTime")],
                   "delivered": [{"id": rid(f"{D}/asr/atTime"), "date": ASR}]})
+    # Review round 9.
+    recon("deliver", "reconciliation.deliver.fire-date-before-identity",
+          "At 19:46 the app delivers Dhuhr's after-reminder, moved to 19:45, and Asr's alert of "
+          "15:35, in that order. They are posted by fire date, Asr's first, although Dhuhr's "
+          "identity comes first.",
+          "RFC 0003 §4.5 Delivering due alerts: by fire date, then identity.",
+          [{"deliver": [a(f"{D}/dhuhr/after", "2026-06-02T19:45:00+03:00"),
+                        a(f"{D}/asr/atTime", ASR)],
+            "now": "2026-06-02T19:46:00+03:00"}])
     recon("namespaces", "reconciliation.namespaces.deliver-foreign-alert-after-repeated-identity",
           "Delivering Asr's identity twice and then an alert of another namespace is rejected "
           "for the namespace: deliver checks namespaces first too.",

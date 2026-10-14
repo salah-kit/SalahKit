@@ -757,6 +757,75 @@
           "deliveredNotifications"
         ]
       }
+    },
+    {
+      "id": "reconciliation.deliver.fire-date-before-identity",
+      "description": "At 19:46 the app delivers Dhuhr's after-reminder, moved to 19:45, and Asr's alert of 15:35, in that order. They are posted by fire date, Asr's first, although Dhuhr's identity comes first.",
+      "provenance": "RFC 0003 §4.5 Delivering due alerts: by fire date, then identity.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/dhuhr/after",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              },
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              }
+            ],
+            "now": "2026-06-02T19:46:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "posted": [
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              },
+              {
+                "id": "2026-06-02/dhuhr/after",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "skipped": [],
+            "failures": {}
+          }
+        ],
+        "pending": [],
+        "delivered": [
+          {
+            "id": "salah.prayers/2026-06-02/asr/atTime",
+            "date": "2026-06-02T19:46:00+03:00"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/after",
+            "date": "2026-06-02T19:46:00+03:00"
+          }
+        ],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "addImmediate": "salah.prayers/2026-06-02/asr/atTime"
+          },
+          {
+            "addImmediate": "salah.prayers/2026-06-02/dhuhr/after"
+          }
+        ]
+      }
     }
   ]
 }
