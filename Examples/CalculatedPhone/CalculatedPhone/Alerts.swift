@@ -253,10 +253,16 @@ nonisolated struct AlertsSnapshot: Equatable, Sendable {
         default: strings("Notifications aren't allowed yet.")
         }
       }
-    let confirmed = Set(report?.confirmed ?? [])
+    let confirmed = Dictionary(
+      (report?.confirmed ?? []).map { ($0.notification, $0.fireDate) },
+      uniquingKeysWith: { first, _ in first })
     func statusText(_ identity: NotificationIdentity, fireDate: Date) -> String {
-      if confirmed.contains(AlertOccurrenceID(notification: identity, fireDate: fireDate)) {
-        return strings("Confirmed")
+      // A request's trigger names a whole second, rounded up from its alert's fire date
+      // (RFC 0003 §4.5 Requests), so a pending request is the confirmed one when its time is
+      // within the second after the alert's.
+      if let planned = confirmed[identity] {
+        let offset = fireDate.timeIntervalSince(planned)
+        if offset >= -0.001 && offset < 1 { return strings("Confirmed") }
       }
       switch report?.failures[identity] {
       case .notAuthorized?: return strings("Notifications aren't allowed")
@@ -285,8 +291,12 @@ nonisolated struct AlertsSnapshot: Equatable, Sendable {
       .filter { !pendingIdentities.contains($0.key) }
       .sorted { $0.key < $1.key }
       .prefix(shownRows)
-      .map { identity, _ in
-        "\(title(identity)), \(format.longDate(identity.scheduleDay)): \(statusText(identity, fireDate: .distantPast))"
+      .map { identity, failure in
+        var line =
+          "\(title(identity)), \(format.longDate(identity.scheduleDay)): \(statusText(identity, fireDate: .distantPast))"
+        // The system's own words for a rejected request.
+        if case .addFailed(let message) = failure { line += " (\(message))" }
+        return line
       }
     return AlertsSnapshot(
       status: status,

@@ -2,6 +2,7 @@ import Foundation
 import SalahAlerts
 import SalahCore
 import UserNotifications
+import os
 
 /// Plans the app's alerts and installs them through `NotificationScheduler`, then reads the
 /// pending requests back for the Alerts card.
@@ -27,15 +28,20 @@ final class AlertCoordinator {
   @ObservationIgnored private let fixtureStart: Date?
   @ObservationIgnored private let fixtureDay: CivilDay?
   @ObservationIgnored private let requestPermission: @MainActor () async -> Void
+  @ObservationIgnored private let retryDelays: [Duration]
   @ObservationIgnored private var generation = 0
   @ObservationIgnored private var probeCount: Int?
+  @ObservationIgnored private let log = Logger(
+    subsystem: "io.github.salah-kit.CalculatedPhone", category: "alerts")
 
   /// Creates a coordinator on `center`, the system's by default, wrapped in a failing center
-  /// when `-failAlertAdds` asks for one.
+  /// when `-failAlertAdds` asks for one. Requests the center rejects are tried again after
+  /// each of `retryDelays`.
   init(
     options: LaunchOptions, launch: Date = Date(),
     center base: (any AlertNotificationCenter)? = nil,
-    requestPermission: (@MainActor () async -> Void)? = nil
+    requestPermission: (@MainActor () async -> Void)? = nil,
+    retryDelays: [Duration] = [2, 4, 8, 16, 32, 64].map { .seconds($0) }
   ) {
     let system = base ?? UNUserNotificationCenter.current()
     let center: any AlertNotificationCenter =
@@ -50,6 +56,7 @@ final class AlertCoordinator {
     fixtureStart = options.alertFixtureIn.map { launch.addingTimeInterval($0) }
     fixtureDay = options.alertFixtureDay
     usesFixture = fixtureStart != nil
+    self.retryDelays = retryDelays
     self.requestPermission =
       requestPermission ?? {
         _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [
@@ -87,18 +94,42 @@ final class AlertCoordinator {
         alerts: [], coveredUntil: now, coverageByKind: [:])
     }
     let content = PhoneAlertContent(strings: strings, timeZone: zone)
-    let report = try? await scheduler.apply(plan, content: { content.make($0) })
-    let authorization = await center.authorizationStatus()
-    let pending = PendingAlert.owned((try? await center.pendingNotificationRequests()) ?? [])
-    guard mine == generation else { return }
-    self.plan = plan
-    self.report = report
-    self.authorization = authorization
-    self.pending = pending
+    // The system can reject requests after the user allows notifications ("Source is not
+    // authorized"); the iOS 27.0 simulator did until it restarted. Rejected requests are tried
+    // again after each retry delay, and the card shows every attempt; what still fails stays
+    // failed until the next replan, when the app next becomes active.
+    var delays = retryDelays[...]
+    while true {
+      let report = try? await scheduler.apply(plan, content: { content.make($0) })
+      let authorization = await center.authorizationStatus()
+      let pending = PendingAlert.owned((try? await center.pendingNotificationRequests()) ?? [])
+      guard mine == generation else { return }
+      self.plan = plan
+      self.report = report
+      self.authorization = authorization
+      self.pending = pending
+      guard let rejected = report.flatMap(Self.addFailures), let reason = rejected.first,
+        let delay = delays.popFirst()
+      else { break }
+      log.error(
+        "\(rejected.count, privacy: .public) alert requests failed: \(reason, privacy: .public); trying again in \(String(describing: delay), privacy: .public)"
+      )
+      try? await Task.sleep(for: delay)
+      guard mine == generation, !Task.isCancelled else { return }
+    }
     if let count = probeCount {
       probeCount = nil
       probe = await probeLimit(count)
     }
+  }
+
+  /// The system's reasons for the requests it rejected, or `nil` when it rejected none.
+  private static func addFailures(_ report: NotificationApplyReport) -> [String]? {
+    let reasons = report.failures.values.compactMap { failure -> String? in
+      if case .addFailed(let reason) = failure { return reason }
+      return nil
+    }
+    return reasons.isEmpty ? nil : reasons
   }
 
   /// Adds `count` requests under a separate prefix, a day apart, reads back how many the system

@@ -23,7 +23,7 @@ All notable changes to this project are documented here. The format follows
     (five minutes at prayer time, two for reminders), never fires a before-reminder after its
     prayer has begun, reports each occurrence once, and offers the default audio precedence.
   - The DocC article "Alerts within the 64-notification limit".
-- **Vectors**: 60 alert-planning vectors in `Vectors/alerts/` and 48 scheduler vectors in
+- **Vectors**: 60 alert-planning vectors in `Vectors/alerts/` and 60 scheduler vectors in
   `Vectors/reconciliation/`, against a modelled notification center, written from RFC 0003 and
   reviewed independently before the implementation.
 - **CalculatedPhone** schedules prayer alerts through SalahAlerts: alerts and a reminder in

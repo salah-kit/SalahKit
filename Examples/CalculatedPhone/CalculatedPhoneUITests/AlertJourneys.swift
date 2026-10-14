@@ -2,14 +2,18 @@ import XCTest
 
 /// The alerts journey on an iPhone simulator, with the real clock (RFC 0003 §8):
 ///
-/// 1. turn alerts on in Settings and allow notifications through Springboard;
-/// 2. schedule alerts a minute or two ahead from the fixture timetable (`-alertFixtureIn`);
+/// 1. turn alerts on in Settings, allow notifications through Springboard, and wait until the
+///    app has an alert confirmed;
+/// 2. relaunch and schedule alerts a minute or two ahead from the fixture timetable
+///    (`-alertFixtureIn`), so a slow permission prompt can't use up their lead;
 /// 3. terminate the app;
 /// 4. watch the first alert arrive through Springboard;
 /// 5. relaunch with the fixture's times moved, and read the pending requests back: the same
 ///    requests, at the new times;
 /// 6. relaunch with Dhuhr's add failing (`-failAlertAdds`), and read back again: Dhuhr's old
-///    request is still there, unconfirmed, and the scheduled coverage stops before it.
+///    request is still there, unconfirmed, and the scheduled coverage stops before it;
+/// 7. turn alerts off, which removes the app's requests, and measure how many pending requests
+///    the system keeps for one app (`-probeNotificationLimit`).
 ///
 /// Every launch names the fixture's owning day, so the requests keep their identities even if
 /// the journey crosses midnight.
@@ -56,7 +60,11 @@ nonisolated final class AlertJourneys: XCTestCase {
       }
       RunLoop.current.run(until: Date().addingTimeInterval(0.5))
     }
-    XCTFail("\(identifier) never satisfied the condition; last label: \(last)")
+    let failures = app.descendants(matching: .any)
+      .matching(NSPredicate(format: "identifier BEGINSWITH %@", "alerts.failure."))
+      .allElementsBoundByIndex.map(\.label)
+    XCTFail(
+      "\(identifier) never satisfied the condition; last label: \(last); failures: \(failures)")
     return last
   }
 
@@ -92,33 +100,54 @@ nonisolated final class AlertJourneys: XCTestCase {
   func testAlertsArriveWithTheAppClosedAndReadBackAfterChanges() throws {
     let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
     let day = Self.makkahDay()
-    let fixture = ["-alertFixtureDay", day]
+    // Step 1 turns alerts on through the interface. The later launches say so too, so they
+    // don't depend on how soon the settings reached the disk before the app was terminated.
+    let fixture = ["-alerts", "on", "-alertFixtureDay", day]
     func row(_ prayer: String) -> String { "alerts.request.\(day)/\(prayer)/atTime" }
 
     // 1. Alerts on, permission through Springboard.
-    let app = launch(["-resetSettings", "-alertFixtureIn", "100"] + fixture)
-    element("settings.open", in: app).tap()
-    let toggle = app.switches["settings.alerts"]
+    let settings = launch(["-resetSettings"])
+    element("settings.open", in: settings).tap()
+    let toggle = settings.switches["settings.alerts"]
     XCTAssertTrue(toggle.waitForExistence(timeout: 10))
-    // The app asks for permission when alerts are turned on; Springboard shows the alert. A
-    // simulator that already allowed the app shows none.
-    func allowIfAsked() {
-      let allow = springboard.alerts.buttons["Allow"]
-      if allow.waitForExistence(timeout: 20) {
+    // The switch itself takes the tap; a tap on the middle of its row doesn't toggle it.
+    let knob = toggle.switches.firstMatch
+    (knob.exists ? knob : toggle).tap()
+    // The app asks for permission when alerts are turned on, and the switch turns on once the
+    // request is answered. Springboard shows the request: on a simulator that has just booted,
+    // only after a minute or two; on one that already allowed the app, never.
+    let allow = springboard.alerts.buttons["Allow"]
+    let deadline = Date().addingTimeInterval(180)
+    while Date() < deadline, toggle.value as? String != "1" {
+      if allow.exists {
         screenshot("alerts-1-permission")
         allow.tap()
+        break
       }
-    }
-    toggle.tap()
-    allowIfAsked()
-    if !waitForValue(toggle, "1") {
-      toggle.switches.firstMatch.tap()
-      allowIfAsked()
+      RunLoop.current.run(until: Date().addingTimeInterval(0.5))
     }
     XCTAssertTrue(waitForValue(toggle, "1"), "alerts didn't turn on")
-    element("settings.done", in: app).tap()
+    element("settings.done", in: settings).tap()
+    XCTAssertEqual(label("alerts.status", in: settings), "Notifications are allowed.")
+    // The system can reject the first requests after the permission ("Source is not
+    // authorized"); the app tries them again until one is confirmed.
+    let confirmed = settings.descendants(matching: .any)
+      .matching(
+        NSPredicate(
+          format: "identifier BEGINSWITH %@ AND identifier ENDSWITH %@ AND label == %@",
+          "alerts.request.", ".status", "Confirmed")
+      ).firstMatch
+    if !confirmed.waitForExistence(timeout: 180) {
+      let failures = settings.descendants(matching: .any)
+        .matching(NSPredicate(format: "identifier BEGINSWITH %@", "alerts.failure."))
+        .allElementsBoundByIndex.map(\.label)
+      XCTFail("no alert was confirmed after the permission; failures: \(failures)")
+    }
+    screenshot("alerts-1-confirmed")
+    settings.terminate()
 
     // 2. Five requests, a minute apart, confirmed by the read-back.
+    let app = launch(["-alertFixtureIn", "100"] + fixture)
     reveal(row("isha"), in: app)
     XCTAssertEqual(label("alerts.status", in: app), "Notifications are allowed.")
     var firstTimes: [String: String] = [:]

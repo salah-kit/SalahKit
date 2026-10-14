@@ -159,23 +159,86 @@ struct AlertTests {
 
   // MARK: The coordinator
 
+  /// The scheduler adds only alerts after its own clock's now, which is the real one, so the
+  /// coordinator tests plan from the real clock too.
   @MainActor
   @Test func theCoordinatorPlansInstallsAndReadsBack() async throws {
     let center = RecordingCenter()
     var options = LaunchOptions()
     options.alertFixtureIn = 100
+    let launch = Date()
     let coordinator = AlertCoordinator(
-      options: options, launch: Self.makkahNoon, center: center, requestPermission: {})
+      options: options, launch: launch, center: center, requestPermission: {})
     var settings = AppSettings.defaults
     settings.alerts.isOn = true
-    await coordinator.replan(
-      settings: settings, strings: PhoneStrings(language: "en"), now: Self.makkahNoon)
+    await coordinator.replan(settings: settings, strings: PhoneStrings(language: "en"), now: launch)
 
     #expect(coordinator.usesFixture)
     #expect(coordinator.report?.confirmed.count == 60)
     #expect(coordinator.pending.count == 60)
-    #expect(coordinator.pending.first?.fireDate == Self.makkahNoon.addingTimeInterval(100))
+    // The trigger names a whole second, rounded up from the fixture's first prayer.
+    let first = (launch.timeIntervalSinceReferenceDate + 100 - 0.001).rounded(.up)
+    #expect(coordinator.pending.first?.fireDate == Date(timeIntervalSinceReferenceDate: first))
     #expect(coordinator.authorization == .authorized)
+    #expect(center.added.count == 60)
+    // The card shows every request it lists as confirmed, though the fixture's times have
+    // fractions of a second and the requests' triggers don't.
+    let snapshot = AlertsSnapshot.make(
+      options: settings.alerts, authorization: coordinator.authorization, plan: coordinator.plan,
+      report: coordinator.report, pending: coordinator.pending, fromFixture: true,
+      strings: PhoneStrings(language: "en"), timeZone: settings.place.location.timeZone)
+    #expect(snapshot.rows.count == AlertsSnapshot.shownRows)
+    #expect(snapshot.rows.allSatisfy { $0.status == "Confirmed" })
+  }
+
+  /// The system can reject the requests added just after the user allows notifications; the
+  /// coordinator tries them again after each retry delay until they're accepted.
+  @MainActor
+  @Test func theCoordinatorRetriesRejectedRequests() async throws {
+    let center = RecordingCenter(rejecting: 120)
+    var options = LaunchOptions()
+    options.alertFixtureIn = 100
+    let launch = Date()
+    let coordinator = AlertCoordinator(
+      options: options, launch: launch, center: center, requestPermission: {},
+      retryDelays: [.milliseconds(10), .milliseconds(10), .milliseconds(10)])
+    var settings = AppSettings.defaults
+    settings.alerts.isOn = true
+    await coordinator.replan(settings: settings, strings: PhoneStrings(language: "en"), now: launch)
+
+    // Two rejected attempts, then one accepted; the third delay isn't needed.
+    #expect(center.added.count == 180)
+    #expect(coordinator.report?.failures.isEmpty == true)
+    #expect(coordinator.report?.confirmed.count == 60)
+    #expect(coordinator.pending.count == 60)
+  }
+
+  /// A request still rejected after the last retry stays failed, and the card says so.
+  @MainActor
+  @Test func aRequestRejectedOnEveryAttemptStaysFailed() async throws {
+    let center = RecordingCenter(rejecting: 61)
+    var options = LaunchOptions()
+    options.alertFixtureIn = 100
+    let launch = Date()
+    let coordinator = AlertCoordinator(
+      options: options, launch: launch, center: center, requestPermission: {},
+      retryDelays: [.milliseconds(10)])
+    var settings = AppSettings.defaults
+    settings.alerts.isOn = true
+    await coordinator.replan(settings: settings, strings: PhoneStrings(language: "en"), now: launch)
+
+    #expect(center.added.count == 120)
+    #expect(coordinator.report?.failures.count == 1)
+    #expect(coordinator.report?.confirmed.count == 59)
+    let reason = RecordingCenter.Rejected().localizedDescription
+    #expect(coordinator.report?.failures.first?.value == .addFailed(reason))
+    // The card names the system's reason.
+    let snapshot = AlertsSnapshot.make(
+      options: settings.alerts, authorization: coordinator.authorization, plan: coordinator.plan,
+      report: coordinator.report, pending: coordinator.pending, fromFixture: true,
+      strings: PhoneStrings(language: "en"), timeZone: settings.place.location.timeZone)
+    #expect(snapshot.failures.count == 1)
+    #expect(snapshot.failures.first?.hasSuffix("Couldn't be scheduled (\(reason))") == true)
   }
 
   @MainActor
@@ -237,6 +300,31 @@ struct AlertTests {
     #expect(off.status == "Alerts are off. Turn them on in Settings.")
     #expect(off.pendingCount == nil)
   }
+
+  /// A request's trigger names a whole second rounded up from its alert's fire date: the card
+  /// takes a pending request within the second after a confirmed alert's time for that alert,
+  /// and any other for an older one.
+  @Test func theCardMatchesARequestToItsAlertsRoundedTime() throws {
+    let zone = try #require(TimeZone(identifier: "Asia/Riyadh"))
+    let identity = NotificationIdentity(
+      namespace: "prayers", scheduleDay: CivilDay(year: 2026, month: 10, day: 14), prayer: .asr,
+      kind: .atTime)
+    let fireDate = Self.makkahNoon.addingTimeInterval(100.4)
+    let report = NotificationApplyReport(
+      verifiedAt: Self.makkahNoon,
+      confirmed: [AlertOccurrenceID(notification: identity, fireDate: fireDate)], failures: [:],
+      superseded: false, confirmedCoveredUntil: fireDate)
+    for (seconds, status) in [(101.0, "Confirmed"), (100.0, "Pending"), (102.0, "Pending")] {
+      let snapshot = AlertsSnapshot.make(
+        options: PhoneAlertOptions(isOn: true), authorization: .authorized, plan: nil,
+        report: report,
+        pending: [
+          PendingAlert(identity: identity, fireDate: Self.makkahNoon.addingTimeInterval(seconds))
+        ],
+        fromFixture: false, strings: PhoneStrings(language: "en"), timeZone: zone)
+      #expect(snapshot.rows.map(\.status) == [status], "pending at +\(seconds) s")
+    }
+  }
 }
 
 /// A notification center that keeps what's added, authorized unless told otherwise.
@@ -247,9 +335,17 @@ nonisolated final class RecordingCenter: AlertNotificationCenter, @unchecked Sen
   private var requests: [String: UNNotificationRequest] = [:]
   private var identifiers: [String] = []
   private var currentStatus: UNAuthorizationStatus
+  private var rejecting: Int
 
-  init(status: UNAuthorizationStatus = .authorized) {
+  /// A center whose first `rejecting` adds fail.
+  init(status: UNAuthorizationStatus = .authorized, rejecting: Int = 0) {
     currentStatus = status
+    self.rejecting = rejecting
+  }
+
+  /// The error of a rejected add.
+  struct Rejected: LocalizedError {
+    var errorDescription: String? { "Rejected by the test center" }
   }
 
   var status: UNAuthorizationStatus {
@@ -266,10 +362,16 @@ nonisolated final class RecordingCenter: AlertNotificationCenter, @unchecked Sen
   }
 
   func add(_ request: UNNotificationRequest) async throws {
-    lock.withLock {
+    let rejected = lock.withLock {
       identifiers.append(request.identifier)
+      if rejecting > 0 {
+        rejecting -= 1
+        return true
+      }
       if request.trigger != nil { requests[request.identifier] = request }
+      return false
     }
+    if rejected { throw Rejected() }
   }
 
   func removePendingNotificationRequests(withIdentifiers identifiers: [String]) async {
