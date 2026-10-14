@@ -308,6 +308,19 @@ nonisolated final class MemoryNotificationCenter: AlertNotificationCenter, @unch
     lock.withLock { delivered.map(\.identifier) }
   }
 
+  /// Models the system delivering installed requests in one transition. A deferred banner
+  /// always sees either the pending request or its delivered record, never a gap between them.
+  func deliverPendingNotificationRequests(withIdentifiers identifiers: [String]) {
+    let date = now()
+    lock.withLock {
+      for identifier in identifiers {
+        guard pending.removeValue(forKey: identifier) != nil else { continue }
+        delivered.append(DeliveredNotificationRecord(identifier: identifier, date: date))
+      }
+      order.removeAll { pending[$0] == nil }
+    }
+  }
+
   func authorizationStatus() async -> UNAuthorizationStatus { .authorized }
 
   func pendingNotificationRequests() async throws -> [UNNotificationRequest] {

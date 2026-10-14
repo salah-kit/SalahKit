@@ -252,8 +252,6 @@ struct AlertCoordinatorTests {
     rig.coordinator.replan()
     await rig.coordinator.waitForApply()
     let request = try Self.asrAlert(rig)
-    let alert = try #require(
-      rig.coordinator.engineSchedule?.alerts.first { Self.identifier($0) == request })
 
     // T - 1: the engine reports early, while the system still holds its future request.
     rig.clock.jump(to: asr.time.addingTimeInterval(-1))
@@ -264,12 +262,7 @@ struct AlertCoordinatorTests {
 
     // T: model the system's delivery, which moves the request out of the pending list.
     rig.clock.jump(to: asr.time)
-    await rig.center.removePendingNotificationRequests(withIdentifiers: [request])
-    try await rig.center.add(
-      UNNotificationRequest(
-        identifier: request,
-        content: AlertContent(strings: MenuBarStrings(language: .english)).make(alert),
-        trigger: nil))
+    rig.center.deliverPendingNotificationRequests(withIdentifiers: [request])
     #expect(rig.center.deliveredIdentifiers == [request])
     #expect(!rig.center.pendingIdentifiers.contains(request))
 
@@ -316,6 +309,31 @@ struct AlertCoordinatorTests {
     #expect(rig.center.pendingIdentifiers.contains(request))
     #expect(rig.center.deliveredIdentifiers.isEmpty)
     #expect(rig.player.plays.count == 1)
+  }
+
+  @Test("system delivery is visible before a deferred banner checks the center")
+  func systemDeliveryIsVisibleToADeferredBanner() async throws {
+    let asr = try Fixture.event(.asr)
+    let rig = Rig(at: asr.time.addingTimeInterval(-60), settings: Self.settings(reminder: nil))
+    rig.coordinator.replan()
+    await rig.coordinator.waitForApply()
+    let request = try Self.asrAlert(rig)
+    let alert = try #require(
+      rig.coordinator.engineSchedule?.alerts.first { Self.identifier($0) == request })
+    let content = AlertContent(strings: MenuBarStrings(language: .english))
+    let shared = rig.clock.shared
+    let deferred = NotificationScheduler(
+      identifierPrefix: "io.github.salah-kit.MenuBar.", namespace: "prayers",
+      center: rig.center, now: { shared.value })
+
+    rig.clock.jump(to: asr.time)
+    rig.center.deliverPendingNotificationRequests(withIdentifiers: [request])
+    // A banner queued before the system transition checks after it, as it can after an apply.
+    let report = try await deferred.deliver([alert], content: content.make)
+
+    #expect(report.posted.isEmpty)
+    #expect(report.skipped == [alert.occurrenceID])
+    #expect(rig.center.deliveredIdentifiers == [request])
   }
 
   @Test("the observer listens for NSWorkspace's wake notification by its real name")
