@@ -1,0 +1,207 @@
+# Generates WatchComplication.xcodeproj. Run `xcodegen` in this folder after changing it, and
+# commit both files (STANDARD.md, Apps).
+#
+# Generate from a clone whose folder is named `SalahKit`, as CI's checkout is: XcodeGen names
+# the local package's folder reference after the folder that `../..` resolves to, so another
+# name changes the project and fails CI's generate check.
+#
+# Three processes (README, Processes): the iPhone companion sends inputs over WatchConnectivity;
+# the watch app stores them in the watch's App Group; the complication extension reads them
+# there. The phone never shares storage with the watch.
+name: WatchComplication
+options:
+  bundleIdPrefix: io.github.salah-kit
+  deploymentTarget:
+    iOS: "17.0"
+    watchOS: "10.0"
+  developmentLanguage: en
+  createIntermediateGroups: true
+configFiles:
+  Debug: Config/Shared.xcconfig
+  Release: Config/Shared.xcconfig
+packages:
+  SalahKit:
+    path: ../..
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    # The default actor isolation of the example's own targets. Builds pass
+    # WATCHCOMPLICATION_ISOLATION=nonisolated (or MainActor) to check both settings (proposal
+    # §3.1). Passing SWIFT_DEFAULT_ACTOR_ISOLATION itself on the command line would also reach
+    # the package targets and make SalahTimes' types main-actor-isolated, which no app sees
+    # (docs/rfcs/0001-core.md, section 6.3); this setting reaches only the targets below.
+    WATCHCOMPLICATION_ISOLATION: MainActor
+targets:
+  # The iPhone companion: picks inputs and sends them to the watch.
+  WatchComplication:
+    type: application
+    platform: iOS
+    sources:
+      - path: Companion
+      - path: Shared
+    dependencies:
+      - package: SalahKit
+        product: SalahCore
+      - package: SalahKit
+        product: SalahCalculation
+      # The watch app ships inside the companion, as Xcode's single-target watch apps do.
+      - target: WatchComplicationWatch
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.WatchComplication
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)
+        # iPhone only. Set per target: XcodeGen's iOS preset writes "1,2" at target level, which
+        # would override a project-level value.
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_KEY_CFBundleDisplayName: WatchComplication
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+
+  # The watch app: receives the inputs, keeps its own copy and shows the schedule.
+  WatchComplicationWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - path: Watch
+      - path: WatchShared
+      - path: Shared
+    entitlements:
+      path: Watch/WatchComplicationWatch.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.io.github.salah-kit.WatchComplication
+    dependencies:
+      - package: SalahKit
+        product: SalahCore
+      - package: SalahKit
+        product: SalahCalculation
+      - package: SalahKit
+        product: SalahWidgets
+      - package: SalahKit
+        product: SalahUI
+      - target: Complications
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.WatchComplication.watchkitapp
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)
+        TARGETED_DEVICE_FAMILY: "4"
+        INFOPLIST_KEY_CFBundleDisplayName: WatchComplication
+        INFOPLIST_KEY_WKApplication: YES
+        # A companion app makes WatchConnectivity available; the watch app still runs from its
+        # own stored inputs while the iPhone app is closed.
+        INFOPLIST_KEY_WKCompanionAppBundleIdentifier: io.github.salah-kit.WatchComplication
+        INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp: NO
+
+  # The complication: a watchOS WidgetKit extension that reads the watch app's stored inputs.
+  Complications:
+    type: app-extension
+    platform: watchOS
+    sources:
+      - path: Complications
+      - path: WatchShared
+      - path: Shared
+    info:
+      path: Complications/Info.plist
+      properties:
+        CFBundleDisplayName: WatchComplication
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: Complications/Complications.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.io.github.salah-kit.WatchComplication
+    dependencies:
+      - package: SalahKit
+        product: SalahCore
+      - package: SalahKit
+        product: SalahCalculation
+      - package: SalahKit
+        product: SalahWidgets
+      - package: SalahKit
+        product: SalahUI
+      - sdk: WidgetKit.framework
+      - sdk: SwiftUI.framework
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.WatchComplication.watchkitapp.Complications
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)
+        TARGETED_DEVICE_FAMILY: "4"
+        SKIP_INSTALL: YES
+
+  # The watch's logic below the UI: inputs, the receive-and-store path and the complication's
+  # timeline, with a fixed clock. Hosted by the watch app, so SalahKit's symbols come from it.
+  WatchComplicationTests:
+    type: bundle.unit-test
+    platform: watchOS
+    sources:
+      - path: WatchComplicationTests
+    dependencies:
+      - target: WatchComplicationWatch
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.WatchComplicationTests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)
+        TARGETED_DEVICE_FAMILY: "4"
+
+  # Journeys through the real watch app: missing inputs, the complication states screen and,
+  # with the paired script, inputs received from the companion.
+  WatchUITests:
+    type: bundle.ui-testing
+    platform: watchOS
+    sources:
+      - path: WatchUITests
+    dependencies:
+      - target: WatchComplicationWatch
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.WatchUITests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)
+        TARGETED_DEVICE_FAMILY: "4"
+        TEST_TARGET_NAME: WatchComplicationWatch
+
+  # Journeys through the real companion; the paired script runs them against a paired watch.
+  CompanionUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: CompanionUITests
+    dependencies:
+      - target: WatchComplication
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.CompanionUITests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)
+        TARGETED_DEVICE_FAMILY: "1"
+        TEST_TARGET_NAME: WatchComplication
+schemes:
+  WatchComplication:
+    build:
+      targets:
+        WatchComplication: all
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - CompanionUITests
+  WatchComplicationWatch:
+    build:
+      targets:
+        WatchComplicationWatch: all
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - WatchComplicationTests
+        - WatchUITests

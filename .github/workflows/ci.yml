@@ -296,3 +296,104 @@ jobs:
           name: CalculatedPhone.xcresult
           path: Examples/CalculatedPhone/.derived/CalculatedPhone.xcresult
           if-no-files-found: ignore
+
+  watchcomplication:
+    name: WatchComplication (generate, build, unit tests, journeys)
+    runs-on: macos-26
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          persist-credentials: false
+
+      # Hosted runners don't offer Xcode 27, so CI uses the newest installed Xcode 26
+      # (docs/rfcs/0001-core.md, section 6.4). The project stays compatible with it.
+      - name: Select the newest Xcode 26
+        run: scripts/select-xcode.sh
+
+      # The committed project must be exactly what project.yml generates (STANDARD.md, Apps).
+      # `git status` also catches generated files that were never committed; the checkout's
+      # folder is named SalahKit, the name the project was generated under (see project.yml).
+      - name: Check the generated project
+        run: |
+          brew install xcodegen
+          (cd Examples/WatchComplication && xcodegen --quiet)
+          changes="$(git status --porcelain -- Examples/WatchComplication)"
+          if [[ -n "${changes}" ]]; then
+            echo "${changes}"
+            git diff -- Examples/WatchComplication
+            echo "::error::Examples/WatchComplication differs from what project.yml generates."
+            exit 1
+          fi
+
+      # Every target (companion, watch app, complication and the three test bundles) builds
+      # under both default-isolation settings (proposal section 3.1). The project's
+      # WATCHCOMPLICATION_ISOLATION reaches only the example's own targets: passing
+      # SWIFT_DEFAULT_ACTOR_ISOLATION here would also make SalahTimes' types main-actor-isolated
+      # (docs/rfcs/0001-core.md, section 6.3).
+      - name: Build (MainActor and nonisolated)
+        run: |
+          for isolation in MainActor nonisolated; do
+            for scheme in "WatchComplication|iOS Simulator" "WatchComplicationWatch|watchOS Simulator"; do
+              echo "::group::${scheme%%|*} (${isolation})"
+              xcodebuild build-for-testing \
+                -project Examples/WatchComplication/WatchComplication.xcodeproj \
+                -scheme "${scheme%%|*}" -destination "generic/platform=${scheme##*|}" \
+                -derivedDataPath "Examples/WatchComplication/.derived/${isolation}" \
+                WATCHCOMPLICATION_ISOLATION="${isolation}" CODE_SIGNING_ALLOWED=NO
+              echo "::endgroup::"
+            done
+          done
+
+      # The unit tests (timeline logic with a fixed clock, inputs, the receive-and-store path)
+      # and the watch journeys that need no iPhone (missing inputs, the complication states
+      # screen, stored inputs across launches, the ended timetable, Arabic) run on the first
+      # available Apple Watch simulator; without one, the job stays build-only here and says so
+      # (STANDARD.md, CI).
+      - name: Unit tests and watch journeys on an Apple Watch simulator
+        run: |
+          udid="$(xcrun simctl list devices available | grep -E '^ +Apple Watch' | head -n 1 \
+            | grep -oE '[0-9A-F]{8}-([0-9A-F]{4}-){3}[0-9A-F]{12}' || true)"
+          if [[ -z "${udid}" ]]; then
+            echo "::warning::No Apple Watch simulator is available on this runner; WatchComplication's watch targets are build-only here."
+            exit 0
+          fi
+          xcrun simctl list devices available | grep "${udid}"
+          xcodebuild test \
+            -project Examples/WatchComplication/WatchComplication.xcodeproj \
+            -scheme WatchComplicationWatch -destination "id=${udid}" \
+            -derivedDataPath Examples/WatchComplication/.derived/test \
+            -resultBundlePath Examples/WatchComplication/.derived/WatchComplicationWatch.xcresult
+
+      # The companion's own journey (presets, a send and the session's state) runs on the first
+      # available iPhone simulator, unpaired: WatchConnectivity refuses the send and the app says
+      # why.
+      #
+      # The paired journey (Scripts/paired-journeys.sh: a watch receives a change from the
+      # companion, then runs from its stored inputs with the companion closed) doesn't run here.
+      # It needs a newly created and paired iPhone and Apple Watch simulator pair booted together
+      # and WatchConnectivity delivery between them, which hasn't been shown to be reliable on
+      # hosted runners; its XCUITest steps skip unless WATCHCOMPLICATION_PAIRED=1. Run it locally
+      # (README, Testing).
+      - name: Companion journey on an iPhone simulator
+        run: |
+          udid="$(xcrun simctl list devices available | grep -E '^ +iPhone' | head -n 1 \
+            | grep -oE '[0-9A-F]{8}-([0-9A-F]{4}-){3}[0-9A-F]{12}' || true)"
+          if [[ -z "${udid}" ]]; then
+            echo "::warning::No iPhone simulator is available on this runner; the companion is build-only here."
+            exit 0
+          fi
+          xcrun simctl list devices available | grep "${udid}"
+          xcodebuild test \
+            -project Examples/WatchComplication/WatchComplication.xcodeproj \
+            -scheme WatchComplication -destination "id=${udid}" \
+            -derivedDataPath Examples/WatchComplication/.derived/test \
+            -resultBundlePath Examples/WatchComplication/.derived/WatchComplication.xcresult
+
+      - name: Upload the test results
+        if: failure()
+        uses: actions/upload-artifact@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          name: WatchComplication.xcresult
+          path: Examples/WatchComplication/.derived/*.xcresult
+          if-no-files-found: ignore
