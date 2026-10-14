@@ -318,25 +318,26 @@ import Testing
 
     /// Salah's content per kind (`:526-544`): the prayer as title, time-sensitive at-time and
     /// before alerts, an active after alert, relevance 1.0 / 0.7 / 0.5, and the kind in user info.
-    nonisolated static let salahContent: @Sendable (PlannedAlert) -> UNMutableNotificationContent = { alert in
-      let content = UNMutableNotificationContent()
-      content.title = alert.id.prayer.rawValue.capitalized
-      content.body = "\(alert.kind.rawValue)"
-      content.userInfo = ["prayer": alert.id.prayer.rawValue, "kind": alert.kind.rawValue]
-      switch alert.kind {
-      case .atTime:
-        content.interruptionLevel = .timeSensitive
-        content.relevanceScore = 1.0
-      case .before:
-        content.interruptionLevel = .timeSensitive
-        content.relevanceScore = 0.7
-      case .after:
-        content.interruptionLevel = .active
-        content.relevanceScore = 0.5
+    nonisolated static let salahContent: @Sendable (PlannedAlert) -> UNMutableNotificationContent =
+      { alert in
+        let content = UNMutableNotificationContent()
+        content.title = alert.id.prayer.rawValue.capitalized
+        content.body = "\(alert.kind.rawValue)"
+        content.userInfo = ["prayer": alert.id.prayer.rawValue, "kind": alert.kind.rawValue]
+        switch alert.kind {
+        case .atTime:
+          content.interruptionLevel = .timeSensitive
+          content.relevanceScore = 1.0
+        case .before:
+          content.interruptionLevel = .timeSensitive
+          content.relevanceScore = 0.7
+        case .after:
+          content.interruptionLevel = .active
+          content.relevanceScore = 0.5
+        }
+        content.sound = alert.sound.notificationSound
+        return content
       }
-      content.sound = alert.sound.notificationSound
-      return content
-    }
 
     /// Was `characterizesIdentifiersCarryTheFireTimestamp` (defect, §7.5 identity): the
     /// identifier was prefix, prayer, kind and the fire date's Unix time. Now it is the prefix,

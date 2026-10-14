@@ -394,6 +394,133 @@
       }
     },
     {
+      "id": "reconciliation.deliver.equal-fire-dates-by-identity",
+      "description": "Maghrib's after-reminder and Isha's before-reminder both fire at 19:45 and neither has a request: they are posted in identity order, Maghrib first, though Isha's identifier sorts first as text.",
+      "provenance": "RFC 0003 §4.5 Delivering due alerts (by fire date and identity); §4.2 Order.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/isha/before",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              },
+              {
+                "id": "2026-06-02/maghrib/after",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "now": "2026-06-02T19:45:05+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "posted": [
+              {
+                "id": "2026-06-02/maghrib/after",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              },
+              {
+                "id": "2026-06-02/isha/before",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "skipped": [],
+            "failures": {}
+          }
+        ],
+        "pending": [],
+        "delivered": [
+          {
+            "id": "salah.prayers/2026-06-02/maghrib/after",
+            "date": "2026-06-02T19:45:05+03:00"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/isha/before",
+            "date": "2026-06-02T19:45:05+03:00"
+          }
+        ],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "addImmediate": "salah.prayers/2026-06-02/maghrib/after"
+          },
+          {
+            "addImmediate": "salah.prayers/2026-06-02/isha/before"
+          }
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.deliver.reads-deliveries-without-retention",
+      "description": "A scheduler without a delivered-notification retention still reads the delivered notifications to deliver: Asr's alert was delivered at its time and is skipped.",
+      "provenance": "RFC 0003 §4.5 Delivering due alerts: it reads the pending requests and the delivered notifications, whatever the retention.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": null
+        },
+        "center": {
+          "delivered": [
+            {
+              "id": "salah.prayers/2026-06-02/asr/atTime",
+              "date": "2026-06-02T15:35:00+03:00"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              }
+            ],
+            "now": "2026-06-02T15:36:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "posted": [],
+            "skipped": [
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              }
+            ],
+            "failures": {}
+          }
+        ],
+        "pending": [],
+        "delivered": [
+          {
+            "id": "salah.prayers/2026-06-02/asr/atTime",
+            "date": "2026-06-02T15:35:00+03:00"
+          }
+        ],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications"
+        ]
+      }
+    },
+    {
       "id": "reconciliation.deliver.not-authorized",
       "description": "Without authorization nothing is posted.",
       "provenance": "RFC 0003 §4.5 Delivering due alerts.",

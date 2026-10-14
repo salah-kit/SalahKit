@@ -17,7 +17,7 @@ import Testing
 
   @Test func everyFileLoads() {
     #expect(Self.loaded.errors.isEmpty, "\(Self.loaded.errors)")
-    // Vectors/README.md: 60 planning vectors in four files.
+    // 60 planning vectors in four files.
     #expect(Self.loaded.vectors.count == 60)
     let ids = Self.loaded.vectors.map(\.id)
     #expect(Set(ids).count == ids.count, "vector ids must be unique")

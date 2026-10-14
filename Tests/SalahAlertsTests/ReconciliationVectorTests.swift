@@ -17,8 +17,8 @@
 
     @Test func everyFileLoads() {
       #expect(Self.loaded.errors.isEmpty, "\(Self.loaded.errors)")
-      // Vectors/README.md: 40 scheduler vectors in nine files.
-      #expect(Self.loaded.vectors.count == 40)
+      // 44 scheduler vectors in nine files.
+      #expect(Self.loaded.vectors.count == 44)
       let ids = Self.loaded.vectors.map(\.id)
       #expect(Set(ids).count == ids.count, "vector ids must be unique")
       #expect(ids.allSatisfy { $0.hasPrefix("reconciliation.") })
@@ -127,17 +127,35 @@
       let first = Task { try await runStep(group[0], scheduler: scheduler) }
       try await waitUntil(context) { center.isSuspended }
       var later: [Task<JSON, any Error>] = []
-      for (offset, step) in group.dropFirst().enumerated() {
-        later.append(Task { try await runStep(step, scheduler: scheduler) })
-        // Submitted in order: each apply registers before the next one starts.
+      var accepted = submitted + 1
+      for step in group.dropFirst() {
+        let finished = Flag()
+        later.append(
+          Task {
+            defer { finished.set() }
+            return try await runStep(step, scheduler: scheduler)
+          })
+        // Submitted in order: each apply registers before the next one starts. One that
+        // validation rejects never registers; it finishes at once instead.
+        let next = accepted + 1
         try await waitUntil(context) {
-          await scheduler.submittedApplies == submitted + offset + 2
+          await scheduler.submittedApplies == next || finished.value
         }
+        if await scheduler.submittedApplies == accepted + 1 { accepted += 1 }
       }
       center.release()
       var reports = [try await first.value]
       for task in later { reports.append(try await task.value) }
       return reports
+    }
+
+    /// A flag one task sets and another reads.
+    final class Flag: @unchecked Sendable {
+      // @unchecked: `isSet` is only read and written while holding `lock`.
+      private let lock = NSLock()
+      private var isSet = false
+      var value: Bool { lock.withLock { isSet } }
+      func set() { lock.withLock { isSet = true } }
     }
 
     func waitUntil(_ context: String, _ condition: @Sendable () async -> Bool) async throws {

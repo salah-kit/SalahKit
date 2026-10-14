@@ -587,6 +587,74 @@
       }
     },
     {
+      "id": "reconciliation.failures.unsorted-plan-coverage",
+      "description": "A hand-made plan lists Isha (20:30) before Maghrib (19:00), and both adds fail. Confirmed coverage ends at the earliest unconfirmed alert, Maghrib, not at the first one listed.",
+      "provenance": "RFC 0003 §4.5 The report: u is the earliest fire date of a desired alert after verifiedAt that isn't confirmed.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "failAdds": [
+            "salah.prayers/2026-06-02/isha/atTime",
+            "salah.prayers/2026-06-02/maghrib/atTime"
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/isha/atTime",
+                  "fireDate": "2026-06-02T20:30:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/maghrib/atTime",
+                  "fireDate": "2026-06-02T19:00:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [],
+            "failures": {
+              "2026-06-02/isha/atTime": "addFailed",
+              "2026-06-02/maghrib/atTime": "addFailed"
+            },
+            "confirmedCoveredUntil": "2026-06-02T19:00:00+03:00"
+          }
+        ],
+        "pending": [],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00"
+          },
+          {
+            "add": "salah.prayers/2026-06-02/maghrib/atTime",
+            "fireDate": "2026-06-02T19:00:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
       "id": "reconciliation.failures.coverage-ends-at-the-plans",
       "description": "Every request is confirmed, but the plan's own coverage ends at 16:00 (a gap or an omitted alert): confirmed coverage is the plan's, not later.",
       "provenance": "Proposal §7.5: the report's coverage can't exceed what the plan intended.",

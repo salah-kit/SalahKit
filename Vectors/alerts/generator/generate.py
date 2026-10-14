@@ -737,6 +737,14 @@ def plan(alerts, covered, namespace="prayers"):
     return {"namespace": namespace, "coveredUntil": covered, "alerts": alerts}
 
 
+def valid_plan(scheduler, plan_):
+    namespace = scheduler["namespace"]
+    ids = [x["id"] for x in plan_["alerts"]]
+    return (plan_["namespace"] == namespace
+            and all(x.get("namespace", namespace) == namespace for x in plan_["alerts"])
+            and len(ids) == len(set(ids)))
+
+
 def recon(file, vid, text, provenance, steps, center=None, scheduler=None, zone=RIYADH):
     scheduler = dict(scheduler or SCHEDULER)
     center = center or {}
@@ -759,18 +767,30 @@ def recon(file, vid, text, provenance, steps, center=None, scheduler=None, zone=
                 reports.append(deliver_alerts(scheduler, model, step["deliver"],
                                               step.get("wording", "v1")))
         else:
-            # The first batch makes `suspendAtCall` calls, then finds a later plan; the plans
-            # submitted while it was suspended are superseded by the last one, which runs.
-            model.begin_batch(step["suspendAtCall"])
+            # The first batch makes `suspendAtCall` calls. A plan that validation rejects never
+            # enters the pump. If a valid plan arrived, the first batch finds it before its next
+            # call and stops, every valid plan but the last is superseded, and the last runs.
+            later = []
+            for step_ in group[1:]:
+                rejected = apply_plan(scheduler, Center({}, clock), step_["apply"], "v1") \
+                    if not valid_plan(scheduler, step_["apply"]) else None
+                later.append((step_, rejected))
+            valid = [s for s, rejected in later if rejected is None]
+            model.begin_batch(step["suspendAtCall"] if valid else None)
             first = apply_plan(scheduler, model, step["apply"], step.get("wording", "v1"))
-            assert first.get("superseded"), first
+            assert bool(first.get("superseded")) == bool(valid), first
             reports.append(first)
-            for later in group[1:-1]:
-                reports.append({"superseded": True, "verifiedAt": clock.value, "confirmed": [],
-                                "failures": {}, "confirmedCoveredUntil": None})
-            last = group[-1]
-            model.begin_batch()
-            reports.append(apply_plan(scheduler, model, last["apply"], last.get("wording", "v1")))
+            for step_, rejected in later:
+                if rejected is not None:
+                    reports.append(rejected)
+                elif step_ is not valid[-1]:
+                    reports.append({"superseded": True, "verifiedAt": clock.value,
+                                    "confirmed": [], "failures": {},
+                                    "confirmedCoveredUntil": None})
+                else:
+                    model.begin_batch()
+                    reports.append(apply_plan(scheduler, model, step_["apply"],
+                                              step_.get("wording", "v1")))
         index += len(group)
 
     def report_json(r):
@@ -1027,6 +1047,15 @@ def reconciliation_vectors():
           [{"apply": plan([a(f"{D}/dhuhr/after", DHUHR_AFTER), a(f"{D}/asr/atTime", ASR)],
                           COVER), "now": "2026-06-02T12:23:00+03:00",
             "readBackAt": "2026-06-02T12:25:00+03:00"}])
+    recon("failures", "reconciliation.failures.unsorted-plan-coverage",
+          "A hand-made plan lists Isha (20:30) before Maghrib (19:00), and both adds fail. "
+          "Confirmed coverage ends at the earliest unconfirmed alert, Maghrib, not at the first "
+          "one listed.",
+          "RFC 0003 §4.5 The report: u is the earliest fire date of a desired alert after "
+          "verifiedAt that isn't confirmed.",
+          [{"apply": plan([a(f"{D}/isha/atTime", ISHA), a(f"{D}/maghrib/atTime", MAGHRIB)],
+                          COVER), "now": MORNING}],
+          center={"failAdds": [rid(f"{D}/isha/atTime"), rid(f"{D}/maghrib/atTime")]})
     recon("failures", "reconciliation.failures.coverage-ends-at-the-plans",
           "Every request is confirmed, but the plan's own coverage ends at 16:00 (a gap or an "
           "omitted alert): confirmed coverage is the plan's, not later.",
@@ -1116,6 +1145,15 @@ def reconciliation_vectors():
                           COVER), "now": MORNING, "duringPrevious": True}],
           center={"failAdds": [rid(f"{D}/dhuhr/before")]})
 
+    recon("pump", "reconciliation.pump.rejected-plan-supersedes-nothing",
+          "While a valid apply is held in its first add, an empty plan of another namespace "
+          "arrives. Validation rejects it before it enters the pump, so it supersedes nothing: "
+          "the first apply finishes and confirms both requests.",
+          "RFC 0003 §4.5 The update pump: a call that validation rejects never enters the pump.",
+          [{"apply": plan(DHUHR_THREE[:2], COVER), "now": MORNING, "suspendAtCall": 4},
+           {"apply": plan([], COVER, namespace="mosque"), "now": MORNING,
+            "duringPrevious": True}])
+
     recon("deliver", "reconciliation.deliver.due-alerts",
           "At 19:46 the app passes four alerts. Isha's before-reminder was left out of the plan "
           "and is posted at once. Maghrib's after-reminder still has its pending request and is "
@@ -1170,6 +1208,22 @@ def reconciliation_vectors():
           center={"delivered": [
               {"id": rid(f"{D}/maghrib/after"), "date": "2026-06-02T19:44:58.500+03:00"},
               {"id": rid(f"{D}/isha/before"), "date": "2026-06-02T19:44:58.400+03:00"}]})
+    recon("deliver", "reconciliation.deliver.equal-fire-dates-by-identity",
+          "Maghrib's after-reminder and Isha's before-reminder both fire at 19:45 and neither has "
+          "a request: they are posted in identity order, Maghrib first, though Isha's identifier "
+          "sorts first as text.",
+          "RFC 0003 §4.5 Delivering due alerts (by fire date and identity); §4.2 Order.",
+          [{"deliver": [a(f"{D}/isha/before", "2026-06-02T19:45:00+03:00"),
+                        a(f"{D}/maghrib/after", "2026-06-02T19:45:00+03:00")],
+            "now": "2026-06-02T19:45:05+03:00"}])
+    recon("deliver", "reconciliation.deliver.reads-deliveries-without-retention",
+          "A scheduler without a delivered-notification retention still reads the delivered "
+          "notifications to deliver: Asr's alert was delivered at its time and is skipped.",
+          "RFC 0003 §4.5 Delivering due alerts: it reads the pending requests and the delivered "
+          "notifications, whatever the retention.",
+          [{"deliver": [a(f"{D}/asr/atTime", ASR)], "now": "2026-06-02T15:36:00+03:00"}],
+          center={"delivered": [{"id": rid(f"{D}/asr/atTime"), "date": ASR}]},
+          scheduler={**SCHEDULER, "deliveredRetention": None})
     recon("deliver", "reconciliation.deliver.not-authorized",
           "Without authorization nothing is posted.",
           "RFC 0003 §4.5 Delivering due alerts.",

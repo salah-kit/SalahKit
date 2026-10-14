@@ -565,7 +565,7 @@ def apply_plan(scheduler, center, plan, wording):
             failures.pop(a["id"], None)
             continue
         failures.setdefault(a["id"], "unconfirmed")
-        if first_unconfirmed is None:
+        if first_unconfirmed is None or fire < first_unconfirmed:
             first_unconfirmed = fire
     covered = parse_instant(plan["coveredUntil"])
     if first_unconfirmed is not None:

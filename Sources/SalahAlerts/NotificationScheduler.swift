@@ -352,7 +352,8 @@
           continue
         }
         if failures[alert.id] == nil { failures[alert.id] = .unconfirmed }
-        if firstUnconfirmed == nil { firstUnconfirmed = alert.fireDate }
+        // The earliest, since a hand-made plan need not be sorted.
+        firstUnconfirmed = min(firstUnconfirmed ?? alert.fireDate, alert.fireDate)
       }
       let covered = min(plan.coveredUntil, firstUnconfirmed ?? plan.coveredUntil)
       return NotificationApplyReport(
