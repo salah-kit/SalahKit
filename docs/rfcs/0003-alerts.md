@@ -143,7 +143,7 @@ nonisolated public struct NotificationPlan: Hashable, Sendable {
   public var namespace: String
   public var effectiveRange: DateInterval
   public var alerts: [PlannedAlert]     // the selected requests, by fire date, then identity
-  /// Every enabled alert before this instant is in `alerts` and known.
+  /// Every enabled alert before this instant is known and selected or excluded as handled.
   public var coveredUntil: Date
   public var coverageByKind: [AlertKind: Date]
   public init(namespace: String, effectiveRange: DateInterval, alerts: [PlannedAlert],
@@ -166,7 +166,9 @@ nonisolated public struct AlertPlanner: Sendable {
                        settings: (AlertSubject) -> AlertSettings?)
     throws(AlertPlanningError) -> AlertSchedule
   public func notificationPlan(_ schedule: AlertSchedule, from now: Date,
-                               budget: AlertBudget = AlertBudget()) -> NotificationPlan
+                               budget: AlertBudget = AlertBudget(),
+                               excluding handledOccurrences: [AlertOccurrenceID: Date] = [:])
+    -> NotificationPlan
 }
 
 // MARK: In process
@@ -189,6 +191,7 @@ nonisolated public struct CatchUpPolicy: Hashable, Sendable {
 @MainActor public final class SystemAlertClock: AlertClock { public init() }
 
 @MainActor public final class InProcessAlertEngine {
+  public private(set) var handledOccurrences: [AlertOccurrenceID: Date] = [:]
   public init(catchUp: CatchUpPolicy = CatchUpPolicy(), clock: any AlertClock = SystemAlertClock(),
               onDue: @escaping @MainActor ([PlannedAlert]) -> Void)
   public func update(_ schedule: AlertSchedule)
@@ -322,7 +325,7 @@ Each interval is clipped to the requested range; empty ones are dropped. Interva
 
 ### 4.4 The notification plan
 
-`notificationPlan(_:from: now, budget:)` selects the requests for an operating system that keeps a limited number, and says how far the selection is complete (§7.5). Negative budget values count as zero.
+`notificationPlan(_:from: now, budget:excluding:)` selects the requests for an operating system that keeps a limited number, and says how far the selection is complete (§7.5). Negative budget values count as zero. The optional handled-occurrence record excludes exact occurrences only while `now` precedes their report times, before selection and coverage (§10.2).
 
 **Effective range.** `[now, E)` with `E = max(now, min(requestedRange.end, now + horizon))`. Only alerts with a fire date in it can be selected. A requested range that ends at or before `now` gives an empty effective range and an empty plan. The near-term window is `[now, N)` with `N = min(now + nearTermWindow, E)`, so a window longer than the horizon can't extend the plan.
 
@@ -337,7 +340,7 @@ The plan's `alerts` are the selected alerts, by fire date, then identity.
 - the fire date of the first alert of kind `K` with a fire date in `[now, E)` that wasn't selected;
 - for each gap of kind `K` that meets `[now, E)` (`start < E` and `end > now`), `max(now, start)`. A gap entirely before `now` changes nothing, and a gap that contains `now` gives `now`.
 
-When the requested range starts after `now`, nothing is known before its start, so every cutoff is `now`. `coveredUntil` is the earliest cutoff of any kind, or `E` when no kind is present (and `now` when the range starts after `now`). It is the end of a contiguous interval, from `now`, in which every enabled alert is known and selected; it is not the last selected alert's fire date. Each kind's cutoff uses its own offsets, so an unknown future prayer that hides a before-reminder doesn't shorten the at-time coverage.
+When the requested range starts after `now`, nothing is known before its start, so every cutoff is `now`. `coveredUntil` is the earliest cutoff of any kind, or `E` when no kind is present (and `now` when the range starts after `now`). It is the end of a contiguous interval, from `now`, in which every enabled alert is known and selected or excluded as handled; it is not the last selected alert's fire date. Each kind's cutoff uses its own offsets, so an unknown future prayer that hides a before-reminder doesn't shorten the at-time coverage.
 
 **The arithmetic example (§7.5, D7).** Five prayers a day, each with an at-time alert, a before-reminder and an after-reminder, no reminder crossing a window edge, `now` at the start of a day, the default budget and a range of 14 days: the two near-term days reserve 30 requests, and the 30 left go to the at-time alerts of the next six days. The plan holds eight days of at-time alerts and two days of reminders; `coveredUntil` is the third day's first before-reminder; `coverageByKind[.atTime]` is the ninth day's first at-time alert.
 
@@ -412,7 +415,7 @@ Everything else above is specified. The scheduler keeps no state between calls b
 
 **Due.** At `now`, an alert that hasn't been handled is due when `now − fireDate` lies in `[−1.5 s, grace]`, where the grace is `atTimeGrace` for an at-time alert and `reminderGrace` for a reminder (negative values count as zero), and, for a before-reminder, `now` is before its prayer's time. So an alert up to 1.5 seconds ahead counts as due, an at-time alert is caught up for 5 minutes by default and a reminder for 2, and a before-reminder never fires once its prayer has begun (§7.5 "Catch-up"). An alert past its grace is dropped silently.
 
-**Once.** Each due alert is handled once: the engine remembers its `AlertOccurrenceID` and calls `onDue` with every alert that became due in that check, by fire date and identity. Repeated updates and wake checks don't repeat it. A changed fire date is a new occurrence. The engine forgets an occurrence three hours after its fire date (longer when a grace is longer), so the memory stays small; it isn't persisted, and keeping handled alerts across a relaunch is the app's policy (§7.5 "Deduplication").
+**Once.** Each due alert is handled once: the engine records its `AlertOccurrenceID` and the check's `now` in `handledOccurrences` before calling `onDue` with every alert that became due in that check, by fire date and identity. Repeated updates and wake checks don't repeat it or change its report time. A changed fire date is a new occurrence. Records are pruned on each check when their report time is at or before `now − max(86400, atTimeGrace + 60, reminderGrace + 60)` seconds: one day by default, or longer for a longer grace (§10.2). They aren't persisted, and keeping handled alerts across a relaunch is the app's policy (§7.5 "Deduplication").
 
 **Audio.** `onDue` gets every due alert, whatever its sound; the app plays what it plays. `preferredAlert(among:)` is the documented default precedence for one sound among alerts due together: the latest fire date wins; at one instant `atTime` beats `before`, which beats `after`; and between two prayers' alerts of one kind at one instant, the later identity wins (Kazan's 20 June Fajr over 19 June's Isha). Apps first filter the alerts whose sound they play (§7.5 "Audio precedence").
 
@@ -497,7 +500,7 @@ The table also contradicted itself on that message, and the code counted the fir
 
 ## 8. Evidence
 
-- **Vectors.** 60 alert-planning vectors (`Vectors/alerts/`) and 60 reconciliation vectors (`Vectors/reconciliation/`), generated from a model of this RFC written before the implementation and recomputed by independent reviewers (§7). `AlertVectorTests` runs the alert vectors on every platform, Linux included; `ReconciliationVectorTests` runs the reconciliation vectors where UserNotifications exists.
+- **Vectors.** 69 alert-planning vectors (`Vectors/alerts/`) and 60 reconciliation vectors (`Vectors/reconciliation/`), generated from a model of this RFC; the original 60 planning vectors were written before the implementation and recomputed by independent reviewers (§7), and nine handled-occurrence vectors follow §10.2. `AlertVectorTests` runs the alert vectors on every platform, Linux included; `ReconciliationVectorTests` runs the reconciliation vectors where UserNotifications exists.
 - **Characterization.** A2's tests of Salah's `PrayerAlertScheduler`, ported as `CharacterizationPortTests` with the outcomes §6 lists.
 - **Unit tests.**
   - `AlertPlannerTests` covers the planner.
@@ -521,7 +524,7 @@ The table also contradicted itself on that message, and the code counted the fir
 
 ## 9. Open questions
 
-1. **Persisting handled occurrences.** The engine's handled set lives in memory. An app relaunched within an alert's grace replays it. Whether the engine should accept a handled set to restore waits for a consumer that needs it.
+1. **Persisting handled occurrences.** The engine's handled record lives in memory. An app relaunched within an alert's grace replays it. Whether the engine should accept a handled set to restore waits for a consumer that needs it.
 2. **Several processes, one namespace.** Only one process may write a namespace. A widget extension or a notification service extension that needs alerts changed asks the app (§7.5).
 
 ## 10. Changes after review
@@ -532,3 +535,13 @@ The table also contradicted itself on that message, and the code counted the fir
    - `reconciliation.apply.fractional-second-rounds-up`: its fire date is a quarter second past 12:19, not half, so rounding to the nearest second fails it.
    - `reconciliation.namespaces.duplicate-identity-to-deliver`: the repeated identity has two fire dates, so rejecting only a repeated occurrence fails it.
    - Wording only: `alerts.schedule.offsets-at-the-maximum`, `alerts.schedule.offset-at-the-maximum-on-the-range-end`, `alerts.schedule.reminders-of-events-outside-the-range`, `alerts.plan.negative-budget-counts-as-zero`, `alerts.errors.jumuah-gap-subject`.
+
+2. **0.4.0, handled occurrences after a clock rollback (#16).** `InProcessAlertEngine.handledOccurrences` is a read-only `[AlertOccurrenceID: Date]` record of report times, updated before `onDue`. It replaces the private deduplication set. Retention increases from three hours after the fire date to one day after the report time, extended to `max(86400, atTimeGrace + 60, reminderGrace + 60)` seconds for longer graces; each check drops records at that age or older. This removes Salah's one-day app-owned workaround and serves a second consumer, `Examples/MenuBar`, which passes the record on every replan.
+
+   `AlertPlanner.notificationPlan(_:from:budget:excluding:)` adds a default-empty handled-occurrence record. For each alert it excludes an exact occurrence only if `now < handledOccurrences[occurrenceID]`. Exclusion precedes both near-term reservation and at-time fill, consumes no allowance and creates no coverage hole. Coverage still lists every kind present in the schedule, and source gaps still shorten it. A changed fire date or namespace is a different occurrence. At equal or later report time, a future request stays eligible: an engine report in the 1.5-second early window must not remove a pending system request during a normal replan. Existing call sites keep their behavior with the empty default.
+
+   The record proves an engine report, not system delivery. It is not persisted; a relaunch or a rollback after pruning can't use it. If the clock moves back before an early engine report before the system delivered its pending request, exclusion can remove that request too; this retains Salah's accepted behavior. Apps keep delivering due alerts after the latest `apply`, as §8's MenuBar evidence requires. Operating-system delivery and elapsed time during asynchronous `apply`/`deliver` remain outside this record's guarantees.
+
+   No existing vector changes. Nine new vectors in `alerts/handled.json` pin rollback, capacity in both selection phases, complete coverage when all alerts are handled, strict report-time comparison at and after an early report, changed fire dates, foreign namespaces, reminders, and gaps. Engine tests pin callback ordering and retention boundaries. The MenuBar regression failed before the fix because Asr was planned and pending again after a clock rollback; the new API removes that request. A second MenuBar test preserves its pending request during early delivery and a same-moment replan.
+
+   The one-week RFC comment window is waived under `proposal/AMENDMENTS.md`, Amendment 11. Later API changes follow the normal RFC process.

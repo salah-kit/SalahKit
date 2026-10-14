@@ -17,8 +17,8 @@ import Testing
 
   @Test func everyFileLoads() {
     #expect(Self.loaded.errors.isEmpty, "\(Self.loaded.errors)")
-    // 60 planning vectors in four files.
-    #expect(Self.loaded.vectors.count == 60)
+    // 69 planning vectors in five files, including handled occurrences after a rollback.
+    #expect(Self.loaded.vectors.count == 69)
     let ids = Self.loaded.vectors.map(\.id)
     #expect(Set(ids).count == ids.count, "vector ids must be unique")
     #expect(ids.allSatisfy { $0.hasPrefix("alerts.") })
@@ -100,15 +100,18 @@ nonisolated struct AlertVector: Sendable, CustomTestStringConvertible {
         if let value = json["horizon"]?.number { budget.horizon = .seconds(value) }
       }
       let now = try query.required("now").instant()
-      let plan = AlertPlanner().notificationPlan(alertSchedule, from: now, budget: budget)
-      try checkPlan(plan, schedule: alertSchedule, now: now, context)
+      let handled = try handledOccurrences(query, namespace: namespace)
+      let plan = AlertPlanner().notificationPlan(
+        alertSchedule, from: now, budget: budget, excluding: handled)
+      try checkPlan(plan, schedule: alertSchedule, now: now, handled: handled, context)
     case let other:
       Issue.record("\(context): unknown query type \(other)")
     }
   }
 
   func checkPlan(
-    _ plan: NotificationPlan, schedule: AlertSchedule, now: Date, _ context: String
+    _ plan: NotificationPlan, schedule: AlertSchedule, now: Date,
+    handled: [AlertOccurrenceID: Date], _ context: String
   ) throws {
     let expected = vector.expected
     #expect(plan.namespace == schedule.namespace, "\(context): plan namespace")
@@ -116,11 +119,12 @@ nonisolated struct AlertVector: Sendable, CustomTestStringConvertible {
       plan.effectiveRange, try expected.required("effectiveRange"),
       "\(context): effectiveRange")
     try checkAlerts(plan.alerts, try expected.required("alerts"), "\(context): plan alerts")
-    // Omitted: the schedule's alerts in the effective range that the plan didn't select.
+    // Omitted: eligible alerts in the effective range the budget didn't select.
     let selected = Set(plan.alerts.map(\.occurrenceID))
     let omitted = schedule.alerts.filter {
       plan.effectiveRange.start <= $0.fireDate && $0.fireDate < plan.effectiveRange.end
         && !selected.contains($0.occurrenceID)
+        && !(handled[$0.occurrenceID].map { now < $0 } ?? false)
     }
     let expectedOmitted = try expected.required("omitted").requiredArray()
     #expect(
@@ -146,6 +150,21 @@ nonisolated struct AlertVector: Sendable, CustomTestStringConvertible {
   }
 
   // MARK: Invariants every schedule keeps, whatever the vector checks
+
+  func handledOccurrences(_ query: JSON, namespace: String) throws -> [AlertOccurrenceID: Date] {
+    var result: [AlertOccurrenceID: Date] = [:]
+    for record in try query["handled"]?.requiredArray() ?? [] {
+      let owner = try record["namespace"]?.requiredString() ?? namespace
+      let reference = try record.required("id").requiredString()
+      let identity = try #require(
+        NotificationIdentity(requestIdentifier: "\(owner)/\(reference)", prefix: ""))
+      let occurrence = AlertOccurrenceID(
+        notification: identity, fireDate: try record.required("fireDate").instant())
+      #expect(result[occurrence] == nil, "handled occurrences are unique")
+      result[occurrence] = try record.required("handledAt").instant()
+    }
+    return result
+  }
 
   func checkInvariants(_ schedule: AlertSchedule, _ context: String) throws {
     let range = schedule.requestedRange

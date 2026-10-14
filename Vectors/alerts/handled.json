@@ -1,0 +1,3297 @@
+{
+  "schemaVersion": 1,
+  "description": "Notification plans after a clock rollback (RFC 0003 §10.2): exact handled occurrences, reported timestamps, request capacity and coverage.",
+  "vectors": [
+    {
+      "id": "alerts.handled.rollback-does-not-spend-capacity",
+      "description": "Asr was reported at 15:35:01; the clock is back at 15:15. The allowance of one selects Maghrib, not Asr; coverage ends at Isha, not at the handled Asr.",
+      "provenance": "RFC 0003 §10.2 (#16): reported occurrences excluded only before handledAt.",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh"
+        },
+        "source": {
+          "expectedKinds": [
+            "fajr",
+            "sunrise",
+            "dhuhr",
+            "asr",
+            "maghrib",
+            "isha"
+          ],
+          "rows": [
+            {
+              "day": "2026-05-25",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-26",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-27",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-28",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-29",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-30",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-31",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-01",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-02",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-03",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-04",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-05",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-06",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-07",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-08",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-09",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-10",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-11",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-12",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-13",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-14",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-15",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-16",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-17",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-18",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-19",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-20",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            }
+          ]
+        },
+        "namespace": "prayers",
+        "alertSettings": {
+          "kinds": {
+            "fajr": {
+              "atTime": true
+            },
+            "dhuhr": {
+              "atTime": true
+            },
+            "asr": {
+              "atTime": true
+            },
+            "maghrib": {
+              "atTime": true
+            },
+            "isha": {
+              "atTime": true
+            }
+          }
+        },
+        "query": {
+          "type": "plan",
+          "from": "2026-06-02T15:00:00+03:00",
+          "to": "2026-06-02T21:00:00+03:00",
+          "now": "2026-06-02T15:15:00+03:00",
+          "budget": {
+            "maxPending": 1
+          },
+          "handled": [
+            {
+              "id": "2026-06-02/asr/atTime",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "handledAt": "2026-06-02T15:35:01+03:00"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "effectiveRange": [
+          "2026-06-02T15:15:00+03:00",
+          "2026-06-02T21:00:00+03:00"
+        ],
+        "alerts": [
+          {
+            "id": "2026-06-02/maghrib/atTime",
+            "fireDate": "2026-06-02T19:00:00+03:00",
+            "event": "2026-06-02T19:00:00+03:00",
+            "observance": "ordinary",
+            "sound": "system"
+          }
+        ],
+        "omitted": [
+          {
+            "id": "2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00"
+          }
+        ],
+        "coveredUntil": "2026-06-02T20:30:00+03:00",
+        "coverageByKind": {
+          "atTime": "2026-06-02T20:30:00+03:00"
+        }
+      }
+    },
+    {
+      "id": "alerts.handled.all-resolved-with-no-budget",
+      "description": "Only Asr is enabled and it was handled. Even with no request allowance, the whole effective range is complete: no pending alert remains to omit.",
+      "provenance": "RFC 0003 §10.2 (#16): reported occurrences excluded only before handledAt.",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh"
+        },
+        "source": {
+          "expectedKinds": [
+            "fajr",
+            "sunrise",
+            "dhuhr",
+            "asr",
+            "maghrib",
+            "isha"
+          ],
+          "rows": [
+            {
+              "day": "2026-05-25",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-26",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-27",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-28",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-29",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-30",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-31",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-01",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-02",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-03",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-04",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-05",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-06",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-07",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-08",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-09",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-10",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-11",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-12",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-13",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-14",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-15",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-16",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-17",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-18",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-19",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-20",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            }
+          ]
+        },
+        "namespace": "prayers",
+        "alertSettings": {
+          "kinds": {
+            "asr": {
+              "atTime": true
+            }
+          }
+        },
+        "query": {
+          "type": "plan",
+          "from": "2026-06-02T15:00:00+03:00",
+          "to": "2026-06-02T21:00:00+03:00",
+          "now": "2026-06-02T15:15:00+03:00",
+          "budget": {
+            "maxPending": 0
+          },
+          "handled": [
+            {
+              "id": "2026-06-02/asr/atTime",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "handledAt": "2026-06-02T15:35:01+03:00"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "effectiveRange": [
+          "2026-06-02T15:15:00+03:00",
+          "2026-06-02T21:00:00+03:00"
+        ],
+        "alerts": [],
+        "omitted": [],
+        "coveredUntil": "2026-06-02T21:00:00+03:00",
+        "coverageByKind": {
+          "atTime": "2026-06-02T21:00:00+03:00"
+        }
+      }
+    },
+    {
+      "id": "alerts.handled.at-report-time-keeps-early-request",
+      "description": "The engine reports Asr a second early. Replanning at exactly that reported time keeps Asr's future system request; no clock rollback preceded its report.",
+      "provenance": "RFC 0003 §10.2 (#16): reported occurrences excluded only before handledAt.",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh"
+        },
+        "source": {
+          "expectedKinds": [
+            "fajr",
+            "sunrise",
+            "dhuhr",
+            "asr",
+            "maghrib",
+            "isha"
+          ],
+          "rows": [
+            {
+              "day": "2026-05-25",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-26",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-27",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-28",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-29",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-30",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-31",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-01",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-02",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-03",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-04",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-05",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-06",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-07",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-08",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-09",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-10",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-11",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-12",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-13",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-14",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-15",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-16",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-17",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-18",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-19",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-20",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            }
+          ]
+        },
+        "namespace": "prayers",
+        "alertSettings": {
+          "kinds": {
+            "asr": {
+              "atTime": true
+            }
+          }
+        },
+        "query": {
+          "type": "plan",
+          "from": "2026-06-02T15:00:00+03:00",
+          "to": "2026-06-02T21:00:00+03:00",
+          "now": "2026-06-02T15:34:59+03:00",
+          "handled": [
+            {
+              "id": "2026-06-02/asr/atTime",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "handledAt": "2026-06-02T15:34:59+03:00"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "effectiveRange": [
+          "2026-06-02T15:34:59+03:00",
+          "2026-06-02T21:00:00+03:00"
+        ],
+        "alerts": [
+          {
+            "id": "2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:35:00+03:00",
+            "event": "2026-06-02T15:35:00+03:00",
+            "observance": "ordinary",
+            "sound": "system"
+          }
+        ],
+        "omitted": [],
+        "coveredUntil": "2026-06-02T21:00:00+03:00",
+        "coverageByKind": {
+          "atTime": "2026-06-02T21:00:00+03:00"
+        }
+      }
+    },
+    {
+      "id": "alerts.handled.after-report-time-keeps-early-request",
+      "description": "Half a second after Asr's early report, its fire date is still ahead. Its system request remains selectable; a handled record alone doesn't suppress it.",
+      "provenance": "RFC 0003 §10.2 (#16): reported occurrences excluded only before handledAt.",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh"
+        },
+        "source": {
+          "expectedKinds": [
+            "fajr",
+            "sunrise",
+            "dhuhr",
+            "asr",
+            "maghrib",
+            "isha"
+          ],
+          "rows": [
+            {
+              "day": "2026-05-25",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-26",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-27",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-28",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-29",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-30",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-31",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-01",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-02",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-03",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-04",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-05",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-06",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-07",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-08",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-09",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-10",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-11",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-12",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-13",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-14",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-15",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-16",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-17",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-18",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-19",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-20",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            }
+          ]
+        },
+        "namespace": "prayers",
+        "alertSettings": {
+          "kinds": {
+            "asr": {
+              "atTime": true
+            }
+          }
+        },
+        "query": {
+          "type": "plan",
+          "from": "2026-06-02T15:00:00+03:00",
+          "to": "2026-06-02T21:00:00+03:00",
+          "now": "2026-06-02T15:34:59.500+03:00",
+          "handled": [
+            {
+              "id": "2026-06-02/asr/atTime",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "handledAt": "2026-06-02T15:34:59+03:00"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "effectiveRange": [
+          "2026-06-02T15:34:59.500+03:00",
+          "2026-06-02T21:00:00+03:00"
+        ],
+        "alerts": [
+          {
+            "id": "2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:35:00+03:00",
+            "event": "2026-06-02T15:35:00+03:00",
+            "observance": "ordinary",
+            "sound": "system"
+          }
+        ],
+        "omitted": [],
+        "coveredUntil": "2026-06-02T21:00:00+03:00",
+        "coverageByKind": {
+          "atTime": "2026-06-02T21:00:00+03:00"
+        }
+      }
+    },
+    {
+      "id": "alerts.handled.changed-fire-date-is-new-occurrence",
+      "description": "Asr was handled at 15:35 and recalculated to 15:40. The clock is back at 15:15; the same logical identity at the new fire date remains selectable.",
+      "provenance": "RFC 0003 §10.2 (#16): reported occurrences excluded only before handledAt.",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh"
+        },
+        "source": {
+          "expectedKinds": [
+            "fajr",
+            "sunrise",
+            "dhuhr",
+            "asr",
+            "maghrib",
+            "isha"
+          ],
+          "rows": [
+            {
+              "day": "2026-05-25",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-26",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-27",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-28",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-29",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-30",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-31",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-01",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-02",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:40",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-03",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-04",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-05",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-06",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-07",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-08",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-09",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-10",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-11",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-12",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-13",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-14",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-15",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-16",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-17",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-18",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-19",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-20",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            }
+          ]
+        },
+        "namespace": "prayers",
+        "alertSettings": {
+          "kinds": {
+            "asr": {
+              "atTime": true
+            }
+          }
+        },
+        "query": {
+          "type": "plan",
+          "from": "2026-06-02T15:00:00+03:00",
+          "to": "2026-06-02T21:00:00+03:00",
+          "now": "2026-06-02T15:15:00+03:00",
+          "handled": [
+            {
+              "id": "2026-06-02/asr/atTime",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "handledAt": "2026-06-02T15:35:01+03:00"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "effectiveRange": [
+          "2026-06-02T15:15:00+03:00",
+          "2026-06-02T21:00:00+03:00"
+        ],
+        "alerts": [
+          {
+            "id": "2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:40:00+03:00",
+            "event": "2026-06-02T15:40:00+03:00",
+            "observance": "ordinary",
+            "sound": "system"
+          }
+        ],
+        "omitted": [],
+        "coveredUntil": "2026-06-02T21:00:00+03:00",
+        "coverageByKind": {
+          "atTime": "2026-06-02T21:00:00+03:00"
+        }
+      }
+    },
+    {
+      "id": "alerts.handled.another-namespace-does-not-exclude",
+      "description": "A handled Asr with the same owning day, kind and fire date in another namespace doesn't exclude this schedule's Asr.",
+      "provenance": "RFC 0003 §10.2 (#16): reported occurrences excluded only before handledAt.",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh"
+        },
+        "source": {
+          "expectedKinds": [
+            "fajr",
+            "sunrise",
+            "dhuhr",
+            "asr",
+            "maghrib",
+            "isha"
+          ],
+          "rows": [
+            {
+              "day": "2026-05-25",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-26",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-27",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-28",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-29",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-30",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-31",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-01",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-02",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-03",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-04",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-05",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-06",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-07",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-08",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-09",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-10",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-11",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-12",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-13",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-14",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-15",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-16",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-17",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-18",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-19",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-20",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            }
+          ]
+        },
+        "namespace": "prayers",
+        "alertSettings": {
+          "kinds": {
+            "asr": {
+              "atTime": true
+            }
+          }
+        },
+        "query": {
+          "type": "plan",
+          "from": "2026-06-02T15:00:00+03:00",
+          "to": "2026-06-02T21:00:00+03:00",
+          "now": "2026-06-02T15:15:00+03:00",
+          "handled": [
+            {
+              "id": "2026-06-02/asr/atTime",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "handledAt": "2026-06-02T15:35:01+03:00",
+              "namespace": "other"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "effectiveRange": [
+          "2026-06-02T15:15:00+03:00",
+          "2026-06-02T21:00:00+03:00"
+        ],
+        "alerts": [
+          {
+            "id": "2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:35:00+03:00",
+            "event": "2026-06-02T15:35:00+03:00",
+            "observance": "ordinary",
+            "sound": "system"
+          }
+        ],
+        "omitted": [],
+        "coveredUntil": "2026-06-02T21:00:00+03:00",
+        "coverageByKind": {
+          "atTime": "2026-06-02T21:00:00+03:00"
+        }
+      }
+    },
+    {
+      "id": "alerts.handled.reminder-leaves-room-for-at-time",
+      "description": "Asr's before-reminder was reported, its at-time alert wasn't. A budget of one selects the at-time alert with complete coverage of both kinds to 21:00.",
+      "provenance": "RFC 0003 §10.2 (#16): reported occurrences excluded only before handledAt.",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh"
+        },
+        "source": {
+          "expectedKinds": [
+            "fajr",
+            "sunrise",
+            "dhuhr",
+            "asr",
+            "maghrib",
+            "isha"
+          ],
+          "rows": [
+            {
+              "day": "2026-05-25",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-26",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-27",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-28",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-29",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-30",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-31",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-01",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-02",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-03",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-04",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-05",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-06",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-07",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-08",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-09",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-10",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-11",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-12",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-13",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-14",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-15",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-16",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-17",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-18",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-19",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-20",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            }
+          ]
+        },
+        "namespace": "prayers",
+        "alertSettings": {
+          "kinds": {
+            "asr": {
+              "atTime": true,
+              "before": 600
+            }
+          }
+        },
+        "query": {
+          "type": "plan",
+          "from": "2026-06-02T15:00:00+03:00",
+          "to": "2026-06-02T21:00:00+03:00",
+          "now": "2026-06-02T15:15:00+03:00",
+          "budget": {
+            "maxPending": 1
+          },
+          "handled": [
+            {
+              "id": "2026-06-02/asr/before",
+              "fireDate": "2026-06-02T15:25:00+03:00",
+              "handledAt": "2026-06-02T15:25:01+03:00"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "effectiveRange": [
+          "2026-06-02T15:15:00+03:00",
+          "2026-06-02T21:00:00+03:00"
+        ],
+        "alerts": [
+          {
+            "id": "2026-06-02/asr/atTime",
+            "fireDate": "2026-06-02T15:35:00+03:00",
+            "event": "2026-06-02T15:35:00+03:00",
+            "observance": "ordinary",
+            "sound": "system"
+          }
+        ],
+        "omitted": [],
+        "coveredUntil": "2026-06-02T21:00:00+03:00",
+        "coverageByKind": {
+          "atTime": "2026-06-02T21:00:00+03:00",
+          "before": "2026-06-02T21:00:00+03:00"
+        }
+      }
+    },
+    {
+      "id": "alerts.handled.source-gap-still-shortens-coverage",
+      "description": "Asr is now missing from the source. Its old handled occurrence resolves no source gap: an unknown changed fire date could still be ahead, so coverage ends at now.",
+      "provenance": "RFC 0003 §10.2 (#16): reported occurrences excluded only before handledAt.",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh"
+        },
+        "source": {
+          "expectedKinds": [
+            "fajr",
+            "sunrise",
+            "dhuhr",
+            "asr",
+            "maghrib",
+            "isha"
+          ],
+          "rows": [
+            {
+              "day": "2026-05-25",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-26",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-27",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-28",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-29",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-30",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-31",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-01",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-02",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-03",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-04",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-05",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-06",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-07",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-08",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-09",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-10",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-11",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-12",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-13",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-14",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-15",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-16",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-17",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-18",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-19",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-20",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            }
+          ]
+        },
+        "namespace": "prayers",
+        "alertSettings": {
+          "kinds": {
+            "asr": {
+              "atTime": true
+            }
+          }
+        },
+        "query": {
+          "type": "plan",
+          "from": "2026-06-02T15:00:00+03:00",
+          "to": "2026-06-02T21:00:00+03:00",
+          "now": "2026-06-02T15:15:00+03:00",
+          "handled": [
+            {
+              "id": "2026-06-02/asr/atTime",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "handledAt": "2026-06-02T15:35:01+03:00"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "effectiveRange": [
+          "2026-06-02T15:15:00+03:00",
+          "2026-06-02T21:00:00+03:00"
+        ],
+        "alerts": [],
+        "omitted": [],
+        "coveredUntil": "2026-06-02T15:15:00+03:00",
+        "coverageByKind": {
+          "atTime": "2026-06-02T15:15:00+03:00"
+        }
+      }
+    },
+    {
+      "id": "alerts.handled.later-fill-does-not-spend-capacity",
+      "description": "With no near-term window, Asr is excluded before the at-time fill spends its allowance of one on Maghrib; Isha ends the coverage.",
+      "provenance": "RFC 0003 §10.2 (#16): reported occurrences excluded only before handledAt.",
+      "input": {
+        "location": {
+          "latitude": 21.4225,
+          "longitude": 39.8262,
+          "timeZone": "Asia/Riyadh"
+        },
+        "source": {
+          "expectedKinds": [
+            "fajr",
+            "sunrise",
+            "dhuhr",
+            "asr",
+            "maghrib",
+            "isha"
+          ],
+          "rows": [
+            {
+              "day": "2026-05-25",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-26",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-27",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-28",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-29",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-30",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-05-31",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-01",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-02",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-03",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-04",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-05",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-06",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-07",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-08",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-09",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-10",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-11",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-12",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-13",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-14",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-15",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-16",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-17",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-18",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-19",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            },
+            {
+              "day": "2026-06-20",
+              "times": {
+                "fajr": "04:11",
+                "sunrise": "05:38",
+                "dhuhr": "12:19",
+                "asr": "15:35",
+                "maghrib": "19:00",
+                "isha": "20:30"
+              }
+            }
+          ]
+        },
+        "namespace": "prayers",
+        "alertSettings": {
+          "kinds": {
+            "fajr": {
+              "atTime": true
+            },
+            "dhuhr": {
+              "atTime": true
+            },
+            "asr": {
+              "atTime": true
+            },
+            "maghrib": {
+              "atTime": true
+            },
+            "isha": {
+              "atTime": true
+            }
+          }
+        },
+        "query": {
+          "type": "plan",
+          "from": "2026-06-02T15:00:00+03:00",
+          "to": "2026-06-02T21:00:00+03:00",
+          "now": "2026-06-02T15:15:00+03:00",
+          "budget": {
+            "maxPending": 1,
+            "nearTermWindow": 0
+          },
+          "handled": [
+            {
+              "id": "2026-06-02/asr/atTime",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "handledAt": "2026-06-02T15:35:01+03:00"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "effectiveRange": [
+          "2026-06-02T15:15:00+03:00",
+          "2026-06-02T21:00:00+03:00"
+        ],
+        "alerts": [
+          {
+            "id": "2026-06-02/maghrib/atTime",
+            "fireDate": "2026-06-02T19:00:00+03:00",
+            "event": "2026-06-02T19:00:00+03:00",
+            "observance": "ordinary",
+            "sound": "system"
+          }
+        ],
+        "omitted": [
+          {
+            "id": "2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00"
+          }
+        ],
+        "coveredUntil": "2026-06-02T20:30:00+03:00",
+        "coverageByKind": {
+          "atTime": "2026-06-02T20:30:00+03:00"
+        }
+      }
+    }
+  ]
+}

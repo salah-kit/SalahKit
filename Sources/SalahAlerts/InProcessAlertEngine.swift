@@ -33,10 +33,10 @@ nonisolated public struct CatchUpPolicy: Hashable, Sendable {
     return alert.kind != .before || now < alert.event.time
   }
 
-  /// How long the engine remembers a handled occurrence after its fire date: three hours, or
+  /// How long the engine remembers a handled occurrence after reporting it: one day, or
   /// longer than a longer grace.
   var retention: TimeInterval {
-    max(3 * 3_600, atTimeGrace.timeInterval + 60, reminderGrace.timeInterval + 60)
+    max(86_400, atTimeGrace.timeInterval + 60, reminderGrace.timeInterval + 60)
   }
 }
 
@@ -98,15 +98,22 @@ nonisolated public struct CatchUpPolicy: Hashable, Sendable {
 ///
 /// An alert is due from 1.5 seconds before its fire date until its grace ends
 /// (``CatchUpPolicy``); a before-reminder never once its prayer has begun. The engine
-/// remembers handled occurrences for three hours after their fire dates, in memory: an app
+/// remembers handled occurrences for one day after reporting them, in memory: an app
 /// that must not repeat an alert across a relaunch keeps that record itself.
 @MainActor public final class InProcessAlertEngine {
   private let catchUp: CatchUpPolicy
   private let clock: any AlertClock
   private let onDue: @MainActor ([PlannedAlert]) -> Void
   private var alerts: [PlannedAlert] = []
-  /// Handled occurrences, kept until their fire date is older than the retention.
-  private var handled: Set<AlertOccurrenceID> = []
+  /// The occurrences reported to `onDue`, with the instant each was reported.
+  ///
+  /// Records are added before `onDue` runs and pruned on each update or resync once they are
+  /// a day old (longer for a grace longer than a day). Pass this record to
+  /// ``AlertPlanner/notificationPlan(_:from:budget:excluding:)`` when replanning after a clock
+  /// change, so a clock set back doesn't request an occurrence a second time.
+  ///
+  /// This is an in-memory record of the engine's reports, not proof of system delivery.
+  public private(set) var handledOccurrences: [AlertOccurrenceID: Date] = [:]
 
   /// Creates an engine.
   ///
@@ -156,13 +163,15 @@ nonisolated public struct CatchUpPolicy: Hashable, Sendable {
 
   private func check(at now: Date) {
     let horizon = now.addingTimeInterval(-catchUp.retention)
-    handled = handled.filter { $0.fireDate >= horizon }
-    let due = alerts.filter { !handled.contains($0.occurrenceID) && catchUp.isDue($0, at: now) }
-    handled.formUnion(due.map(\.occurrenceID))
+    handledOccurrences = handledOccurrences.filter { $0.value > horizon }
+    let due = alerts.filter {
+      handledOccurrences[$0.occurrenceID] == nil && catchUp.isDue($0, at: now)
+    }
+    for alert in due { handledOccurrences[alert.occurrenceID] = now }
 
     let earliest = now.addingTimeInterval(CatchUpPolicy.earlyLeeway)
     if let next = alerts.first(where: {
-      $0.fireDate > earliest && !handled.contains($0.occurrenceID)
+      $0.fireDate > earliest && handledOccurrences[$0.occurrenceID] == nil
     }) {
       // Just after the fire date. A before-reminder whose prayer begins sooner wakes a second
       // before its prayer instead, inside its early leeway, so a late timer can't miss it; never

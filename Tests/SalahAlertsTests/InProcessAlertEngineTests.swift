@@ -105,6 +105,80 @@ import Testing
     #expect(recorder.batches.count == 1)
   }
 
+  @Test func aHandledOccurrenceIsRecordedBeforeItsCallback() throws {
+    let now = Fixture.date(12, 19, second: 30)
+    let clock = ManualAlertClock(now)
+    var sawRecord = false
+    var engine: InProcessAlertEngine?
+    engine = InProcessAlertEngine(clock: clock) { due in
+      sawRecord = due.allSatisfy { engine?.handledOccurrences[$0.occurrenceID] == now }
+    }
+    let schedule = try Fixture.alerts(
+      from: Fixture.date(12, 0), to: Fixture.date(13, 0), settings: dhuhrAll)
+    engine?.update(schedule)
+    #expect(sawRecord)
+    let alert = try #require(schedule.alerts.first { $0.kind == .atTime })
+    #expect(engine?.handledOccurrences == [alert.occurrenceID: now])
+    engine?.resync()
+    #expect(engine?.handledOccurrences[alert.occurrenceID] == now)
+    engine = nil
+  }
+
+  @Test(arguments: [-1.5, 300.0])
+  func handledOccurrencesLastADayAfterTheirReport(_ lateness: TimeInterval) throws {
+    let reportedAt = Fixture.time(.dhuhr).addingTimeInterval(lateness)
+    let (engine, clock, _) = engine(at: reportedAt)
+    let schedule = try Fixture.alerts(
+      from: Fixture.date(12, 0), to: Fixture.date(13, 0),
+      settings: Fixture.settings(AlertSettings(), for: [.dhuhr]))
+    let occurrence = try #require(schedule.alerts.first).occurrenceID
+    engine.update(schedule)
+    #expect(engine.handledOccurrences == [occurrence: reportedAt])
+
+    clock.now = reportedAt.addingTimeInterval(86_399)
+    engine.resync()
+    #expect(engine.handledOccurrences == [occurrence: reportedAt])
+    clock.now = reportedAt.addingTimeInterval(86_400)
+    engine.resync()
+    #expect(engine.handledOccurrences.isEmpty, "pruned at exactly one day after its report")
+  }
+
+  @Test func aClockRollbackAfterFourHoursStillKeepsTheHandledOccurrence() throws {
+    let now = Fixture.time(.dhuhr)
+    let (engine, clock, recorder) = engine(at: now)
+    let schedule = try Fixture.alerts(
+      from: Fixture.date(12, 0), to: Fixture.date(13, 0),
+      settings: Fixture.settings(AlertSettings(), for: [.dhuhr]))
+    engine.update(schedule)
+    clock.now = now.addingTimeInterval(4 * 3_600)
+    engine.resync()
+    clock.now = Fixture.date(12, 0)
+    engine.update(schedule)
+    let plan = AlertPlanner().notificationPlan(
+      schedule, from: clock.now, excluding: engine.handledOccurrences)
+    #expect(plan.alerts.isEmpty)
+    #expect(plan.coveredUntil == Fixture.date(13, 0))
+    clock.now = now
+    engine.resync()
+    #expect(recorder.batches.count == 1)
+  }
+
+  @Test func aLongGraceKeepsTheRecordBeyondADay() throws {
+    let reportedAt = Fixture.time(.dhuhr)
+    let (engine, clock, _) = engine(
+      at: reportedAt, catchUp: CatchUpPolicy(atTimeGrace: .seconds(2 * 86_400)))
+    engine.update(
+      try Fixture.alerts(
+        from: Fixture.date(12, 0), to: Fixture.date(13, 0),
+        settings: Fixture.settings(AlertSettings(), for: [.dhuhr])))
+    clock.now = reportedAt.addingTimeInterval(2 * 86_400 + 59)
+    engine.resync()
+    #expect(engine.handledOccurrences.count == 1)
+    clock.now = reportedAt.addingTimeInterval(2 * 86_400 + 60)
+    engine.resync()
+    #expect(engine.handledOccurrences.isEmpty)
+  }
+
   @Test func aClockSetForwardCatchesUp() throws {
     let start = Fixture.date(11, 0)
     let (engine, clock, recorder) = engine(at: start)

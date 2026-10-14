@@ -5,7 +5,7 @@ import SalahCore
 ///
 /// Planning has two steps. ``schedule(_:namespace:from:to:maximumReminderOffset:settings:)``
 /// builds the complete ``AlertSchedule`` of a range: every enabled alert, and the gaps where a
-/// missing prayer time hides some. ``notificationPlan(_:from:budget:)`` selects what an
+/// missing prayer time hides some. ``notificationPlan(_:from:budget:excluding:)`` selects what an
 /// operating system can keep: every alert of the near term, then at-time alerts as far as the
 /// budget reaches, and says until when that selection is complete.
 ///
@@ -137,12 +137,20 @@ nonisolated public struct AlertPlanner: Sendable {
   /// nearest first. Later reminders are never selected: they stay in the schedule for
   /// ``InProcessAlertEngine``.
   ///
+  /// `handledOccurrences` is an occurrence-to-report-time record, such as
+  /// ``InProcessAlertEngine/handledOccurrences``. An exact occurrence is excluded only when
+  /// `now` is earlier than its report time: the clock moved back past a report. It consumes
+  /// no capacity and doesn't shorten coverage. At or after the report time it remains
+  /// eligible, so a request still ahead during the engine's 1.5-second early window stays
+  /// pending. A changed fire date is a new occurrence. Source gaps remain unknown.
+  ///
   /// Each kind's coverage ends at its first alert left out, at the first instant a gap could
   /// hide one (a gap that holds `now` ends it at `now`; one entirely before `now` doesn't
   /// count), or at `E`. ``NotificationPlan/coveredUntil`` is the earliest, and `now` when the
   /// schedule's range starts after `now`.
   public func notificationPlan(
-    _ schedule: AlertSchedule, from now: Date, budget: AlertBudget = AlertBudget()
+    _ schedule: AlertSchedule, from now: Date, budget: AlertBudget = AlertBudget(),
+    excluding handledOccurrences: [AlertOccurrenceID: Date] = [:]
   ) -> NotificationPlan {
     let allowance = max(0, budget.maxPending)
     let requested = schedule.requestedRange
@@ -152,7 +160,10 @@ nonisolated public struct AlertPlanner: Sendable {
       now.addingTimeInterval(max(0, budget.nearTermWindow.timeInterval)), effectiveEnd)
 
     let inRange = schedule.alerts
-      .filter { now <= $0.fireDate && $0.fireDate < effectiveEnd }
+      .filter {
+        now <= $0.fireDate && $0.fireDate < effectiveEnd
+          && !(handledOccurrences[$0.occurrenceID].map { now < $0 } ?? false)
+      }
       .sorted(by: PlannedAlert.precedes)
     // Sorted by fire date, the near-term alerts are a prefix.
     let nearCount = inRange.prefix { $0.fireDate < nearEnd }.count

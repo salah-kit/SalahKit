@@ -194,6 +194,57 @@ struct AlertCoordinatorTests {
     #expect(await eventually { rig.coordinator.replanCount == 2 })
   }
 
+  @Test("a clock set back doesn't request an occurrence the engine already reported")
+  func clockSetBackDoesNotReRequestAnAlert() async throws {
+    let asr = try Fixture.event(.asr)
+    let rig = Rig(at: asr.time.addingTimeInterval(-60), settings: Self.settings(reminder: nil))
+    rig.coordinator.replan()
+    await rig.coordinator.waitForApply()
+    let request = try Self.asrAlert(rig)
+    #expect(rig.center.pendingIdentifiers.contains(request))
+
+    rig.clock.jump(to: asr.time.addingTimeInterval(1))
+    rig.systemCenter.post(name: .NSSystemClockDidChange, object: nil)
+    #expect(await eventually { rig.center.deliveredIdentifiers == [request] })
+    #expect(rig.player.plays.count == 1)
+
+    rig.clock.jump(to: asr.time.addingTimeInterval(-20 * 60))
+    rig.systemCenter.post(name: .NSSystemClockDidChange, object: nil)
+    await rig.coordinator.waitForApply()
+    #expect(
+      rig.coordinator.plan?.alerts.contains {
+        $0.event == asr && $0.kind == .atTime
+      } == false)
+    #expect(!rig.center.pendingIdentifiers.contains(request))
+
+    rig.clock.advance(to: asr.time.addingTimeInterval(1))
+    #expect(rig.player.plays.count == 1)
+    #expect(rig.center.deliveredIdentifiers == [request])
+  }
+
+  @Test("an alert reported early keeps its pending request during a replan")
+  func earlyReportKeepsThePendingRequest() async throws {
+    let asr = try Fixture.event(.asr)
+    let rig = Rig(at: asr.time.addingTimeInterval(-60), settings: Self.settings(reminder: nil))
+    rig.coordinator.replan()
+    await rig.coordinator.waitForApply()
+    let request = try Self.asrAlert(rig)
+
+    rig.clock.jump(to: asr.time.addingTimeInterval(-1))
+    rig.systemCenter.post(name: .NSSystemClockDidChange, object: nil)
+    await rig.coordinator.waitForApply()
+    #expect(rig.coordinator.lastDue.map(\.event.kind) == [.asr])
+    #expect(rig.player.plays.count == 1)
+    #expect(rig.coordinator.plan?.alerts.contains { Self.identifier($0) == request } == true)
+    #expect(rig.center.pendingIdentifiers.contains(request))
+    #expect(rig.center.deliveredIdentifiers.isEmpty)
+
+    rig.coordinator.replan()
+    await rig.coordinator.waitForApply()
+    #expect(rig.center.pendingIdentifiers.contains(request))
+    #expect(rig.player.plays.count == 1)
+  }
+
   @Test("the observer listens for NSWorkspace's wake notification by its real name")
   func wakeName() {
     #expect(SystemEventObserver.didWake == NSWorkspace.didWakeNotification)

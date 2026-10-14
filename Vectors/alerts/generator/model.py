@@ -285,13 +285,13 @@ def alert_schedule(source, namespace, start_, end_, maximum, table):
             for (lo, hi, kind, d, reason), prayers in grouped.items()]
     gaps.sort(key=lambda g: (g["start"], g["day"], ALERT_ORDER[g["kind"]],
                              REASON_ORDER[g["reason"]], g["end"]))
-    return {"requested": (start_, end_), "alerts": alerts, "gaps": gaps}
+    return {"namespace": namespace, "requested": (start_, end_), "alerts": alerts, "gaps": gaps}
 
 
 # The notification plan (RFC 0003 §4.4) -------------------------------------------------------
 
 
-def notification_plan(schedule, now, budget):
+def notification_plan(schedule, now, budget, handled=()):
     max_pending = max(0, budget["maxPending"])
     near = timedelta(seconds=max(0, budget["nearTermWindow"]))
     horizon = timedelta(seconds=max(0, budget["horizon"]))
@@ -299,7 +299,11 @@ def notification_plan(schedule, now, budget):
     effective_end = max(now, min(requested_end, now + horizon))
     near_end = min(now + near, effective_end)
 
-    in_range = [a for a in schedule["alerts"] if now <= a["fireDate"] < effective_end]
+    excluded = {(h.get("namespace", schedule["namespace"]), h["id"], parse_instant(h["fireDate"]))
+                for h in handled if now < parse_instant(h["handledAt"])}
+    in_range = [a for a in schedule["alerts"] if now <= a["fireDate"] < effective_end
+                and (schedule["namespace"], f"{a['day']}/{a['prayer']}/{a['kind']}",
+                     a["fireDate"]) not in excluded]
     near_term = [a for a in in_range if a["fireDate"] < near_end]
     if len(near_term) > max_pending:
         selected = near_term[:max_pending]

@@ -53,6 +53,20 @@ import Testing
     #expect(jumuah(friday)?.before == .seconds(2_700))
   }
 
+  @Test @MainActor func theArticlesRollbackPlanRuns() throws {
+    let clock = ManualAlertClock(Fixture.time(.dhuhr))
+    let engine = InProcessAlertEngine(clock: clock) { _ in }
+    let alerts = try Fixture.alerts(
+      from: Fixture.date(12, 0), to: Fixture.date(13, 0),
+      settings: Fixture.settings(AlertSettings(), for: [.dhuhr]))
+    engine.update(alerts)
+    clock.now = Fixture.date(12, 15)
+    let plan = AlertsDocumentationExamples.planAfterClockChange(
+      alerts, engine: engine, now: clock.now)
+    #expect(plan.alerts.isEmpty)
+    #expect(plan.coveredUntil == Fixture.date(13, 0))
+  }
+
   /// The contents of a document's fenced Swift blocks, in order.
   nonisolated static func swiftBlocks(in path: String) throws -> [String] {
     let text = try String(contentsOf: root.appendingPathComponent(path), encoding: .utf8)

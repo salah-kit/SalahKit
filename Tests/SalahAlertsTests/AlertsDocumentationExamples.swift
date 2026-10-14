@@ -66,6 +66,18 @@ nonisolated enum AlertsDocumentationExamples {
     }
   }
 
+  /// Replanning after a clock change uses the engine's own report record.
+  @MainActor
+  static func planAfterClockChange(
+    _ alerts: AlertSchedule, engine: InProcessAlertEngine, now: Date
+  ) -> NotificationPlan {
+    let planner = AlertPlanner()
+    engine.resync(now: now)
+    let refreshedPlan = planner.notificationPlan(
+      alerts, from: now, excluding: engine.handledOccurrences)
+    return refreshedPlan
+  }
+
   #if canImport(UserNotifications) && !os(tvOS)
     /// The article's installation of a plan on the app's notification center. Compiled, not
     /// run: a test process has no app to own notifications.

@@ -115,7 +115,8 @@ final class AlertCoordinator {
       let longSchedule = try planner.schedule(
         schedule, namespace: Self.namespace, from: now, to: now.addingTimeInterval(14 * 86_400),
         settings: preferences.settings(for:))
-      let plan = planner.notificationPlan(longSchedule, from: now, budget: budget)
+      let plan = planner.notificationPlan(
+        longSchedule, from: now, budget: budget, excluding: engine?.handledOccurrences ?? [:])
       self.plan = plan
       planningError = nil
       diagnostics?.record(

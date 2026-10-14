@@ -37,7 +37,8 @@ nonisolated public struct AlertGap: Hashable, Sendable {
 /// known.
 ///
 /// ``AlertPlanner/schedule(_:namespace:from:to:maximumReminderOffset:settings:)`` builds it.
-/// ``InProcessAlertEngine`` follows it whole; ``AlertPlanner/notificationPlan(_:from:budget:)``
+/// ``InProcessAlertEngine`` follows it whole;
+/// ``AlertPlanner/notificationPlan(_:from:budget:excluding:)``
 /// selects from it what an operating system can keep.
 nonisolated public struct AlertSchedule: Hashable, Sendable {
   /// The namespace of every alert, kept even when there are none.
@@ -95,7 +96,8 @@ nonisolated public struct NotificationPlan: Hashable, Sendable {
   public var effectiveRange: DateInterval
   /// The selected alerts, by fire date, then identity.
   public var alerts: [PlannedAlert]
-  /// Every enabled alert before this instant is in ``alerts`` and known.
+  /// Every enabled alert before this instant is known and either in ``alerts`` or excluded
+  /// by its handled-occurrence record.
   ///
   /// It ends the contiguous interval from the planning instant in which the plan is complete:
   /// at the first enabled alert the budget left out, the first instant a source gap could
