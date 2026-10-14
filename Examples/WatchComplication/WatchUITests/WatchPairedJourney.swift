@@ -81,8 +81,11 @@ nonisolated final class WatchPairedJourney: WatchJourneyCase {
     XCTAssertEqual(label("home.place", in: app), "Makkah")
     XCTAssertEqual(label("home.source", in: app), "Calculated on the watch")
     XCTAssertTrue(element("home.next", in: app).waitForExistence(timeout: 10))
-    // The countdown is live: the label names the next prayer.
-    XCTAssertFalse(label("home.next", in: app).isEmpty)
+    // The label names the next prayer, whichever it is at the moment of the run.
+    let next = label("home.next", in: app)
+    XCTAssertTrue(
+      ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"].contains { next.hasPrefix($0) },
+      "home.next is “\(next)”, without a prayer's name")
     print("WATCHCOMPLICATION home.next: \(label("home.next", in: app))")
     print("WATCHCOMPLICATION home.phone: \(label("home.phone", in: app))")
     screenshot("paired-4-watch-phone-app-closed")
