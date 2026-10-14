@@ -45,9 +45,11 @@ func saveForWidgets(_ settings: PrayerSettings) {
   }
 }
 
-extension DarwinSignal {
-  static let stopPlayback = DarwinSignal(name: "com.example.prayers.stop")
-}
+#if canImport(notify)
+  extension DarwinSignal {
+    static let stopPlayback = DarwinSignal(name: "com.example.prayers.stop")
+  }
+#endif
 
 #if canImport(WidgetKit) && canImport(SwiftUI)
   struct PrayerEntry: TimelineEntry {

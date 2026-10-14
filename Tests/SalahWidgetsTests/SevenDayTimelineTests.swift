@@ -57,7 +57,7 @@ struct SevenDayTimelineTests {
     // The timeline of call 2 is valid for 48 hours and asks for a reload after 24; the next call
     // comes 30 hours after that, 6 hours past the validity.
     let host = try WidgetHost(
-      from: Self.start, until: Self.start + Self.week, delays: [2: 30 * 3_600]
+      from: Self.start, until: Self.start + Self.week, delays: [2: 30.0 * 3_600]
     ) {
       date in (try PrayerTimelineBuilder(schedule: schedule).timeline(from: date), schedule)
     }
@@ -76,7 +76,7 @@ struct SevenDayTimelineTests {
   func delayWithinSlack() throws {
     let schedule = Self.calculated()
     let host = try WidgetHost(
-      from: Self.start, until: Self.start + Self.week, delays: [1: 20 * 3_600, 4: 23 * 3_600]
+      from: Self.start, until: Self.start + Self.week, delays: [1: 20.0 * 3_600, 4: 23.0 * 3_600]
     ) { date in (try PrayerTimelineBuilder(schedule: schedule).timeline(from: date), schedule) }
 
     #expect(check(host, from: Self.start, through: Self.start + Self.week).expired.isEmpty)

@@ -310,6 +310,7 @@ The first `observe` called `MainActor.assumeIsolated` inside the main-queue bloc
 3. **Wording for gaps.** Every consumer turns `ScheduleGapReason` into a sentence. A summary of an unavailable state's coverage (Core §9 #8) would shorten that.
 4. **Timeline size.** WidgetKit documents no entry limit. The default of 96 is Core's; a device run may show whether long timelines are cut.
 5. **One writer per key.** `SharedValue` doesn't lock. If an extension needs to write a value the app also writes (an optimistic stop), a compare-and-swap API may be needed.
+6. **Secondary text in the plain styles.** Passed rows and the next prayer's time use the system's secondary color: iOS's `secondaryLabel` over white is 3.30 to 3.44:1 in light mode (5.95 to 6.36:1 in dark mode), above `ContrastCheck`'s default floor of 3:1 but below WCAG's 4.5:1 for body text. Increase Contrast raises it. It follows the platform's convention for de-emphasized text; an app with stricter needs restyles. MosqueBoard and CalculatedPhone use the same color for secondary text.
 
 ## 9. Consumer findings
 
