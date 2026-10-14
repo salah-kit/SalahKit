@@ -239,6 +239,11 @@ The examples are complete apps on the public API, each with its own README, test
 | [WatchComplication](Examples/WatchComplication) | Apple Watch, iPhone | A complication with its own copy of the inputs, which keeps working with the iPhone app closed |
 | [MenuBar](Examples/MenuBar) | Mac | An app that keeps running: a menu-bar title refreshed with `.steps`, in-process alerts with a generated tone, and a desktop widget whose Stop button reaches the app |
 
+The examples use descriptive app and module names rather than the ecosystem's `Salah`
+prefix; the reusable package modules keep that prefix. Their app minimums are iOS/tvOS 17,
+watchOS 10 and macOS 14, allowing the examples to use current app, widget and observation
+APIs. Those example requirements do not raise the package minimums below.
+
 ## Supported platforms
 
 - iOS 16, macOS 13, watchOS 9, tvOS 16 and visionOS 1 or later.

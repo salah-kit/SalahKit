@@ -137,7 +137,7 @@ Every value on the board has a VoiceOver label, such as "Begins 05:31", "Iqama 0
 
 ## Pending
 
-- **Contrast check:** SalahUI's `ContrastCheck` doesn't exist yet. Once it does, check the board's colors with it.
+- **Contrast decision:** `ContrastCheck` exists. The system's secondary text on white measured 3.30–3.44:1 in light mode, below WCAG's 4.5:1 for body text ([RFC 0004](../../docs/rfcs/0004-widgets-and-ui.md), §8 #6). Choosing a stronger secondary color remains pending; the iOS measurements do not establish full contrast compliance or measure the TV's own background.
 - **A real iPad:** only simulators have run the board so far. Run it on a physical iPad in both orientations and with large Dynamic Type sizes.
 - **A real Apple TV:** only a simulator has run the tvOS app so far. Run it on an Apple TV connected to a TV, check that the board stays inside the picture with the TV's overscan, and leave it open past the screen-saver delay to confirm the board stays on screen.
 - **Arabic review:** a native speaker should review the Arabic strings.

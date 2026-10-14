@@ -54,6 +54,7 @@
       self.missing = missing
     }
 
+    /// The styled prayer rows in a vertical stack with no extra spacing.
     public var body: some View {
       VStack(spacing: 0) {
         rows

@@ -15,10 +15,11 @@ One screen, and a Settings sheet:
 - **Coverage banner:** when the state is `.unavailable`, a banner lists the gaps (day, kinds and reason), current ones first. When the state is known but today is partial, the banner lists today's missing kinds. This is the app's explicit display policy: nothing is filled in from another day or another source.
 - **Calculation:** every parameter of the current `CalculationSettings`: method (or Custom), Fajr rule (an angle or the Moonsighting Committee), Maghrib rule (sunset or an angle), Isha rule (an angle, minutes after Maghrib, or the Moonsighting Committee with its twilight), madhab, high-latitude rule, night span, the method's minutes, the user's minutes, rounding and the Ramadan rule.
 - **Settings:** the place (six presets), the method (all 14 `CalculationMethod.allCases` and Custom, with "Use the suggested method" from `CalculationMethod.suggested(for:)`), rounding, Custom's Fajr angle, Isha rule and night span, the madhab, the high-latitude rule, the Ramadan Isha rule, a stepper per prayer for the user's minutes, and the stored JSON. Changes apply at once.
+- **Prayer alerts:** Settings turns notifications on for the five prayers and offers reminders 5, 10, 15 or 30 minutes before each. The app plans up to 14 days within the system's pending-request limit and replans when it opens. The Alerts card shows permission, planned and confirmed coverage, the pending requests read back from the system, and scheduling failures.
 
 A method defines Fajr, Maghrib and Isha, the night span, its own minutes and the rounding, so changing any of them switches to Custom and the method shown is always exact. The madhab, the high-latitude rule, the user's minutes and the Ramadan rule are the user's own and stay when the method changes (`AppSettings.choose(_:)`).
 
-The settings (place, method choice and `CalculationSettings`) are stored as JSON in `UserDefaults` and decoded at launch; the Settings sheet shows the stored JSON. `PrivacyInfo.xcprivacy` declares the `UserDefaults` access with reason `CA92.1`. The app reads no location: a place is an explicit `PrayerLocation`.
+The settings (place, method choice, `CalculationSettings` and alert options) are stored as JSON in `UserDefaults` and decoded at launch; the Settings sheet shows the stored JSON. `PrivacyInfo.xcprivacy` declares the `UserDefaults` access with reason `CA92.1`. The app reads no location: a place is an explicit `PrayerLocation`.
 
 Today's rows use `PrayerTimesList.rows`, with the partial day's missing-kind dictionary passed as `missing`. `PhoneRowStyle` reads `PrayerRowConfiguration.gapReason` to show the app's translated reason where no time exists. The same style draws known events and their statuses, and marks day offsets; it keeps the example's explicit 24-hour clock and seconds when rounding is disabled. This is the second consumer of the missing-row API in SalahKit 0.4.0, alongside Salah. The polar-night journey asserts that all six kinds stay in order and missing kinds show reasons with no status or day marker.
 
@@ -69,7 +70,7 @@ The app's targets set `SWIFT_DEFAULT_ACTOR_ISOLATION` to `$(CALCULATEDPHONE_ISOL
 
 ### Importing SalahTimes
 
-SalahCalculation doesn't re-export SalahTimes ([RFC 0002](../../docs/rfcs/0002-calculation.md) §3). The app names engine types (`CalculationMethod`, `Madhab`, `HighLatitudeRule`, `Rounding`, `FajrRule`, `IshaRule`, `PrayerAdjustments`, `RamadanIshaRule`), so its files `import SalahTimes`. The project links only the SalahKit products `SalahCore` and `SalahCalculation`; the `SalahTimes` module reaches the app through SalahCalculation's dependency, and Xcode 26 and 27 accept the import without a package dependency of the app's own. A Swift package that imports SalahTimes should still list the SalahTimes product in its target, as RFC 0002 says.
+SalahCalculation doesn't re-export SalahTimes ([RFC 0002](../../docs/rfcs/0002-calculation.md) §3). The app names engine types (`CalculationMethod`, `Madhab`, `HighLatitudeRule`, `Rounding`, `FajrRule`, `IshaRule`, `PrayerAdjustments`, `RamadanIshaRule`), so its files `import SalahTimes`. The project links the SalahKit products `SalahCore`, `SalahCalculation`, `SalahAlerts` and `SalahUI`; the `SalahTimes` module reaches the app through SalahCalculation's dependency, and Xcode 26 and 27 accept the import without a package dependency of the app's own. A Swift package that imports SalahTimes should still list the SalahTimes product in its target, as RFC 0002 says.
 
 ### Launch arguments
 
@@ -89,6 +90,12 @@ SalahCalculation doesn't re-export SalahTimes ([RFC 0002](../../docs/rfcs/0002-c
 | `-ramadanIsha on` | `on` or `off`: Isha 120 minutes after Maghrib in Ramadan, for an Isha set in minutes |
 | `-language ar` | `en` or `ar`: UI strings, names, digits and dates. Add `-AppleLanguages (ar)` for the system's own right-to-left behavior. |
 | `-resetSettings` | Start from the defaults (Makkah, Umm al-Qura), ignoring stored settings |
+| `-alerts on` | `on` or `off`: save whether alerts at the five prayers are enabled |
+| `-alertReminder 5` | Save a reminder offset of `5`, `10`, `15` or `30` minutes; `0` disables reminders |
+| `-alertFixtureIn 180` | For this run, plan five fixture prayers starting this many seconds after launch, one minute apart |
+| `-alertFixtureDay 2026-10-14` | For this run, choose the civil day that owns the fixture's prayers |
+| `-failAlertAdds dhuhr,asr` | For this run, inject add failures for these prayer kinds to show unconfirmed requests and shortened coverage |
+| `-probeNotificationLimit 70` | For this run, add `1`–`500` temporary requests after planning, count those the system keeps, then remove them |
 
 ## Tests
 
@@ -102,6 +109,7 @@ The expected times are SalahTimes 0.1.0's. They were computed once, through Sala
   4. Source failure: Tromsø on 21 June, where Fajr, sunrise, Maghrib and Isha can't be calculated and, after Asr, the banner explains the gap; and a latitude of 95°, where the whole day is invalid input with no times.
   5. Settings made in the app survive a relaunch without `-resetSettings`.
   6. Arabic names, Arabic-Indic digits and a right-to-left layout.
+- `AlertJourneys` uses the real notification center: it enables alerts through Settings, accepts the permission alert through Springboard, checks pending-request read-back, observes a Fajr notification with the app closed, changes the fixture times, injects an add failure, then turns alerts off and probes the system's pending-request limit. It checks confirmed coverage separately from the plan's horizon. Run it with the same test command above. On the iOS 27.0 simulator, the first permission grant has sometimes left adds failing with "Source is not authorized" despite an allowed status; restarting that simulator after the grant resolved it. Keep a failed first-grant run in the evidence and report any restart separately ([RFC 0003](../../docs/rfcs/0003-alerts.md), §8).
 
 ## Accessibility and languages
 
@@ -110,5 +118,6 @@ Every value has a VoiceOver label, such as "At 15:27", "Time remaining: 1 hour, 
 ## Pending
 
 - **A real iPhone:** only simulators have run the app so far. Run it on a physical iPhone, with large Dynamic Type sizes and VoiceOver.
-- **Contrast check:** SalahUI's `ContrastCheck` doesn't exist yet. Once it does, check the app's colors with it.
+- **Contrast decision:** `ContrastCheck` exists. The system's secondary text on white measured 3.30–3.44:1 in light mode, below WCAG's 4.5:1 for body text ([RFC 0004](../../docs/rfcs/0004-widgets-and-ui.md), §8 #6). The orange coverage-banner border measured 1.97–2.20:1, below the 3:1 non-text threshold. Choosing stronger colors remains pending; these measurements do not establish full contrast compliance.
+- **Real notification delivery:** check closed-app delivery and first-permission behavior on a physical iPhone; the simulator journey does not establish device behavior.
 - **Arabic review:** a native speaker should review the Arabic strings.

@@ -80,6 +80,7 @@
     /// Creates the plain next-prayer style.
     public init() {}
 
+    /// Renders the selected prayer and its countdown or elapsed time with the plain style.
     public func makeBody(configuration: Configuration) -> some View {
       // Each line stays one line and shrinks to fit, so a narrow complication never breaks a
       // time or a countdown in the middle.

@@ -50,6 +50,7 @@
       self.selection = selection
     }
 
+    /// The selected prayer's text rendered with the environment's next-prayer style.
     public var body: some View {
       let content = NextPrayerContent(
         state: state, names: names, timeZone: timeZone, locale: locale, selection: selection)

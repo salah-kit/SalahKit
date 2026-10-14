@@ -20,6 +20,7 @@
       self.locale = locale
     }
 
+    /// The moment's next prayer, countdowns and prayer rows, or its explicit coverage gaps.
     public var body: some View {
       let zone = moment.place.location.timeZone
       let names = PrayerNames(locale: locale)
@@ -67,6 +68,7 @@
       self.locale = locale
     }
 
+    /// The place's featured day rendered with the plain prayer-row style.
     public var body: some View {
       VStack(alignment: .leading, spacing: 12) {
         Text(verbatim: "\(place.id) · \(place.featuredDay)")

@@ -1,6 +1,6 @@
 # RFC 0002: SalahCalculation
 
-- **Status:** Draft for 0.1.0. `CalculatedPhone` has reported: its findings are in §9 and §10. Open to findings from Salah's migration and other adopters until 1.0 (STANDARD.md, Releases).
+- **Status:** Shipped in 0.1.0. `CalculatedPhone` has reported: its findings are in §9 and §10. Open to findings from Salah's migration and other adopters until 1.0 (STANDARD.md, Releases).
 - **Products:** SalahCalculation.
 - **Discussion:** [salah-kit/SalahKit#7](https://github.com/salah-kit/SalahKit/discussions/7).
 - **Started:** 2026-10-13.

@@ -116,7 +116,30 @@ The Stop buttons are labelled "Stop the tone" (the widget's names the prayer: "S
 
 ## Pending
 
-These need a person, a real desktop or real sleep, and are recorded in `reports/evidence/`:
+These checks need a person. Record the tag, macOS version, signing setup, settings, timestamps,
+screenshots and logs in a check record of your own; the implementation run's workspace evidence
+is not included in this standalone repository.
 
-- **A real tap on the desktop widget's Stop button** (`reports/evidence/D2-menubar-widget-stop.md`): the harness runs the intent's code in a separate sandboxed process, not in the widget extension that WidgetKit launches.
-- **Real sleep and wake** (`reports/evidence/D2-menubar-sleep-wake.md`): the round-trip tests make the app post the wake notification to itself; a real sleep also stops the app's timers, and the system decides when an overdue notification request is delivered.
+- **A real tap on the desktop widget's Stop button:** build the app signed as above, launch
+  it with `-playTestTone repeating`, and add its small or medium widget to the desktop.
+  Click Stop three times across separate tone launches, including once in Arabic. Use the
+  harness's `state` command to confirm that what plays is absent and the timeline's
+  `showsStopButton` is false. Record click-to-stop/redraw delay and the app's `stopSignal`,
+  `stopped signal wasPlaying=true` and `published playing=false` log entries. The automated
+  harness runs the intent in a separate sandboxed process; only this tap observes the widget
+  extension that WidgetKit launches.
+- **Real sleep and wake:** launch with `-alerts on -reminder off -notifications memory`
+  and `-now` set about two minutes before a prayer. Sleep the Mac within a minute and wake
+  about three minutes later: the at-time tone should catch up once within its five-minute
+  grace. Repeat waking after eight minutes: it must not play beyond grace. Check a genuine
+  clock change, restoring automatic time afterwards. Then repeat the wake check using real
+  notifications after explicitly granting permission; record each banner separately from
+  the engine's due report and tone, expecting one delivery. The round-trip tests inject a
+  wake notification; a real sleep stops timers and leaves overdue delivery to the system.
+
+Read the app's unified log with:
+
+```sh
+/usr/bin/log show --last 20m --style compact \
+  --predicate 'subsystem == "io.github.salah-kit.MenuBar"'
+```

@@ -6,6 +6,17 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- CalculatedPhone's README now describes its shipped alert settings, launch arguments and
+  notification journey, and lists all linked SalahKit products. Its and MosqueBoard's
+  contrast notes reflect the available checker and the unresolved color decisions.
+- DocC comments describe SalahUI's public view and style implementations and the preview
+  galleries' view bodies.
+- The README explains the examples' naming and platform differences, the original Core and
+  Calculation RFCs identify their shipped status, and MenuBar's pending device checks can be
+  followed from a standalone clone.
+
 ## [0.4.0] - 2026-10-14
 
 ### Added

@@ -22,8 +22,12 @@ cat "${FAKE_SYMBOLS}"
 NM
 chmod +x "${work}/bin/nm"
 
+# Swift's mangled symbols contain a literal $s, not a shell variable.
+# shellcheck disable=SC2016
 core_symbol='0000000000001000 T _$s9SalahCore12PrayerSourceMp'
+# shellcheck disable=SC2016
 times_symbol='0000000000002000 T _$s10SalahTimes17CalculationMethodO'
+# shellcheck disable=SC2016
 calculation_symbol='0000000000003000 T _$s16SalahCalculation17CalculationSourceV'
 
 # xcodebuild's target dependency graph for MosqueBoard, with any extra SalahKit targets.

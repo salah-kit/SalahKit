@@ -96,6 +96,7 @@
     /// Creates the plain row style.
     public init() {}
 
+    /// Renders a row's name, time, countdown and day offset with the plain style.
     public func makeBody(configuration: Configuration) -> some View {
       let emphasized: Bool
       let foreground: AnyShapeStyle

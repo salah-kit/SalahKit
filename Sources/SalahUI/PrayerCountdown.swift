@@ -47,6 +47,7 @@
       self.mode = mode
     }
 
+    /// The remaining time rendered in the environment's locale and requested countdown mode.
     public var body: some View {
       content.text(mode: mode, locale: locale, frozen: frozen)
     }
