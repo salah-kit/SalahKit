@@ -1,0 +1,150 @@
+# Generates PhoneWidgets.xcodeproj. Run `xcodegen` in this folder after changing it, and commit
+# both files (STANDARD.md, Apps).
+#
+# Generate from a clone whose folder is named `SalahKit`, as CI's checkout is: XcodeGen names
+# the local package's folder reference after the folder that `../..` resolves to, so another
+# name changes the project and fails CI's generate check.
+name: PhoneWidgets
+options:
+  bundleIdPrefix: io.github.salah-kit
+  deploymentTarget:
+    # iOS 17 for `containerBackground(for: .widget)`.
+    iOS: "17.0"
+  developmentLanguage: en
+  createIntermediateGroups: true
+configFiles:
+  Debug: Config/Shared.xcconfig
+  Release: Config/Shared.xcconfig
+packages:
+  SalahKit:
+    path: ../..
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    # The default actor isolation of the app's own targets. Builds pass
+    # PHONEWIDGETS_ISOLATION=nonisolated (or MainActor) to check both settings (proposal §3.1).
+    # Passing SWIFT_DEFAULT_ACTOR_ISOLATION itself on the command line would also reach the
+    # package targets and make SalahTimes' types main-actor-isolated, which no app sees
+    # (docs/rfcs/0001-core.md, section 6.3); this setting reaches only the targets below.
+    PHONEWIDGETS_ISOLATION: MainActor
+targets:
+  PhoneWidgets:
+    type: application
+    platform: iOS
+    sources:
+      - path: PhoneWidgets
+      # The settings, the timeline provider, the widget's views, the diagnostics log and the
+      # strings: one copy, compiled into the app and the extension.
+      - path: Shared
+    dependencies:
+      # SalahTimes comes with SalahCalculation: the code imports it to name CalculationMethod
+      # without a package dependency of its own.
+      - package: SalahKit
+        product: SalahCore
+      - package: SalahKit
+        product: SalahCalculation
+      - package: SalahKit
+        product: SalahWidgets
+      - package: SalahKit
+        product: SalahUI
+      - target: PhoneWidgetsWidgets
+        embed: true
+      - sdk: WidgetKit.framework
+    entitlements:
+      path: PhoneWidgets/PhoneWidgets.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.io.github.salah-kit.PhoneWidgets
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.PhoneWidgets
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(PHONEWIDGETS_ISOLATION)
+        # iPhone only. Set per target: XcodeGen's iOS preset writes "1,2" at target level, which
+        # would override a project-level value.
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_KEY_CFBundleDisplayName: PhoneWidgets
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+  PhoneWidgetsWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Widgets
+      - path: Shared
+    dependencies:
+      - package: SalahKit
+        product: SalahCore
+      - package: SalahKit
+        product: SalahCalculation
+      - package: SalahKit
+        product: SalahWidgets
+      - package: SalahKit
+        product: SalahUI
+      - sdk: WidgetKit.framework
+      - sdk: SwiftUI.framework
+    info:
+      path: Widgets/Info.plist
+      properties:
+        # An extension's versions must match its app's.
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: Widgets/Widgets.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.io.github.salah-kit.PhoneWidgets
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.PhoneWidgets.Widgets
+        PRODUCT_NAME: PhoneWidgetsWidgets
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: PhoneWidgets
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(PHONEWIDGETS_ISOLATION)
+        TARGETED_DEVICE_FAMILY: "1"
+        SKIP_INSTALL: YES
+  PhoneWidgetsTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: PhoneWidgetsTests
+    dependencies:
+      # Hosted by the app: SalahKit's symbols come from the app binary, not a second copy.
+      - target: PhoneWidgets
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.PhoneWidgetsTests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(PHONEWIDGETS_ISOLATION)
+        TARGETED_DEVICE_FAMILY: "1"
+  PhoneWidgetsUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: PhoneWidgetsUITests
+    dependencies:
+      - target: PhoneWidgets
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.PhoneWidgetsUITests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(PHONEWIDGETS_ISOLATION)
+        TARGETED_DEVICE_FAMILY: "1"
+        TEST_TARGET_NAME: PhoneWidgets
+schemes:
+  PhoneWidgets:
+    build:
+      targets:
+        PhoneWidgets: all
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - PhoneWidgetsTests
+        - PhoneWidgetsUITests

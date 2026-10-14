@@ -397,3 +397,82 @@ jobs:
           name: WatchComplication.xcresult
           path: Examples/WatchComplication/.derived/*.xcresult
           if-no-files-found: ignore
+
+  phonewidgets:
+    name: PhoneWidgets (generate, build, journeys)
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          persist-credentials: false
+
+      # Hosted runners don't offer Xcode 27, so CI uses the newest installed Xcode 26
+      # (docs/rfcs/0001-core.md, section 6.4). The project stays compatible with it.
+      - name: Select the newest Xcode 26
+        run: scripts/select-xcode.sh
+
+      # The committed project must be exactly what project.yml generates (STANDARD.md, Apps).
+      # `git status` also catches generated files that were never committed; the checkout's
+      # folder is named SalahKit, the name the project was generated under (see project.yml).
+      - name: Check the generated project
+        run: |
+          brew install xcodegen
+          (cd Examples/PhoneWidgets && xcodegen --quiet)
+          changes="$(git status --porcelain -- Examples/PhoneWidgets)"
+          if [[ -n "${changes}" ]]; then
+            echo "${changes}"
+            git diff -- Examples/PhoneWidgets
+            echo "::error::Examples/PhoneWidgets differs from what project.yml generates."
+            exit 1
+          fi
+
+      # The app and its widget extension build under both default-isolation settings (proposal
+      # section 3.1). The project's PHONEWIDGETS_ISOLATION reaches only the example's own targets:
+      # passing SWIFT_DEFAULT_ACTOR_ISOLATION here would also make SalahTimes' types
+      # main-actor-isolated (docs/rfcs/0001-core.md, section 6.3).
+      - name: Build (MainActor and nonisolated)
+        run: |
+          for isolation in MainActor nonisolated; do
+            echo "::group::${isolation}"
+            xcodebuild build-for-testing \
+              -project Examples/PhoneWidgets/PhoneWidgets.xcodeproj -scheme PhoneWidgets \
+              -destination 'generic/platform=iOS Simulator' \
+              -derivedDataPath "Examples/PhoneWidgets/.derived/${isolation}" \
+              PHONEWIDGETS_ISOLATION="${isolation}" CODE_SIGNING_ALLOWED=NO
+            echo "::endgroup::"
+          done
+
+      # The unit tests and the app journeys need an iPhone simulator. The runner's images name
+      # them differently over time, so the step picks the first available iPhone; without one,
+      # the job stays build-only and says so (STANDARD.md, CI).
+      #
+      # The Home Screen journey (HomeScreenJourney) skips itself here with XCTSkip: it adds the
+      # widget through Springboard's editing UI and waits on WidgetKit to run the real extension,
+      # which a cold hosted simulator doesn't do on a schedule a pull request should depend on.
+      # It runs on a local simulator; the README says how. TEST_RUNNER_ variables reach the test
+      # runner with the prefix removed.
+      - name: Unit tests and journeys on an iPhone simulator
+        env:
+          TEST_RUNNER_PHONEWIDGETS_SKIP_HOME_SCREEN: "1"
+        run: |
+          udid="$(xcrun simctl list devices available | grep -E '^ +iPhone' | head -n 1 \
+            | grep -oE '[0-9A-F]{8}-([0-9A-F]{4}-){3}[0-9A-F]{12}' || true)"
+          if [[ -z "${udid}" ]]; then
+            echo "::warning::No iPhone simulator is available on this runner; PhoneWidgets is build-only here."
+            exit 0
+          fi
+          xcrun simctl list devices available | grep "${udid}"
+          xcodebuild test \
+            -project Examples/PhoneWidgets/PhoneWidgets.xcodeproj -scheme PhoneWidgets \
+            -destination "id=${udid}" \
+            -derivedDataPath Examples/PhoneWidgets/.derived/test \
+            -resultBundlePath Examples/PhoneWidgets/.derived/PhoneWidgets.xcresult
+
+      - name: Upload the test results
+        if: failure()
+        uses: actions/upload-artifact@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          name: PhoneWidgets.xcresult
+          path: Examples/PhoneWidgets/.derived/PhoneWidgets.xcresult
+          if-no-files-found: ignore
