@@ -1,0 +1,1225 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		080E41B1E57EF6610D53895D /* NowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A670FD3A2D62ED5ABD7BDA /* NowPlaying.swift */; };
+		08C54977169F2855702EBC73 /* MenuBarJourneys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E24D644E4BAADDA9C8E55B7 /* MenuBarJourneys.swift */; };
+		08C6241FEB491AA84039D00F /* WidgetTimelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D478E1464A935C80128203E /* WidgetTimelineTests.swift */; };
+		0C46F12DC0F1AF12939BA013 /* RoundTripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7179C3D0501E0EBF43C0AD2C /* RoundTripTests.swift */; };
+		0E04A3B0BFBB24583BF8AFDD /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = E516D5E6843D87DD7FB13CDB /* Support.swift */; };
+		123765EE6EAC713C7AB49912 /* MenuBarTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36841FF730C1F63B29544E7 /* MenuBarTimeline.swift */; };
+		16A422AB098805EE9E2BD611 /* MenuBarWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E567430BC1E7AC7F0D6B9F0 /* MenuBarWidgets.swift */; };
+		1EBD4DF2D1E1B97716497615 /* SalahAlerts in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8E8FC46249517047353D6D /* SalahAlerts */; };
+		2613BD2B4BFFCB64C6E1AA5F /* MenuBarTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36841FF730C1F63B29544E7 /* MenuBarTimeline.swift */; };
+		268B1087B1EA2BB37921B5B3 /* DisplayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE3822233B76B25E5C565AA /* DisplayTests.swift */; };
+		2B19B213AEFC38C6A9EDE045 /* LaunchOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6968E407A8E7A4AD825B84D6 /* LaunchOptions.swift */; };
+		2C78C331563B9559E75FED59 /* SalahCalculation in Frameworks */ = {isa = PBXBuildFile; productRef = 2DA0DA1A65730E3C31FD12A5 /* SalahCalculation */; };
+		2D20AD16CFF5DCD0ADC68422 /* MenuBarStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E88ACDC4929A37E588040 /* MenuBarStrings.swift */; };
+		2EA33DBF052A430D714F9C8C /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F851B5EBC4C5BF163ABF9BD5 /* Localizable.xcstrings */; };
+		2EB3707637708A3AD1572C4B /* StopPlaybackIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF89A0BE26E5AB49ACA5C06 /* StopPlaybackIntent.swift */; };
+		38DBBBB0072A9E03D89824F7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2BDB842CFCC292030F5305A4 /* PrivacyInfo.xcprivacy */; };
+		392A013D20677AF9458D1EA8 /* LiveStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53409AB62C4C18FF4557F62F /* LiveStateTests.swift */; };
+		3F2F9AAD03A4949C444A52F7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AB38317D50B048ECB3426716 /* PrivacyInfo.xcprivacy */; };
+		3FC28B25C617B76B2902B9B2 /* MenuBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A40CA5FAFA2472E82BC699 /* MenuBarApp.swift */; };
+		473E4605A4431D8196CDE736 /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DE6715C2DCDEF3A06E1FBE /* ScheduleView.swift */; };
+		49D3C82043108A0CD16FC837 /* SalahCore in Frameworks */ = {isa = PBXBuildFile; productRef = D780BB8DC5E354772D9F86F3 /* SalahCore */; };
+		4CFB71F23DE0F9B22927909C /* NowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A670FD3A2D62ED5ABD7BDA /* NowPlaying.swift */; };
+		4F2030D38017E4C1F0BDE2AE /* SalahWidgets in Frameworks */ = {isa = PBXBuildFile; productRef = 6558505E74B0EFE6AB149893 /* SalahWidgets */; };
+		51DE5E8EC1CACF7136F3B655 /* SalahCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0609A678A12A057E84D72BD4 /* SalahCore */; };
+		5AA4E46FE6E9A7E3C7F19B98 /* SalahCalculation in Frameworks */ = {isa = PBXBuildFile; productRef = 3DFF50D2A8E0789B85A765CD /* SalahCalculation */; };
+		5C825AA1750C9B0D97385316 /* MenuBarTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36841FF730C1F63B29544E7 /* MenuBarTimeline.swift */; };
+		63AC55DCB3E16DA1486C1608 /* SalahCalculation in Frameworks */ = {isa = PBXBuildFile; productRef = E5910DAF70DD9595511A44A5 /* SalahCalculation */; };
+		664FD4D58C02F963AD21AFAF /* SalahUI in Frameworks */ = {isa = PBXBuildFile; productRef = 821D6265225B42A768DFC81F /* SalahUI */; };
+		6D4ADA5A46B2765BB81BE59E /* SalahCore in Frameworks */ = {isa = PBXBuildFile; productRef = F00B1CF71A7229B228DF3034 /* SalahCore */; };
+		6EF26A823AE31F041E0DA7A0 /* MenuBarID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A9E190BB776D7191B4CEF5 /* MenuBarID.swift */; };
+		7098D23A16D12192C5381400 /* SalahWidgets in Frameworks */ = {isa = PBXBuildFile; productRef = 65DA598D83D4508ADEA1FC89 /* SalahWidgets */; };
+		78A758F4C66926E5F5FB52FC /* ToneAndOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E0E7665A319B3A42D93B87 /* ToneAndOptionsTests.swift */; };
+		78C323CD08D89CB42EDB7E7A /* MenuBarWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 23CB8503FD7D867415CC67AE /* MenuBarWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		79F7A1D06206B999E083649B /* SalahCalculation in Frameworks */ = {isa = PBXBuildFile; productRef = EB5A51E7449B148C3BF1F3FF /* SalahCalculation */; };
+		7E2DE719B211628B4D1667B8 /* SalahCore in Frameworks */ = {isa = PBXBuildFile; productRef = 498B31C37D7E64DE7983E655 /* SalahCore */; };
+		7F80DC40015199E982F8F821 /* LiveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A6F694C1C250250391524F /* LiveState.swift */; };
+		818E3D5976977C2DBBEAC08D /* SalahWidgets in Frameworks */ = {isa = PBXBuildFile; productRef = 3CA2DC3CD334173FDE316AF4 /* SalahWidgets */; };
+		8D7830A9A52DA015147E3CB3 /* MenuBarSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FD028860FB59A3B7335BF8 /* MenuBarSettings.swift */; };
+		92EFAB76D02CD97FAF808A76 /* SalahAlerts in Frameworks */ = {isa = PBXBuildFile; productRef = 8BE60CAB5453AC18BCFC17FE /* SalahAlerts */; };
+		95BED9D03964EF7E9185810C /* Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D56AAD2B14FCFAB2A16AE61 /* Display.swift */; };
+		97104AA3B5FBC80DD02BE76C /* MenuBarSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FD028860FB59A3B7335BF8 /* MenuBarSettings.swift */; };
+		971585278A07FCF64F780957 /* MenuBarStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E88ACDC4929A37E588040 /* MenuBarStrings.swift */; };
+		976839766EF02D8699F1ED97 /* SalahUI in Frameworks */ = {isa = PBXBuildFile; productRef = F9BCA2A89394A2A9F87DD35D /* SalahUI */; };
+		9840D80081181DF65E3E19CD /* MenuBarID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A9E190BB776D7191B4CEF5 /* MenuBarID.swift */; };
+		99AB180B77927F71E45FAA99 /* SalahAlerts in Frameworks */ = {isa = PBXBuildFile; productRef = 523672109D384DF90CC70B38 /* SalahAlerts */; };
+		A2445EF6E1F20278F65F0978 /* TonePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7299D3E28F3BD9DC823723A /* TonePlayer.swift */; };
+		A3D6C4A727A29C2B483E6CB6 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E547020B7A81C08325BF38 /* SwiftUI.framework */; };
+		A5B9DFD61AAF6D2F9E0417B9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78994F07A9428BC417F80E43 /* main.swift */; };
+		AB13C68EEB66BBD4D39B9FF0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F851B5EBC4C5BF163ABF9BD5 /* Localizable.xcstrings */; };
+		B55C01567C3F3E0E5600251D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B1B54648C1D15F9761BEF190 /* PrivacyInfo.xcprivacy */; };
+		BB04183ECF750A8B47900A05 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F851B5EBC4C5BF163ABF9BD5 /* Localizable.xcstrings */; };
+		BF82A478E7293DCA87E01A9E /* NowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A670FD3A2D62ED5ABD7BDA /* NowPlaying.swift */; };
+		C137FB11F9018D019E6AC903 /* SalahCalculation in Frameworks */ = {isa = PBXBuildFile; productRef = E12D2FEA7ECEB7EE17EC762B /* SalahCalculation */; };
+		C22557574597D81DAB862222 /* MenuBarSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FD028860FB59A3B7335BF8 /* MenuBarSettings.swift */; };
+		C433B9EF0035783A706CCDE5 /* StopPlaybackIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF89A0BE26E5AB49ACA5C06 /* StopPlaybackIntent.swift */; };
+		CF30286C6B52450BC8FDC988 /* StopPlaybackIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF89A0BE26E5AB49ACA5C06 /* StopPlaybackIntent.swift */; };
+		D10B3349EEE26DDC8AAFFC3B /* SalahUI in Frameworks */ = {isa = PBXBuildFile; productRef = 07C997563F3B58F8CB64AD09 /* SalahUI */; };
+		D1AFF9BD26D1080C341D2A6D /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC260C81E221E3726713D94 /* Alerts.swift */; };
+		EABDD1DDE3416411B32B6E42 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB2CE436B6C1202B9E1D83B1 /* WidgetKit.framework */; };
+		EF01F5AA1ED0FAB347B64F39 /* MenuBarID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A9E190BB776D7191B4CEF5 /* MenuBarID.swift */; };
+		F370912C04C0D17AD0F57FE7 /* AlertCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CF00046504649C1238EDFA /* AlertCoordinatorTests.swift */; };
+		F7167FAFB953960F343ABFF0 /* MenuBarStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E88ACDC4929A37E588040 /* MenuBarStrings.swift */; };
+		FA3850194751C13CEA87CC11 /* SalahCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE781E167EF3A1063CCAC89 /* SalahCore */; };
+		FFF058CF6625A40499FF03C4 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D4722811F6B3EEEF6792B6 /* AppModel.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		16315BE9204179BD386C06CA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DDB0B0308B370AD0532258F4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 62C39684673E178BDF953E98;
+			remoteInfo = MenuBarStopHarness;
+		};
+		35A3579864BB20B6BAA059B2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DDB0B0308B370AD0532258F4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B77AD31A333766741C4203DB;
+			remoteInfo = MenuBar;
+		};
+		4B181060EBC807A60348EFCF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DDB0B0308B370AD0532258F4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8E5AFD1DB955F3DEB9DB4D7E;
+			remoteInfo = MenuBarWidgets;
+		};
+		9C53C39E3F046B47122E7DA5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DDB0B0308B370AD0532258F4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B77AD31A333766741C4203DB;
+			remoteInfo = MenuBar;
+		};
+		DB64E081D3D621FBF7878133 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DDB0B0308B370AD0532258F4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B77AD31A333766741C4203DB;
+			remoteInfo = MenuBar;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CBAA287E984292CF0A700895 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				78C323CD08D89CB42EDB7E7A /* MenuBarWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		08FD028860FB59A3B7335BF8 /* MenuBarSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarSettings.swift; sourceTree = "<group>"; };
+		09A40CA5FAFA2472E82BC699 /* MenuBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarApp.swift; sourceTree = "<group>"; };
+		12A670FD3A2D62ED5ABD7BDA /* NowPlaying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlaying.swift; sourceTree = "<group>"; };
+		23CB8503FD7D867415CC67AE /* MenuBarWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MenuBarWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BDB842CFCC292030F5305A4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		2C809F7DC4B417068754526B /* MenuBarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenuBarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E24D644E4BAADDA9C8E55B7 /* MenuBarJourneys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarJourneys.swift; sourceTree = "<group>"; };
+		301A6B696A9276D4B9568C47 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		34DE6715C2DCDEF3A06E1FBE /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
+		3C7E88ACDC4929A37E588040 /* MenuBarStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarStrings.swift; sourceTree = "<group>"; };
+		456D2BBA229B93E4BD06CA82 /* MenuBarRoundTripTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenuBarRoundTripTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		53409AB62C4C18FF4557F62F /* LiveStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStateTests.swift; sourceTree = "<group>"; };
+		56061F16F95C7D05F69ED747 /* MenuBarUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenuBarUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		61E547020B7A81C08325BF38 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		676A456F1808C8BB1C360172 /* MenuBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenuBar.entitlements; sourceTree = "<group>"; };
+		6968E407A8E7A4AD825B84D6 /* LaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptions.swift; sourceTree = "<group>"; };
+		6CC260C81E221E3726713D94 /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
+		6FE3822233B76B25E5C565AA /* DisplayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTests.swift; sourceTree = "<group>"; };
+		7003D19231F3FFB20AB9B8E8 /* SalahKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SalahKit; path = ../..; sourceTree = SOURCE_ROOT; };
+		7179C3D0501E0EBF43C0AD2C /* RoundTripTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundTripTests.swift; sourceTree = "<group>"; };
+		74DDBD6D7339143804B6AED7 /* StopHarness.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StopHarness.entitlements; sourceTree = "<group>"; };
+		78994F07A9428BC417F80E43 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		79A9E190BB776D7191B4CEF5 /* MenuBarID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarID.swift; sourceTree = "<group>"; };
+		7B723514A81058C7CDD7FE3A /* Widgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Widgets.entitlements; sourceTree = "<group>"; };
+		8D56AAD2B14FCFAB2A16AE61 /* Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Display.swift; sourceTree = "<group>"; };
+		8DF89A0BE26E5AB49ACA5C06 /* StopPlaybackIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopPlaybackIntent.swift; sourceTree = "<group>"; };
+		8E567430BC1E7AC7F0D6B9F0 /* MenuBarWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarWidgets.swift; sourceTree = "<group>"; };
+		95CF00046504649C1238EDFA /* AlertCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertCoordinatorTests.swift; sourceTree = "<group>"; };
+		9D478E1464A935C80128203E /* WidgetTimelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTimelineTests.swift; sourceTree = "<group>"; };
+		AB38317D50B048ECB3426716 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		B1B54648C1D15F9761BEF190 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		B7299D3E28F3BD9DC823723A /* TonePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TonePlayer.swift; sourceTree = "<group>"; };
+		BB2CE436B6C1202B9E1D83B1 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		C36841FF730C1F63B29544E7 /* MenuBarTimeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarTimeline.swift; sourceTree = "<group>"; };
+		D4A6F694C1C250250391524F /* LiveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveState.swift; sourceTree = "<group>"; };
+		D4E0E7665A319B3A42D93B87 /* ToneAndOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToneAndOptionsTests.swift; sourceTree = "<group>"; };
+		DC67C8278E3171CF0821B38C /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
+		E516D5E6843D87DD7FB13CDB /* Support.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Support.swift; sourceTree = "<group>"; };
+		EB4910B480D9FEEA85E6463A /* MenuBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenuBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F02CF2301920AD88ED2D1491 /* MenuBarStopHarness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenuBarStopHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3D4722811F6B3EEEF6792B6 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		F851B5EBC4C5BF163ABF9BD5 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		081F56FDD8A1820DCFF0DE55 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E2DE719B211628B4D1667B8 /* SalahCore in Frameworks */,
+				79F7A1D06206B999E083649B /* SalahCalculation in Frameworks */,
+				92EFAB76D02CD97FAF808A76 /* SalahAlerts in Frameworks */,
+				4F2030D38017E4C1F0BDE2AE /* SalahWidgets in Frameworks */,
+				976839766EF02D8699F1ED97 /* SalahUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8E130198FF26F1A9438AE157 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				51DE5E8EC1CACF7136F3B655 /* SalahCore in Frameworks */,
+				5AA4E46FE6E9A7E3C7F19B98 /* SalahCalculation in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9AF325FE2922E422BA7CF367 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA3850194751C13CEA87CC11 /* SalahCore in Frameworks */,
+				2C78C331563B9559E75FED59 /* SalahCalculation in Frameworks */,
+				1EBD4DF2D1E1B97716497615 /* SalahAlerts in Frameworks */,
+				818E3D5976977C2DBBEAC08D /* SalahWidgets in Frameworks */,
+				664FD4D58C02F963AD21AFAF /* SalahUI in Frameworks */,
+				EABDD1DDE3416411B32B6E42 /* WidgetKit.framework in Frameworks */,
+				A3D6C4A727A29C2B483E6CB6 /* SwiftUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA5B4BDB5C1DC3795BDCB35A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D4ADA5A46B2765BB81BE59E /* SalahCore in Frameworks */,
+				C137FB11F9018D019E6AC903 /* SalahCalculation in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E96E8BE44F1B28AEF0DBB98C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				49D3C82043108A0CD16FC837 /* SalahCore in Frameworks */,
+				63AC55DCB3E16DA1486C1608 /* SalahCalculation in Frameworks */,
+				99AB180B77927F71E45FAA99 /* SalahAlerts in Frameworks */,
+				7098D23A16D12192C5381400 /* SalahWidgets in Frameworks */,
+				D10B3349EEE26DDC8AAFFC3B /* SalahUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0B3012A8C287B5399F54ECD3 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				DC67C8278E3171CF0821B38C /* Shared.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		0E6BFB92078360ED938E636F /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				6CC260C81E221E3726713D94 /* Alerts.swift */,
+				F3D4722811F6B3EEEF6792B6 /* AppModel.swift */,
+				8D56AAD2B14FCFAB2A16AE61 /* Display.swift */,
+				6968E407A8E7A4AD825B84D6 /* LaunchOptions.swift */,
+				D4A6F694C1C250250391524F /* LiveState.swift */,
+				676A456F1808C8BB1C360172 /* MenuBar.entitlements */,
+				09A40CA5FAFA2472E82BC699 /* MenuBarApp.swift */,
+				B1B54648C1D15F9761BEF190 /* PrivacyInfo.xcprivacy */,
+				34DE6715C2DCDEF3A06E1FBE /* ScheduleView.swift */,
+				B7299D3E28F3BD9DC823723A /* TonePlayer.swift */,
+			);
+			path = MenuBar;
+			sourceTree = "<group>";
+		};
+		38D946ADD05384E2014AFFCF /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				F851B5EBC4C5BF163ABF9BD5 /* Localizable.xcstrings */,
+				79A9E190BB776D7191B4CEF5 /* MenuBarID.swift */,
+				08FD028860FB59A3B7335BF8 /* MenuBarSettings.swift */,
+				3C7E88ACDC4929A37E588040 /* MenuBarStrings.swift */,
+				C36841FF730C1F63B29544E7 /* MenuBarTimeline.swift */,
+				12A670FD3A2D62ED5ABD7BDA /* NowPlaying.swift */,
+				8DF89A0BE26E5AB49ACA5C06 /* StopPlaybackIntent.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		4D1500FEC387E89E304241AB /* MenuBarTests */ = {
+			isa = PBXGroup;
+			children = (
+				95CF00046504649C1238EDFA /* AlertCoordinatorTests.swift */,
+				6FE3822233B76B25E5C565AA /* DisplayTests.swift */,
+				53409AB62C4C18FF4557F62F /* LiveStateTests.swift */,
+				E516D5E6843D87DD7FB13CDB /* Support.swift */,
+				D4E0E7665A319B3A42D93B87 /* ToneAndOptionsTests.swift */,
+				9D478E1464A935C80128203E /* WidgetTimelineTests.swift */,
+			);
+			path = MenuBarTests;
+			sourceTree = "<group>";
+		};
+		6F751D6CA936B3FBF3F862F8 /* MenuBarUITests */ = {
+			isa = PBXGroup;
+			children = (
+				2E24D644E4BAADDA9C8E55B7 /* MenuBarJourneys.swift */,
+			);
+			path = MenuBarUITests;
+			sourceTree = "<group>";
+		};
+		88127B69781E6ED5246653E0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EB4910B480D9FEEA85E6463A /* MenuBar.app */,
+				456D2BBA229B93E4BD06CA82 /* MenuBarRoundTripTests.xctest */,
+				F02CF2301920AD88ED2D1491 /* MenuBarStopHarness.app */,
+				2C809F7DC4B417068754526B /* MenuBarTests.xctest */,
+				56061F16F95C7D05F69ED747 /* MenuBarUITests.xctest */,
+				23CB8503FD7D867415CC67AE /* MenuBarWidgets.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AEF35DE97F20503B8C588F9E /* StopHarness */ = {
+			isa = PBXGroup;
+			children = (
+				78994F07A9428BC417F80E43 /* main.swift */,
+				AB38317D50B048ECB3426716 /* PrivacyInfo.xcprivacy */,
+				74DDBD6D7339143804B6AED7 /* StopHarness.entitlements */,
+			);
+			path = StopHarness;
+			sourceTree = "<group>";
+		};
+		B41C8424416B96319A4F104A = {
+			isa = PBXGroup;
+			children = (
+				0B3012A8C287B5399F54ECD3 /* Config */,
+				0E6BFB92078360ED938E636F /* MenuBar */,
+				F3EA3C508BD9825387C2EFFB /* MenuBarRoundTripTests */,
+				4D1500FEC387E89E304241AB /* MenuBarTests */,
+				6F751D6CA936B3FBF3F862F8 /* MenuBarUITests */,
+				F5860BA071EDBC9AF92C2644 /* Packages */,
+				38D946ADD05384E2014AFFCF /* Shared */,
+				AEF35DE97F20503B8C588F9E /* StopHarness */,
+				C51EA53E06C334FE39AB1975 /* Widgets */,
+				D0C16706D841E42DD39DD63E /* Frameworks */,
+				88127B69781E6ED5246653E0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C51EA53E06C334FE39AB1975 /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				301A6B696A9276D4B9568C47 /* Info.plist */,
+				8E567430BC1E7AC7F0D6B9F0 /* MenuBarWidgets.swift */,
+				2BDB842CFCC292030F5305A4 /* PrivacyInfo.xcprivacy */,
+				7B723514A81058C7CDD7FE3A /* Widgets.entitlements */,
+			);
+			path = Widgets;
+			sourceTree = "<group>";
+		};
+		D0C16706D841E42DD39DD63E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				61E547020B7A81C08325BF38 /* SwiftUI.framework */,
+				BB2CE436B6C1202B9E1D83B1 /* WidgetKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F3EA3C508BD9825387C2EFFB /* MenuBarRoundTripTests */ = {
+			isa = PBXGroup;
+			children = (
+				7179C3D0501E0EBF43C0AD2C /* RoundTripTests.swift */,
+			);
+			path = MenuBarRoundTripTests;
+			sourceTree = "<group>";
+		};
+		F5860BA071EDBC9AF92C2644 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				7003D19231F3FFB20AB9B8E8 /* SalahKit */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2737346330D2969347435384 /* MenuBarUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1BCD66DBD7A757DF0BBF150A /* Build configuration list for PBXNativeTarget "MenuBarUITests" */;
+			buildPhases = (
+				8A37D1D7D35BF8FFCBA7D596 /* Sources */,
+				DA5B4BDB5C1DC3795BDCB35A /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C8FC009D428DC881AB20544E /* PBXTargetDependency */,
+			);
+			name = MenuBarUITests;
+			packageProductDependencies = (
+				F00B1CF71A7229B228DF3034 /* SalahCore */,
+				E12D2FEA7ECEB7EE17EC762B /* SalahCalculation */,
+			);
+			productName = MenuBarUITests;
+			productReference = 56061F16F95C7D05F69ED747 /* MenuBarUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		5ED9F2707BEE52488C9E6A42 /* MenuBarRoundTripTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C571D249919542161DB8E46 /* Build configuration list for PBXNativeTarget "MenuBarRoundTripTests" */;
+			buildPhases = (
+				FDB0688CE8AA5C67DAE54885 /* Sources */,
+				8E130198FF26F1A9438AE157 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A94E56FC5AA9A18CF8E5084A /* PBXTargetDependency */,
+				4D4DCDB16C827A9A8BFF5DB1 /* PBXTargetDependency */,
+			);
+			name = MenuBarRoundTripTests;
+			packageProductDependencies = (
+				0609A678A12A057E84D72BD4 /* SalahCore */,
+				3DFF50D2A8E0789B85A765CD /* SalahCalculation */,
+			);
+			productName = MenuBarRoundTripTests;
+			productReference = 456D2BBA229B93E4BD06CA82 /* MenuBarRoundTripTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		62C39684673E178BDF953E98 /* MenuBarStopHarness */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 68A39A6A85E8B10E017F1AF5 /* Build configuration list for PBXNativeTarget "MenuBarStopHarness" */;
+			buildPhases = (
+				0957FE026317209660F779F8 /* Sources */,
+				84B8579D1F94848048328DEC /* Resources */,
+				081F56FDD8A1820DCFF0DE55 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MenuBarStopHarness;
+			packageProductDependencies = (
+				498B31C37D7E64DE7983E655 /* SalahCore */,
+				EB5A51E7449B148C3BF1F3FF /* SalahCalculation */,
+				8BE60CAB5453AC18BCFC17FE /* SalahAlerts */,
+				6558505E74B0EFE6AB149893 /* SalahWidgets */,
+				F9BCA2A89394A2A9F87DD35D /* SalahUI */,
+			);
+			productName = MenuBarStopHarness;
+			productReference = F02CF2301920AD88ED2D1491 /* MenuBarStopHarness.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8E5AFD1DB955F3DEB9DB4D7E /* MenuBarWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04E810DC608A3A7942FFEE80 /* Build configuration list for PBXNativeTarget "MenuBarWidgets" */;
+			buildPhases = (
+				A0472F698E9961156864E66F /* Sources */,
+				A278081EDECD2A6A04880E88 /* Resources */,
+				9AF325FE2922E422BA7CF367 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MenuBarWidgets;
+			packageProductDependencies = (
+				0EE781E167EF3A1063CCAC89 /* SalahCore */,
+				2DA0DA1A65730E3C31FD12A5 /* SalahCalculation */,
+				9F8E8FC46249517047353D6D /* SalahAlerts */,
+				3CA2DC3CD334173FDE316AF4 /* SalahWidgets */,
+				821D6265225B42A768DFC81F /* SalahUI */,
+			);
+			productName = MenuBarWidgets;
+			productReference = 23CB8503FD7D867415CC67AE /* MenuBarWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		A21BB9815994E6A6E059F8EA /* MenuBarTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0815ACB89B033F1BD6E4C43F /* Build configuration list for PBXNativeTarget "MenuBarTests" */;
+			buildPhases = (
+				C51D942610655536A468F3ED /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B0D9FE7843302C3705119CB7 /* PBXTargetDependency */,
+			);
+			name = MenuBarTests;
+			packageProductDependencies = (
+			);
+			productName = MenuBarTests;
+			productReference = 2C809F7DC4B417068754526B /* MenuBarTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		B77AD31A333766741C4203DB /* MenuBar */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B24D5FCE58BD5067C419C3FC /* Build configuration list for PBXNativeTarget "MenuBar" */;
+			buildPhases = (
+				01BF69C27DF4B3E62BA1FCCD /* Sources */,
+				D69612387AA09F3085F1F916 /* Resources */,
+				E96E8BE44F1B28AEF0DBB98C /* Frameworks */,
+				CBAA287E984292CF0A700895 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DC15ADCD4F23D0706FD56F1B /* PBXTargetDependency */,
+			);
+			name = MenuBar;
+			packageProductDependencies = (
+				D780BB8DC5E354772D9F86F3 /* SalahCore */,
+				E5910DAF70DD9595511A44A5 /* SalahCalculation */,
+				523672109D384DF90CC70B38 /* SalahAlerts */,
+				65DA598D83D4508ADEA1FC89 /* SalahWidgets */,
+				07C997563F3B58F8CB64AD09 /* SalahUI */,
+			);
+			productName = MenuBar;
+			productReference = EB4910B480D9FEEA85E6463A /* MenuBar.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DDB0B0308B370AD0532258F4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					2737346330D2969347435384 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+						TestTargetID = B77AD31A333766741C4203DB;
+					};
+					5ED9F2707BEE52488C9E6A42 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					62C39684673E178BDF953E98 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					8E5AFD1DB955F3DEB9DB4D7E = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					A21BB9815994E6A6E059F8EA = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					B77AD31A333766741C4203DB = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 7723913EE33C7277892E873C /* Build configuration list for PBXProject "MenuBar" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				ar,
+				en,
+			);
+			mainGroup = B41C8424416B96319A4F104A;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CBA9635BD686178B19AB9654 /* XCLocalSwiftPackageReference "../.." */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 88127B69781E6ED5246653E0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B77AD31A333766741C4203DB /* MenuBar */,
+				8E5AFD1DB955F3DEB9DB4D7E /* MenuBarWidgets */,
+				62C39684673E178BDF953E98 /* MenuBarStopHarness */,
+				A21BB9815994E6A6E059F8EA /* MenuBarTests */,
+				5ED9F2707BEE52488C9E6A42 /* MenuBarRoundTripTests */,
+				2737346330D2969347435384 /* MenuBarUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		84B8579D1F94848048328DEC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB13C68EEB66BBD4D39B9FF0 /* Localizable.xcstrings in Resources */,
+				3F2F9AAD03A4949C444A52F7 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A278081EDECD2A6A04880E88 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB04183ECF750A8B47900A05 /* Localizable.xcstrings in Resources */,
+				38DBBBB0072A9E03D89824F7 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D69612387AA09F3085F1F916 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2EA33DBF052A430D714F9C8C /* Localizable.xcstrings in Resources */,
+				B55C01567C3F3E0E5600251D /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		01BF69C27DF4B3E62BA1FCCD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1AFF9BD26D1080C341D2A6D /* Alerts.swift in Sources */,
+				FFF058CF6625A40499FF03C4 /* AppModel.swift in Sources */,
+				95BED9D03964EF7E9185810C /* Display.swift in Sources */,
+				2B19B213AEFC38C6A9EDE045 /* LaunchOptions.swift in Sources */,
+				7F80DC40015199E982F8F821 /* LiveState.swift in Sources */,
+				3FC28B25C617B76B2902B9B2 /* MenuBarApp.swift in Sources */,
+				6EF26A823AE31F041E0DA7A0 /* MenuBarID.swift in Sources */,
+				97104AA3B5FBC80DD02BE76C /* MenuBarSettings.swift in Sources */,
+				F7167FAFB953960F343ABFF0 /* MenuBarStrings.swift in Sources */,
+				5C825AA1750C9B0D97385316 /* MenuBarTimeline.swift in Sources */,
+				4CFB71F23DE0F9B22927909C /* NowPlaying.swift in Sources */,
+				473E4605A4431D8196CDE736 /* ScheduleView.swift in Sources */,
+				C433B9EF0035783A706CCDE5 /* StopPlaybackIntent.swift in Sources */,
+				A2445EF6E1F20278F65F0978 /* TonePlayer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0957FE026317209660F779F8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9840D80081181DF65E3E19CD /* MenuBarID.swift in Sources */,
+				8D7830A9A52DA015147E3CB3 /* MenuBarSettings.swift in Sources */,
+				971585278A07FCF64F780957 /* MenuBarStrings.swift in Sources */,
+				2613BD2B4BFFCB64C6E1AA5F /* MenuBarTimeline.swift in Sources */,
+				BF82A478E7293DCA87E01A9E /* NowPlaying.swift in Sources */,
+				2EB3707637708A3AD1572C4B /* StopPlaybackIntent.swift in Sources */,
+				A5B9DFD61AAF6D2F9E0417B9 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A37D1D7D35BF8FFCBA7D596 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				08C54977169F2855702EBC73 /* MenuBarJourneys.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A0472F698E9961156864E66F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF01F5AA1ED0FAB347B64F39 /* MenuBarID.swift in Sources */,
+				C22557574597D81DAB862222 /* MenuBarSettings.swift in Sources */,
+				2D20AD16CFF5DCD0ADC68422 /* MenuBarStrings.swift in Sources */,
+				123765EE6EAC713C7AB49912 /* MenuBarTimeline.swift in Sources */,
+				16A422AB098805EE9E2BD611 /* MenuBarWidgets.swift in Sources */,
+				080E41B1E57EF6610D53895D /* NowPlaying.swift in Sources */,
+				CF30286C6B52450BC8FDC988 /* StopPlaybackIntent.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C51D942610655536A468F3ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F370912C04C0D17AD0F57FE7 /* AlertCoordinatorTests.swift in Sources */,
+				268B1087B1EA2BB37921B5B3 /* DisplayTests.swift in Sources */,
+				392A013D20677AF9458D1EA8 /* LiveStateTests.swift in Sources */,
+				0E04A3B0BFBB24583BF8AFDD /* Support.swift in Sources */,
+				78A758F4C66926E5F5FB52FC /* ToneAndOptionsTests.swift in Sources */,
+				08C6241FEB491AA84039D00F /* WidgetTimelineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FDB0688CE8AA5C67DAE54885 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C46F12DC0F1AF12939BA013 /* RoundTripTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4D4DCDB16C827A9A8BFF5DB1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 62C39684673E178BDF953E98 /* MenuBarStopHarness */;
+			targetProxy = 16315BE9204179BD386C06CA /* PBXContainerItemProxy */;
+		};
+		A94E56FC5AA9A18CF8E5084A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B77AD31A333766741C4203DB /* MenuBar */;
+			targetProxy = 9C53C39E3F046B47122E7DA5 /* PBXContainerItemProxy */;
+		};
+		B0D9FE7843302C3705119CB7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B77AD31A333766741C4203DB /* MenuBar */;
+			targetProxy = DB64E081D3D621FBF7878133 /* PBXContainerItemProxy */;
+		};
+		C8FC009D428DC881AB20544E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B77AD31A333766741C4203DB /* MenuBar */;
+			targetProxy = 35A3579864BB20B6BAA059B2 /* PBXContainerItemProxy */;
+		};
+		DC15ADCD4F23D0706FD56F1B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8E5AFD1DB955F3DEB9DB4D7E /* MenuBarWidgets */;
+			targetProxy = 4B181060EBC807A60348EFCF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		10D0BCD8F8064EB2F74B60D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBarTests";
+				SDKROOT = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MenuBar.app/Contents/MacOS/MenuBar";
+			};
+			name = Debug;
+		};
+		18DA322E2AD250321A99EB57 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBarUITests";
+				SDKROOT = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
+				TEST_TARGET_NAME = MenuBar;
+			};
+			name = Release;
+		};
+		23BB0F526CF84F56DD0EBABB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = StopHarness/StopHarness.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSBackgroundOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBar.StopHarness";
+				SDKROOT = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
+			};
+			name = Debug;
+		};
+		35D8363E0E342F9A35556C5F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DC67C8278E3171CF0821B38C /* Shared.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				MENUBAR_ISOLATION = MainActor;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		451FE1D1A384DD6EFC9DC224 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MenuBar/MenuBar.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MenuBar;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBar";
+				SDKROOT = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
+			};
+			name = Release;
+		};
+		60323BEC54F116FBA25A0801 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MenuBar/MenuBar.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MenuBar;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBar";
+				SDKROOT = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
+			};
+			name = Debug;
+		};
+		8365998E621A50EB161BB2D2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBarTests";
+				SDKROOT = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MenuBar.app/Contents/MacOS/MenuBar";
+			};
+			name = Release;
+		};
+		A429515F3C4177DA0935CD09 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBarRoundTripTests";
+				SDKROOT = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
+				TEST_HOST = "";
+			};
+			name = Release;
+		};
+		C5B2650458A94EB101B6AF83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = StopHarness/StopHarness.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSBackgroundOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBar.StopHarness";
+				SDKROOT = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
+			};
+			name = Release;
+		};
+		E17E7DBED065C00C02E2C0DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DC67C8278E3171CF0821B38C /* Shared.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				MENUBAR_ISOLATION = MainActor;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		E33969771927FD7AB83766C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Widgets/Widgets.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Widgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MenuBar;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBar.Widgets";
+				PRODUCT_NAME = MenuBarWidgets;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
+			};
+			name = Debug;
+		};
+		E925A5EE72D7BDF2359A6B7F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Widgets/Widgets.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Widgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MenuBar;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBar.Widgets";
+				PRODUCT_NAME = MenuBarWidgets;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
+			};
+			name = Release;
+		};
+		F2B5DFCF564FF98A3A0CD662 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBarUITests";
+				SDKROOT = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
+				TEST_TARGET_NAME = MenuBar;
+			};
+			name = Debug;
+		};
+		FF8DD6D0E9F80602779BAEE5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBarRoundTripTests";
+				SDKROOT = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
+				TEST_HOST = "";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		04E810DC608A3A7942FFEE80 /* Build configuration list for PBXNativeTarget "MenuBarWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E33969771927FD7AB83766C9 /* Debug */,
+				E925A5EE72D7BDF2359A6B7F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		0815ACB89B033F1BD6E4C43F /* Build configuration list for PBXNativeTarget "MenuBarTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				10D0BCD8F8064EB2F74B60D4 /* Debug */,
+				8365998E621A50EB161BB2D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		1BCD66DBD7A757DF0BBF150A /* Build configuration list for PBXNativeTarget "MenuBarUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F2B5DFCF564FF98A3A0CD662 /* Debug */,
+				18DA322E2AD250321A99EB57 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2C571D249919542161DB8E46 /* Build configuration list for PBXNativeTarget "MenuBarRoundTripTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FF8DD6D0E9F80602779BAEE5 /* Debug */,
+				A429515F3C4177DA0935CD09 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		68A39A6A85E8B10E017F1AF5 /* Build configuration list for PBXNativeTarget "MenuBarStopHarness" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				23BB0F526CF84F56DD0EBABB /* Debug */,
+				C5B2650458A94EB101B6AF83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7723913EE33C7277892E873C /* Build configuration list for PBXProject "MenuBar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				35D8363E0E342F9A35556C5F /* Debug */,
+				E17E7DBED065C00C02E2C0DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B24D5FCE58BD5067C419C3FC /* Build configuration list for PBXNativeTarget "MenuBar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60323BEC54F116FBA25A0801 /* Debug */,
+				451FE1D1A384DD6EFC9DC224 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		CBA9635BD686178B19AB9654 /* XCLocalSwiftPackageReference "../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0609A678A12A057E84D72BD4 /* SalahCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahCore;
+		};
+		07C997563F3B58F8CB64AD09 /* SalahUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahUI;
+		};
+		0EE781E167EF3A1063CCAC89 /* SalahCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahCore;
+		};
+		2DA0DA1A65730E3C31FD12A5 /* SalahCalculation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahCalculation;
+		};
+		3CA2DC3CD334173FDE316AF4 /* SalahWidgets */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahWidgets;
+		};
+		3DFF50D2A8E0789B85A765CD /* SalahCalculation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahCalculation;
+		};
+		498B31C37D7E64DE7983E655 /* SalahCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahCore;
+		};
+		523672109D384DF90CC70B38 /* SalahAlerts */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahAlerts;
+		};
+		6558505E74B0EFE6AB149893 /* SalahWidgets */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahWidgets;
+		};
+		65DA598D83D4508ADEA1FC89 /* SalahWidgets */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahWidgets;
+		};
+		821D6265225B42A768DFC81F /* SalahUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahUI;
+		};
+		8BE60CAB5453AC18BCFC17FE /* SalahAlerts */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahAlerts;
+		};
+		9F8E8FC46249517047353D6D /* SalahAlerts */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahAlerts;
+		};
+		D780BB8DC5E354772D9F86F3 /* SalahCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahCore;
+		};
+		E12D2FEA7ECEB7EE17EC762B /* SalahCalculation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahCalculation;
+		};
+		E5910DAF70DD9595511A44A5 /* SalahCalculation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahCalculation;
+		};
+		EB5A51E7449B148C3BF1F3FF /* SalahCalculation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahCalculation;
+		};
+		F00B1CF71A7229B228DF3034 /* SalahCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahCore;
+		};
+		F9BCA2A89394A2A9F87DD35D /* SalahUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahUI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = DDB0B0308B370AD0532258F4 /* Project object */;
+}

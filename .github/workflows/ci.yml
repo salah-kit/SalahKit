@@ -479,3 +479,70 @@ jobs:
           name: PhoneWidgets.xcresult
           path: Examples/PhoneWidgets/.derived/PhoneWidgets.xcresult
           if-no-files-found: ignore
+
+  menubar:
+    name: MenuBar (generate, build, unit tests, journeys)
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          persist-credentials: false
+
+      # Hosted runners don't offer Xcode 27, so CI uses the newest installed Xcode 26
+      # (docs/rfcs/0001-core.md, section 6.4). The project stays compatible with it.
+      - name: Select the newest Xcode 26
+        run: scripts/select-xcode.sh
+
+      # The committed project must be exactly what project.yml generates (STANDARD.md, Apps).
+      # `git status` also catches generated files that were never committed; the checkout's
+      # folder is named SalahKit, the name the project was generated under (see project.yml).
+      - name: Check the generated project
+        run: |
+          brew install xcodegen
+          (cd Examples/MenuBar && xcodegen --quiet)
+          changes="$(git status --porcelain -- Examples/MenuBar)"
+          if [[ -n "${changes}" ]]; then
+            echo "${changes}"
+            git diff -- Examples/MenuBar
+            echo "::error::Examples/MenuBar differs from what project.yml generates."
+            exit 1
+          fi
+
+      # The app, its widget extension, the stop harness and the test bundles build under both
+      # default-isolation settings (proposal section 3.1). The project's MENUBAR_ISOLATION
+      # reaches only the example's own targets: passing SWIFT_DEFAULT_ACTOR_ISOLATION here would
+      # also make SalahTimes' types main-actor-isolated (docs/rfcs/0001-core.md, section 6.3).
+      - name: Build (MainActor and nonisolated)
+        run: |
+          for isolation in MainActor nonisolated; do
+            echo "::group::${isolation}"
+            xcodebuild build-for-testing \
+              -project Examples/MenuBar/MenuBar.xcodeproj -scheme MenuBar \
+              -destination 'platform=macOS' \
+              -derivedDataPath "Examples/MenuBar/.derived/${isolation}" \
+              MENUBAR_ISOLATION="${isolation}" CODE_SIGNING_ALLOWED=NO
+            echo "::endgroup::"
+          done
+
+      # Hosted runners have no signing team, so CI builds unsigned: no sandbox and no App Group
+      # entitlement. The app and the stop harness then share the App Group's suite as plain
+      # preferences, and the journeys still run the widget's stop code in a separate process
+      # against the running app. The signed, sandboxed run with the App Group runs locally
+      # (Examples/MenuBar/README.md, Tests).
+      - name: Unit tests and journeys on the runner's Mac
+        run: |
+          xcodebuild test \
+            -project Examples/MenuBar/MenuBar.xcodeproj -scheme MenuBar \
+            -destination 'platform=macOS' \
+            -derivedDataPath Examples/MenuBar/.derived/test \
+            -resultBundlePath Examples/MenuBar/.derived/MenuBar.xcresult \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Upload the test results
+        if: failure()
+        uses: actions/upload-artifact@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          name: MenuBar.xcresult
+          path: Examples/MenuBar/.derived/MenuBar.xcresult
+          if-no-files-found: ignore

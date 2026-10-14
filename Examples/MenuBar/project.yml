@@ -1,0 +1,223 @@
+# Generates MenuBar.xcodeproj. Run `xcodegen` in this folder after changing it, and commit both
+# files (STANDARD.md, Apps).
+#
+# Generate from a clone whose folder is named `SalahKit`, as CI's checkout is: XcodeGen names
+# the local package's folder reference after the folder that `../..` resolves to, so another
+# name changes the project and fails CI's generate check.
+name: MenuBar
+options:
+  bundleIdPrefix: io.github.salah-kit
+  deploymentTarget:
+    # macOS 14 for the widget's interactive Stop button (`Button(intent:)`).
+    macOS: "14.0"
+  developmentLanguage: en
+  createIntermediateGroups: true
+configFiles:
+  Debug: Config/Shared.xcconfig
+  Release: Config/Shared.xcconfig
+packages:
+  SalahKit:
+    path: ../..
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    # The compiler lists the strings it finds (`*.stringsdata`); `xcrun xcstringstool sync`
+    # merges them into Shared/Localizable.xcstrings, as Xcode does when it builds.
+    SWIFT_EMIT_LOC_STRINGS: YES
+    ENABLE_HARDENED_RUNTIME: YES
+    # The default actor isolation of the example's own targets. Builds pass
+    # MENUBAR_ISOLATION=nonisolated (or MainActor) to check both settings (proposal §3.1).
+    # Passing SWIFT_DEFAULT_ACTOR_ISOLATION itself on the command line would also reach the
+    # package targets and make SalahTimes' types main-actor-isolated, which no app sees
+    # (docs/rfcs/0001-core.md, section 6.3); this setting reaches only the targets below.
+    MENUBAR_ISOLATION: MainActor
+targets:
+  MenuBar:
+    type: application
+    platform: macOS
+    sources:
+      - path: MenuBar
+      # The settings, what plays, the stop intent, the widget's timeline and the strings: one
+      # copy, compiled into the app, the widget extension and the stop harness.
+      - path: Shared
+    dependencies:
+      # SalahTimes comes with SalahCalculation: the code imports it to name CalculationMethod
+      # without a package dependency of its own.
+      - package: SalahKit
+        product: SalahCore
+      - package: SalahKit
+        product: SalahCalculation
+      - package: SalahKit
+        product: SalahAlerts
+      - package: SalahKit
+        product: SalahWidgets
+      - package: SalahKit
+        product: SalahUI
+      - target: MenuBarWidgets
+        embed: true
+    entitlements:
+      path: MenuBar/MenuBar.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.application-groups:
+          - group.io.github.salah-kit.MenuBar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MenuBar
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(MENUBAR_ISOLATION)
+        INFOPLIST_KEY_CFBundleDisplayName: MenuBar
+        # A menu-bar app: no Dock icon, no main menu.
+        INFOPLIST_KEY_LSUIElement: YES
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.lifestyle
+  MenuBarWidgets:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: Widgets
+      - path: Shared
+    dependencies:
+      - package: SalahKit
+        product: SalahCore
+      - package: SalahKit
+        product: SalahCalculation
+      - package: SalahKit
+        product: SalahAlerts
+      - package: SalahKit
+        product: SalahWidgets
+      - package: SalahKit
+        product: SalahUI
+      - sdk: WidgetKit.framework
+      - sdk: SwiftUI.framework
+    info:
+      path: Widgets/Info.plist
+      properties:
+        # An extension's versions must match its app's.
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: Widgets/Widgets.entitlements
+      properties:
+        # WidgetKit runs only sandboxed extensions on macOS.
+        com.apple.security.app-sandbox: true
+        com.apple.security.application-groups:
+          - group.io.github.salah-kit.MenuBar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MenuBar.Widgets
+        PRODUCT_NAME: MenuBarWidgets
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: MenuBar
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(MENUBAR_ISOLATION)
+        SKIP_INSTALL: YES
+  # The widget's stop code in a separate process, signed like the extension: the harness for the
+  # cross-process stop round trip (StopHarness/main.swift says how to run it).
+  MenuBarStopHarness:
+    type: application
+    platform: macOS
+    sources:
+      - path: StopHarness
+      - path: Shared
+    dependencies:
+      - package: SalahKit
+        product: SalahCore
+      - package: SalahKit
+        product: SalahCalculation
+      - package: SalahKit
+        product: SalahAlerts
+      - package: SalahKit
+        product: SalahWidgets
+      - package: SalahKit
+        product: SalahUI
+    entitlements:
+      path: StopHarness/StopHarness.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.application-groups:
+          - group.io.github.salah-kit.MenuBar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MenuBar.StopHarness
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(MENUBAR_ISOLATION)
+        # A command-line process in an app bundle, so it can carry the App Group's provisioning
+        # profile: no Dock icon, no menu, no window.
+        INFOPLIST_KEY_LSBackgroundOnly: YES
+  MenuBarTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: MenuBarTests
+    dependencies:
+      # Hosted by the app: SalahKit's symbols come from the app binary, not a second copy. The
+      # app stays inert while it hosts tests (MenuBarApp.swift).
+      - target: MenuBar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MenuBarTests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(MENUBAR_ISOLATION)
+  # The stop round trip and the simulated sleep and clock change. No host app: the tests run in
+  # xctest, outside any sandbox, so they can start the app and the stop harness as separate
+  # processes (XCUITest's runner is sandboxed and can't start the harness).
+  MenuBarRoundTripTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: MenuBarRoundTripTests
+    dependencies:
+      # Built first, into the same products folder; the tests start them.
+      - target: MenuBar
+        embed: false
+        link: false
+      - target: MenuBarStopHarness
+        embed: false
+        link: false
+      # The tests compute Makkah's Asr with the package to choose their launch moments.
+      - package: SalahKit
+        product: SalahCore
+      - package: SalahKit
+        product: SalahCalculation
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MenuBarRoundTripTests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(MENUBAR_ISOLATION)
+        TEST_HOST: ""
+        BUNDLE_LOADER: ""
+  MenuBarUITests:
+    type: bundle.ui-testing
+    platform: macOS
+    sources:
+      - path: MenuBarUITests
+    dependencies:
+      - target: MenuBar
+      # The journeys compute Makkah's times with the package to choose their launch moments.
+      - package: SalahKit
+        product: SalahCore
+      - package: SalahKit
+        product: SalahCalculation
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MenuBarUITests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: $(MENUBAR_ISOLATION)
+        TEST_TARGET_NAME: MenuBar
+schemes:
+  MenuBar:
+    build:
+      targets:
+        MenuBar: all
+        MenuBarStopHarness: all
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - MenuBarTests
+        - MenuBarRoundTripTests
+        - MenuBarUITests

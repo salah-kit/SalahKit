@@ -1,7 +1,8 @@
 # RFC 0004: SalahWidgets and SalahUI
 
-- **Status:** Draft for 0.2.0. Both 0.2 consumers, `PhoneWidgets` and `WatchComplication`, have reported: their findings are in §9. Open to findings from Salah's migration and other adopters until 1.0 (STANDARD.md, Releases).
+- **Status:** Draft, shipped in 0.2.0. The 0.2 consumers, `PhoneWidgets` and `WatchComplication`, and the 0.3 consumer, `MenuBar`, have reported: their findings are in §9. Open to findings from Salah's migration and other adopters until 1.0 (STANDARD.md, Releases).
 - **Products:** SalahWidgets, SalahUI.
+- **Discussion:** [salah-kit/SalahKit#9](https://github.com/salah-kit/SalahKit/discussions/9).
 - **Started:** 2026-10-14.
 - **Supersedes:** the sketches in the SalahKit proposal, §7.3 and §7.4.
 - **Depends on:** RFC 0001 (SalahCore: state §4.7, refresh planning §4.8, names and durations §4.9).
@@ -332,6 +333,13 @@ The first `observe` called `MainActor.assumeIsolated` inside the main-queue bloc
 8. **Text for sentences** (both). Configurations give `Text`, so an app sentence in its own word order ("Asr has started") or an inline "Asr 12m" composes `Text`s or reads `state` with `PrayerNames`. Waits for a consumer that needs strings.
 9. **A fixed moment's live countdown** (PhoneWidgets). The app's widget-states screen draws entries at fixed moments, where a live timer would count from the wall clock; it uses `.staticText`. The test-only freeze stays internal.
 10. **Bugs the journeys found in the examples' own code**: PhoneWidgets created its settings store in a view's initializer, which applied the launch arguments again after a language change; WatchComplication rebuilt its timeline from the clock on every redraw and never settled. Both are fixed, with regression journeys.
+
+`Examples/MenuBar` (0.3.0, a macOS menu-bar app with a desktop widget) uses `SharedValue`, `DarwinSignal`, `PrayerTimelineBuilder` with `.steps`, and SalahUI's views with static countdowns. What it found:
+
+11. **The stop signal between sandboxed processes on macOS.** The app and its stop harness, both signed with a team, sandboxed and sharing an App Group, exchanged the signal and the shared values on macOS 27 with no prompt; C1 had tested only unsandboxed processes. The harness runs the widget intent's own `perform()`; the widget extension that WidgetKit launches for a real tap is still to observe.
+12. **Two writers of the live-state value** (§8 #5). The intent clears what plays and the app publishes it again after every signal, so the value has two writers. The app's write after each signal settles any race, so the pattern needs no compare-and-swap. `SharedValue`'s one-writer advice stands; the article "Lessons from Salah" names this exception.
+13. **A `.steps` display outside WidgetKit.** The menu bar's title is static text refreshed at a `.steps` plan's dates, with a limit of 1,000 entries: a minute grid an hour either side of a prayer needs about 120 per prayer, and Core's default of 96 is WidgetKit's budget, not an app's. Like PhoneWidgets (#3), it refreshes at each midnight as well; a second consumer for day boundaries in the refresh plan.
+14. **Static countdowns overstate by up to a step.** A `.staticText` countdown shows the time left at its entry's date, rounded down, so until the next entry the true time left is up to one step shorter. That's what static text means; a view that must never overstate uses the live countdown.
 
 ## 10. Changes after review
 

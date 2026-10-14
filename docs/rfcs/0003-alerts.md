@@ -1,7 +1,8 @@
 # RFC 0003: SalahAlerts
 
-- **Status:** Draft for 0.2.0. Its first consumer, `CalculatedPhone`, schedules alerts through it; Salah and the MenuBar example adopt it next. Open until shipped apps report (STANDARD.md, Releases).
+- **Status:** Draft, shipped in 0.2.0. `CalculatedPhone` schedules alerts through it, and `MenuBar` (0.3.0) runs the in-process engine beside the scheduler; Salah adopts it next. Open until shipped apps report (STANDARD.md, Releases).
 - **Products:** SalahAlerts.
+- **Discussion:** [salah-kit/SalahKit#8](https://github.com/salah-kit/SalahKit/discussions/8).
 - **Started:** 2026-10-14.
 - **Supersedes:** the API sketch in the SalahKit proposal, §7.5.
 - **Depends on:** RFC 0001 (SalahCore: owning days, coverage gaps and their kinds).
@@ -514,7 +515,8 @@ The table also contradicted itself on that message, and the code counted the fir
   - It lasted more than two minutes, through relaunches, until the simulator restarted. CI's iOS 26 simulators accepted requests at once.
   - The report showed each rejected alert as `addFailed`, as §4.5 says. CalculatedPhone tries again with growing delays and shows the system's reason.
   - Whether an iOS 27 device does the same is a step of the iPhone check below.
-- **Still to observe on hardware**, listed as pending in the release notes: closed-app delivery on a real iPhone, and in-process reminders across real Mac sleep and wake.
+- **MenuBar on this Mac** (macOS 27, 0.3.0; `MenuBarTests` and `MenuBarUITests`). The app gives `InProcessAlertEngine` the uncapped schedule and `NotificationScheduler` the budgeted plan; with a budget of two, a reminder the plan left out still came due, got a banner through `deliver` and played the tone. Two alerts due together played the one `preferredAlert(among:)` picks. A wake notification posted to an injected NSWorkspace center after a sleep through Asr caught it up; a clock change within the grace caught up and beyond it skipped. In the running app, a simulated three-minute sleep (the app moves its clock forward and posts the wake notification to itself) caught Asr's alert up and played the tone. The app reuses `AlertClock` for its display's refreshes and its twelve-hour replan.
+- **Still to observe on hardware**, listed as pending in the release notes: closed-app delivery on a real iPhone, and in-process reminders across real Mac sleep and wake (C2's harness, and MenuBar).
 
 ## 9. Open questions
 

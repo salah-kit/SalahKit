@@ -1,0 +1,542 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ at %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@ الساعة %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ at %2$@"
+          }
+        }
+      }
+    },
+    "%@ began %@ ago." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "بدأت %1$@ منذ %2$@."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ began %2$@ ago."
+          }
+        }
+      }
+    },
+    "%@ in %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@ بعد %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ in %2$@"
+          }
+        }
+      }
+    },
+    "%@ in %@." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@ بعد %2$@."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ in %2$@."
+          }
+        }
+      }
+    },
+    "%@ started %@ ago" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "بدأت %1$@ منذ %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ started %2$@ ago"
+          }
+        }
+      }
+    },
+    "%lld minutes before" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "قبلها بـ %lld دقيقة"
+          }
+        }
+      }
+    },
+    "%lld notifications confirmed until %@." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تأكّد %1$lld إشعارًا حتى %2$@."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld notifications confirmed until %2$@."
+          }
+        }
+      }
+    },
+    "%lld notifications confirmed." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تأكّد %lld إشعارًا."
+          }
+        }
+      }
+    },
+    "Alerts are off." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "التنبيهات متوقفة."
+          }
+        }
+      }
+    },
+    "Can't be calculated here" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "لا يمكن حسابه هنا"
+          }
+        }
+      }
+    },
+    "Clock change" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تغيير الساعة"
+          }
+        }
+      }
+    },
+    "Diyanet (Turkey)" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "رئاسة الشؤون الدينية (تركيا)"
+          }
+        }
+      }
+    },
+    "Egyptian General Authority of Survey" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "الهيئة المصرية العامة للمساحة"
+          }
+        }
+      }
+    },
+    "Following %lld alerts while the app runs." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يتابع التطبيق %lld تنبيهًا ما دام يعمل."
+          }
+        }
+      }
+    },
+    "ISNA (North America)" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "الجمعية الإسلامية لأمريكا الشمالية"
+          }
+        }
+      }
+    },
+    "Invalid data" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "بيانات غير صالحة"
+          }
+        }
+      }
+    },
+    "Istanbul" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "إسطنبول"
+          }
+        }
+      }
+    },
+    "It's time for %@." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "حان وقت %@."
+          }
+        }
+      }
+    },
+    "Language" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "اللغة"
+          }
+        }
+      }
+    },
+    "London" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "لندن"
+          }
+        }
+      }
+    },
+    "Makkah" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "مكة المكرمة"
+          }
+        }
+      }
+    },
+    "Method" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "طريقة الحساب"
+          }
+        }
+      }
+    },
+    "Muslim World League" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "رابطة العالم الإسلامي"
+          }
+        }
+      }
+    },
+    "Next unknown" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "التالية غير معروفة"
+          }
+        }
+      }
+    },
+    "No prayer times are known now" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "لا تُعرف مواقيت الصلاة الآن"
+          }
+        }
+      }
+    },
+    "No times" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "لا مواقيت"
+          }
+        }
+      }
+    },
+    "None" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "بلا تذكير"
+          }
+        }
+      }
+    },
+    "Not published" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "غير منشور"
+          }
+        }
+      }
+    },
+    "Notifications aren't allowed. Allow them in System Settings." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "الإشعارات غير مسموح بها. اسمح بها في إعدادات النظام."
+          }
+        }
+      }
+    },
+    "Open MenuBar to set up prayer times." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "افتح MenuBar لإعداد مواقيت الصلاة."
+          }
+        }
+      }
+    },
+    "Open MenuBar to update." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "افتح MenuBar لتحديث المواقيت."
+          }
+        }
+      }
+    },
+    "Place" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "المكان"
+          }
+        }
+      }
+    },
+    "Play test tone" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تشغيل نغمة تجريبية"
+          }
+        }
+      }
+    },
+    "Playing the after-reminder for %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يُشغَّل تذكير ما بعد %@"
+          }
+        }
+      }
+    },
+    "Playing the reminder for %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يُشغَّل تذكير %@"
+          }
+        }
+      }
+    },
+    "Playing the test tone" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تُشغَّل النغمة التجريبية"
+          }
+        }
+      }
+    },
+    "Playing the tone for %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تُشغَّل نغمة %@"
+          }
+        }
+      }
+    },
+    "Prayer alerts" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تنبيهات الصلاة"
+          }
+        }
+      }
+    },
+    "Quit" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "إنهاء"
+          }
+        }
+      }
+    },
+    "Reminder" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "التذكير"
+          }
+        }
+      }
+    },
+    "Stop" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "إيقاف"
+          }
+        }
+      }
+    },
+    "Stop the tone" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "إيقاف النغمة"
+          }
+        }
+      }
+    },
+    "Stop the tone for %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "إيقاف نغمة %@"
+          }
+        }
+      }
+    },
+    "Stops the tone MenuBar is playing." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يوقف النغمة التي يشغّلها MenuBar."
+          }
+        }
+      }
+    },
+    "The next prayer time isn't known" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "موعد الصلاة التالية غير معروف"
+          }
+        }
+      }
+    },
+    "The next prayer, with a button that stops MenuBar's tone." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "الصلاة التالية، مع زر يوقف نغمة MenuBar."
+          }
+        }
+      }
+    },
+    "The schedule couldn't be planned." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تعذّر تخطيط المواقيت."
+          }
+        }
+      }
+    },
+    "Times shown until %@." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "المواقيت المعروضة حتى %@."
+          }
+        }
+      }
+    },
+    "Tromsø" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ترومسو"
+          }
+        }
+      }
+    },
+    "Umm al-Qura" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "أم القرى"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
