@@ -74,7 +74,7 @@ These are the journeys' screenshot attachments. The iPad ones were exported from
 
 ### On Apple TV
 
-These come from the tvOS journeys on an Apple TV 4K (3rd generation) simulator with tvOS 27, exported the same way, scaled down from 3840 × 2160 and quantized with `pngquant`.
+These come from the tvOS journeys on an Apple TV 4K (3rd generation) (at 1080p) simulator with tvOS 27, exported the same way, scaled down from 1920 × 1080 and quantized with `pngquant`.
 
 | | |
 |---|---|
