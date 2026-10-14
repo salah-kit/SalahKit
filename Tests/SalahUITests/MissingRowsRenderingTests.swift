@@ -75,6 +75,11 @@
     @Test("a parent stack gives flexible rows equal height and expands its focus independently")
     func directChildGeometry() throws {
       let list = try partialList()
+      let probe = DirectChildrenLayout {
+        list.rows
+      }
+      .prayerRowStyle(GeometryStyle())
+      #expect(Snapshot.render(probe, width: 40) != nil)
       let actual = VStack(spacing: 0) { list.rows }
         .prayerRowStyle(GeometryStyle())
         .frame(width: 40, height: 300)
@@ -90,7 +95,7 @@
       #expect(Snapshot.compare(actualImage, reference) == nil)
       let pixels = try #require(Snapshot.rgba(actualImage))
       // Five flexible siblings are 40 points each; the Dhuhr focus retains 100 points.
-      // These bounds catch a list stack around all rows, even if the total height stays 300.
+      // These bounds observe the actual VStack sizing, beyond the child-count probe above.
       func color(at y: Int) -> ArraySlice<UInt8> {
         let start = (y * actualImage.width + 20) * 4
         return pixels[start..<(start + 3)]
@@ -104,6 +109,29 @@
       #expect(color(at: 360) == color(at: 439))
       #expect(color(at: 440) == color(at: 519))
       #expect(color(at: 520) == color(at: 599))
+    }
+  }
+
+  /// Measures SwiftUI's actual layout children. A containing stack would expose one child
+  /// and hide the row priorities from this parent, even if a simple image looked identical.
+  nonisolated private struct DirectChildrenLayout: Layout {
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+      #expect(subviews.count == 6)
+      #expect(subviews.map(\.priority) == [0, 0, 1, 0, 0, 0])
+      return CGSize(width: 40, height: 300)
+    }
+
+    func placeSubviews(
+      in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()
+    ) {
+      var y = bounds.minY
+      for (index, subview) in subviews.enumerated() {
+        let height: CGFloat = index == 2 ? 100 : 40
+        subview.place(
+          at: CGPoint(x: bounds.minX, y: y), anchor: .topLeading,
+          proposal: ProposedViewSize(width: 40, height: height))
+        y += height
+      }
     }
   }
 
