@@ -245,6 +245,40 @@
       #expect(center.calls.isEmpty)
     }
 
+    /// Validation names the first offender in the given order (RFC 0003 §4.5 Validation).
+    @Test func validationErrorsNameTheFirstOffender() async throws {
+      let clock = TestClock(Fixture.date(6, 0))
+      let center = ModelCenter(clock: clock)
+      let scheduler = scheduler(center, clock: clock)
+      func alert(_ prayer: PrayerKind, namespace: String = "prayers") -> PlannedAlert {
+        PlannedAlert(
+          id: Fixture.identity(prayer, .atTime, namespace: namespace),
+          event: PrayerEvent(scheduleDay: Fixture.day, kind: prayer, time: Fixture.time(prayer)),
+          fireDate: Fixture.time(prayer), sound: .system)
+      }
+      let a = alert(.asr)
+      let b = alert(.maghrib)
+      await #expect(throws: NotificationSchedulerError.duplicateIdentity(b.id)) {
+        try await scheduler.apply(plan([a, b, b, a], at: clock.now), content: { _ in .init() })
+      }
+      await #expect(
+        throws: NotificationSchedulerError.namespaceMismatch(expected: "prayers", found: "one")
+      ) {
+        try await scheduler.apply(
+          plan(
+            [a, alert(.isha, namespace: "one"), alert(.fajr, namespace: "two"), a], at: clock.now),
+          content: { _ in .init() })
+      }
+      var foreignPlan = plan([alert(.isha, namespace: "one")], at: clock.now)
+      foreignPlan.namespace = "mosque"
+      await #expect(
+        throws: NotificationSchedulerError.namespaceMismatch(expected: "prayers", found: "mosque")
+      ) {
+        try await scheduler.apply(foreignPlan, content: { _ in .init() })
+      }
+      #expect(center.calls.isEmpty)
+    }
+
     @Test func soundsMapToNotificationSounds() {
       #expect(AlertSound.none.notificationSound == nil)
       #expect(AlertSound.system.notificationSound == .default)

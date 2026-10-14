@@ -959,6 +959,13 @@ def reconciliation_vectors():
           "RFC 0003 §4.5 Validation.",
           [{"deliver": [a(f"{D}/asr/atTime", ASR), a(f"{D}/asr/atTime", f"{D}T15:36:00+03:00")],
             "now": "2026-06-02T15:36:30+03:00"}])
+    recon("namespaces", "reconciliation.namespaces.foreign-alert-before-repeated-identity",
+          "A plan repeats Asr's identity and holds a foreign alert after it: the namespace is "
+          "checked first.",
+          "RFC 0003 §4.5 Validation: namespaces are checked first.",
+          [{"apply": plan([a(f"{D}/asr/atTime", ASR), a(f"{D}/asr/atTime", f"{D}T15:41:00+03:00"),
+                           a(f"{D}/maghrib/atTime", MAGHRIB, namespace="mosque")], COVER),
+            "now": MORNING}])
     recon("namespaces", "reconciliation.namespaces.deliver-foreign-alert",
           "Delivering an alert of another namespace is rejected before any call.",
           "RFC 0003 §4.5 Validation.",
@@ -1142,6 +1149,15 @@ def reconciliation_vectors():
           [{"deliver": [a(f"{D}/isha/before", "2026-06-02T19:45:00+03:00")],
             "now": "2026-06-02T19:45:30+03:00"}],
           center={"failReads": [1]})
+    recon("deliver", "reconciliation.deliver.failed-read-still-sees-deliveries",
+          "Isha's request fires at 20:30 and the first read, which fails, delivers it first. "
+          "Nothing counts as pending, but the delivered notification still shows the occurrence "
+          "was delivered, so it is skipped rather than posted twice.",
+          "RFC 0003 §4.5 Delivering due alerts; Vectors/README.md: a read in failReads delivers "
+          "first, then throws.",
+          [{"deliver": [a(f"{D}/isha/atTime", ISHA)], "now": "2026-06-02T20:30:30+03:00"}],
+          center={"pending": [pend(rid(f"{D}/isha/atTime"), ISHA, "isha", "v1 atTime")],
+                  "failReads": [1]})
     recon("deliver", "reconciliation.deliver.delivered-within-the-leeway",
           "Two alerts fire at 19:45. Maghrib's after-reminder was delivered at 19:44:58.500, 1.5 "
           "seconds early, which counts as this occurrence: skipped. Isha's before-reminder was "
