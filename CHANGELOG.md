@@ -16,9 +16,11 @@ All notable changes to this project are documented here. The format follows
   and a desktop widget whose Stop button follows the live-state pattern: the intent clears the
   shared value and posts a `DarwinSignal`, and the app acts on the signal and republishes.
   `MenuBarStopHarness`, signed and sandboxed like the widget extension, runs the intent's own
-  code in a separate process against the running app, which closes the widget-to-app stop
-  round trip that 0.2.0 left pending. Unit tests with a manual clock and injected notification
-  centers, and XCUITest journeys on the Mac.
+  code in a separate process against the running app, which covers the cross-process stop
+  round trip that 0.2.0 left pending; a real tap on the desktop widget, and real sleep and
+  wake, are still to observe. Unit tests with a manual clock and injected notification
+  centers, round-trip tests that start the app and the harness, and XCUITest journeys on the
+  Mac.
 - **MosqueBoard for tvOS** (`MosqueBoardTV`, tvOS 17): the same board on a mosque's Apple TV,
   built from the iPad app's shared code. It links only SalahCore, fits the whole board inside
   the TV's safe area and keeps the screen saver off. Its unit tests and journeys (a normal day,
@@ -39,6 +41,11 @@ All notable changes to this project are documented here. The format follows
   which the iPad and tvOS apps both compile.
 - RFC 0003 and RFC 0004 record MenuBar's evidence and findings, and every RFC links its
   discussion.
+- "Alerts within the 64-notification limit" says to deliver the engine's alerts after the
+  `apply` of a replan made at the same moment: otherwise a caught-up alert whose request is
+  still pending can lose its notification.
+- The stop signal's declaration in "Building widget timelines" is `nonisolated`, so an intent
+  that isn't on the main actor can post it in a module that defaults to the main actor.
 
 ## [0.2.0] - 2026-10-14
 

@@ -589,8 +589,8 @@ jobs:
 
       # Hosted runners have no signing team, so CI builds unsigned: no sandbox and no App Group
       # entitlement. The app and the stop harness then share the App Group's suite as plain
-      # preferences, and the journeys still run the widget's stop code in a separate process
-      # against the running app. The signed, sandboxed run with the App Group runs locally
+      # preferences, and the round-trip tests still run the widget's stop code in a separate
+      # process against the running app. The signed, sandboxed run with the App Group runs locally
       # (Examples/MenuBar/README.md, Tests).
       - name: Unit tests and journeys on the runner's Mac
         run: |

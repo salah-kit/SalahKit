@@ -47,7 +47,7 @@ func saveForWidgets(_ settings: PrayerSettings) {
 }
 
 #if canImport(notify)
-  extension DarwinSignal {
+  nonisolated extension DarwinSignal {
     static let stopPlayback = DarwinSignal(name: "com.example.prayers.stop")
   }
 #endif

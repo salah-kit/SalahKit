@@ -239,7 +239,7 @@ app is doing. The widget's App Intent runs in the extension's process, so it rea
 with a ``DarwinSignal`` whose name the app owns:
 
 ```swift
-extension DarwinSignal {
+nonisolated extension DarwinSignal {
   static let stopPlayback = DarwinSignal(name: "com.example.prayers.stop")
 }
 ```

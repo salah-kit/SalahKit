@@ -134,19 +134,33 @@ struct AlertCoordinatorTests {
     #expect(rig.player.plays.isEmpty)
   }
 
+  /// Asr's at-time alert in the engine's schedule, and its request's identifier.
+  static func asrAlert(_ rig: Rig) throws -> String {
+    let alert = try #require(
+      rig.coordinator.engineSchedule?.alerts.first { $0.event.kind == .asr && $0.kind == .atTime })
+    return identifier(alert)
+  }
+
   @Test("after a sleep through a prayer, the wake notification catches it up and replans")
   func wake() async throws {
     let asr = try Fixture.event(.asr)
     let rig = Rig(at: asr.time.addingTimeInterval(-5 * 60), settings: Self.settings(reminder: nil))
     rig.coordinator.replan()
+    await rig.coordinator.waitForApply()
+    let request = try Self.asrAlert(rig)
+    #expect(rig.center.pendingIdentifiers.contains(request))
     #expect(rig.clock.wakeDate.map { $0 > asr.time } == true)
-    // The Mac sleeps through Asr: the engine's wake-up doesn't run.
+    // The Mac sleeps through Asr: the engine's wake-up doesn't run, and the system still holds
+    // Asr's request as pending (the in-memory center never delivers by itself).
     rig.clock.jump(to: asr.time.addingTimeInterval(2 * 60))
     rig.workspaceCenter.post(name: SystemEventObserver.didWake, object: nil)
     #expect(await eventually { rig.coordinator.lastDue.map(\.event.kind) == [.asr] })
     #expect(rig.live.nowPlaying?.alert?.prayer == .asr)
     #expect(rig.coordinator.replanCount == 2)
     #expect(rig.coordinator.plan?.effectiveRange.start == rig.clock.now)
+    // The replan removes the past request, and Asr's banner is posted after it.
+    #expect(await eventually { rig.center.deliveredIdentifiers == [request] })
+    #expect(!rig.center.pendingIdentifiers.contains(request))
   }
 
   @Test("a clock change within the grace catches up; beyond it, the alert is skipped")
@@ -162,10 +176,14 @@ struct AlertCoordinatorTests {
 
     let onTime = Rig(at: asr.time.addingTimeInterval(-60), settings: Self.settings(reminder: nil))
     onTime.coordinator.replan()
+    await onTime.coordinator.waitForApply()
+    let request = try Self.asrAlert(onTime)
+    #expect(onTime.center.pendingIdentifiers.contains(request))
     onTime.clock.jump(to: asr.time.addingTimeInterval(3 * 60))
     onTime.systemCenter.post(name: .NSSystemClockDidChange, object: nil)
     #expect(await eventually { onTime.coordinator.lastDue.map(\.event.kind) == [.asr] })
     #expect(onTime.player.plays.count == 1)
+    #expect(await eventually { onTime.center.deliveredIdentifiers == [request] })
   }
 
   @Test("a time zone change replans")

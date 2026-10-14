@@ -33,8 +33,8 @@ struct LaunchOptionsTests {
   func arguments() throws {
     let options = LaunchOptions(arguments: [
       "MenuBar", "-now", "2026-10-14T12:00:00+03:00", "-place", "london", "-method", "isna",
-      "-language", "ar", "-alerts", "on", "-reminder", "15", "-notifications", "memory",
-      "-muted", "-playTestTone", "repeating", "-showWindow", "-testEvents",
+      "-language", "ar", "-alerts", "on", "-reminder", "15", "-tone", "off", "-notifications",
+      "memory", "-muted", "-playTestTone", "repeating", "-showWindow", "-testEvents",
     ])
     #expect(options.now == (try Date("2026-10-14T12:00:00+03:00", strategy: .iso8601)))
     #expect(options.place == .london)
@@ -42,6 +42,7 @@ struct LaunchOptionsTests {
     #expect(options.language == .arabic)
     #expect(options.alertsEnabled == true)
     #expect(options.reminderMinutes == .some(15))
+    #expect(options.playsTone == false)
     #expect(options.inMemoryNotifications)
     #expect(options.muted)
     #expect(options.testTone == .repeating)
@@ -53,7 +54,7 @@ struct LaunchOptionsTests {
     #expect(settings.method == .isna)
     #expect(settings.language == .arabic)
     #expect(
-      settings.alerts == AlertPreferences(enabled: true, reminderMinutes: 15, playsTone: true))
+      settings.alerts == AlertPreferences(enabled: true, reminderMinutes: 15, playsTone: false))
   }
 
   @Test("unreadable values are ignored, and -reminder off removes the reminder")
@@ -66,6 +67,9 @@ struct LaunchOptionsTests {
     #expect(options.alertsEnabled == nil)
     #expect(options.applied(to: .defaults).alerts.reminderMinutes == nil)
     #expect(LaunchOptions(arguments: ["-reminder", "500"]).reminderMinutes == nil)
+    // Only the reminders the dropdown offers, so its picker always shows the choice.
+    #expect(LaunchOptions(arguments: ["-reminder", "20"]).reminderMinutes == nil)
+    #expect(LaunchOptions(arguments: ["-tone", "maybe"]).playsTone == nil)
   }
 
   /// A journey adds its own arguments after the quiet launch's (`-language en`, `-alerts off`);

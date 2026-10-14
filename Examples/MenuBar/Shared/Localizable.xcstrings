@@ -367,6 +367,16 @@
         }
       }
     },
+    "Play the app's tone" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تشغيل نغمة التطبيق"
+          }
+        }
+      }
+    },
     "Playing the after-reminder for %@" : {
       "localizations" : {
         "ar" : {

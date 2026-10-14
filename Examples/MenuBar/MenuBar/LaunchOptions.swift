@@ -19,8 +19,10 @@ nonisolated struct LaunchOptions: Equatable, Sendable {
   var language: NamesLanguage?
   /// `-alerts on|off`.
   var alertsEnabled: Bool?
-  /// `-reminder <minutes>|off`: the reminder before each prayer.
+  /// `-reminder 5|10|15|30|off`: the reminder before each prayer, one the dropdown offers.
   var reminderMinutes: Int??
+  /// `-tone on|off`: whether the app plays its tone for alerts.
+  var playsTone: Bool?
   /// `-notifications memory`: an in-memory notification center instead of the system's, so a
   /// test run asks for no permission and leaves nothing in Notification Center.
   var inMemoryNotifications = false
@@ -61,9 +63,14 @@ nonisolated struct LaunchOptions: Equatable, Sendable {
     if let reminder = value(after: "-reminder") {
       if reminder == "off" {
         reminderMinutes = .some(nil)
-      } else if let minutes = Int(reminder), (1...120).contains(minutes) {
+      } else if let minutes = Int(reminder), AlertPreferences.reminderChoices.contains(minutes) {
         reminderMinutes = .some(minutes)
       }
+    }
+    switch value(after: "-tone") {
+    case "on": playsTone = true
+    case "off": playsTone = false
+    default: break
     }
     inMemoryNotifications = value(after: "-notifications") == "memory"
     muted = arguments.contains("-muted")
@@ -80,6 +87,7 @@ nonisolated struct LaunchOptions: Equatable, Sendable {
     if let language { settings.language = language }
     if let alertsEnabled { settings.alerts.enabled = alertsEnabled }
     if let reminderMinutes { settings.alerts.reminderMinutes = reminderMinutes }
+    if let playsTone { settings.alerts.playsTone = playsTone }
     return settings
   }
 }

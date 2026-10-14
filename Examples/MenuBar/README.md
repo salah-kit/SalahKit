@@ -67,7 +67,7 @@ The app's targets default to `MainActor` isolation, as new Xcode projects do. `M
 |---|---|
 | `-now <ISO 8601 instant>` | Start the app's clock at this instant; it then runs in real time. The widget extension always uses the real clock. |
 | `-place makkah\|istanbul\|london\|tromso`, `-method <name>`, `-language en\|ar` | Change the settings, as the dropdown does; they're saved. |
-| `-alerts on\|off`, `-reminder <minutes>\|off` | Turn alerts on or off and set the reminder; saved. |
+| `-alerts on\|off`, `-reminder 5\|10\|15\|30\|off`, `-tone on\|off` | Turn alerts on or off, set the reminder, and choose whether the app plays its tone; saved. |
 | `-notifications memory` | Use an in-memory notification center: no permission prompt, nothing in Notification Center. |
 | `-muted` | Play the tone at zero volume. |
 | `-playTestTone once\|repeating` | Start the test tone at launch, once or until stopped. |
@@ -79,9 +79,9 @@ The app's targets default to `MainActor` isolation, as new Xcode projects do. `M
 - **Unit tests** (`MenuBarTests`, Swift Testing, hosted by the app, which stays inert while it hosts them):
   - `DisplayTests`: the title's wording far from a prayer, within its hour, just after it and with no usable state, in English and Arabic; the refreshes of a `.steps` plan with a manual clock (every 15 minutes, then every minute on the prayer's minutes for an hour either side, each title exact at its refresh); the midnight refresh; a replan after a jump in time.
   - `LiveStateTests`: publishing what plays and gating the widget's reloads; the stop signal stopping the tone and republishing; the signal with a stored value that still says the tone plays (the app stops, and its republish clears the value); a cleared value without the signal (nothing stops); a tone that ends by itself or can't start.
-  - `AlertCoordinatorTests`: the engine gets the uncapped two-day schedule and the scheduler the 60-request plan; with a budget of two, a reminder the plan left out still comes due, gets a banner through `deliver` and plays the tone; two alerts due together play the one the engine's precedence picks; a wake posted to an injected NSWorkspace center after a sleep through Asr catches it up and replans; a clock change posted to an injected center within the five-minute grace catches up and beyond it skips; a time zone change replans; alerts off empties the engine and removes the requests; the twelve-hour replan; the notifications' wording and sounds.
+  - `AlertCoordinatorTests`: the engine gets the uncapped two-day schedule and the scheduler the 60-request plan; with a budget of two, a reminder the plan left out still comes due, gets a banner through `deliver` and plays the tone; two alerts due together play the one the engine's precedence picks; a wake posted to an injected NSWorkspace center after a sleep through Asr catches it up, replans, and then posts Asr's banner although its request was still pending (the banner goes out after the replan's apply, which removes the past request); a clock change posted to an injected center within the five-minute grace catches up with a banner and beyond it skips; a time zone change replans; alerts off empties the engine and removes the requests; the twelve-hour replan; the notifications' wording and sounds.
   - `WidgetTimelineTests`: the setup entry; the `.steps` timeline with its minute grid, its expired entry and its midnight entries; the Stop button on every entry while a tone plays; the intent's work (clear, reload, signal).
-  - `ToneTests` and `LaunchOptionsTests`: the WAV data and the arguments.
+  - `ToneTests` and `LaunchOptionsTests`: the WAV data and the arguments; `-reminder` takes only the reminders the dropdown offers.
 - **Round trip** (`MenuBarRoundTripTests`, Swift Testing, no host app): each test starts the real app with launch arguments and drives the stop harness, each in its own process. These tests run in `xctest`, outside any sandbox; XCUITest's runner is sandboxed and can't start the harness.
   - The stop round trip (below).
   - The signal alone: the harness posts only the signal, leaving the stored value saying the tone plays; the app stops, and its republish clears the value (`changed=true`).
@@ -91,6 +91,7 @@ The app's targets default to `MainActor` isolation, as new Xcode projects do. `M
   - `testScheduleShowsTheDay` and `testArabic`: the window lists Makkah's day, in English or Arabic, and the status item names the next prayer.
   - `testTitleRefreshesOnTheMinute`: launched three seconds before Asr, the status item's title turns to "Asr started 0 seconds ago" at Asr and to "Asr started 1 minute ago" a minute later, with nothing touching the app. (XCUITest reads the title's spoken label, which the app sets from the same refresh as the text "Asr +0s".)
   - `testAppStopButton`: the window's "Play test tone" shows what plays, and its Stop button ends it.
+  - `testToneToggle`: "Play the app's tone" turns off and on again, and is disabled once alerts are off.
 
 ## The stop round trip
 
@@ -118,4 +119,4 @@ The Stop buttons are labelled "Stop the tone" (the widget's names the prayer: "S
 These need a person, a real desktop or real sleep, and are recorded in `reports/evidence/`:
 
 - **A real tap on the desktop widget's Stop button** (`reports/evidence/D2-menubar-widget-stop.md`): the harness runs the intent's code in a separate sandboxed process, not in the widget extension that WidgetKit launches.
-- **Real sleep and wake** (`reports/evidence/D2-menubar-sleep-wake.md`): the journeys post the wake notification inside the app; a real sleep also stops the app's timers.
+- **Real sleep and wake** (`reports/evidence/D2-menubar-sleep-wake.md`): the round-trip tests make the app post the wake notification to itself; a real sleep also stops the app's timers, and the system decides when an overdue notification request is delivered.

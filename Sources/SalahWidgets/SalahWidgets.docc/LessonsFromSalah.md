@@ -55,7 +55,7 @@ nonisolated struct StopPlaybackIntent: AppIntent {
 
 The running app stops when the signal arrives, without reading the stored value, and then
 publishes what it really plays. That confirms the stop to the widget, or corrects it when the
-app was already playing something else:
+stored value still said something played:
 
 ```swift
 // In the app, on the main actor, for as long as it runs:
@@ -123,7 +123,7 @@ components follow it.
 
 A widget extension runs in the system's language, not the language the user chose in your app.
 Put the chosen language in the shared inputs, and build the locale from it in the extension,
-as both widget examples do.
+as the widget examples do.
 
 ## See Also
 

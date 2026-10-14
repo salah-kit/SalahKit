@@ -82,7 +82,7 @@ them.
 | `MosqueBoard` | iPadOS and tvOS simulators | No |
 | `PhoneWidgets` | iOS simulator | No |
 | `WatchComplication` | iOS and watchOS simulators | No |
-| `MenuBar` | macOS | Yes, for the App Group its app, widget extension and stop harness share |
+| `MenuBar` | macOS | For the sandboxed App Group its app, widget extension and stop harness share; its tests also run unsigned |
 
 Simulator builds need no signing. To sign an example, copy its `Config/Local.xcconfig.example` to
 `Config/Local.xcconfig` (gitignored) and set your team there; never commit a team.

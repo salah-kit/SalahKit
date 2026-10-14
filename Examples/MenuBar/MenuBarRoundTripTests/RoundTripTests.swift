@@ -24,10 +24,11 @@ struct RoundTripTests {
     return try #require(schedule.day(CivilDay(year: 2026, month: 10, day: 14)).day?[.asr]?.time)
   }
 
-  /// The quiet launch: zero volume, notifications in memory, Makkah in English, alerts off.
+  /// The quiet launch: zero volume, notifications in memory, Makkah in English, alerts off,
+  /// and the app's tone for alerts.
   static let quiet = [
     "-muted", "-notifications", "memory", "-place", "makkah", "-method", "ummAlQura",
-    "-language", "en", "-alerts", "off", "-AppleLanguages", "(en)",
+    "-language", "en", "-alerts", "off", "-tone", "on", "-AppleLanguages", "(en)",
   ]
 
   // MARK: - The stop round trip (proposal §7.3, Live state)
@@ -66,7 +67,10 @@ struct RoundTripTests {
 
     let signalled = try Harness.run("signal")
     #expect(signalled.signalAccepted == true)
-    let after = try await Harness.waitForState(of: app) { $0.nowPlaying == nil }
+    // The app saves the cleared value before it records "published": wait for both.
+    let after = try await Harness.waitForState(of: app) {
+      $0.nowPlaying == nil && $0.records(since: playing).contains { $0.event == "published" }
+    }
     let records = after.records(since: playing)
     #expect(records.map(\.event) == ["stopSignal", "stopped", "published"], "\(records)")
     #expect(records.last?.detail == "playing=false changed=true")
@@ -93,8 +97,11 @@ struct RoundTripTests {
 
     let woke = try Harness.run("sleep")
     #expect(woke.signalAccepted == true)
-    let after = try await Harness.waitForState(of: app) {
-      $0.records(since: launched).contains { $0.event == "started" }
+    // The app records "started", then saves what plays, then replans: wait for all three.
+    let after = try await Harness.waitForState(of: app) { state in
+      let events = state.records(since: launched).map(\.event)
+      return events.contains("started") && events.contains("replanned")
+        && state.nowPlaying != nil
     }
     let records = after.records(since: launched)
     let events = records.map(\.event)

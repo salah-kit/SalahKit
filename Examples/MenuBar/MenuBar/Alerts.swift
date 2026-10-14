@@ -156,16 +156,30 @@ final class AlertCoordinator {
 
   private func alertsCameDue(_ due: [PlannedAlert]) {
     lastDue = due
-    let content = AlertContent(strings: MenuBarStrings(language: settings.language))
-    Task { [scheduler] in
-      _ = try? await scheduler.deliver(due, content: content.make)
-    }
+    deliver(due)
     // The tone plays for the alerts whose sound is the app's own, by the engine's precedence.
     let toneAlerts = due.filter { $0.sound == .named(MenuBarTone.soundName) }
     if let alert = InProcessAlertEngine.preferredAlert(among: toneAlerts) {
       live.play(
         NowPlaying.Alert(
           prayer: alert.event.kind, observance: alert.event.observance, kind: alert.kind))
+    }
+  }
+
+  /// Posts banners for `due` once the plans applied so far have finished, including the one a
+  /// replan starts later in this turn.
+  ///
+  /// After a wake or a clock change, the engine reports an alert whose request the system may
+  /// still hold as pending, and then the app replans from the new moment. Delivering first would
+  /// skip the alert because its request is pending, and the replan's `apply` would then remove
+  /// that request, which is in the past: no banner at all. After the `apply`, `deliver` posts
+  /// the banner, or skips it when the system delivered the request meanwhile.
+  private func deliver(_ due: [PlannedAlert]) {
+    let content = AlertContent(strings: MenuBarStrings(language: settings.language))
+    // The task starts after this turn on the main actor, when `applyTask` is the latest apply.
+    Task { [weak self, scheduler] in
+      await self?.applyTask?.value
+      _ = try? await scheduler.deliver(due, content: content.make)
     }
   }
 }

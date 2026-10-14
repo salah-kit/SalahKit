@@ -39,7 +39,8 @@ nonisolated final class MenuBarJourneys: XCTestCase {
     app.launchArguments =
       [
         "-showWindow", "-muted", "-notifications", "memory", "-place", "makkah", "-method",
-        "ummAlQura", "-language", "en", "-alerts", "off", "-AppleLanguages", "(en)",
+        "ummAlQura", "-language", "en", "-alerts", "off", "-tone", "on", "-AppleLanguages",
+        "(en)",
       ] + (now.map { ["-now", $0.formatted(.iso8601)] } ?? []) + arguments
     app.launch()
     addTeardownBlock { @MainActor in app.terminate() }
@@ -141,6 +142,44 @@ nonisolated final class MenuBarJourneys: XCTestCase {
     XCTAssertEqual(stop.label, "Stop the tone")
     stop.click()
     XCTAssertTrue(playing.waitForNonExistence(timeout: 10), window.debugDescription)
+  }
+
+  /// The tone switch turns the app's tone off and on, and is disabled once alerts are off.
+  @MainActor
+  func testToneToggle() throws {
+    let app = launch(["-alerts", "on"])
+    let window = window(app)
+    let tone = window.checkBoxes["toneToggle"]
+    XCTAssertTrue(tone.waitForExistence(timeout: 10), window.debugDescription)
+    XCTAssertEqual(tone.label, "Play the app's tone")
+    XCTAssertTrue(tone.isEnabled)
+    XCTAssertEqual(tone.value as? Int, 1)
+    tone.click()
+    XCTAssertTrue(waitForValue(tone, 0), window.debugDescription)
+    tone.click()
+    XCTAssertTrue(waitForValue(tone, 1), window.debugDescription)
+    window.checkBoxes["alertsToggle"].click()
+    XCTAssertTrue(waitForDisabled(tone), window.debugDescription)
+  }
+
+  /// Waits for a checkbox to show `value`.
+  @MainActor
+  func waitForValue(_ element: XCUIElement, _ value: Int) -> Bool {
+    let deadline = Date().addingTimeInterval(10)
+    while element.value as? Int != value, Date() < deadline {
+      Thread.sleep(forTimeInterval: 0.2)
+    }
+    return element.value as? Int == value
+  }
+
+  /// Waits for an element to be disabled.
+  @MainActor
+  func waitForDisabled(_ element: XCUIElement) -> Bool {
+    let deadline = Date().addingTimeInterval(10)
+    while element.isEnabled, Date() < deadline {
+      Thread.sleep(forTimeInterval: 0.2)
+    }
+    return !element.isEnabled
   }
 
   @MainActor

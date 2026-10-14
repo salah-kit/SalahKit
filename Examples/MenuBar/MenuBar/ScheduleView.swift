@@ -177,6 +177,15 @@ private struct AlertsSection: View {
           get: { model.settings.alerts.enabled }, set: { model.setAlertsEnabled($0) })
       )
       .accessibilityIdentifier("alertsToggle")
+      // Without the app's tone, notifications play the system's sound.
+      Toggle(
+        strings("Play the app's tone"),
+        isOn: Binding(
+          get: { model.settings.alerts.playsTone },
+          set: { playsTone in model.change { $0.alerts.playsTone = playsTone } })
+      )
+      .disabled(!model.settings.alerts.enabled)
+      .accessibilityIdentifier("toneToggle")
       Text(verbatim: status)
         .font(.caption)
         .foregroundStyle(.secondary)
@@ -255,7 +264,7 @@ private struct SettingsSection: View {
           })
       ) {
         Text(verbatim: strings("None")).tag(0)
-        ForEach([5, 10, 15, 30], id: \.self) { minutes in
+        ForEach(AlertPreferences.reminderChoices, id: \.self) { minutes in
           Text(verbatim: strings("\(minutes) minutes before")).tag(minutes)
         }
       }

@@ -69,6 +69,8 @@ nonisolated struct AlertPreferences: Codable, Hashable, Sendable {
   var enabled = false
   /// The reminder before each prayer, in minutes, or `nil` for none.
   var reminderMinutes: Int? = 10
+  /// The reminders the app offers, in minutes.
+  static let reminderChoices = [5, 10, 15, 30]
   /// Whether the app plays its tone for alerts. Without it, notifications use the system sound.
   var playsTone = true
 

@@ -168,6 +168,12 @@ the system's list, so `deliver` can't tell it was shown.)
 ``InProcessAlertEngine/preferredAlert(among:)`` picks one sound when several alerts fall due
 together. Include the catch-up interval in the engine's range, as above.
 
+If you also apply a new plan when you resync, deliver the engine's alerts after that `apply`
+finishes. After a sleep, the system can still hold a caught-up alert's request as pending, so
+`deliver` skips it; an `apply` planned from the new moment then removes that request, whose time
+has passed, and the alert gets no notification. After the `apply`, `deliver` posts it, or skips
+it when the system delivered it meanwhile. `Examples/MenuBar` does this.
+
 ### What the package doesn't promise
 
 - **Atomic updates.** A batch can stop part way, an add can fail, and another writer can change
