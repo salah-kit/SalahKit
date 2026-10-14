@@ -246,7 +246,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 | `reconciliation/authorization.json` | Denied (nothing confirmed even when a matching request survives), not determined, provisional |
 | `reconciliation/housekeeping.json` | Delivered-notification retention, and none |
 | `reconciliation/pump.json` | Serialized applies; overlapping applies reconciled to the latest; a superseded batch's failures, none before step 6 and step 6's without a call; a rejected plan supersedes nothing; no check after the read-back |
-| `reconciliation/deliver.json` | Posting due alerts in identity order, skipping pending and delivered occurrences (with the 1.5-second leeway, and after a late delivery), a failed pending read, the delivered read without a retention, a future alert, an empty list |
+| `reconciliation/deliver.json` | Posting due alerts by fire date, then identity, skipping pending and delivered occurrences (with the 1.5-second leeway, and after a late delivery), a failed pending read, the delivered read without a retention, a future alert, an empty list |
 
 **Input:**
 
@@ -268,7 +268,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 }
 ```
 
-- **`scheduler`**: `NotificationScheduler(identifierPrefix:namespace:threadIdentifier:center:deliveredRetention:now:)`; `threadIdentifier` and `deliveredRetention` (seconds) may be `null`.
+- **`scheduler`**: `NotificationScheduler(identifierPrefix:namespace:threadIdentifier:center:deliveredRetention:now:)`; `threadIdentifier` and `deliveredRetention` (seconds; a negative one counts as zero) may be `null`.
 - **`center`**, the model every harness implements:
   - `authorization` is `"authorized"` (the default), `"provisional"`, `"ephemeral"`, `"denied"` or `"notDetermined"`; `pending` holds requests with a non-repeating calendar trigger at `fireDate` (UTC) and the content `title`, `body` and `thread`; `delivered` holds delivered notifications. Each list key is optional.
   - On each pending read, the center first delivers every pending request whose fire date is at or before the current instant, in order of fire date, then identifier: it leaves `pending` and joins `delivered`, dated at its fire date. A read listed in `failReads` delivers first, then throws.

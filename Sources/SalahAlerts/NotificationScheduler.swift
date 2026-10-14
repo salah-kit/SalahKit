@@ -399,15 +399,21 @@
     private static let utc = TimeZone(identifier: "UTC") ?? TimeZone(secondsFromGMT: 0) ?? .gmt
 
     /// A non-repeating Gregorian calendar trigger in UTC at `date`, rounded up to a whole
-    /// second, so it never fires before `date`. A thousandth of a second past a whole second
-    /// counts as on it, so arithmetic noise doesn't add a second.
+    /// second, so it never fires more than a millisecond before `date`. Up to a millisecond past
+    /// a whole second counts as on it, so arithmetic noise doesn't add a second.
+    ///
+    /// The second is `⌈s − 0.001⌉`, with `s` the date in whole microseconds since the reference
+    /// date, so the result doesn't depend on floating-point rounding (RFC 0003 §4.5 Requests).
     static func trigger(at date: Date) -> UNCalendarNotificationTrigger {
-      let seconds = (date.timeIntervalSinceReferenceDate - 0.001).rounded(.up)
+      let microseconds = Int64((date.timeIntervalSinceReferenceDate * 1_000_000).rounded())
+      let shifted = microseconds - 1_000
+      let seconds =
+        shifted >= 0 ? (shifted + 999_999) / 1_000_000 : -((-shifted) / 1_000_000)
       var calendar = Calendar(identifier: .gregorian)
       calendar.timeZone = utc
       var components = calendar.dateComponents(
         [.year, .month, .day, .hour, .minute, .second],
-        from: Date(timeIntervalSinceReferenceDate: seconds))
+        from: Date(timeIntervalSinceReferenceDate: TimeInterval(seconds)))
       components.calendar = calendar
       components.timeZone = utc
       return UNCalendarNotificationTrigger(dateMatching: components, repeats: false)

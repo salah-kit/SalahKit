@@ -123,8 +123,10 @@
 
     @Test func aThreadIsSetOnlyWhenTheSchedulerHasOne() async throws {
       let clock = TestClock(Fixture.date(6, 0))
-      let content: @Sendable (PlannedAlert) -> UNMutableNotificationContent = { _ in
+      let content: @Sendable (PlannedAlert) -> UNMutableNotificationContent = { alert in
         let content = UNMutableNotificationContent()
+        content.title = alert.id.prayer.rawValue
+        content.body = "It's time"
         content.threadIdentifier = "from-the-app"
         return content
       }
@@ -138,10 +140,14 @@
         plan([asrAlert()], at: clock.now), content: content)
       #expect(threaded.pending[Self.identifier]?.content.threadIdentifier == "prayers")
 
-      // `deliver` posts under the identifier, with the thread, as `apply` adds.
+      // `deliver` posts the closure's content under the identifier, with the thread, as
+      // `apply` adds it.
       let posting = ModelCenter(clock: clock)
       _ = try await scheduler(posting, clock: clock).deliver([asrAlert()], content: content)
       #expect(posting.posted.map(\.identifier) == [Self.identifier])
+      #expect(posting.posted.first?.trigger == nil)
+      #expect(posting.posted.first?.content.title == "asr")
+      #expect(posting.posted.first?.content.body == "It's time")
       #expect(posting.posted.first?.content.threadIdentifier == "from-the-app")
       let threadedPosting = ModelCenter(clock: clock)
       _ = try await scheduler(threadedPosting, clock: clock, thread: "prayers").deliver(
@@ -166,6 +172,15 @@
       #expect(
         try await addsOver(Self.components(wallClockIn: utc, calendarZone: utc, zone: utc))
           == false)
+      // A trigger written in another calendar is read in it: Asr's time as a Hijri date.
+      var hijri = Calendar(identifier: .islamicUmmAlQura)
+      hijri.timeZone = utc
+      var written = hijri.dateComponents(
+        [.era, .year, .month, .day, .hour, .minute, .second], from: Fixture.time(.asr))
+      written.calendar = hijri
+      written.timeZone = utc
+      #expect(written.year == 1447)
+      #expect(try await addsOver(written) == false)
       for wallClock in [utc, riyadh, kiritimati, TimeZone.current] {
         #expect(
           try await addsOver(
@@ -213,8 +228,9 @@
     /// of arithmetic noise doesn't add a second (RFC 0003 §4.5 Requests).
     @Test func triggersRoundUpToAWholeSecond() async throws {
       let cases: [(Double, Double)] = [
-        (0, 0), (0.25, 1), (0.999, 1), (0.000_5, 0), (0.000_9, 0), (0.001, 0), (0.001_1, 1),
-        (0.001_5, 1), (-0.000_5, 0), (-0.25, 0),
+        (0, 0), (0.25, 1), (0.999, 1), (0.000_5, 0), (0.000_9, 0), (0.001, 0), (0.001_000_3, 0),
+        (0.001_000_7, 1), (0.001_001, 1),
+        (0.001_1, 1), (0.001_5, 1), (-0.000_5, 0), (-0.25, 0),
       ]
       for (fraction, expected) in cases {
         let clock = TestClock(Fixture.date(6, 0))
