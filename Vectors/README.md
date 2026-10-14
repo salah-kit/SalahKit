@@ -192,7 +192,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 | `alerts/gaps.json` | Source gaps moved per alert kind: a missing Isha, a missing day, an expired timetable, a missing Friday Dhuhr with both observances, a missing sunrise, gaps of prayers without alerts, clipping |
 | `alerts/plans.json` | Notification plans: the D7 example (30 near-term + 30 at-time requests), insufficient near-term capacity, equal fire dates at the budget's edge, reminders across midnight, horizon clipping, ranges that start after or end at or before now, past-only gaps and gaps that contain now, different coverage per kind, an expired timetable, zero and negative budgets (each negative value on its own) |
 | `alerts/errors.json` | `AlertPlanningError` and the order of its checks, gap subjects included |
-| `alerts/handled.json` | Exact handled occurrences after a clock rollback: reported timestamps and their strict comparison, capacity in both selection phases, coverage with handled alerts and gaps, changed fire dates, namespaces and reminders |
+| `alerts/handled.json` | Exact excluded occurrences after a clock rollback: unconditional exclusion at and before fire dates, capacity in both selection phases, coverage with excluded alerts and gaps, changed fire dates, namespaces and reminders |
 
 **Input:**
 
@@ -209,8 +209,8 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
   "maximumReminderOffset": 7200,
   "query": {"type": "plan", "from": "<instant>", "to": "<instant>", "now": "<instant>",
             "budget": {"maxPending": 60, "nearTermWindow": 172800, "horizon": 1209600},
-            "handled": [{"id": "2026-06-02/asr/atTime", "fireDate": "<instant>",
-                         "handledAt": "<report instant>", "namespace": "prayers"}]}
+            "excluding": [{"id": "2026-06-02/asr/atTime", "fireDate": "<instant>",
+                           "namespace": "prayers"}]}
 }
 ```
 
@@ -218,7 +218,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 - **`namespace`**: the planner's namespace.
 - **`alertSettings`**: the settings closure as a table. For a subject (day, prayer, observance): use `days[day]` when the day has an entry, else the top level; then the table's `jumuah` value when the observance is `jumuah` and the table has one, else `kinds[prayer]`. A missing entry is `nil` (no alerts). Each value is `AlertSettings` JSON (RFC 0003 §4.1): every key optional, offsets in seconds, sounds `"none"`, `"system"` or `{"named": "<file>"}`.
 - **`maximumReminderOffset`**: seconds; absent means the default, 7200.
-- **`query`**: `{"type": "schedule", "from", "to"}` calls `schedule(_:namespace:from:to:maximumReminderOffset:settings:)`; `{"type": "plan", "from", "to", "now", "budget", "handled"}` calls it and then `notificationPlan(_:from: now, budget:excluding:)`. `budget` and each of its keys are optional (defaults 60, 172800 and 1209600 seconds). `handled` is optional (default empty), with unique occurrence records: `id` is `<owning day>/<prayer>/<kind>`, `fireDate` names the exact occurrence, `handledAt` is when the engine reported it, and `namespace` defaults to the input's namespace. An occurrence is excluded only when `now < handledAt` (RFC 0003 §10.2).
+- **`query`**: `{"type": "schedule", "from", "to"}` calls `schedule(_:namespace:from:to:maximumReminderOffset:settings:)`; `{"type": "plan", "from", "to", "now", "budget", "excluding"}` calls it and then `notificationPlan(_:from: now, budget:excluding:)`. `budget` and each of its keys are optional (defaults 60, 172800 and 1209600 seconds). `excluding` is optional (default empty), with unique occurrence references: `id` is `<owning day>/<prayer>/<kind>`, `fireDate` names the exact occurrence, and `namespace` defaults to the input's namespace. Every occurrence in that set is excluded unconditionally (RFC 0003 §10.3). The planner takes no report timestamps; selecting an exclusion set is the caller's policy.
 
 **Expected:**
 
@@ -233,7 +233,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 
 - **`AlertRef`**: `{"id": "2026-06-02/dhuhr/before", "fireDate": "<instant>", "event": "<instant>", "observance": "ordinary", "sound": "system"}`. `id` is the identity without its namespace, `<owning day>/<prayer>/<kind>`; `event` is the event's time.
 - **`AlertGapRef`**: `{"start", "end", "kind": "before", "day": "YYYY-MM-DD", "prayers": ["isha"], "reason": "noPublishedData"}`, half-open; `prayers` are compared as a set.
-- `alerts` and `gaps` are compared as ordered lists (RFC 0003 §4.2–§4.3 orders). `omitted` is the eligible alerts in the effective range that the budget didn't select, in schedule order: a harness derives it from the schedule, plan and handled record. Excluded handled occurrences aren't omitted and don't shorten coverage. `coverageByKind` is compared as a map. Offsets in errors are seconds.
+- `alerts` and `gaps` are compared as ordered lists (RFC 0003 §4.2–§4.3 orders). `omitted` is the eligible alerts in the effective range that the budget didn't select, in schedule order: a harness derives it from the schedule, plan and excluded set. Excluded handled occurrences aren't omitted and don't shorten coverage. `coverageByKind` is compared as a map. Offsets in errors are seconds.
 
 ## Reconciliation vectors
 

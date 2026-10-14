@@ -155,7 +155,7 @@ import Testing
     clock.now = Fixture.date(12, 0)
     engine.update(schedule)
     let plan = AlertPlanner().notificationPlan(
-      schedule, from: clock.now, excluding: engine.handledOccurrences)
+      schedule, from: clock.now, excluding: Set(engine.handledOccurrences.keys))
     #expect(plan.alerts.isEmpty)
     #expect(plan.coveredUntil == Fixture.date(13, 0))
     clock.now = now

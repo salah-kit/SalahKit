@@ -66,15 +66,28 @@ nonisolated enum AlertsDocumentationExamples {
     }
   }
 
-  /// Replanning after a clock change uses the engine's own report record.
+  /// Ordinary replans preserve a future request during the engine's early report window.
+  @MainActor
+  static func ordinaryPlan(
+    _ alerts: AlertSchedule, engine: InProcessAlertEngine, now: Date
+  ) -> NotificationPlan {
+    let planner = AlertPlanner()
+    let handledAfterNow = engine.handledOccurrences.filter { now < $0.value }
+    let normalPlan = planner.notificationPlan(
+      alerts, from: now, excluding: Set(handledAfterNow.keys))
+    return normalPlan
+  }
+
+  /// A clock change snapshots the engine's prior reports before resync marks new ones due.
   @MainActor
   static func planAfterClockChange(
     _ alerts: AlertSchedule, engine: InProcessAlertEngine, now: Date
   ) -> NotificationPlan {
     let planner = AlertPlanner()
+    let previouslyHandled = Set(engine.handledOccurrences.keys)
     engine.resync(now: now)
     let refreshedPlan = planner.notificationPlan(
-      alerts, from: now, excluding: engine.handledOccurrences)
+      alerts, from: now, excluding: previouslyHandled)
     return refreshedPlan
   }
 

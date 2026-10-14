@@ -137,12 +137,12 @@ nonisolated public struct AlertPlanner: Sendable {
   /// nearest first. Later reminders are never selected: they stay in the schedule for
   /// ``InProcessAlertEngine``.
   ///
-  /// `handledOccurrences` is an occurrence-to-report-time record, such as
-  /// ``InProcessAlertEngine/handledOccurrences``. An exact occurrence is excluded only when
-  /// `now` is earlier than its report time: the clock moved back past a report. It consumes
-  /// no capacity and doesn't shorten coverage. At or after the report time it remains
-  /// eligible, so a request still ahead during the engine's 1.5-second early window stays
-  /// pending. A changed fire date is a new occurrence. Source gaps remain unknown.
+  /// Every exact occurrence in `handledOccurrences` is excluded before selection: it consumes
+  /// no capacity and doesn't shorten coverage. A changed fire date is a new occurrence;
+  /// source gaps remain unknown. The caller chooses the excluded set. On a clock change,
+  /// snapshot ``InProcessAlertEngine/handledOccurrences``'s keys before resyncing; during an
+  /// ordinary replan, exclude only records whose report times are after `now`, preserving a
+  /// still-future system request for an alert reported in the engine's early window.
   ///
   /// Each kind's coverage ends at its first alert left out, at the first instant a gap could
   /// hide one (a gap that holds `now` ends it at `now`; one entirely before `now` doesn't
@@ -150,7 +150,7 @@ nonisolated public struct AlertPlanner: Sendable {
   /// schedule's range starts after `now`.
   public func notificationPlan(
     _ schedule: AlertSchedule, from now: Date, budget: AlertBudget = AlertBudget(),
-    excluding handledOccurrences: [AlertOccurrenceID: Date] = [:]
+    excluding handledOccurrences: Set<AlertOccurrenceID> = []
   ) -> NotificationPlan {
     let allowance = max(0, budget.maxPending)
     let requested = schedule.requestedRange
@@ -162,7 +162,7 @@ nonisolated public struct AlertPlanner: Sendable {
     let inRange = schedule.alerts
       .filter {
         now <= $0.fireDate && $0.fireDate < effectiveEnd
-          && !(handledOccurrences[$0.occurrenceID].map { now < $0 } ?? false)
+          && !handledOccurrences.contains($0.occurrenceID)
       }
       .sorted(by: PlannedAlert.precedes)
     // Sorted by fire date, the near-term alerts are a prefix.

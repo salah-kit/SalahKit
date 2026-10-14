@@ -291,7 +291,7 @@ def alert_schedule(source, namespace, start_, end_, maximum, table):
 # The notification plan (RFC 0003 §4.4) -------------------------------------------------------
 
 
-def notification_plan(schedule, now, budget, handled=()):
+def notification_plan(schedule, now, budget, excluding=()):
     max_pending = max(0, budget["maxPending"])
     near = timedelta(seconds=max(0, budget["nearTermWindow"]))
     horizon = timedelta(seconds=max(0, budget["horizon"]))
@@ -300,7 +300,7 @@ def notification_plan(schedule, now, budget, handled=()):
     near_end = min(now + near, effective_end)
 
     excluded = {(h.get("namespace", schedule["namespace"]), h["id"], parse_instant(h["fireDate"]))
-                for h in handled if now < parse_instant(h["handledAt"])}
+                for h in excluding}
     in_range = [a for a in schedule["alerts"] if now <= a["fireDate"] < effective_end
                 and (schedule["namespace"], f"{a['day']}/{a['prayer']}/{a['kind']}",
                      a["fireDate"]) not in excluded]

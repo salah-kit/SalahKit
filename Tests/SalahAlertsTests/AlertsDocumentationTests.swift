@@ -67,6 +67,31 @@ import Testing
     #expect(plan.coveredUntil == Fixture.date(13, 0))
   }
 
+  @Test @MainActor func theArticleKeepsNewEarlyRequestsButExcludesPriorClockChangeReports() throws {
+    let fireDate = Fixture.time(.dhuhr)
+    let clock = ManualAlertClock(fireDate.addingTimeInterval(-60))
+    let engine = InProcessAlertEngine(clock: clock) { _ in }
+    let alerts = try Fixture.alerts(
+      from: Fixture.date(12, 0), to: Fixture.date(13, 0),
+      settings: Fixture.settings(AlertSettings(), for: [.dhuhr]))
+    engine.update(alerts)
+    clock.now = fireDate.addingTimeInterval(-1)
+    // A clock change with no prior report discovers an early alert and keeps its request.
+    let newlyDue = AlertsDocumentationExamples.planAfterClockChange(
+      alerts, engine: engine, now: clock.now)
+    #expect(newlyDue.alerts == alerts.alerts)
+    #expect(engine.handledOccurrences.count == 1)
+    // An ordinary replan half a second later still preserves that pending request.
+    clock.now = fireDate.addingTimeInterval(-0.5)
+    let ordinary = AlertsDocumentationExamples.ordinaryPlan(alerts, engine: engine, now: clock.now)
+    #expect(ordinary.alerts == alerts.alerts)
+    // A clock-change snapshot excludes it regardless of the relation to its report time.
+    let clockChange = AlertsDocumentationExamples.planAfterClockChange(
+      alerts, engine: engine, now: clock.now)
+    #expect(clockChange.alerts.isEmpty)
+    #expect(clockChange.coveredUntil == Fixture.date(13, 0))
+  }
+
   /// The contents of a document's fenced Swift blocks, in order.
   nonisolated static func swiftBlocks(in path: String) throws -> [String] {
     let text = try String(contentsOf: root.appendingPathComponent(path), encoding: .utf8)

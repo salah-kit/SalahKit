@@ -175,30 +175,46 @@ finishes. After a sleep, the system can still hold a caught-up alert's request a
 has passed, and the alert gets no notification. After the `apply`, `deliver` posts it, or skips
 it when the system delivered it meanwhile. `Examples/MenuBar` does this.
 
-When the clock moves back, an occurrence the engine already reported can be ahead again.
-Pass ``InProcessAlertEngine/handledOccurrences`` to the planner while rebuilding the system
-plan:
+During an ordinary replan, select occurrences from
+``InProcessAlertEngine/handledOccurrences`` whose report times are after the planning instant:
 
 ```swift
-engine.resync(now: now)
-let refreshedPlan = planner.notificationPlan(
-  alerts, from: now, excluding: engine.handledOccurrences)
+let handledAfterNow = engine.handledOccurrences.filter { now < $0.value }
+let normalPlan = planner.notificationPlan(
+  alerts, from: now, excluding: Set(handledAfterNow.keys))
 ```
 
-The record maps exact occurrences (identity and fire date) to their report times. The planner
-excludes one only when `now` is earlier than that report time, before allocating requests or
-computing coverage. Exclusions consume no budget and create no coverage hole. A changed fire
-date stays eligible, and source gaps still shorten coverage. `Examples/MenuBar` uses this
-record on every replan.
+This preserves a future system request when the engine reported its alert up to 1.5 seconds
+early. Wake, activation and time-zone events use this ordinary selection too.
+
+For a clock change, capture all previously reported keys **before** calling `resync` or
+`update`, then exclude those exact occurrences while rebuilding the system plan:
+
+```swift
+let previouslyHandled = Set(engine.handledOccurrences.keys)
+engine.resync(now: now)
+let refreshedPlan = planner.notificationPlan(
+  alerts, from: now, excluding: previouslyHandled)
+```
+
+An alert reported at `T − 1 second`, delivered by the system at `T`, can become future again
+when the clock rolls back to `T − 0.5 seconds`. That instant is after the report time, so a
+timestamp comparison alone would reinstall its request. The snapshot prevents this replay;
+alerts newly reported during the resync remain eligible so their future requests survive.
+`Examples/MenuBar` uses this distinction on every replan.
+
+The planner excludes every exact occurrence supplied by the caller, before allocating
+requests or computing coverage. Exclusions consume no budget and create no coverage hole. A
+changed fire date stays eligible, and source gaps still shorten coverage. The engine's record
+maps exact occurrences (identity and fire date) to their report times; the planner takes a set
+of keys and never infers which records an app wants excluded.
 
 The engine records the report before its callback and keeps it for one day after reporting
 (longer for a grace longer than a day), pruning it on updates and resyncs. It is in memory and
 doesn't establish system delivery. A relaunch or a rollback after the record expired can't use
-it to prevent replay. At the report time or later, an alert reported up to 1.5 seconds early
-remains selectable until its fire date, preserving its pending request. If the clock moves
-back before that early report before the system actually delivers, the planner excludes the
-occurrence too: the record proves the engine reported it, not that a banner was presented.
-Keep delivering due alerts after the latest `apply`, as above.
+it to prevent replay. A clock-change snapshot can exclude a previously reported early alert
+whose system request has not delivered yet: the record proves the engine reported it, not
+that a banner was presented. Keep delivering due alerts after the latest `apply`, as above.
 
 ### What the package doesn't promise
 

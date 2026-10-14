@@ -167,7 +167,7 @@ nonisolated public struct AlertPlanner: Sendable {
     throws(AlertPlanningError) -> AlertSchedule
   public func notificationPlan(_ schedule: AlertSchedule, from now: Date,
                                budget: AlertBudget = AlertBudget(),
-                               excluding handledOccurrences: [AlertOccurrenceID: Date] = [:])
+                               excluding handledOccurrences: Set<AlertOccurrenceID> = [])
     -> NotificationPlan
 }
 
@@ -325,7 +325,7 @@ Each interval is clipped to the requested range; empty ones are dropped. Interva
 
 ### 4.4 The notification plan
 
-`notificationPlan(_:from: now, budget:excluding:)` selects the requests for an operating system that keeps a limited number, and says how far the selection is complete (§7.5). Negative budget values count as zero. The optional handled-occurrence record excludes exact occurrences only while `now` precedes their report times, before selection and coverage (§10.2).
+`notificationPlan(_:from: now, budget:excluding:)` selects the requests for an operating system that keeps a limited number, and says how far the selection is complete (§7.5). Negative budget values count as zero. The optional set excludes every exact occurrence it contains, before selection and coverage; choosing that set is the caller's policy (§10.3).
 
 **Effective range.** `[now, E)` with `E = max(now, min(requestedRange.end, now + horizon))`. Only alerts with a fire date in it can be selected. A requested range that ends at or before `now` gives an empty effective range and an empty plan. The near-term window is `[now, N)` with `N = min(now + nearTermWindow, E)`, so a window longer than the horizon can't extend the plan.
 
@@ -500,7 +500,7 @@ The table also contradicted itself on that message, and the code counted the fir
 
 ## 8. Evidence
 
-- **Vectors.** 69 alert-planning vectors (`Vectors/alerts/`) and 60 reconciliation vectors (`Vectors/reconciliation/`), generated from a model of this RFC; the original 60 planning vectors were written before the implementation and recomputed by independent reviewers (§7), and nine handled-occurrence vectors follow §10.2. `AlertVectorTests` runs the alert vectors on every platform, Linux included; `ReconciliationVectorTests` runs the reconciliation vectors where UserNotifications exists.
+- **Vectors.** 69 alert-planning vectors (`Vectors/alerts/`) and 60 reconciliation vectors (`Vectors/reconciliation/`), generated from a model of this RFC; the original 60 planning vectors were written before the implementation and recomputed by independent reviewers (§7), and nine excluded-occurrence vectors follow §10.3. `AlertVectorTests` runs the alert vectors on every platform, Linux included; `ReconciliationVectorTests` runs the reconciliation vectors where UserNotifications exists.
 - **Characterization.** A2's tests of Salah's `PrayerAlertScheduler`, ported as `CharacterizationPortTests` with the outcomes §6 lists.
 - **Unit tests.**
   - `AlertPlannerTests` covers the planner.
@@ -536,7 +536,7 @@ The table also contradicted itself on that message, and the code counted the fir
    - `reconciliation.namespaces.duplicate-identity-to-deliver`: the repeated identity has two fire dates, so rejecting only a repeated occurrence fails it.
    - Wording only: `alerts.schedule.offsets-at-the-maximum`, `alerts.schedule.offset-at-the-maximum-on-the-range-end`, `alerts.schedule.reminders-of-events-outside-the-range`, `alerts.plan.negative-budget-counts-as-zero`, `alerts.errors.jumuah-gap-subject`.
 
-2. **0.4.0, handled occurrences after a clock rollback (#16).** `InProcessAlertEngine.handledOccurrences` is a read-only `[AlertOccurrenceID: Date]` record of report times, updated before `onDue`. It replaces the private deduplication set. Retention increases from three hours after the fire date to one day after the report time, extended to `max(86400, atTimeGrace + 60, reminderGrace + 60)` seconds for longer graces; each check drops records at that age or older. This removes Salah's one-day app-owned workaround and serves a second consumer, `Examples/MenuBar`, which passes the record on every replan.
+2. **Initial 0.4.0 amendment, handled occurrences after a clock rollback (#16); planner policy superseded by §10.3.** `InProcessAlertEngine.handledOccurrences` is a read-only `[AlertOccurrenceID: Date]` record of report times, updated before `onDue`. It replaces the private deduplication set. Retention increases from three hours after the fire date to one day after the report time, extended to `max(86400, atTimeGrace + 60, reminderGrace + 60)` seconds for longer graces; each check drops records at that age or older. This removes Salah's one-day app-owned workaround and serves a second consumer, `Examples/MenuBar`, which passes the record on every replan.
 
    `AlertPlanner.notificationPlan(_:from:budget:excluding:)` adds a default-empty handled-occurrence record. For each alert it excludes an exact occurrence only if `now < handledOccurrences[occurrenceID]`. Exclusion precedes both near-term reservation and at-time fill, consumes no allowance and creates no coverage hole. Coverage still lists every kind present in the schedule, and source gaps still shorten it. A changed fire date or namespace is a different occurrence. At equal or later report time, a future request stays eligible: an engine report in the 1.5-second early window must not remove a pending system request during a normal replan. Existing call sites keep their behavior with the empty default.
 
@@ -545,3 +545,15 @@ The table also contradicted itself on that message, and the code counted the fir
    No existing vector changes. Nine new vectors in `alerts/handled.json` pin rollback, capacity in both selection phases, complete coverage when all alerts are handled, strict report-time comparison at and after an early report, changed fire dates, foreign namespaces, reminders, and gaps. Engine tests pin callback ordering and retention boundaries. The MenuBar regression failed before the fix because Asr was planned and pending again after a clock rollback; the new API removes that request. A second MenuBar test preserves its pending request during early delivery and a same-moment replan.
 
    The one-week RFC comment window is waived under `proposal/AMENDMENTS.md`, Amendment 11. Later API changes follow the normal RFC process.
+
+3. **0.4.0 review correction: early-window replay (#18).** An engine report at `T − 1 second`, a system delivery at `T`, and a clock rollback to `T − 0.5 seconds` left the old timestamp-based exclusion empty: the new planning instant was still after the report time. `apply` reinstalled the already-delivered request. The hosted MenuBar regression reproduced this exact pending-to-delivered transition and failed on both the resulting plan and the pending center before the correction.
+
+   The planner's `excluding` argument is now `Set<AlertOccurrenceID> = []`. It excludes every supplied exact occurrence unconditionally, before capacity allocation and coverage, with no timestamp comparison. The engine still exposes `[AlertOccurrenceID: Date]` and retains the report times under §4.6. An empty default keeps existing call behavior; changed dates and namespaces remain distinct occurrences, and gaps stay unknown.
+
+   The caller selects the set according to its event. An ordinary replan, wake, activation or time-zone change uses only records whose report times are after `now`. This preserves a future system request during the early report window. For an actual clock-change notification, capture **all previously handled keys before any `resync` or `update`**, then pass those keys to the replan (unioned with ordinary exclusions). Reports newly created during that event remain eligible. Taking that snapshot on a mere wake or time-zone change would remove a previously early-reported request before its system delivery, so those events deliberately use the ordinary policy. Both Salah and `Examples/MenuBar` use the clock-change snapshot; the public package needs no app-specific event type.
+
+   A snapshot proves prior engine reporting, not system presentation. It can exclude an early-reported occurrence whose system request hasn't delivered yet. One-day retention, relaunch limits and asynchronous delivery limits from §10.2 still apply; callers keep due delivery after the latest `apply`.
+
+   The nine new `alerts/handled.json` vectors now use occurrence-only `query.excluding` instead of timestamp-bearing `query.handled`. The two early-window vectors become `at-fire-date-excludes` and `early-window-rollback-excludes`, with excluded alerts resolved through the range's end, rather than retained. The other seven preserve their selection and coverage expectations under explicit set exclusion. Every one of the original 120 alert/reconciliation vectors stays unchanged. Compiled DocC examples exercise ordinary selection, newly due early reports and clock-change snapshots. Hosted MenuBar tests pin the exact replay sequence, an ordinary early replan, and wake/time-zone preservation at the same early instant.
+
+   The one-week comment window is waived under Amendment 11, as for §10.2; later API changes follow the normal RFC process.

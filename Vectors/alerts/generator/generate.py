@@ -194,7 +194,7 @@ def alert_vector(file, description, vid, text, provenance, location, source, set
         else:
             budget = {"maxPending": 60, "nearTermWindow": 2 * DAY, "horizon": 14 * DAY}
             budget.update(query.get("budget", {}))
-            plan = notification_plan(schedule, t(query["now"]), budget, query.get("handled", []))
+            plan = notification_plan(schedule, t(query["now"]), budget, query.get("excluding", []))
             expected = {
                 "effectiveRange": [iso(plan["effectiveRange"][0], zone),
                                    iso(plan["effectiveRange"][1], zone)],
@@ -220,8 +220,8 @@ PLANS = ("Notification plans (RFC 0003 §4.4): near-term reservation, at-time fi
          "equal-time ties, the horizon, ranges that start after or end before now, and coverage "
          "per alert kind with source gaps.")
 ERRORS = "Planning errors (RFC 0003 §4.3), in the order they are checked."
-HANDLED = ("Notification plans after a clock rollback (RFC 0003 §10.2): exact handled "
-           "occurrences, reported timestamps, request capacity and coverage.")
+HANDLED = ("Notification plans after a clock rollback (RFC 0003 §10.3): exact excluded "
+           "occurrences, request capacity and coverage.")
 
 
 def q_schedule(start_, end_):
@@ -629,63 +629,59 @@ def handled_vectors():
     start_ = "2026-06-02T15:00:00+03:00"
     end_ = "2026-06-02T21:00:00+03:00"
     now = "2026-06-02T15:15:00+03:00"
-    record = {"id": "2026-06-02/asr/atTime", "fireDate": "2026-06-02T15:35:00+03:00",
-              "handledAt": "2026-06-02T15:35:01+03:00"}
-    provenance = "RFC 0003 §10.2 (#16): reported occurrences excluded only before handledAt."
+    occurrence = {"id": "2026-06-02/asr/atTime", "fireDate": "2026-06-02T15:35:00+03:00"}
+    provenance = "RFC 0003 §10.3 (#18): exclude every exact occurrence supplied by the caller."
 
-    def query(instant=now, records=None, **budget):
+    def query(instant=now, excluded=None, **budget):
         value = q_plan(start_, end_, instant, **budget)
-        value["handled"] = [record] if records is None else records
+        value["excluding"] = [occurrence] if excluded is None else excluded
         return value
 
     result = v("alerts.handled.rollback-does-not-spend-capacity",
-               "Asr was reported at 15:35:01; the clock is back at 15:15. The allowance of "
-               "one selects Maghrib, not Asr; coverage ends at Isha, not at the handled Asr.",
+               "Asr was handled and is explicitly excluded after a clock rollback to 15:15. "
+               "The allowance of one selects Maghrib, not Asr; coverage ends at Isha.",
                provenance, MAKKAH, makkah(), AT_TIME_ONLY, query(maxPending=1))
     assert [a["id"] for a in result["alerts"]] == ["2026-06-02/maghrib/atTime"]
     assert result["coveredUntil"] == "2026-06-02T20:30:00+03:00"
 
     only_asr = {"kinds": {"asr": every()}}
     result = v("alerts.handled.all-resolved-with-no-budget",
-               "Only Asr is enabled and it was handled. Even with no request allowance, "
+               "Only Asr is enabled and it is excluded. Even with no request allowance, "
                "the whole effective range is complete: no pending alert remains to omit.",
                provenance, MAKKAH, makkah(), only_asr, query(maxPending=0))
     assert result["alerts"] == [] and result["omitted"] == []
     assert result["coveredUntil"] == end_
 
-    early = {**record, "handledAt": "2026-06-02T15:34:59+03:00"}
-    v("alerts.handled.at-report-time-keeps-early-request",
-      "The engine reports Asr a second early. Replanning at exactly that reported time "
-      "keeps Asr's future system request; no clock rollback preceded its report.",
+    v("alerts.handled.at-fire-date-excludes",
+      "The planning instant is exactly Asr's fire date. An explicit excluded occurrence "
+      "isn't selected, even though an alert at now is otherwise in the effective range.",
+      provenance, MAKKAH, makkah(), only_asr, query(instant=occurrence["fireDate"]))
+    v("alerts.handled.early-window-rollback-excludes",
+      "Asr was reported a second early, delivered at 15:35, and the clock returned to "
+      "15:34:59.500. The caller's prior-report snapshot excludes this occurrence even "
+      "though the planning instant is after the report time; the planner doesn't compare it.",
       provenance, MAKKAH, makkah(), only_asr,
-      query(instant=early["handledAt"], records=[early]))
-    v("alerts.handled.after-report-time-keeps-early-request",
-      "Half a second after Asr's early report, its fire date is still ahead. Its system "
-      "request remains selectable; a handled record alone doesn't suppress it.",
-      provenance, MAKKAH, makkah(), only_asr,
-      query(instant="2026-06-02T15:34:59.500+03:00", records=[early]))
+      query(instant="2026-06-02T15:34:59.500+03:00"))
 
     moved = makkah(changes={"2026-06-02": {"times": {**MAKKAH_TIMES, "asr": "15:40"}}})
     v("alerts.handled.changed-fire-date-is-new-occurrence",
-      "Asr was handled at 15:35 and recalculated to 15:40. The clock is back at 15:15; "
-      "the same logical identity at the new fire date remains selectable.",
+      "The caller excludes Asr at 15:35, but Asr is recalculated to 15:40. The same "
+      "logical identity at the new fire date remains selectable.",
       provenance, MAKKAH, moved, only_asr, query())
     v("alerts.handled.another-namespace-does-not-exclude",
-      "A handled Asr with the same owning day, kind and fire date in another namespace "
+      "An excluded Asr with the same owning day, kind and fire date in another namespace "
       "doesn't exclude this schedule's Asr.",
       provenance, MAKKAH, makkah(), only_asr,
-      query(records=[{**record, "namespace": "other"}]))
+      query(excluded=[{**occurrence, "namespace": "other"}]))
 
-    before = {**record, "id": "2026-06-02/asr/before",
-              "fireDate": "2026-06-02T15:25:00+03:00",
-              "handledAt": "2026-06-02T15:25:01+03:00"}
+    before = {"id": "2026-06-02/asr/before", "fireDate": "2026-06-02T15:25:00+03:00"}
     v("alerts.handled.reminder-leaves-room-for-at-time",
-      "Asr's before-reminder was reported, its at-time alert wasn't. A budget of one "
+      "Asr's before-reminder is excluded, its at-time alert isn't. A budget of one "
       "selects the at-time alert with complete coverage of both kinds to 21:00.",
       provenance, MAKKAH, makkah(), {"kinds": {"asr": every(before=600)}},
-      query(records=[before], maxPending=1))
+      query(excluded=[before], maxPending=1))
     v("alerts.handled.source-gap-still-shortens-coverage",
-      "Asr is now missing from the source. Its old handled occurrence resolves no source "
+      "Asr is now missing from the source. Its excluded old occurrence resolves no source "
       "gap: an unknown changed fire date could still be ahead, so coverage ends at now.",
       provenance, MAKKAH, makkah(changes={"2026-06-02": {"drop": ["asr"]}}),
       only_asr, query())

@@ -100,7 +100,7 @@ nonisolated struct AlertVector: Sendable, CustomTestStringConvertible {
         if let value = json["horizon"]?.number { budget.horizon = .seconds(value) }
       }
       let now = try query.required("now").instant()
-      let handled = try handledOccurrences(query, namespace: namespace)
+      let handled = try excludedOccurrences(query, namespace: namespace)
       let plan = AlertPlanner().notificationPlan(
         alertSchedule, from: now, budget: budget, excluding: handled)
       try checkPlan(plan, schedule: alertSchedule, now: now, handled: handled, context)
@@ -111,7 +111,7 @@ nonisolated struct AlertVector: Sendable, CustomTestStringConvertible {
 
   func checkPlan(
     _ plan: NotificationPlan, schedule: AlertSchedule, now: Date,
-    handled: [AlertOccurrenceID: Date], _ context: String
+    handled: Set<AlertOccurrenceID>, _ context: String
   ) throws {
     let expected = vector.expected
     #expect(plan.namespace == schedule.namespace, "\(context): plan namespace")
@@ -124,7 +124,7 @@ nonisolated struct AlertVector: Sendable, CustomTestStringConvertible {
     let omitted = schedule.alerts.filter {
       plan.effectiveRange.start <= $0.fireDate && $0.fireDate < plan.effectiveRange.end
         && !selected.contains($0.occurrenceID)
-        && !(handled[$0.occurrenceID].map { now < $0 } ?? false)
+        && !handled.contains($0.occurrenceID)
     }
     let expectedOmitted = try expected.required("omitted").requiredArray()
     #expect(
@@ -151,17 +151,16 @@ nonisolated struct AlertVector: Sendable, CustomTestStringConvertible {
 
   // MARK: Invariants every schedule keeps, whatever the vector checks
 
-  func handledOccurrences(_ query: JSON, namespace: String) throws -> [AlertOccurrenceID: Date] {
-    var result: [AlertOccurrenceID: Date] = [:]
-    for record in try query["handled"]?.requiredArray() ?? [] {
+  func excludedOccurrences(_ query: JSON, namespace: String) throws -> Set<AlertOccurrenceID> {
+    var result: Set<AlertOccurrenceID> = []
+    for record in try query["excluding"]?.requiredArray() ?? [] {
       let owner = try record["namespace"]?.requiredString() ?? namespace
       let reference = try record.required("id").requiredString()
       let identity = try #require(
         NotificationIdentity(requestIdentifier: "\(owner)/\(reference)", prefix: ""))
       let occurrence = AlertOccurrenceID(
         notification: identity, fireDate: try record.required("fireDate").instant())
-      #expect(result[occurrence] == nil, "handled occurrences are unique")
-      result[occurrence] = try record.required("handledAt").instant()
+      #expect(result.insert(occurrence).inserted, "excluded occurrences are unique")
     }
     return result
   }

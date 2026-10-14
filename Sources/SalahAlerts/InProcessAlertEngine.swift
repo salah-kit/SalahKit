@@ -108,9 +108,11 @@ nonisolated public struct CatchUpPolicy: Hashable, Sendable {
   /// The occurrences reported to `onDue`, with the instant each was reported.
   ///
   /// Records are added before `onDue` runs and pruned on each update or resync once they are
-  /// a day old (longer for a grace longer than a day). Pass this record to
-  /// ``AlertPlanner/notificationPlan(_:from:budget:excluding:)`` when replanning after a clock
-  /// change, so a clock set back doesn't request an occurrence a second time.
+  /// a day old (longer for a grace longer than a day). On a clock change, snapshot its keys
+  /// before resyncing and pass that set to
+  /// ``AlertPlanner/notificationPlan(_:from:budget:excluding:)``. An ordinary replan excludes
+  /// only keys reported after its planning instant, preserving pending requests in the early
+  /// delivery window. Newly due reports remain eligible during the event's replan.
   ///
   /// This is an in-memory record of the engine's reports, not proof of system delivery.
   public private(set) var handledOccurrences: [AlertOccurrenceID: Date] = [:]

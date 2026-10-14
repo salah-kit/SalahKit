@@ -245,6 +245,71 @@ struct AlertCoordinatorTests {
     #expect(rig.player.plays.count == 1)
   }
 
+  @Test("an early-reported alert isn't re-requested after delivery and a half-second rollback")
+  func deliveredEarlyReportDoesNotReturnToThePendingPlan() async throws {
+    let asr = try Fixture.event(.asr)
+    let rig = Rig(at: asr.time.addingTimeInterval(-60), settings: Self.settings(reminder: nil))
+    rig.coordinator.replan()
+    await rig.coordinator.waitForApply()
+    let request = try Self.asrAlert(rig)
+    let alert = try #require(
+      rig.coordinator.engineSchedule?.alerts.first { Self.identifier($0) == request })
+
+    // T - 1: the engine reports early, while the system still holds its future request.
+    rig.clock.jump(to: asr.time.addingTimeInterval(-1))
+    rig.systemCenter.post(name: .NSSystemClockDidChange, object: nil)
+    await rig.coordinator.waitForApply()
+    #expect(rig.player.plays.count == 1)
+    #expect(rig.center.pendingIdentifiers.contains(request))
+
+    // T: model the system's delivery, which moves the request out of the pending list.
+    rig.clock.jump(to: asr.time)
+    await rig.center.removePendingNotificationRequests(withIdentifiers: [request])
+    try await rig.center.add(
+      UNNotificationRequest(
+        identifier: request,
+        content: AlertContent(strings: MenuBarStrings(language: .english)).make(alert),
+        trigger: nil))
+    #expect(rig.center.deliveredIdentifiers == [request])
+    #expect(!rig.center.pendingIdentifiers.contains(request))
+
+    // T - 0.5 is still after the early report, so comparing only with handledAt repeats it.
+    rig.clock.jump(to: asr.time.addingTimeInterval(-0.5))
+    rig.systemCenter.post(name: .NSSystemClockDidChange, object: nil)
+    await rig.coordinator.waitForApply()
+    #expect(rig.coordinator.plan?.alerts.contains { Self.identifier($0) == request } == false)
+    #expect(!rig.center.pendingIdentifiers.contains(request))
+    #expect(rig.center.deliveredIdentifiers == [request])
+    #expect(rig.player.plays.count == 1)
+  }
+
+  @Test(
+    "a wake or time zone change preserves an early-reported alert's pending request",
+    arguments: [SystemEvent.wake, .timeZoneChange])
+  func ordinarySystemEventsKeepAnEarlyPendingRequest(_ event: SystemEvent) async throws {
+    let asr = try Fixture.event(.asr)
+    let rig = Rig(at: asr.time.addingTimeInterval(-60), settings: Self.settings(reminder: nil))
+    rig.coordinator.replan()
+    await rig.coordinator.waitForApply()
+    let request = try Self.asrAlert(rig)
+    rig.clock.jump(to: asr.time.addingTimeInterval(-1))
+    rig.systemCenter.post(name: .NSSystemClockDidChange, object: nil)
+    await rig.coordinator.waitForApply()
+    #expect(rig.player.plays.count == 1)
+    #expect(rig.center.pendingIdentifiers.contains(request))
+
+    if event == .wake {
+      rig.workspaceCenter.post(name: SystemEventObserver.didWake, object: nil)
+    } else {
+      rig.systemCenter.post(name: .NSSystemTimeZoneDidChange, object: nil)
+    }
+    await rig.coordinator.waitForApply()
+    #expect(rig.coordinator.plan?.alerts.contains { Self.identifier($0) == request } == true)
+    #expect(rig.center.pendingIdentifiers.contains(request))
+    #expect(rig.center.deliveredIdentifiers.isEmpty)
+    #expect(rig.player.plays.count == 1)
+  }
+
   @Test("the observer listens for NSWorkspace's wake notification by its real name")
   func wakeName() {
     #expect(SystemEventObserver.didWake == NSWorkspace.didWakeNotification)
