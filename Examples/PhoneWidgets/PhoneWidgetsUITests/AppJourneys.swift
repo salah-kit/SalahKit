@@ -41,6 +41,24 @@ nonisolated final class AppJourneys: JourneyCase {
     XCTAssertEqual(label("save.status", in: again), "لم يُحفظ شيء في هذه الجلسة.")
   }
 
+  /// 1b. Launch arguments apply once: the last change made after a launch with arguments
+  /// survives a relaunch without them. (The app once made its store in a view's initializer;
+  /// SwiftUI ran it again when the language changed, and the discarded store saved the launch
+  /// arguments over the change.)
+  @MainActor
+  func testLaunchArgumentsApplyOnce() {
+    let app = launch(["-place", "makkah", "-method", "ummAlQura", "-language", "en"], clean: true)
+    XCTAssertEqual(label("save.status", in: app), "Save 1: changed, widget reload requested.")
+    chooseLanguage("العربية", in: app)
+    XCTAssertEqual(
+      label("save.status", in: app), "الحفظ ٢: تغيّرت الإعدادات، وطُلبت إعادة تحميل الأداة.")
+    let changed = label("settings.fingerprint", in: app)
+    app.terminate()
+    let again = launch([])
+    XCTAssertEqual(label("settings.fingerprint", in: again), changed)
+    XCTAssertEqual(label("save.status", in: again), "لم يُحفظ شيء في هذه الجلسة.")
+  }
+
   /// 2. The widget's views for every state, in English: setup required, normal, partial (a
   /// partial day, and an unknown next prayer), unavailable and expired.
   @MainActor
@@ -56,7 +74,8 @@ nonisolated final class AppJourneys: JourneyCase {
     let normal = state("normal", .medium, in: app)
     XCTAssertEqual(text("widget.next.name", in: normal), "Asr")
     XCTAssertEqual(text("widget.place", in: normal), "Makkah")
-    XCTAssertTrue(normal.descendants(matching: .any)["widget.next.countdown"].exists)
+    // In the app the countdown is the time left at the entry's moment: 14:00 to Asr at 15:27.
+    XCTAssertTrue(text("widget.next.countdown", in: normal).contains("27"))
     XCTAssertTrue(text("widget.row.fajr", in: normal).hasPrefix("Fajr"))
 
     // Tromsø's partial day: the known times, what can't be calculated, and a real countdown to
@@ -69,7 +88,8 @@ nonisolated final class AppJourneys: JourneyCase {
       "Fajr, Sunrise, Maghrib, and Isha: can't be calculated today.")
     XCTAssertTrue(text("widget.row.dhuhr", in: partial).hasPrefix("Dhuhr"))
     XCTAssertFalse(partial.descendants(matching: .any)["widget.row.isha"].exists)
-    XCTAssertTrue(partial.descendants(matching: .any)["widget.next.countdown"].exists)
+    // 15:00 to Asr at 17:58.
+    XCTAssertTrue(text("widget.next.countdown", in: partial).contains("58"))
 
     // An unknown next prayer reads as unknown, with no countdown.
     let unknown = state("unknownNext", .large, in: app)

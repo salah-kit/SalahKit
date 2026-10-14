@@ -175,6 +175,7 @@ private struct NoticeView: View {
 /// A known state: the next prayer from SalahUI's `NextPrayerView`, the day from its
 /// `PrayerTimesList`, and the app's note for what isn't known.
 private struct TimesView: View {
+  @Environment(\.widgetCountdownMode) private var countdownMode
   let times: TimesDisplay
   let context: EntryContext
   let wording: WidgetWording
@@ -226,7 +227,8 @@ private struct TimesView: View {
   }
 
   private var next: NextPrayerView {
-    NextPrayerView(state: times.state, names: strings.names, timeZone: zone)
+    NextPrayerView(
+      state: times.state, names: strings.names, timeZone: zone, countdown: countdownMode)
   }
 
   private var placeLine: some View {
@@ -251,9 +253,11 @@ private struct TimesView: View {
   @ViewBuilder private func dayList(font: Font) -> some View {
     if let day = times.day {
       VStack(alignment: .leading, spacing: 2) {
-        PrayerTimesList(day: day, state: times.state, names: strings.names)
-          .prayerRowStyle(WidgetRowStyle(palette: palette))
-          .font(font)
+        PrayerTimesList(
+          day: day, state: times.state, names: strings.names, countdown: countdownMode
+        )
+        .prayerRowStyle(WidgetRowStyle(palette: palette))
+        .font(font)
         if family == .systemMedium {
           note
         }
@@ -432,4 +436,18 @@ private struct WidgetRowStyle: PrayerRowStyle {
     .accessibilityElement(children: .combine)
     .accessibilityIdentifier("widget.row.\(configuration.event.kind.rawValue)")
   }
+}
+
+extension EnvironmentValues {
+  /// How the widget's countdowns update: live in the extension, where WidgetKit draws them
+  /// against the real clock; the time left at the entry's date when the app draws an entry of
+  /// a fixed moment, such as on the Widget states screen.
+  var widgetCountdownMode: PrayerCountdown.Mode {
+    get { self[WidgetCountdownModeKey.self] }
+    set { self[WidgetCountdownModeKey.self] = newValue }
+  }
+}
+
+private struct WidgetCountdownModeKey: EnvironmentKey {
+  static var defaultValue: PrayerCountdown.Mode { .live }
 }

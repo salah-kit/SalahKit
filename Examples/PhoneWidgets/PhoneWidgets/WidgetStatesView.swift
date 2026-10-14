@@ -132,6 +132,12 @@ struct WidgetFrame: View {
   @Environment(\.colorScheme) private var colorScheme
 
   var body: some View {
+    frame
+      // The entry is a fixed moment; a live timer would count from the real clock instead.
+      .environment(\.widgetCountdownMode, .staticText)
+  }
+
+  @ViewBuilder private var frame: some View {
     let size = Self.size(of: family)
     if family.isAccessory {
       PrayerWidgetView(entry: entry, family: family)

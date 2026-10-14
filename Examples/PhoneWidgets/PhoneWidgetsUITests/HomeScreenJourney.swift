@@ -86,8 +86,19 @@ nonisolated final class HomeScreenJourney: JourneyCase {
     }
     goBack(in: app)
 
-    // (d) The unavailable view: invalid coordinates, in English.
+    // Back to English. WidgetKit lets the first reload of a foreground session through at
+    // once and holds later ones until the app goes to the background (or about 90 seconds), so
+    // the journey goes to the Home Screen after each change it waits for.
     chooseLanguage("English", in: app)
+    XCTAssertEqual(label("save.status", in: app), "Save 4: changed, widget reload requested.")
+    XCTAssertEqual(
+      waitForRecord(of: app, fingerprint: label("settings.fingerprint", in: app)).fajrName, "Fajr")
+    goBack(in: app)
+    showWidget(on: springboard)
+    XCTAssertTrue(widgetText("widget.row.fajr", in: springboard).hasPrefix("Fajr"))
+
+    // (d) The unavailable view: invalid coordinates.
+    app.activate()
     pick("Invalid coordinates", from: "settings.place", of: app)
     XCTAssertEqual(label("save.status", in: app), "Save 5: changed, widget reload requested.")
     let invalid = waitForRecord(of: app, fingerprint: label("settings.fingerprint", in: app))
