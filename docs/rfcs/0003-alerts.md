@@ -1,6 +1,6 @@
 # RFC 0003: SalahAlerts
 
-- **Status:** Draft, shipped in 0.2.0. `CalculatedPhone` schedules alerts through it, and `MenuBar` (0.3.0) runs the in-process engine beside the scheduler; The retained-exclusion amendment ships in 0.4.0, used by MenuBar and Salah 1.1.0. Open until shipped apps report (STANDARD.md, Releases).
+- **Status:** Draft, shipped in 0.2.0. `CalculatedPhone` schedules alerts through it, and `MenuBar` (0.3.0) runs the in-process engine beside the scheduler; the retained-exclusion amendment ships in 0.4.0, used by MenuBar and Salah 1.1.0. Open until shipped apps report (STANDARD.md, Releases).
 - **Products:** SalahAlerts.
 - **Discussion:** [salah-kit/SalahKit#8](https://github.com/salah-kit/SalahKit/discussions/8).
 - **Started:** 2026-10-14.
