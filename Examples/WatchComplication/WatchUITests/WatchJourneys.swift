@@ -62,15 +62,24 @@ nonisolated class WatchJourneyCase: XCTestCase {
     add(attachment)
   }
 
-  /// Scrolls until the element is on screen, for screenshots.
+  /// Scrolls with small turns of the crown until the element is near the top of the screen,
+  /// for screenshots.
   @MainActor
   func scroll(to identifier: String, in app: XCUIApplication) {
     let target = element(identifier, in: app)
     XCTAssertTrue(target.waitForExistence(timeout: 10), "\(identifier) is missing")
-    for _ in 0..<12 where !target.isHittable {
-      app.swipeUp()
+    let window = app.windows.firstMatch.frame
+    for _ in 0..<30 {
+      let frame = target.frame
+      // Under the navigation bar, in the top third, so the row below it shows.
+      let top = window.minY + 40
+      let limit = window.minY + window.height / 3
+      if frame.minY >= top, frame.minY <= limit { return }
+      XCUIDevice.shared.rotateDigitalCrown(delta: frame.minY > limit ? 0.1 : -0.1)
+      Thread.sleep(forTimeInterval: 0.5)
     }
   }
+
 }
 
 /// Journeys through the real watch app on a watch simulator, with no iPhone: missing inputs,
@@ -126,11 +135,11 @@ nonisolated final class WatchJourneys: WatchJourneyCase {
     XCTAssertFalse(label("states.expired.rectangular", in: app).contains("Timetable ended"))
     XCTAssertFalse(label("states.ended.rectangular", in: app).contains("refreshing"))
 
-    scroll(to: "states.next.rectangular", in: app)
+    scroll(to: "states.next", in: app)
     screenshot("03-states-next-prayer")
-    scroll(to: "states.ended.rectangular", in: app)
+    scroll(to: "states.ended", in: app)
     screenshot("04-states-timetable-ended")
-    scroll(to: "states.expired.rectangular", in: app)
+    scroll(to: "states.expired", in: app)
     screenshot("05-states-timeline-expired")
   }
 

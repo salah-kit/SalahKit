@@ -16,6 +16,7 @@ nonisolated final class WatchSmartStackJourney: WatchJourneyCase {
       "Smart Stack steps run only from Scripts/paired-journeys.sh.")
   }
 
+  @MainActor
   private var carousel: XCUIApplication {
     XCUIApplication(bundleIdentifier: "com.apple.Carousel")
   }

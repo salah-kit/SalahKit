@@ -38,7 +38,7 @@ One widget, `PrayerComplication`, in four accessory families: `accessoryCircular
 |---|---|---|---|
 | Missing settings | No inputs stored yet | "No settings yet", "Open the iPhone app" | Inputs from the iPhone; the watch app reloads the complication when they arrive |
 | Next prayer | The schedule knows the next prayer | Its name, time and live countdown, and the place | |
-| Partial | The latest prayer is known, the next isn't (after a timetable's last Isha) | "Latest: Isha 7:41 PM", "Next prayer unknown · Send new times from the iPhone" | New published times |
+| Partial | The latest prayer is known, the next isn't (after a timetable's last Isha) | "Latest: Isha 7:49 PM", "Next prayer unknown · Send new times from the iPhone" | New published times |
 | Timetable ended | `.schedule(.unavailable)` with a `noPublishedData` gap: the timetable is past its last row | "Timetable ended", "Send new times from the iPhone" | New published times from the iPhone. A reload can't fix it |
 | Times unavailable | Another source gap, such as coordinates no calculation accepts | "Times unavailable" and the reason | Correct inputs |
 | Timeline expired | `.expired(knownThrough:)`: WidgetKit didn't ask for a new timeline in time | "Times need refreshing", "Known through 2:00 PM" | The next timeline. The source may be fine |
@@ -48,6 +48,21 @@ The two "no times" states are worded apart on purpose: an ended timetable needs 
 The timeline (`ComplicationTimeline.make(inputs:now:)`) is SalahWidgets' `PrayerTimelineBuilder.timeline(from:horizon:entry:)`: an entry wherever the state changes over 48 hours, the timeline-expired entry at the end, and a reload halfway. Without inputs it's one setup entry with the policy `.never`: the watch app reloads the complication when inputs arrive.
 
 The watch app's **Complication states** screen draws every state in every family with the same views, from real inputs at fixed instants, and the current entry from the stored inputs. The UI tests assert the states there, in the running app, because a watch face can't be inspected from a test.
+
+## Screenshots
+
+These are the journeys' screenshot attachments, exported from test runs on an Apple Watch Series 11 (46 mm) simulator with watchOS 27, paired with an iPhone 17 simulator with iOS 27 (`xcrun xcresulttool export attachments`), and scaled down. The first seven come from the paired journey.
+
+| | | |
+|---|---|---|
+| ![No settings yet](Screenshots/01-watch-no-settings.png) | ![The companion after a send](Screenshots/02-companion-sent.png) | ![The ended timetable on the watch](Screenshots/03-watch-timetable-ended.png) |
+| A fresh watch app: no inputs yet | The companion sent the ended timetable: queued, paired, watch app installed | The watch received it: the timetable ended, new times must come from the iPhone |
+| ![Makkah with the companion closed](Screenshots/04-watch-phone-app-closed.png) | ![The complication in the Smart Stack](Screenshots/05-smart-stack-next-prayer.png) | ![The ended timetable in the Smart Stack](Screenshots/06-smart-stack-timetable-ended.png) |
+| The companion terminated: a new launch shows Makkah's next prayer from the watch's storage | The complication in the Smart Stack: Dhuhr, its time and live countdown | The complication after the watch app stored the ended timetable |
+| ![Missing settings in the Smart Stack](Screenshots/07-smart-stack-missing-settings.png) | ![The states screen, missing settings](Screenshots/08-states-missing-settings.png) | ![The states screen, next prayer](Screenshots/09-states-next-prayer.png) |
+| The complication after the watch app removed its inputs | Complication states: every family with no inputs | Makkah at 14:00, a static countdown for the fixed clock |
+| ![The states screen, timetable ended](Screenshots/10-states-timetable-ended.png) | ![The states screen, timeline expired](Screenshots/11-states-timeline-expired.png) | ![Arabic](Screenshots/12-watch-arabic.png) |
+| The ended timetable in every family | The timeline-expired entry, worded apart from the ended timetable | Arabic: names, Arabic-Indic digits, right to left |
 
 ## Diagnostics
 
@@ -146,3 +161,24 @@ xcrun simctl unpair "$pair"; xcrun simctl delete "$watch" "$iphone"
 ```
 
 CI runs the unit tests and both apps' own journeys, but not the paired journey (see the workflow's comment).
+
+### What the simulators showed
+
+On a paired iPhone 17 and Apple Watch Series 11 (46 mm) simulator pair with iOS 27 and watchOS 27, the paired journey passed every step:
+
+- WatchConnectivity delivered each application context within seconds of the send, while the watch app ran.
+- With the companion terminated, a new launch of the watch app showed Makkah's next prayer and its live countdown from the watch's storage.
+- The complication extension didn't run until its widget was in the Smart Stack: installing the app and asking WidgetKit to reload only made it cache placeholders. Once the widget was in the Smart Stack, every change of the stored inputs reloaded it, and each `getTimeline` call read the watch's App Group, which shows the App Group is shared by the watch app and its extension on the simulator. A widget left in the Smart Stack stayed there when the app was uninstalled and reinstalled.
+- The extension built its timelines in under 30 ms, with a memory footprint of 12 to 15 MB: 34 entries for Makkah over 48 hours, 4 for the ended timetable.
+
+The simulator was heavily loaded by other builds during these runs. Watch UI queries then took minutes, so the journeys wait generously and relaunch the app once if it doesn't come up.
+
+## Accessibility and languages
+
+Every complication family reads as one VoiceOver element: the next prayer, its time and the time remaining, or a message's title and detail. The watch app's text uses Dynamic Type styles and scrolls; the complications use the sizes their families allow. Colors are the system's, with states also told apart by symbols and wording. UI strings are in `Shared/Localizable.xcstrings` in English and Arabic; the Arabic strings are machine-drafted and marked as needing review. Prayer names come from SalahCore in the same locale.
+
+## Pending
+
+- **A real Apple Watch:** only simulators have run the example. Install it on an iPhone and a paired Apple Watch, add the complication to a face and to the Smart Stack, send inputs, close the iPhone app, and record what the watch shows over a day, including the ended timetable and delivery while the watch app isn't running.
+- **Contrast check:** the example uses system colors; check them with SalahUI's `ContrastCheck` if it gets custom ones.
+- **Arabic review:** a native speaker should review the Arabic strings.
