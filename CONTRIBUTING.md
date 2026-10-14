@@ -106,6 +106,7 @@ python3 -m http.server --directory /tmp/salahkit-docs 8000
 
 - Small fixes: open a pull request. CI must pass.
 - Public API and behavior: write or amend an RFC in [`docs/rfcs/`](docs/rfcs/) first. RFC 0001
-  covers SalahCore and SalahFixtures, RFC 0002 SalahCalculation. Public API stays small and needs
-  a consumer that justifies it.
+  covers SalahCore and SalahFixtures, RFC 0002 SalahCalculation, RFC 0003 SalahAlerts, and
+  RFC 0004 SalahWidgets and SalahUI. Public API stays small and needs a consumer that justifies
+  it.
 - Record user-visible changes in `CHANGELOG.md` under Unreleased.

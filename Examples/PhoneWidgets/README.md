@@ -161,6 +161,8 @@ Measured inside the real extension on an iPhone 17 simulator with iOS 27.0 (Xcod
 | Invalid coordinates (6 entries) | 2 | 1.7 and 3.7 ms | about 18.3 MiB |
 | Setup required (1 entry) | 9 | under 1 ms | |
 
+A later run measured 356 ms for the first call after the extension started cold, then 6.4 to 59 ms, at 14.7 to 18.1 MiB.
+
 The time is the provider's work alone (`ContinuousClock` around `PrayerTimelineProvider.timeline`); the footprint is `phys_footprint` before and after it, so it includes SwiftUI and WidgetKit, which the extension loads anyway. A simulator on a Mac says little about the oldest supported iPhone; that measurement is pending.
 
 ## Accessibility and languages

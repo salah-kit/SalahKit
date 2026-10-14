@@ -6,6 +6,11 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-14
+
+Widgets that build their own timelines, SwiftUI building blocks you restyle, and prayer
+alerts within the system's notification limit, each with working examples.
+
 ### Added
 
 - **SalahWidgets**, specified in [RFC 0004](docs/rfcs/0004-widgets-and-ui.md): widget timelines
@@ -65,6 +70,9 @@ All notable changes to this project are documented here. The format follows
   sends calculated or published inputs over WatchConnectivity: the watch keeps its own copy,
   shows missing-settings, ended-timetable and expired views, and keeps working with the iPhone
   app closed; checked on a paired iPhone and Watch simulator pair.
+- **CI** for PhoneWidgets and WatchComplication (generation check, both isolation builds, unit
+  tests, and the journeys that hosted runners can run), a MainActor-isolation build on macOS,
+  SalahUI's snapshots rendered again at UTC+14, and documentation for all six modules.
 
 ## [0.1.0] - 2026-10-13
 
@@ -124,5 +132,6 @@ apps that prove them through the public API.
   that it links no calculation code) and CalculatedPhone; documentation published to GitHub
   Pages.
 
-[Unreleased]: https://github.com/salah-kit/SalahKit/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/salah-kit/SalahKit/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/salah-kit/SalahKit/releases/tag/0.2.0
 [0.1.0]: https://github.com/salah-kit/SalahKit/releases/tag/0.1.0
