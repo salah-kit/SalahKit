@@ -78,7 +78,10 @@ nonisolated final class WatchSmartStackJourney: WatchJourneyCase {
     openTheSmartStack()
     screenshot("smartstack-2-makkah")
     // The taps can't be checked in the home app; the extension's first timeline shows they
-    // added the widget.
+    // added the widget. That holds on a fresh pair, as the paired script's procedure uses: a
+    // widget left in the Smart Stack by an earlier run survives reinstalling and would log
+    // timelines whatever the taps did. The script's checks of the extension's log, which count
+    // only records made after the companion closed, stay the gate.
     let count = waitForATimeline(timeout: 90)
     print("WATCHCOMPLICATION diagnostics after adding: \(count)")
     XCTAssertFalse(count.hasPrefix("0 "), "The complication extension built no timeline")

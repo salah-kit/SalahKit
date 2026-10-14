@@ -162,7 +162,7 @@ struct ReceiverTests {
     #expect(receiver.receipt.load()?.changed == false)
     #expect(receiver.receipt.load()?.sentAt == later)
 
-    // The same send read again, as the session's last context is at launch: nothing changes.
+    // The same send delivered again: the receipt already names it, so nothing changes.
     #expect(
       receiver.receive(context: try context(.makkah, sentAt: later), at: later) == .alreadyReceived)
     #expect(recorder.requests.count == 1)
