@@ -44,16 +44,16 @@ struct ComplicationEntryView: View {
 /// nothing here talks to the iPhone or needs the watch app to be running.
 nonisolated struct ComplicationProvider: TimelineProvider {
   func placeholder(in context: Context) -> ComplicationEntry {
-    ComplicationSample.placeholder
+    ComplicationSample.placeholder(at: Date())
   }
 
   func getSnapshot(in context: Context, completion: @escaping (ComplicationEntry) -> Void) {
     if context.isPreview {
-      completion(ComplicationSample.placeholder)
+      completion(ComplicationSample.placeholder(at: Date()))
       return
     }
     let entries = ComplicationTimeline.make(inputs: SharedValue.inputs.load(), now: Date()).entries
-    completion(entries.first ?? ComplicationSample.placeholder)
+    completion(entries.first ?? ComplicationSample.placeholder(at: Date()))
   }
 
   func getTimeline(
@@ -75,13 +75,5 @@ nonisolated struct ComplicationProvider: TimelineProvider {
     TimelineLog().append(record)
     TimelineLog.logger.notice("\(record.line, privacy: .public)")
     completion(timeline)
-  }
-}
-
-extension ComplicationSample {
-  /// What the face gallery shows before any inputs: Makkah's next prayer at a fixed moment.
-  nonisolated static var placeholder: ComplicationEntry {
-    ComplicationSample.all.first { $0.id == "next" }?.entry
-      ?? ComplicationEntry(date: Date(), content: .setupRequired, timeZone: .current)
   }
 }

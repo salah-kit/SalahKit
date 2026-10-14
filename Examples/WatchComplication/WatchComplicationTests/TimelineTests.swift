@@ -171,6 +171,20 @@ struct TimelineTests {
     #expect(ComplicationDisplay(first.content, at: first.date) == .unavailable(.invalidData))
   }
 
+  @Test func thePlaceholderCountsDownFromTheMomentItsAskedFor() throws {
+    for now in [Self.makkahAfternoon, Self.makkahAfternoon.addingTimeInterval(400 * 86_400)] {
+      let placeholder = ComplicationSample.placeholder(at: now)
+      #expect(placeholder.date <= now)
+      guard case .next(let state) = ComplicationDisplay(placeholder.content, at: now) else {
+        Issue.record("The placeholder at \(now) isn't a next-prayer entry")
+        continue
+      }
+      let next = try #require(state.nextPrayer)
+      #expect(next.time > now)
+      #expect(next.time.timeIntervalSince(now) < 86_400)
+    }
+  }
+
   @Test func theStatesScreenSamplesShowEachState() {
     let byID = Dictionary(uniqueKeysWithValues: ComplicationSample.all.map { ($0.id, $0) })
     #expect(

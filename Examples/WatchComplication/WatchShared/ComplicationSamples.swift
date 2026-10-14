@@ -28,6 +28,14 @@ nonisolated struct ComplicationSample: Identifiable, Sendable {
     sample("expired", inputs: makkah, at: "2026-10-14T14:00:00+03:00", last: true),
   ]
 
+  /// What the face gallery and widget previews show before any inputs: Makkah's next prayer
+  /// from `now`, so its live countdown runs. The states screen keeps its fixed samples.
+  static func placeholder(at now: Date) -> ComplicationEntry {
+    ComplicationTimeline.entry(
+      at: now, in: ComplicationTimeline.make(inputs: makkah, now: now).entries)
+      ?? ComplicationEntry(date: now, content: .setupRequired, timeZone: .current)
+  }
+
   /// Makkah, calculated.
   static let makkah = InputsPreset.makkah.inputs(today: Date())
 

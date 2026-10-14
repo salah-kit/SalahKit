@@ -45,7 +45,7 @@ One widget, `PrayerComplication`, in four accessory families: `accessoryCircular
 
 The two "no times" states are worded apart on purpose: an ended timetable needs new data from the iPhone, and an expired timeline needs only a reload.
 
-The timeline (`ComplicationTimeline.make(inputs:now:)`) is SalahWidgets' `PrayerTimelineBuilder.timeline(from:horizon:entry:)`: an entry wherever the state changes over 48 hours, the timeline-expired entry at the end, and a reload halfway. Without inputs it's one setup entry with the policy `.never`: the watch app reloads the complication when inputs arrive.
+The timeline (`ComplicationTimeline.make(inputs:now:)`) is SalahWidgets' `PrayerTimelineBuilder.timeline(from:horizon:entry:)`: an entry wherever the state changes over 48 hours, the timeline-expired entry at the end, and a reload halfway. Without inputs it's one setup entry with the policy `.never`: the watch app reloads the complication when inputs arrive. The widget gallery and previews show Makkah's next prayer counted down from the moment they're drawn (`ComplicationSample.placeholder(at:)`).
 
 The watch app's **Complication states** screen draws every state in every family with the same views, from real inputs at fixed instants, and the current entry from the stored inputs. The UI tests assert the states there, in the running app, because a watch face can't be inspected from a test.
 
