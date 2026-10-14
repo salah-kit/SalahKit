@@ -6,6 +6,32 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **SalahAlerts**, specified in [RFC 0003](docs/rfcs/0003-alerts.md): prayer alerts within the
+  system's notification limit.
+  - `AlertPlanner` plans every enabled alert of a range from a `PrayerSchedule` and per-prayer
+    `AlertSettings` (at the prayer's time, a reminder before, a reminder after, each with its
+    sound), moves source gaps by each kind's offset, and selects a `NotificationPlan` within an
+    `AlertBudget`: every alert of the next two days, then prayer-time alerts, nearest first.
+    `coveredUntil` and `coverageByKind` say until when the plan is complete.
+  - `NotificationScheduler` installs a plan under stable identifiers (namespace, owning day,
+    prayer, kind), replaces changed requests by adding them, removes only its own obsolete
+    ones, serializes overlapping calls toward the latest plan, and reports what the read-back
+    confirmed (`NotificationApplyReport`). `deliver` posts due alerts a plan left out.
+  - `InProcessAlertEngine` follows the whole schedule in a running app, catches up after sleep
+    (five minutes at prayer time, two for reminders), never fires a before-reminder after its
+    prayer has begun, reports each occurrence once, and offers the default audio precedence.
+  - The DocC article "Alerts within the 64-notification limit".
+- **Vectors**: 60 alert-planning vectors in `Vectors/alerts/` and 48 scheduler vectors in
+  `Vectors/reconciliation/`, against a modelled notification center, written from RFC 0003 and
+  reviewed independently before the implementation.
+- **CalculatedPhone** schedules prayer alerts through SalahAlerts: alerts and a reminder in
+  Settings, an Alerts card that shows the pending requests read back and until when they're
+  confirmed, and an XCUITest journey that allows notifications through Springboard, watches an
+  alert arrive with the app closed, and reads the requests back after a time change and an
+  injected failure.
+
 ## [0.1.0] - 2026-10-13
 
 The first release: the schedule core, calculated and published sources, and the two example
