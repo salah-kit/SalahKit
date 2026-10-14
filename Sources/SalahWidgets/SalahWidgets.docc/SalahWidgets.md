@@ -28,6 +28,7 @@ WidgetKit exists, and `DarwinSignal` exists on Apple platforms.
 ### Essentials
 
 - <doc:BuildingWidgetTimelines>
+- <doc:LessonsFromSalah>
 
 ### Sharing inputs
 

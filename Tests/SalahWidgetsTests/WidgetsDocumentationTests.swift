@@ -1,15 +1,21 @@
 import Foundation
 import Testing
 
-/// Checks that the Swift code of the article "Building widget timelines without daily app
-/// launches", and README.md's blocks about SalahWidgets, is the code that
-/// `WidgetsDocumentationExamples` compiles and runs.
+/// Checks that the Swift code of the articles "Building widget timelines without daily app
+/// launches" and "Lessons from Salah", and README.md's blocks about SalahWidgets, is the code
+/// that `WidgetsDocumentationExamples` compiles and runs.
 @Suite struct WidgetsDocumentationTests {
   nonisolated static let root = URL(fileURLWithPath: #filePath)
     .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
   nonisolated static let readme = "README.md"
   nonisolated static let article =
     "Sources/SalahWidgets/SalahWidgets.docc/BuildingWidgetTimelines.md"
+  nonisolated static let lessons = "Sources/SalahWidgets/SalahWidgets.docc/LessonsFromSalah.md"
+  /// The files the examples are in.
+  nonisolated static let examples = [
+    "Tests/SalahWidgetsTests/WidgetsDocumentationExamples.swift",
+    "Tests/SalahWidgetsTests/LessonsDocumentationExamples.swift",
+  ]
 
   /// Whether a README block is about SalahWidgets; SalahCore's, SalahCalculation's and SalahUI's
   /// documentation tests check the others.
@@ -17,20 +23,19 @@ import Testing
     ["SharedValue", "PrayerTimelineBuilder", "DarwinSignal"].contains { block.contains($0) }
   }
 
-  @Test(arguments: [readme, article])
+  @Test(arguments: [readme, article, lessons])
   func swiftBlocksAreTestedExamples(_ path: String) throws {
-    let examples = try String(
-      contentsOf: Self.root.appendingPathComponent(
-        "Tests/SalahWidgetsTests/WidgetsDocumentationExamples.swift"),
-      encoding: .utf8)
-    let haystack = "\n\(Self.normalized(examples))\n"
+    let examples = try Self.examples.map {
+      try String(contentsOf: Self.root.appendingPathComponent($0), encoding: .utf8)
+    }
+    let haystack = examples.map { "\n\(Self.normalized($0))\n" }.joined()
     var blocks = try Self.swiftBlocks(in: path).filter { !$0.contains(".package(url:") }
     if path == Self.readme { blocks = blocks.filter(Self.isWidgets) }
     #expect(!blocks.isEmpty, "\(path) has no SalahWidgets code")
     for block in blocks {
       #expect(
         haystack.contains("\n\(Self.normalized(block))\n"),
-        "\(path) has a Swift block that WidgetsDocumentationExamples.swift doesn't run:\n\(block)"
+        "\(path) has a Swift block that the documentation examples don't run:\n\(block)"
       )
     }
   }
