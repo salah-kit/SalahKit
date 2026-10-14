@@ -45,7 +45,8 @@
     public let name: Text?
 
     /// The next prayer's abbreviation, for compact layouts; `nil` when the next prayer isn't
-    /// known.
+    /// known. VoiceOver reads it as the full name, so a circular complication that shows "A"
+    /// still says "Asr".
     public let abbreviation: Text?
 
     /// The next prayer's time, as the environment's locale writes a short time, in the view's

@@ -51,7 +51,11 @@
         state: state, names: names, timeZone: timeZone, locale: locale)
       let configuration = NextPrayerConfiguration(
         state: state, name: content.name.map { Text(verbatim: $0) },
-        abbreviation: content.abbreviation.map { Text(verbatim: $0) },
+        // VoiceOver reads an abbreviation as the full name, so a compact style that shows "A"
+        // still says "Asr".
+        abbreviation: content.abbreviation.map {
+          Text(verbatim: $0).accessibilityLabel(Text(verbatim: content.name ?? $0))
+        },
         time: content.time.map { Text(verbatim: $0) },
         countdown: content.countdown?.text(mode: mode, locale: locale, frozen: frozen),
         justStarted: content.justStarted.map { Text(verbatim: $0) })

@@ -109,7 +109,8 @@ struct CardStyle: NextPrayerStyle {
 }
 ```
 
-A small space, such as a circular complication, takes the abbreviation instead of the name:
+A small space, such as a circular complication, takes the abbreviation instead of the name.
+VoiceOver still reads the full name, because the abbreviation carries it as its label:
 
 ```swift
 struct CircularStyle: NextPrayerStyle {
