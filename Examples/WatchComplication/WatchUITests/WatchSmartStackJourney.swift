@@ -26,13 +26,31 @@ nonisolated final class WatchSmartStackJourney: WatchJourneyCase {
     carousel.coordinate(withNormalizedOffset: CGVector(dx: x, dy: y)).tap()
   }
 
-  /// From the face, turning the crown opens the Smart Stack.
+  /// From the face, turning the crown opens the Smart Stack. A second turn moves the stack
+  /// up, which puts its Edit button where the editing steps tap.
   @MainActor
-  private func openTheSmartStack() {
+  private func openTheSmartStack(turns: Int = 1) {
     XCUIDevice.shared.press(.home)
     Thread.sleep(forTimeInterval: 3)
-    XCUIDevice.shared.rotateDigitalCrown(delta: 1, velocity: .default)
-    Thread.sleep(forTimeInterval: 8)
+    for _ in 0..<turns {
+      XCUIDevice.shared.rotateDigitalCrown(delta: 1, velocity: .default)
+      Thread.sleep(forTimeInterval: 6)
+    }
+  }
+
+  /// Waits until the watch app's Diagnostics screen lists at least one timeline from the
+  /// complication extension, which happens only once the widget is in the Smart Stack.
+  @MainActor
+  private func waitForATimeline(timeout: TimeInterval) -> String {
+    let app = launch(["-screen", "diagnostics"])
+    let deadline = Date().addingTimeInterval(timeout)
+    var count = label("diagnostics.count", in: app)
+    while count.hasPrefix("0 "), Date() < deadline {
+      Thread.sleep(forTimeInterval: 5)
+      element("diagnostics.refresh", in: app).tap()
+      count = label("diagnostics.count", in: app)
+    }
+    return count
   }
 
   /// Step 8: adds the example's widget to the Smart Stack, which makes WidgetKit ask the
@@ -41,7 +59,7 @@ nonisolated final class WatchSmartStackJourney: WatchJourneyCase {
   func test5AddTheComplicationToTheSmartStack() {
     let app = launch([])
     XCTAssertEqual(label("home.place", in: app), "Makkah")
-    openTheSmartStack()
+    openTheSmartStack(turns: 2)
     tap(x: 0.5, y: 0.86)  // Edit, under the stack
     Thread.sleep(forTimeInterval: 4)
     tap(x: 0.5, y: 0.43)  // The add slot
@@ -59,6 +77,11 @@ nonisolated final class WatchSmartStackJourney: WatchJourneyCase {
     Thread.sleep(forTimeInterval: 6)
     openTheSmartStack()
     screenshot("smartstack-2-makkah")
+    // The taps can't be checked in the home app; the extension's first timeline shows they
+    // added the widget.
+    let count = waitForATimeline(timeout: 90)
+    print("WATCHCOMPLICATION diagnostics after adding: \(count)")
+    XCTAssertFalse(count.hasPrefix("0 "), "The complication extension built no timeline")
   }
 
   /// Step 9: the watch app stores the ended timetable and reloads the complication.
