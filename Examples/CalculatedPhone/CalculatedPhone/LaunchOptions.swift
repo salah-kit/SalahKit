@@ -1,4 +1,5 @@
 import Foundation
+import SalahAlerts
 import SalahCore
 import SalahTimes
 
@@ -33,6 +34,22 @@ nonisolated struct LaunchOptions: Equatable, Sendable {
   var ishaAngle: Double?
   /// `-ramadanIsha on|off`: Isha 120 minutes after Maghrib in Ramadan, for an interval Isha.
   var ramadanIsha: Bool?
+  /// `-alerts on|off`: alerts at the five prayers.
+  var alerts: Bool?
+  /// `-alertReminder <minutes>`: a reminder before each prayer, one of Settings' choices; `0`
+  /// turns it off.
+  var alertReminder: Int?
+  /// `-alertFixtureIn <seconds>`: plan alerts from a fixture timetable whose five prayers start
+  /// this long after launch, a minute apart (`AlertFixture`). This run only.
+  var alertFixtureIn: TimeInterval?
+  /// `-alertFixtureDay YYYY-MM-DD`: the day that owns the fixture's prayers. This run only.
+  var alertFixtureDay: CivilDay?
+  /// `-failAlertAdds dhuhr,asr`: adding these prayers' requests fails, to show a scheduling
+  /// failure. This run only.
+  var failAlertAdds: Set<PrayerKind> = []
+  /// `-probeNotificationLimit <count>`: after planning, add this many throwaway requests, count
+  /// how many the system keeps, and remove them. This run only.
+  var probeNotificationLimit: Int?
 
   init() {}
 
@@ -76,6 +93,25 @@ nonisolated struct LaunchOptions: Equatable, Sendable {
     case "off": ramadanIsha = false
     default: ramadanIsha = nil
     }
+    switch value(after: "-alerts") {
+    case "on": alerts = true
+    case "off": alerts = false
+    default: alerts = nil
+    }
+    alertReminder = value(after: "-alertReminder").flatMap(Int.init).flatMap { minutes in
+      minutes == 0 || PhoneAlertOptions.reminderChoices.contains(minutes) ? minutes : nil
+    }
+    alertFixtureIn = number(after: "-alertFixtureIn").flatMap { $0 >= 0 ? $0 : nil }
+    alertFixtureDay = value(after: "-alertFixtureDay").flatMap(CivilDay.init).flatMap {
+      $0.isValid ? $0 : nil
+    }
+    failAlertAdds = Set(
+      (value(after: "-failAlertAdds") ?? "").split(separator: ",").compactMap {
+        PrayerKind(rawValue: String($0))
+      })
+    probeNotificationLimit = value(after: "-probeNotificationLimit").flatMap(Int.init).flatMap {
+      (1...500).contains($0) ? $0 : nil
+    }
   }
 
   /// Applies the place and calculation arguments: the method first, then the parameters that
@@ -101,6 +137,12 @@ nonisolated struct LaunchOptions: Equatable, Sendable {
     }
     if let fajrAngle {
       settings.customize { $0.fajr = .angle(fajrAngle) }
+    }
+    if let alerts {
+      settings.alerts.isOn = alerts
+    }
+    if let alertReminder {
+      settings.alerts.reminderMinutes = alertReminder == 0 ? nil : alertReminder
     }
     if let ishaAngle {
       settings.customize { $0.isha = .angle(ishaAngle) }

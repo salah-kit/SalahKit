@@ -30,10 +30,11 @@ nonisolated enum MethodChoice: Hashable, Sendable, RawRepresentable, Codable {
   }
 }
 
-/// Everything the user sets: the place and the calculation.
+/// Everything the user sets: the place, the calculation and the alerts.
 ///
 /// The app stores it as JSON in `UserDefaults`; `calculation` is SalahCalculation's own
-/// `Codable` value, so the stored JSON holds SalahTimes' parameters whole.
+/// `Codable` value, so the stored JSON holds SalahTimes' parameters whole. Settings stored
+/// before the app had alerts decode with alerts off.
 ///
 /// A method defines Fajr, Maghrib and Isha, the night span, its own adjustments and the
 /// rounding. Changing any of them switches to Custom, so the method shown is always exact. The
@@ -43,6 +44,31 @@ nonisolated struct AppSettings: Codable, Hashable, Sendable {
   var place: Place
   var method: MethodChoice
   var calculation: CalculationSettings
+  var alerts = PhoneAlertOptions()
+
+  init(
+    place: Place, method: MethodChoice, calculation: CalculationSettings,
+    alerts: PhoneAlertOptions = PhoneAlertOptions()
+  ) {
+    self.place = place
+    self.method = method
+    self.calculation = calculation
+    self.alerts = alerts
+  }
+
+  private enum CodingKeys: String, CodingKey {
+    case place, method, calculation, alerts
+  }
+
+  init(from decoder: any Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    self.init(
+      place: try container.decode(Place.self, forKey: .place),
+      method: try container.decode(MethodChoice.self, forKey: .method),
+      calculation: try container.decode(CalculationSettings.self, forKey: .calculation),
+      alerts: try container.decodeIfPresent(PhoneAlertOptions.self, forKey: .alerts)
+        ?? PhoneAlertOptions())
+  }
 
   /// Makkah with Umm al-Qura, the method SalahTimes suggests for Saudi Arabia.
   static let defaults = AppSettings(

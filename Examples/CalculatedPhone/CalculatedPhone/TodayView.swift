@@ -16,12 +16,13 @@ struct SecondsSchedule: TimelineSchedule {
   }
 }
 
-/// The main screen: the place and date, the next and latest prayers, today's schedule and the
-/// calculation that produced it.
+/// The main screen: the place and date, the next and latest prayers, today's schedule, the
+/// alerts and the calculation that produced the times.
 struct TodayView: View {
   let settings: AppSettings
   let clock: AppClock
   let strings: PhoneStrings
+  let alerts: AlertCoordinator
 
   var body: some View {
     let settings = settings
@@ -29,6 +30,10 @@ struct TodayView: View {
       TodayContent(
         snapshot: PhoneSnapshot.make(
           settings: settings, at: clock.now(at: context.date), strings: strings),
+        alerts: AlertsSnapshot.make(
+          options: settings.alerts, authorization: alerts.authorization, plan: alerts.plan,
+          report: alerts.report, pending: alerts.pending, fromFixture: alerts.usesFixture,
+          probe: alerts.probe, strings: strings, timeZone: settings.place.location.timeZone),
         strings: strings)
     }
   }
@@ -36,6 +41,7 @@ struct TodayView: View {
 
 struct TodayContent: View {
   let snapshot: PhoneSnapshot
+  var alerts: AlertsSnapshot?
   let strings: PhoneStrings
 
   var body: some View {
@@ -47,6 +53,9 @@ struct TodayContent: View {
         }
         NowCard(snapshot: snapshot, strings: strings)
         ScheduleCard(snapshot: snapshot, strings: strings)
+        if let alerts {
+          AlertsCard(snapshot: alerts, strings: strings)
+        }
         CalculationCard(rows: snapshot.calculation, strings: strings)
       }
       .padding()
@@ -56,7 +65,7 @@ struct TodayContent: View {
 }
 
 /// A rounded section with an optional heading.
-private struct Card<Content: View>: View {
+struct Card<Content: View>: View {
   var title: String?
   @ViewBuilder var content: Content
 

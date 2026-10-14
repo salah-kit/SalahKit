@@ -3,9 +3,10 @@ import SalahCore
 import SalahTimes
 import SwiftUI
 
-/// The place and every calculation control. Changes apply at once and are saved.
+/// The place, the alerts and every calculation control. Changes apply at once and are saved.
 struct SettingsView: View {
   let store: SettingsStore
+  let alerts: AlertCoordinator
   let strings: PhoneStrings
   @Environment(\.dismiss) private var dismiss
 
@@ -17,6 +18,7 @@ struct SettingsView: View {
     NavigationStack {
       Form {
         placeSection
+        alertsSection
         methodSection
         if settings.method == .custom {
           customSection
@@ -56,6 +58,59 @@ struct SettingsView: View {
     } footer: {
       Text(verbatim: placeFooter)
     }
+  }
+
+  private var alertsSection: some View {
+    Section {
+      Toggle(isOn: alertsBinding) {
+        Text(verbatim: strings("Prayer alerts"))
+      }
+      .accessibilityIdentifier("settings.alerts")
+      Picker(selection: reminderBinding) {
+        ForEach(PhoneAlertOptions.reminderChoices, id: \.self) { minutes in
+          Text(verbatim: reminderName(minutes)).tag(minutes)
+        }
+      } label: {
+        Text(verbatim: strings("Reminder before each prayer"))
+      }
+      .pickerStyle(.navigationLink)
+      .disabled(!settings.alerts.isOn)
+      .accessibilityIdentifier("settings.reminder")
+    } header: {
+      Text(verbatim: strings("Alerts"))
+    } footer: {
+      Text(
+        verbatim: strings(
+          "Alerts are scheduled as notifications for the next 14 days, within iOS's limit on pending notifications, and the app schedules them again whenever it opens."
+        ))
+    }
+  }
+
+  private func reminderName(_ minutes: Int?) -> String {
+    guard let minutes else { return strings("No reminder") }
+    return strings("\(text.format.number(Double(minutes))) min")
+  }
+
+  private var alertsBinding: Binding<Bool> {
+    Binding(
+      get: { store.settings.alerts.isOn },
+      set: { isOn in
+        guard isOn else {
+          store.update { $0.alerts.isOn = false }
+          return
+        }
+        // The app asks for permission when the user turns alerts on, then plans them.
+        Task {
+          await alerts.requestPermissionIfNeeded()
+          store.update { $0.alerts.isOn = true }
+        }
+      })
+  }
+
+  private var reminderBinding: Binding<Int?> {
+    Binding(
+      get: { store.settings.alerts.reminderMinutes },
+      set: { minutes in store.update { $0.alerts.reminderMinutes = minutes } })
   }
 
   private var methodSection: some View {

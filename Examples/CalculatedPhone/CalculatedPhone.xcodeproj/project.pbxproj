@@ -12,6 +12,8 @@
 		1CD0E9E94F1F227DA7C3939C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D92AC50CF17AA8CF9945E46 /* SettingsView.swift */; };
 		2002F41B1516B76505D63689 /* SalahCore in Frameworks */ = {isa = PBXBuildFile; productRef = 50905702E64E64EA99C30001 /* SalahCore */; };
 		22C4D4196C9ED219937F2594 /* CalculatedPhoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36462E0B2B973DE619B042A5 /* CalculatedPhoneApp.swift */; };
+		2C7E0133A35940FABD6EB1C8 /* AlertCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7990B01FABFACB63A1AD0B69 /* AlertCoordinator.swift */; };
+		34FBCBF0F2A81A314F4D49AE /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1873580AB743D64AA04D2183 /* Alerts.swift */; };
 		40D7C889D2217695BE4F1745 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60359A066B48513025C135D /* Place.swift */; };
 		44092EAB7498E3AA5E8AABEF /* LaunchOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58170C200BA9FBC0090E8354 /* LaunchOptions.swift */; };
 		45C42B446F5DB111317D86F4 /* CalculatedPhoneJourneys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A31C9CE3AA03E7C93ADD56 /* CalculatedPhoneJourneys.swift */; };
@@ -20,7 +22,11 @@
 		5C8617CEF1F04FCC4A4AAF23 /* PhoneStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776F5774F70F4CC6F63CF23E /* PhoneStrings.swift */; };
 		6D9EC6E9710E50135A458D6D /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B30EADE403237DE2E3DCA953 /* Localizable.xcstrings */; };
 		7C731D4C386AB6DC9620DC1C /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE8507C5A6BF1AA1122E5B1 /* SettingsTests.swift */; };
+		7F8406780D22861E7ADA1A86 /* SalahAlerts in Frameworks */ = {isa = PBXBuildFile; productRef = 1D6A08FBB4BBF70E0062DA81 /* SalahAlerts */; };
 		80EA4D73DF1EFD2956A39291 /* SalahCalculation in Frameworks */ = {isa = PBXBuildFile; productRef = 35679379C488ABB5988B5367 /* SalahCalculation */; };
+		95C9A626966C226CD7E7A63B /* AlertsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F9EFF4CC5EEED896767884B /* AlertsCard.swift */; };
+		A860335B10149A1878F60C00 /* AlertJourneys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6286B81817FADEC06392CE96 /* AlertJourneys.swift */; };
+		B581189E72484AF3778F2238 /* AlertTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62490F532F99C6418088AE7C /* AlertTests.swift */; };
 		F06B6391C6B8291876275F48 /* CalculationText.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B929408B64FCFB88E8E2CC /* CalculationText.swift */; };
 		FA35743B24EA797FEEBE5450 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B9BD5665DA31C7341E8522 /* TodayView.swift */; };
 /* End PBXBuildFile section */
@@ -46,6 +52,7 @@
 		007B5D55B281E6E83D0B3504 /* CalculatedPhoneTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CalculatedPhoneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		01F2B0CBA0FFBD0FB035EC27 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
 		160B303418697FC6EAD67BEE /* PhoneSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneSnapshotTests.swift; sourceTree = "<group>"; };
+		1873580AB743D64AA04D2183 /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		1A78CA560B4D235FBFAAE911 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		36462E0B2B973DE619B042A5 /* CalculatedPhoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatedPhoneApp.swift; sourceTree = "<group>"; };
 		3D92AC50CF17AA8CF9945E46 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -53,9 +60,13 @@
 		58170C200BA9FBC0090E8354 /* LaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptions.swift; sourceTree = "<group>"; };
 		5DE8507C5A6BF1AA1122E5B1 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		61B9BD5665DA31C7341E8522 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		62490F532F99C6418088AE7C /* AlertTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertTests.swift; sourceTree = "<group>"; };
+		6286B81817FADEC06392CE96 /* AlertJourneys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertJourneys.swift; sourceTree = "<group>"; };
 		776F5774F70F4CC6F63CF23E /* PhoneStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneStrings.swift; sourceTree = "<group>"; };
+		7990B01FABFACB63A1AD0B69 /* AlertCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertCoordinator.swift; sourceTree = "<group>"; };
 		7A828744D17C98EA91FEDB77 /* SalahKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SalahKit; path = ../..; sourceTree = SOURCE_ROOT; };
 		92A31C9CE3AA03E7C93ADD56 /* CalculatedPhoneJourneys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatedPhoneJourneys.swift; sourceTree = "<group>"; };
+		9F9EFF4CC5EEED896767884B /* AlertsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsCard.swift; sourceTree = "<group>"; };
 		B1AFC4FFB47DE68644186F76 /* CalculatedPhone.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CalculatedPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B30EADE403237DE2E3DCA953 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		D3B929408B64FCFB88E8E2CC /* CalculationText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculationText.swift; sourceTree = "<group>"; };
@@ -71,6 +82,7 @@
 			files = (
 				2002F41B1516B76505D63689 /* SalahCore in Frameworks */,
 				80EA4D73DF1EFD2956A39291 /* SalahCalculation in Frameworks */,
+				7F8406780D22861E7ADA1A86 /* SalahAlerts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +100,7 @@
 		36A6516A4A6FF579FEC0DC2B /* CalculatedPhoneUITests */ = {
 			isa = PBXGroup;
 			children = (
+				6286B81817FADEC06392CE96 /* AlertJourneys.swift */,
 				92A31C9CE3AA03E7C93ADD56 /* CalculatedPhoneJourneys.swift */,
 			);
 			path = CalculatedPhoneUITests;
@@ -96,6 +109,7 @@
 		3EB5FEB6C62C942CE77D6A61 /* CalculatedPhoneTests */ = {
 			isa = PBXGroup;
 			children = (
+				62490F532F99C6418088AE7C /* AlertTests.swift */,
 				160B303418697FC6EAD67BEE /* PhoneSnapshotTests.swift */,
 				5DE8507C5A6BF1AA1122E5B1 /* SettingsTests.swift */,
 			);
@@ -123,6 +137,9 @@
 		A457A64B6653C5C20CFFA74D /* CalculatedPhone */ = {
 			isa = PBXGroup;
 			children = (
+				7990B01FABFACB63A1AD0B69 /* AlertCoordinator.swift */,
+				1873580AB743D64AA04D2183 /* Alerts.swift */,
+				9F9EFF4CC5EEED896767884B /* AlertsCard.swift */,
 				EB1AA6FF478E0506AF238DCB /* AppSettings.swift */,
 				36462E0B2B973DE619B042A5 /* CalculatedPhoneApp.swift */,
 				D3B929408B64FCFB88E8E2CC /* CalculationText.swift */,
@@ -187,6 +204,7 @@
 			packageProductDependencies = (
 				50905702E64E64EA99C30001 /* SalahCore */,
 				35679379C488ABB5988B5367 /* SalahCalculation */,
+				1D6A08FBB4BBF70E0062DA81 /* SalahAlerts */,
 			);
 			productName = CalculatedPhone;
 			productReference = B1AFC4FFB47DE68644186F76 /* CalculatedPhone.app */;
@@ -276,6 +294,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B581189E72484AF3778F2238 /* AlertTests.swift in Sources */,
 				54AC86CA7AFB93F4A1E81B1A /* PhoneSnapshotTests.swift in Sources */,
 				7C731D4C386AB6DC9620DC1C /* SettingsTests.swift in Sources */,
 			);
@@ -285,6 +304,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A860335B10149A1878F60C00 /* AlertJourneys.swift in Sources */,
 				45C42B446F5DB111317D86F4 /* CalculatedPhoneJourneys.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -293,6 +313,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C7E0133A35940FABD6EB1C8 /* AlertCoordinator.swift in Sources */,
+				34FBCBF0F2A81A314F4D49AE /* Alerts.swift in Sources */,
+				95C9A626966C226CD7E7A63B /* AlertsCard.swift in Sources */,
 				0F639D991E7EEB997FF90F54 /* AppSettings.swift in Sources */,
 				22C4D4196C9ED219937F2594 /* CalculatedPhoneApp.swift in Sources */,
 				F06B6391C6B8291876275F48 /* CalculationText.swift in Sources */,
@@ -613,6 +636,10 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1D6A08FBB4BBF70E0062DA81 /* SalahAlerts */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahAlerts;
+		};
 		35679379C488ABB5988B5367 /* SalahCalculation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SalahCalculation;

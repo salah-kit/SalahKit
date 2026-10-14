@@ -42,6 +42,8 @@ targets:
         product: SalahCore
       - package: SalahKit
         product: SalahCalculation
+      - package: SalahKit
+        product: SalahAlerts
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.CalculatedPhone

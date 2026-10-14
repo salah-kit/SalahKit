@@ -18,6 +18,23 @@
         }
       }
     },
+    "%@ began %@ ago": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "بدأت %1$@ منذ %2$@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ began %2$@ ago"
+          }
+        }
+      }
+    },
     "%@ has started": {
       "extractionState": "manual",
       "localizations": {
@@ -31,6 +48,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ has started"
+          }
+        }
+      }
+    },
+    "%@ in %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%1$@ بعد %2$@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ in %2$@"
           }
         }
       }
@@ -99,6 +133,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ min after Maghrib in Ramadan, Hijri day offset %2$@"
+          }
+        }
+      }
+    },
+    "%@ reminder": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "تذكير %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ reminder"
           }
         }
       }
@@ -188,6 +239,23 @@
         }
       }
     },
+    "%lld pending requests": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "الطلبات المعلّقة: %lld"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld pending requests"
+          }
+        }
+      }
+    },
     "A method sets the Fajr, Maghrib and Isha rules, the night, its own minutes and the rounding. Changing any of them switches to Custom.": {
       "extractionState": "manual",
       "localizations": {
@@ -218,6 +286,74 @@
           "stringUnit": {
             "state": "translated",
             "value": "Added on top of the method's own minutes."
+          }
+        }
+      }
+    },
+    "After %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "بعد %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After %@"
+          }
+        }
+      }
+    },
+    "Alerts": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "التنبيهات"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alerts"
+          }
+        }
+      }
+    },
+    "Alerts are off. Turn them on in Settings.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "التنبيهات متوقفة. شغّلها من الإعدادات."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alerts are off. Turn them on in Settings."
+          }
+        }
+      }
+    },
+    "Alerts are scheduled as notifications for the next 14 days, within iOS's limit on pending notifications, and the app schedules them again whenever it opens.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "تُجدوَل التنبيهات إشعاراتٍ للأيام الأربعة عشر القادمة ضمن حدّ iOS للإشعارات المعلّقة، ويعيد التطبيق جدولتها كلما فُتح."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alerts are scheduled as notifications for the next 14 days, within iOS's limit on pending notifications, and the app schedules them again whenever it opens."
           }
         }
       }
@@ -320,6 +456,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Committee"
+          }
+        }
+      }
+    },
+    "Confirmed": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "مؤكَّد"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirmed"
+          }
+        }
+      }
+    },
+    "Couldn't be scheduled": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "تعذّرت جدولته"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't be scheduled"
           }
         }
       }
@@ -711,6 +881,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Isha: %@ after Maghrib"
+          }
+        }
+      }
+    },
+    "It's time for %@ (%@)": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "حان وقت %1$@ (%2$@)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It's time for %1$@ (%2$@)"
           }
         }
       }
@@ -1191,6 +1378,23 @@
         }
       }
     },
+    "No reminder": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "بلا تذكير"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No reminder"
+          }
+        }
+      }
+    },
     "None": {
       "extractionState": "manual",
       "localizations": {
@@ -1225,6 +1429,23 @@
         }
       }
     },
+    "Not confirmed": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "غير مؤكَّد"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not confirmed"
+          }
+        }
+      }
+    },
     "Not published": {
       "extractionState": "manual",
       "localizations": {
@@ -1238,6 +1459,74 @@
           "stringUnit": {
             "state": "translated",
             "value": "Not published"
+          }
+        }
+      }
+    },
+    "Notifications are allowed.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "الإشعارات مسموح بها."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications are allowed."
+          }
+        }
+      }
+    },
+    "Notifications are turned off in the Settings app.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "الإشعارات متوقفة في تطبيق الإعدادات."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications are turned off in the Settings app."
+          }
+        }
+      }
+    },
+    "Notifications aren't allowed": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "الإشعارات غير مسموح بها"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications aren't allowed"
+          }
+        }
+      }
+    },
+    "Notifications aren't allowed yet.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "لم يُسمح بالإشعارات بعد."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications aren't allowed yet."
           }
         }
       }
@@ -1276,6 +1565,23 @@
         }
       }
     },
+    "Pending": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "معلّق"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pending"
+          }
+        }
+      }
+    },
     "Place": {
       "extractionState": "manual",
       "localizations": {
@@ -1289,6 +1595,57 @@
           "stringUnit": {
             "state": "translated",
             "value": "Place"
+          }
+        }
+      }
+    },
+    "Planned from the fixture timetable of this run.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "مخطّطة من الجدول التجريبي لهذا التشغيل."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Planned from the fixture timetable of this run."
+          }
+        }
+      }
+    },
+    "Planned until %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "مخطّطة حتى %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Planned until %@"
+          }
+        }
+      }
+    },
+    "Prayer alerts": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "تنبيهات الصلاة"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prayer alerts"
           }
         }
       }
@@ -1378,6 +1735,23 @@
         }
       }
     },
+    "Reminder before each prayer": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "تذكير قبل كل صلاة"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reminder before each prayer"
+          }
+        }
+      }
+    },
     "Rounding": {
       "extractionState": "manual",
       "localizations": {
@@ -1408,6 +1782,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Saved settings"
+          }
+        }
+      }
+    },
+    "Scheduled until %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "مجدولة حتى %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scheduled until %@"
           }
         }
       }
@@ -1612,6 +2003,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "The next prayer can't be named."
+          }
+        }
+      }
+    },
+    "The system kept %lld of %lld probe requests.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "احتفظ النظام بـ %1$lld من %2$lld من طلبات الاختبار."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The system kept %1$lld of %2$lld probe requests."
           }
         }
       }
