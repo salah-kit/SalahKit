@@ -24,6 +24,7 @@ let package = Package(
     .library(name: "SalahCore", targets: ["SalahCore"]),
     .library(name: "SalahCalculation", targets: ["SalahCalculation"]),
     .library(name: "SalahFixtures", targets: ["SalahFixtures"]),
+    .library(name: "SalahAlerts", targets: ["SalahAlerts"]),
   ],
   dependencies: [
     // Up to the next minor version: before 1.0, a minor release of SalahTimes may change its
@@ -50,6 +51,11 @@ let package = Package(
       exclude: ["FixtureData.md"],
       swiftSettings: defaultIsolation
     ),
+    .target(
+      name: "SalahAlerts",
+      dependencies: ["SalahCore"],
+      swiftSettings: defaultIsolation
+    ),
     .testTarget(
       name: "SalahCoreTests",
       dependencies: ["SalahCore"],
@@ -65,6 +71,12 @@ let package = Package(
     .testTarget(
       name: "SalahFixturesTests",
       dependencies: ["SalahCore", "SalahFixtures"],
+      swiftSettings: defaultIsolation
+    ),
+    .testTarget(
+      name: "SalahAlertsTests",
+      // SalahCalculation runs the alert vectors that use a calculated source (Kazan).
+      dependencies: ["SalahAlerts", "SalahCalculation", "SalahCore"],
       swiftSettings: defaultIsolation
     ),
   ]
