@@ -475,9 +475,10 @@ def request_id(scheduler, alert_id, namespace=None):
 
 
 def ceil_second(instant):
-    """Rounded up to a whole second as the scheduler rounds, for the millisecond digits vectors
-    carry: a millisecond past a second keeps it in RFC 0003's (s − 0.001).rounded(.up), but
-    whether exactly one millisecond does depends on the double's magnitude, so no vector uses it.
+    """Rounded up to a whole second as the scheduler rounds, (s − 0.001).rounded(.up) in double
+    arithmetic (RFC 0003 §4.5), for the millisecond digits vectors carry: two milliseconds or
+    more past a second round up. Exactly one millisecond past keeps the second or not depending
+    on the double's magnitude, so no vector uses it.
     """
     assert instant.microsecond % 1000 == 0 and instant.microsecond != 1000, instant
     if instant.microsecond > 1000:

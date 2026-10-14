@@ -242,14 +242,20 @@
         #expect(
           ModelCenter.fireDate(of: request) == Fixture.time(.asr).addingTimeInterval(expected),
           "fraction \(fraction)")
+        // The year to the second, nothing finer.
+        let components = try #require(request.trigger as? UNCalendarNotificationTrigger)
+          .dateComponents
+        #expect(components.second != nil && components.nanosecond == nil)
       }
     }
 
     /// The same rounding before the reference date, where the intervals are negative: a fire
-    /// date half a second before 2001 rounds up to 2001's first second, and one 0.9995 s past a
-    /// second keeps it.
+    /// date half a second before 2001 rounds up to 2001's first second, one half a millisecond
+    /// before a second rounds up to it, and one half a millisecond past a second keeps it. Just
+    /// after the reference date, a fraction the 1970 scale would lose still rounds up.
     @Test func triggersRoundUpBefore2001Too() async throws {
-      for (interval, expected) in [(-0.5, 0.0), (-1.000_5, -1.0), (-0.999_5, -1.0)] {
+      let cases = [(-0.5, 0.0), (-1.000_5, -1.0), (-0.999_5, -1.0), (0.001_000_000_1, 1.0)]
+      for (interval, expected) in cases {
         let clock = TestClock(Date(timeIntervalSinceReferenceDate: -3_600))
         let center = ModelCenter(clock: clock)
         _ = try await scheduler(center, clock: clock).apply(
@@ -593,7 +599,7 @@
       let center = ModelCenter(
         clock: clock,
         delivered: [
-          DeliveredNotificationRecord(identifier: past, date: Fixture.date(5, 59)),
+          DeliveredNotificationRecord(identifier: past, date: Fixture.date(6, 0) - 1),
           DeliveredNotificationRecord(identifier: ahead, date: Fixture.date(6, 0) + 30),
         ])
       let scheduler = NotificationScheduler(
@@ -601,6 +607,172 @@
         deliveredRetention: .seconds(-60), now: { clock.now })
       _ = try await scheduler.apply(plan([], at: clock.now), content: { _ in .init() })
       #expect(center.delivered.map(\.identifier) == [ahead])
+    }
+
+    /// A later plan stops a batch at its next call wherever it's held: after the pending read,
+    /// before the delivered read; after the delivered read, before the first add; after the
+    /// removals, before the delivered housekeeping. The later batch's authorization read comes
+    /// next.
+    @Test func aLaterPlanStopsTheBatchAtItsNextCall() async throws {
+      let cases: [(hold: Int, before: [String], housekeeping: Bool)] = [
+        (2, ["authorizationStatus", "pendingRequests"], false),
+        (3, ["authorizationStatus", "pendingRequests", "deliveredNotifications"], false),
+        (
+          4, ["authorizationStatus", "pendingRequests", "deliveredNotifications", "removePending"],
+          true
+        ),
+      ]
+      for (hold, before, housekeeping) in cases {
+        let clock = TestClock(Fixture.date(6, 0))
+        // With housekeeping: an obsolete request to remove, then an expired delivery to clear.
+        let center = ModelCenter(
+          clock: clock,
+          pending: housekeeping
+            ? [
+              ModelCenter.request(
+                "salah.prayers/2026-06-02/isha/atTime", fireDate: Fixture.time(.isha), title: "",
+                body: "", thread: "")
+            ] : [],
+          delivered: housekeeping
+            ? [
+              DeliveredNotificationRecord(
+                identifier: "salah.prayers/2026-05-28/asr/atTime",
+                date: Fixture.date(6, 0) - 5 * 86_400)
+            ] : [])
+        let scheduler = scheduler(center, clock: clock)
+        let plan = plan([asrAlert()], at: clock.now)
+        center.beginStep(readBackAt: nil, suspendAtCall: hold)
+        let first = Task { try await scheduler.apply(plan, content: { _ in .init() }) }
+        try await wait { center.isSuspended }
+        let second = Task { try await scheduler.apply(plan, content: { _ in .init() }) }
+        try await wait { await scheduler.submittedApplies == 2 }
+        center.release()
+        #expect(try await first.value.superseded, "held at call \(hold)")
+        _ = try await second.value
+        #expect(
+          Array(Self.names(center.calls).prefix(hold + 1)) == before + ["authorizationStatus"],
+          "held at call \(hold)")
+      }
+    }
+
+    /// The batch's `t` is the clock when the batch starts, even if the clock moves during its
+    /// calls: the retention's cutoff and the desired alerts both use it.
+    @Test func theBatchStartIsTheClockWhenItsFirstCallBegins() async throws {
+      let clock = TestClock(Fixture.date(6, 0))
+      let start = Fixture.date(6, 0)
+      let recent = "salah.prayers/2026-05-31/asr/atTime"
+      let center = ModelCenter(
+        clock: clock,
+        delivered: [
+          DeliveredNotificationRecord(identifier: recent, date: start - 2 * 86_400 + 300)
+        ])
+      let soon = PlannedAlert(
+        id: Fixture.identity(.dhuhr, .atTime),
+        event: PrayerEvent(scheduleDay: Fixture.day, kind: .dhuhr, time: Fixture.date(6, 5)),
+        fireDate: Fixture.date(6, 5), sound: .system)
+      center.beginStep(readBackAt: nil, suspendAtCall: 1)
+      let batch = Task {
+        try await scheduler(center, clock: clock).apply(
+          plan([soon], at: clock.now), content: { _ in .init() })
+      }
+      try await wait { center.isSuspended }
+      clock.set(Fixture.date(6, 10))
+      center.release()
+      _ = try await batch.value
+      #expect(center.delivered.contains { $0.identifier == recent }, "cutoff is t − retention")
+      #expect(center.calls.contains { $0["add"] != nil }, "an alert after t is desired")
+    }
+
+    /// An unconfirmed alert after the plan's own coverage doesn't extend the confirmed coverage.
+    @Test func anUnconfirmedAlertPastThePlansCoverageDoesNotExtendIt() async throws {
+      let clock = TestClock(Fixture.date(6, 0))
+      let center = ModelCenter(clock: clock)
+      center.configure(failAdds: [Self.identifier], ignoreAdds: [], dropAdds: [], failReads: [])
+      var plan = plan([asrAlert()], at: clock.now)
+      plan.coveredUntil = Fixture.date(7, 0)
+      let report = try await scheduler(center, clock: clock).apply(
+        plan, content: { _ in .init() })
+      #expect(report.confirmedCoveredUntil == Fixture.date(7, 0))
+    }
+
+    /// Expired delivered notifications are removed sorted by identifier as text.
+    @Test func deliveredRemovalsAreSortedByIdentifier() async throws {
+      let clock = TestClock(Fixture.date(6, 0))
+      let earlier = "salah.prayers/2026-05-27/asr/atTime"
+      let later = "salah.prayers/2026-05-28/asr/atTime"
+      let center = ModelCenter(
+        clock: clock,
+        delivered: [
+          DeliveredNotificationRecord(identifier: later, date: Fixture.date(6, 0) - 4 * 86_400),
+          DeliveredNotificationRecord(identifier: earlier, date: Fixture.date(6, 0) - 5 * 86_400),
+        ])
+      _ = try await scheduler(center, clock: clock).apply(
+        plan([], at: clock.now), content: { _ in .init() })
+      #expect(
+        center.calls.contains {
+          $0 == JSON.object(["removeDelivered": .array([.string(earlier), .string(later)])])
+        })
+    }
+
+    /// A delivery more than 1.5 seconds before the fire date is another occurrence's: `deliver`
+    /// posts this one.
+    @Test func deliverSkipsOnlyDeliveriesFromTheLeewayOn() async throws {
+      let clock = TestClock(Fixture.time(.asr) + 10)
+      let center = ModelCenter(
+        clock: clock,
+        delivered: [
+          DeliveredNotificationRecord(identifier: Self.identifier, date: Fixture.time(.asr) - 1.501)
+        ])
+      let report = try await scheduler(center, clock: clock).deliver(
+        [asrAlert()], content: { _ in .init() })
+      #expect(report.posted == [asrAlert().occurrenceID])
+    }
+
+    /// `addFailed` carries the thrown error's `localizedDescription`, from `apply` and from
+    /// `deliver`.
+    @Test func addFailedCarriesTheErrorsDescription() async throws {
+      let expected = NotificationApplyFailure.addFailed(
+        ModelCenter.AddFailure(identifier: Self.identifier).localizedDescription)
+      let clock = TestClock(Fixture.date(6, 0))
+      let applying = ModelCenter(clock: clock)
+      applying.configure(
+        failAdds: [Self.identifier], ignoreAdds: [], dropAdds: [], failReads: [])
+      let applied = try await scheduler(applying, clock: clock).apply(
+        plan([asrAlert()], at: clock.now), content: { _ in .init() })
+      #expect(applied.failures[Self.asr] == expected)
+      let delivering = ModelCenter(clock: clock)
+      delivering.configure(
+        failAdds: [Self.identifier], ignoreAdds: [], dropAdds: [], failReads: [])
+      let delivered = try await scheduler(delivering, clock: clock).deliver(
+        [asrAlert()], content: { _ in .init() })
+      #expect(delivered.failures[Self.asr] == expected)
+    }
+
+    /// A center that lists two requests under one identifier: the scheduler takes the first, in
+    /// the order the center lists them, in its first read and in the read-back.
+    @Test func theFirstRequestUnderAnIdentifierCounts() async throws {
+      let clock = TestClock(Fixture.date(6, 0))
+      func request(_ title: String) -> UNNotificationRequest {
+        ModelCenter.request(
+          Self.identifier, fireDate: Fixture.time(.asr), title: title, body: "", thread: "")
+      }
+      for (listed, adds) in [
+        ([request("old"), request("asr")], true), ([request("asr"), request("old")], false),
+      ] {
+        let center = ListingCenter(listed)
+        let report = try await NotificationScheduler(
+          identifierPrefix: "salah.", namespace: "prayers", center: center,
+          deliveredRetention: nil, now: { clock.now }
+        ).apply(
+          plan([asrAlert()], at: clock.now),
+          content: { _ in
+            let content = UNMutableNotificationContent()
+            content.title = "asr"
+            return content
+          })
+        #expect((center.addCount > 0) == adds, "listed \(listed.map(\.content.title))")
+        #expect(report.confirmed.isEmpty == adds, "listed \(listed.map(\.content.title))")
+      }
     }
 
     /// The calls' names, adds and removals by their kind.
@@ -619,5 +791,26 @@
       }
       Issue.record("timed out")
     }
+  }
+
+  /// A center that always lists the same pending requests, and counts adds.
+  nonisolated final class ListingCenter: AlertNotificationCenter, @unchecked Sendable {
+    // @unchecked: `adds` is read and written while holding `lock`; the requests are immutable.
+    private let lock = NSLock()
+    private let listed: [UNNotificationRequest]
+    private var adds = 0
+
+    init(_ listed: [UNNotificationRequest]) {
+      self.listed = listed
+    }
+
+    var addCount: Int { lock.withLock { adds } }
+
+    func authorizationStatus() async -> UNAuthorizationStatus { .authorized }
+    func pendingNotificationRequests() async throws -> [UNNotificationRequest] { listed }
+    func add(_ request: UNNotificationRequest) async throws { lock.withLock { adds += 1 } }
+    func removePendingNotificationRequests(withIdentifiers identifiers: [String]) async {}
+    func deliveredNotificationRecords() async -> [DeliveredNotificationRecord] { [] }
+    func removeDeliveredNotifications(withIdentifiers identifiers: [String]) async {}
   }
 #endif
