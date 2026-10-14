@@ -38,7 +38,7 @@ Each row is one owning day:
 
 > Contains information from Muslim Prayer Timetable 2026 accessed on 2026-10-13 from data.gov.sg (Majlis Ugama Islam Singapura) which is made available under the terms of the Singapore Open Data Licence version 1.0 https://data.gov.sg/open-data-licence
 
-The licence asks that the use doesn't suggest MUIS or data.gov.sg endorses the app or that the data is an official MUIS product as shown. MosqueBoard is an example app and makes no such claim.
+The licence expressly permits copying, modification, distribution and use in applications, including commercial use, subject to its conditions. The timetable remains under SODL rather than being relicensed under this repository's MIT code licence. NOTICE and the board's visible source footer provide attribution and the licence link. MosqueBoard is an example app and does not claim MUIS or data.gov.sg endorsement.
 
 **How it was converted.** The input is the dataset's response from the data.gov.sg datastore API, with all 365 records in one page (for example `https://data.gov.sg/api/action/datastore_search?resource_id=d_d441e7242e78efc566024dd5b0d9829c&limit=400`). To reproduce the file:
 
@@ -66,7 +66,9 @@ The converter uses the standard library only. It fails unless there are exactly 
 
 ## `edinburgh-synthetic.json`: synthetic, fictional mosque
 
-**This timetable is synthetic.** The mosque is fictional, and the times weren't copied from any real timetable. They're computed for Edinburgh (55.9533° N, 3.1883° W, `Europe/London`). The layout imitates how UK mosques print timetables: separate begin and jama'ah times, a Jumu'ah time that changes with British Summer Time, and Isha after midnight in summer. It exists because no openly licensed published timetable covers daylight saving, events after midnight, published iqama and partial rows (RFC 0001 §8).
+**This timetable is synthetic.** The mosque is fictional, and the times weren't copied from any real timetable. They're computed for Edinburgh (55.9533° N, 3.1883° W, `Europe/London`). Separate begin and jama'ah columns resemble a printed mosque timetable, but its summer Isha after midnight is a deliberate test of day offsets, not a claim about a real mosque's practice. The source search did not find an openly licensed published timetable covering all of daylight saving, events after midnight, published iqama and partial rows (RFC 0001 §8).
+
+For comparison, Edinburgh Central Mosque publishes its own [summer estimation policy](https://edmosque.org/abnormal-summer-times/) and [June 2026 timetable](https://edmosque.org/website/wp-content/uploads/2026/05/June-2026-A1.pdf). Its adopted policy differs from this fixture's middle-of-the-night Isha. A real mosque-board deployment must import that mosque's published times and conventions rather than adopt the fictional example's rules. No data from those publications is bundled here.
 
 ### Begin times
 
@@ -307,9 +309,8 @@ python3 -I Scripts/check-timetables.py
 
 It exits with 1 and lists every problem if any check fails.
 
-## For a person to confirm
+## Source interpretation
 
-- **MUIS Asr convention.** The table is presumably Shafi'i (shadow length 1), as is usual in Singapore. Confirm with MUIS or a local scholar.
-- **MUIS times around midnight.** No 2026 time is near midnight, but confirm that MUIS means plain local wall-clock times.
-- **Licence fit.** Confirm that bundling SODL v1.0 data in this MIT-licensed repository, with the attribution above and a NOTICE entry, is acceptable.
-- **Scottish timetables after midnight.** Check how real Scottish or northern UK mosque timetables print an Isha after midnight. They might print it as "00:20" or "12:20 am", mark it, cap it, or use a fixed time. Also check whether a 01:15 summer Isha with a 01:25 jama'ah is plausible, or whether mosques typically use an earlier fixed time. The synthetic file should keep imitating real practice.
+- **MUIS Asr convention.** The dataset does not identify a shadow-length calculation rule. MosqueBoard imports the published Asar values directly, so it does not need to guess one. Confirm the convention with a primary method statement before describing these rows as evidence for a particular calculated Asr preset.
+- **MUIS date ownership.** All 365 rows have increasing daytime values with no near-midnight ambiguity. They are imported as local Singapore wall-clock times on the printed date; no overnight offset is inferred.
+- **Local timetable interpretation.** When replacing the synthetic fixture, confirm the selected mosque's actual date ownership, summer estimation and jama'ah conventions. The fixture's after-midnight case tests the data model and does not establish a Scottish mosque's practice.

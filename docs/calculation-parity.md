@@ -1,6 +1,16 @@
-# Calculation parity: Salah today and SalahCalculation
+# Historical calculation parity: Salah and SalahCalculation
 
-The Salah app computes prayer times with adhan-swift. It will move to SalahCalculation, SalahKit's calculated prayer source built on the SalahTimes engine, in session D1. This document compares the two for the same user settings, over every day of 2026, and explains every difference larger than one minute. The differences listed here are the changes Salah's users would see after that move.
+This study compared the imported Salah app's adhan-swift implementation with SalahCalculation before the migration. Salah has used SalahCalculation since its 1.0.0 source release. The pinned versions, 2026 comparison data and historical before/after results below remain unchanged; references to the old Salah implementation describe that baseline, not the current app.
+
+## Maintained Salah consumer policy
+
+Salah's 1.1.x line retains the following explicit application choices. They do not change SalahTimes' published presets or require another app to make the same choices.
+
+- **Ramadan interval override:** Salah's delayed-Isha toggle defaults to on and sets an interval-based Isha to 120 minutes during Ramadan, including with Qatar. Turning it off retains the selected preset's interval. Qatar's cited official 1447 table retains 90 minutes; the 120-minute result is Salah's user-setting override, not a claim about that official calendar. This follow-up preserves the existing setting rather than silently moving users' times.
+- **Tehran ties:** when a high-latitude bound places Maghrib and Isha at the same instant, SalahCalculation retains Maghrib and omits the separate Isha to preserve a strictly ordered schedule. Treat this as an unavailable separate occurrence under the selected rule, not a fabricated later time or a promise to follow a local mosque's convention. The dated examples and causes below make the limitation explicit.
+- **Country suggestions:** Salah keeps its own country-to-method table. SalahTimes' sourced suggestions are a separate API; adopting them would intentionally change methods and prayer times in several countries. No automatic replacement is part of this release line.
+
+These choices are implemented in [CalculationChoices](https://github.com/salah-kit/Salah/blob/1.1.1/Salah/Core/Preferences/CalculationChoices.swift) and [MethodPreference](https://github.com/salah-kit/Salah/blob/1.1.1/Salah/Core/Preferences/PreferenceEnums.swift), with the adapter's ordering contract in [CalculationSource](https://github.com/salah-kit/SalahKit/blob/0.4.0/Sources/SalahCalculation/CalculationSource.swift). A future policy change should include affected cities/dates, before/after times and regression evidence. None is required to adopt the current package APIs.
 
 All differences are signed: SalahCalculation minus Salah, in minutes. A "kind-day" is one of the six kinds (Fajr, sunrise, Dhuhr, Asr, Maghrib, Isha) on one day in one configuration.
 
@@ -472,7 +482,7 @@ Because Asr or Isha goes missing on those days, the Tromsø runs have 1 to 3 few
 
 Isha agrees on every day of every run. With the toggle on, Salah used 120 minutes on 30 days in each run and SalahCalculation's Isha matched it on each of them. With it off, neither used 120 minutes. Salah reads the Umm al-Qura month at the start of the civil day in the stored zone. SalahTimes reads it at 12:00 UTC of the same civil date (`Sources/SalahTimes/Engine/Seasonal.swift`). Both give the same Umm al-Qura date for that civil day.
 
-Salah's toggle lengthens any interval Isha, Qatar's included, and the mapping keeps that behavior. SalahTimes' `METHODS.md` (Qatar) notes that Qatar's official 1447 timetable keeps 90 minutes in Ramadan. Whether Salah should keep the toggle on for Qatar is a product choice for D1, not a parity difference.
+Salah's toggle lengthens any interval Isha, Qatar's included, and the mapping keeps that behavior. SalahTimes' `METHODS.md` (Qatar) notes that Qatar's official 1447 timetable keeps 90 minutes in Ramadan. The maintained consumer policy above keeps this existing toggle behavior; it is an application override, not a parity difference or an official Qatar-calendar claim.
 
 ### 4. Country suggestions
 
@@ -607,7 +617,7 @@ Salah's defaults use Tehran only in Iran, where nothing differs. A user anywhere
 
 **Evidence.** Behavior 4 explains 1,016 kind-days, counting the 8 adjusted Tehran runs: alone on 1,011, and on 5 at Tromsø (15 May) with the single step adding 56 seconds. With class G, 25 more, and with class D, 4. The Isha gaps are listed under "Times one side doesn't give".
 
-**Intended.** Yes, as specified. For D1: under Salah's own automatic rule, a Tehran user at 59° or beyond sees Maghrib later and no separate Isha on summer nights, and under the middle-of-the-night rule from Reykjavik's latitude northward. Salah's UI should present that.
+**Intended.** Yes, as specified. In the migrated app: under Salah's own automatic rule, a Tehran user at 59° or beyond sees Maghrib later and no separate Isha on summer nights, and under the middle-of-the-night rule from Reykjavik's latitude northward. Salah's UI should present that.
 
 ### F. The Moonsighting Committee's 55° rule
 
@@ -652,7 +662,7 @@ These kind-days have a time on only one side, so they aren't counted as differen
 
 On every day where SalahCalculation reports a kind missing and SalahTimes computed a time, the reason is one of the adapter rules that `CalculationSource` documents. In this comparison that was a time that isn't strictly after the kind before it, or a time after an event of a later day. In every case of the second kind, the later day was the next one: the time came after the next day's first event.
 
-## What Salah's users will see after D1
+## Changes identified for the migration
 
 Grouped by place and high-latitude rule. "Automatic" is Salah's automatic rule, its default: the seventh of the night beyond 48°. In the bullets, a range is the extreme over every method compared at the places the bullet names, unless it names a method or Salah's defaults; the table after the list gives each method's own range. The list and the table were checked against the harness's table of changes (`d1-changes.tsv`: one row per configuration, place, kind and kind of change, with every date), with a script and by reading.
 

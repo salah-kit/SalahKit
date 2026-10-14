@@ -118,6 +118,6 @@ Every value has a VoiceOver label, such as "At 15:27", "Time remaining: 1 hour, 
 ## Pending
 
 - **A real iPhone:** only simulators have run the app so far. Run it on a physical iPhone, with large Dynamic Type sizes and VoiceOver.
-- **Contrast decision:** `ContrastCheck` exists. The system's secondary text on white measured 3.30–3.44:1 in light mode, below WCAG's 4.5:1 for body text ([RFC 0004](../../docs/rfcs/0004-widgets-and-ui.md), §8 #6). The orange coverage-banner border measured 1.97–2.20:1, below the 3:1 non-text threshold. Choosing stronger colors remains pending; these measurements do not establish full contrast compliance.
+- **Contrast limit:** the example retains platform semantic secondary text, following [RFC 0004](../../docs/rfcs/0004-widgets-and-ui.md), §8 #6. The recorded light-mode ratio of 3.30–3.44:1 is below WCAG's 4.5:1 for body text; apps requiring that floor must restyle it. The orange coverage-banner outline is decorative: the primary-colored warning symbol and text carry its meaning. These measurements do not establish full contrast compliance.
 - **Real notification delivery:** check closed-app delivery and first-permission behavior on a physical iPhone; the simulator journey does not establish device behavior.
 - **Arabic review:** a native speaker should review the Arabic strings.

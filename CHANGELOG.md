@@ -8,9 +8,14 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
+- The calculation-parity study distinguishes its historical baseline from the shipped app and
+  documents Salah's retained Ramadan, Tehran-tie and country-suggestion policies.
+- MosqueBoard's synthetic summer timetable is identified as a day-offset test fixture rather
+  than evidence of a real Scottish mosque's practice, with links to a primary comparison.
+  The MUIS notes record the confirmed SODL distribution grant and date interpretation.
 - CalculatedPhone's README now describes its shipped alert settings, launch arguments and
   notification journey, and lists all linked SalahKit products. Its and MosqueBoard's
-  contrast notes reflect the available checker and the unresolved color decisions.
+  contrast notes document the retained semantic-color policy and its body-text contrast limit.
 - DocC comments describe SalahUI's public view and style implementations and the preview
   galleries' view bodies.
 - The README explains the examples' naming and platform differences, the original Core and
