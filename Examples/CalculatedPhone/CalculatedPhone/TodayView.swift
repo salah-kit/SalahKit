@@ -1,4 +1,5 @@
 import SalahCore
+import SalahUI
 import SwiftUI
 
 /// Redraws every second for the clock and the countdown, which also covers every state change
@@ -266,51 +267,87 @@ private struct ScheduleCard: View {
           .font(.callout)
           .accessibilityIdentifier("day.unavailable")
       }
-      ForEach(snapshot.rows) { row in
-        RowView(row: row)
-        if row.kind != snapshot.rows.last?.kind {
-          Divider()
-        }
+      VStack(alignment: .leading, spacing: 10) {
+        PrayerTimesList(
+          day: snapshot.list.day, state: snapshot.list.state, names: strings.names,
+          countdown: .staticText, missing: snapshot.list.missing
+        ).rows
+      }
+      .prayerRowStyle(
+        PhoneRowStyle(
+          strings: strings, timeZone: snapshot.list.day.timeZone,
+          lastKind: snapshot.rows.last?.kind)
+      )
+      .environment(\.locale, strings.locale)
+    }
+  }
+}
+
+/// The list supplies known events and missing reasons; the app words them in its language.
+private struct PhoneRowStyle: PrayerRowStyle {
+  let strings: PhoneStrings
+  let timeZone: TimeZone
+  let lastKind: PrayerKind?
+
+  func makeBody(configuration: Configuration) -> some View {
+    VStack(spacing: 10) {
+      RowView(configuration: configuration, strings: strings, timeZone: timeZone)
+      if configuration.kind != lastKind {
+        Divider()
       }
     }
   }
 }
 
 private struct RowView: View {
-  let row: PhoneSnapshot.Row
+  let configuration: PrayerRowConfiguration
+  let strings: PhoneStrings
+  let timeZone: TimeZone
+
+  private var status: PhoneSnapshot.Status? {
+    configuration.status.map(PhoneSnapshot.Status.init)
+  }
 
   private var isNext: Bool {
-    if case .next = row.status { return true }
+    if case .next = status { return true }
     return false
   }
 
   var body: some View {
-    let id = "row.\(row.kind.rawValue)"
+    let id = "row.\(configuration.kind.rawValue)"
     HStack(alignment: .firstTextBaseline, spacing: 12) {
       VStack(alignment: .leading, spacing: 2) {
-        Text(verbatim: row.name)
+        configuration.name
           .font(.title3.weight(isNext ? .bold : .regular))
           .accessibilityIdentifier("\(id).name")
-        StatusLabel(status: row.status, text: row.statusText)
-          .accessibilityIdentifier("\(id).status")
+        StatusLabel(
+          status: status,
+          text: configuration.event == nil ? nil : status?.text(strings) ?? strings("Unknown")
+        )
+        .accessibilityIdentifier("\(id).status")
       }
       Spacer(minLength: 8)
       VStack(alignment: .trailing, spacing: 2) {
-        if let time = row.time {
-          Text(verbatim: time)
+        if let event = configuration.event {
+          // This example deliberately uses a 24-hour clock, including seconds when the
+          // calculation's rounding is disabled, rather than the list's short-time text.
+          Text(verbatim: PhoneFormat(strings: strings, timeZone: timeZone).time(event.time))
             .font(.title3.monospacedDigit().weight(isNext ? .bold : .regular))
             .accessibilityIdentifier("\(id).time")
         } else {
-          Text(verbatim: row.missing ?? "")
+          Text(verbatim: configuration.gapReason?.label(strings) ?? "–")
             .font(.callout)
             .foregroundStyle(Color.secondary)
             .multilineTextAlignment(.trailing)
             .accessibilityIdentifier("\(id).time")
         }
-        if let marker = row.dayMarker {
-          Text(verbatim: marker)
-            .font(.caption)
-            .accessibilityIdentifier("\(id).marker")
+        if configuration.dayOffset != 0 {
+          Text(
+            verbatim: configuration.dayOffset > 0
+              ? strings("Next day") : strings("Previous evening")
+          )
+          .font(.caption)
+          .accessibilityIdentifier("\(id).marker")
         }
       }
     }

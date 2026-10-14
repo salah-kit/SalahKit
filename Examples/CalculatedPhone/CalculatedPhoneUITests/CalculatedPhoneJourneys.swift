@@ -316,6 +316,29 @@ nonisolated final class CalculatedPhoneJourneys: XCTestCase {
     screenshot("04b-invalid-coordinates")
   }
 
+  /// SalahUI supplies the polar-night gaps to the app's row style. All expected kinds keep
+  /// their canonical positions, and no missing row displays a status or a borrowed time.
+  @MainActor
+  func testTromsoPolarNightMissingRows() {
+    let app = launch(
+      at: "2026-12-21T12:00:00+01:00",
+      ["-place", "tromso", "-method", "muslimWorldLeague"])
+    for kind in ["sunrise", "asr", "maghrib"] {
+      XCTAssertEqual(label("row.\(kind).time", in: app), "Can't be calculated")
+      assertMissing("row.\(kind).status", in: app)
+      assertMissing("row.\(kind).marker", in: app)
+    }
+    let kinds = ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"]
+    let names = kinds.map { element("row.\($0).name", in: app) }
+    for name in names {
+      XCTAssertTrue(name.waitForExistence(timeout: 10))
+    }
+    for index in 0..<(names.count - 1) {
+      XCTAssertLessThan(names[index].frame.minY, names[index + 1].frame.minY)
+    }
+    screenshot("04c-tromso-polar-night-missing-rows")
+  }
+
   /// 5. Settings made in the app survive a relaunch without `-resetSettings`.
   @MainActor
   func testSettingsPersistAcrossRelaunch() {

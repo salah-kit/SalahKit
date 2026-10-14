@@ -1,8 +1,8 @@
 # CalculatedPhone
 
-An iPhone app that calculates prayer times with SalahCalculation and shows them with SalahCore: the day's schedule, the state across midnight, every calculation parameter, and honest gaps where the calculation can't produce a time.
+An iPhone app that calculates prayer times with SalahCalculation and shows them with SalahCore and SalahUI: the day's schedule, the state across midnight, every calculation parameter, and honest gaps where the calculation can't produce a time.
 
-CalculatedPhone is SalahKit's example of a calculating app (proposal §2.3 #1). It uses only the public API of `SalahCore` and `SalahCalculation`, and imports `SalahTimes` to name the engine's types. It has no `@testable` imports of the packages, no internals and no copies of package logic. Its journeys run on an iPhone simulator with an injected clock and location and assert the exact text on screen.
+CalculatedPhone is SalahKit's example of a calculating app (proposal §2.3 #1). It uses only the public API of `SalahCore`, `SalahCalculation`, `SalahUI` and `SalahAlerts`, and imports `SalahTimes` to name the engine's types. It has no `@testable` imports of the packages, no internals and no copies of package logic. Its journeys run on an iPhone simulator with an injected clock and location and assert the exact text on screen.
 
 ## What it shows
 
@@ -19,6 +19,8 @@ One screen, and a Settings sheet:
 A method defines Fajr, Maghrib and Isha, the night span, its own minutes and the rounding, so changing any of them switches to Custom and the method shown is always exact. The madhab, the high-latitude rule, the user's minutes and the Ramadan rule are the user's own and stay when the method changes (`AppSettings.choose(_:)`).
 
 The settings (place, method choice and `CalculationSettings`) are stored as JSON in `UserDefaults` and decoded at launch; the Settings sheet shows the stored JSON. `PrivacyInfo.xcprivacy` declares the `UserDefaults` access with reason `CA92.1`. The app reads no location: a place is an explicit `PrayerLocation`.
+
+Today's rows use `PrayerTimesList.rows`, with the partial day's missing-kind dictionary passed as `missing`. `PhoneRowStyle` reads `PrayerRowConfiguration.gapReason` to show the app's translated reason where no time exists. The same style draws known events and their statuses, and marks day offsets; it keeps the example's explicit 24-hour clock and seconds when rounding is disabled. This is the second consumer of the missing-row API in SalahKit 0.4.0, alongside Salah. The polar-night journey asserts that all six kinds stay in order and missing kinds show reasons with no status or day marker.
 
 ### Places
 

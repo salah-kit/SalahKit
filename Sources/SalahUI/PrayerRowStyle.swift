@@ -14,7 +14,7 @@
   ///     HStack {
   ///       configuration.name.font(.title3)
   ///       Spacer()
-  ///       configuration.time.monospacedDigit()
+  ///       (configuration.time ?? Text(verbatim: "–")).monospacedDigit()
   ///     }
   ///     .padding(8)
   ///     .background(configuration.status == .next(approaching: true) ? .orange.opacity(0.2) : .clear,
@@ -40,9 +40,20 @@
   }
 
   /// What a ``PrayerRowStyle`` draws one row from.
+  ///
+  /// Since 0.4.0, `event` and `time` are optional. A list asked to show a missing kind supplies
+  /// its `kind`, name and `gapReason`, with no event, time, status or countdown. A custom style
+  /// can word that reason; the plain style shows a dash. Existing styles should unwrap the
+  /// event before reading it and choose a fallback for a missing time.
   public struct PrayerRowConfiguration {
-    /// The event the row shows.
-    public let event: PrayerEvent
+    /// The kind the row shows, including when its event is missing.
+    public let kind: PrayerKind
+
+    /// The event the row shows, or `nil` for an explicitly missing kind.
+    public let event: PrayerEvent?
+
+    /// Why the source could not provide this kind; `nil` for a known event.
+    public let gapReason: ScheduleGapReason?
 
     /// How the event relates to the state: passed, just started, next or upcoming. `nil` when
     /// the list has no known state, as while the schedule is unavailable: show no status then.
@@ -52,11 +63,12 @@
     public let name: Text
 
     /// The event's time, as the environment's locale writes a short time, in the day's time
-    /// zone rather than the device's.
-    public let time: Text
+    /// zone rather than the device's; `nil` when the kind is missing.
+    public let time: Text?
 
     /// The civil days from the event's owning day to the date it occurs on, in the day's time
-    /// zone: 1 for an Isha after midnight, -1 for a Fajr before it, otherwise 0.
+    /// zone: 1 for an Isha after midnight, -1 for a Fajr before it, otherwise 0, including a
+    /// missing kind.
     public let dayOffset: Int
 
     /// The day offset as signed text in the locale's digits, such as `+1`; `nil` when the
@@ -126,7 +138,7 @@
             .fixedSize()
         }
         HStack(alignment: .firstTextBaseline, spacing: 2) {
-          configuration.time
+          (configuration.time ?? Text(verbatim: "–"))
             .monospacedDigit()
           if let offset = configuration.dayOffsetText {
             offset

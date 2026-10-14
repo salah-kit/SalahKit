@@ -423,7 +423,7 @@ private struct WidgetRowStyle: PrayerRowStyle {
       configuration.name
         .lineLimit(1)
       Spacer(minLength: 4)
-      configuration.time
+      (configuration.time ?? Text(verbatim: "–"))
         .monospacedDigit()
         .lineLimit(1)
       if let offset = configuration.dayOffsetText {
@@ -434,7 +434,7 @@ private struct WidgetRowStyle: PrayerRowStyle {
     .fontWeight(emphasized ? .semibold : .regular)
     .foregroundStyle(color.color)
     .accessibilityElement(children: .combine)
-    .accessibilityIdentifier("widget.row.\(configuration.event.kind.rawValue)")
+    .accessibilityIdentifier("widget.row.\(configuration.kind.rawValue)")
   }
 }
 

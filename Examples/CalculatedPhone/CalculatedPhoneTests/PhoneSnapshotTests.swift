@@ -215,6 +215,32 @@ struct PhoneSnapshotTests {
 
   // MARK: Source failure
 
+  @Test func listReceivesTheCalculatedDaysFactsAndReasons() throws {
+    let tromso = settings(.tromso, .muslimWorldLeague)
+    let screen = try snapshot(tromso, at: "2026-06-21T15:00:00+02:00")
+    let date = try Date("2026-06-21T15:00:00+02:00", strategy: .iso8601)
+    let availability = tromso.schedule.day(containing: date)
+    guard case .available(let day, .partial(let missing)) = availability else {
+      Issue.record("Tromsø must have a partial calculated day")
+      return
+    }
+    #expect(screen.list.day == day)
+    #expect(screen.list.missing == missing)
+    #expect(screen.list.missing.keys.sorted() == [.fajr, .sunrise, .maghrib, .isha])
+    #expect(screen.list.state?.next?.kind == .asr)
+    #expect(screen.list.day.events.map(\.kind) == [.dhuhr, .asr])
+  }
+
+  @Test func unavailableListHasNoEventsAndKeepsTheExplicitReasonForEveryKind() throws {
+    let invalid = settings(.invalid, .muslimWorldLeague)
+    let screen = try snapshot(invalid, at: "2026-06-21T12:00:00Z")
+    #expect(screen.list.day.events.isEmpty)
+    #expect(screen.list.state == nil)
+    #expect(
+      screen.list.missing
+        == Dictionary(uniqueKeysWithValues: PrayerKind.allCases.map { ($0, .invalidData) }))
+  }
+
   @Test func tromsoMidsummerAfterAsr() throws {
     let tromso = settings(.tromso, .muslimWorldLeague)
     let screen = try snapshot(tromso, at: "2026-06-21T20:00:00+02:00")

@@ -6,6 +6,13 @@ import SalahCore
 ///
 /// The view draws a snapshot and nothing else, so the app's logic is tested here without UI.
 nonisolated struct PhoneSnapshot: Equatable, Sendable {
+  /// The source facts used by SalahUI's list, alongside the screen's tested text snapshot.
+  struct ListPresentation: Equatable, Sendable {
+    var day: PrayerDay
+    var state: PrayerState?
+    var missing: [PrayerKind: ScheduleGapReason]
+  }
+
   /// A prayer's status at the snapshot's instant (`PrayerState.status(of:)`).
   enum Status: Equatable, Sendable {
     case passed
@@ -70,6 +77,7 @@ nonisolated struct PhoneSnapshot: Equatable, Sendable {
   /// Today's unavailability, when the source has nothing for it.
   var dayUnavailable: String?
   var rows: [Row]
+  var list: ListPresentation
   var calculation: [ParameterRow]
   /// The next instant the state changes, within the look-ahead.
   var changesAt: Date?
@@ -110,6 +118,9 @@ extension PhoneSnapshot {
       clock: format.clock(now),
       next: .unknown(message: "", reason: nil),
       rows: [],
+      list: ListPresentation(
+        day: PrayerDay(day: today, timeZone: location.timeZone, events: []),
+        state: prayerState, missing: [:]),
       calculation: CalculationText(strings: strings).rows(settings),
       changesAt: state.changesAt)
 
@@ -118,6 +129,7 @@ extension PhoneSnapshot {
     var missingToday: [PrayerKind: ScheduleGapReason] = [:]
     switch schedule.day(today) {
     case .available(let day, let coverage):
+      snapshot.list.day = day
       if case .partial(let missing) = coverage {
         missingToday = missing
       }
@@ -147,6 +159,7 @@ extension PhoneSnapshot {
       }
       snapshot.dayUnavailable = strings("Today's times can't be shown: \(reason.sentence(strings))")
     }
+    snapshot.list.missing = missingToday
 
     // The state: the next prayer, the latest one, and what hides them.
     let prayerGaps = state.coverage.gaps

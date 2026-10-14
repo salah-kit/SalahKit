@@ -20,6 +20,7 @@
 		4B45EB3BA424D92B69C43932 /* PhoneSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4664051562A8297396FEC9C6 /* PhoneSnapshot.swift */; };
 		54AC86CA7AFB93F4A1E81B1A /* PhoneSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B303418697FC6EAD67BEE /* PhoneSnapshotTests.swift */; };
 		5C8617CEF1F04FCC4A4AAF23 /* PhoneStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776F5774F70F4CC6F63CF23E /* PhoneStrings.swift */; };
+		6C32DC67FCF8147FD6DF0A7E /* SalahUI in Frameworks */ = {isa = PBXBuildFile; productRef = AF3224484B343B330F724E88 /* SalahUI */; };
 		6D9EC6E9710E50135A458D6D /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B30EADE403237DE2E3DCA953 /* Localizable.xcstrings */; };
 		7C731D4C386AB6DC9620DC1C /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE8507C5A6BF1AA1122E5B1 /* SettingsTests.swift */; };
 		7F8406780D22861E7ADA1A86 /* SalahAlerts in Frameworks */ = {isa = PBXBuildFile; productRef = 1D6A08FBB4BBF70E0062DA81 /* SalahAlerts */; };
@@ -83,6 +84,7 @@
 				2002F41B1516B76505D63689 /* SalahCore in Frameworks */,
 				80EA4D73DF1EFD2956A39291 /* SalahCalculation in Frameworks */,
 				7F8406780D22861E7ADA1A86 /* SalahAlerts in Frameworks */,
+				6C32DC67FCF8147FD6DF0A7E /* SalahUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,6 +207,7 @@
 				50905702E64E64EA99C30001 /* SalahCore */,
 				35679379C488ABB5988B5367 /* SalahCalculation */,
 				1D6A08FBB4BBF70E0062DA81 /* SalahAlerts */,
+				AF3224484B343B330F724E88 /* SalahUI */,
 			);
 			productName = CalculatedPhone;
 			productReference = B1AFC4FFB47DE68644186F76 /* CalculatedPhone.app */;
@@ -647,6 +650,10 @@
 		50905702E64E64EA99C30001 /* SalahCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SalahCore;
+		};
+		AF3224484B343B330F724E88 /* SalahUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
