@@ -13,8 +13,8 @@ struct DisplayContentTests {
   static let names = PrayerNames(locale: Locale(identifier: "en"))
 
   /// How the platform writes a wall-clock time such as `"04:59"` in ``british``: the same
-  /// formatter on that clock time in GMT. ICU data differs between platforms (`4:59` or `04:59`),
-  /// so expectations compare with this instead of fixed text.
+  /// formatter on that clock time in GMT. ICU data can differ between platforms, so
+  /// expectations compare with this instead of fixed text.
   static func clock(_ text: String) -> String {
     let parts = text.split(separator: ":").compactMap { Int($0) }
     let date = Date(timeIntervalSince1970: TimeInterval(parts[0] * 3_600 + parts[1] * 60))
@@ -102,6 +102,28 @@ struct DisplayContentTests {
     #expect(rows.map(\.dayOffset) == [-1, 0])
     #expect(rows.first?.dayOffsetText == "-1")
     #expect(rows.first?.time == Self.clock("23:45"))
+  }
+
+  /// Fajr at 04:11 and Asr at 15:35 in Riyadh, written the way each locale writes a short time.
+  /// 24-hour locales keep the hour's leading zero (issue #11): `Date.FormatStyle`'s `.shortened`
+  /// time wrote "4:11" in French, Turkish and Indonesian.
+  @Test(
+    "times keep the locale's own short format",
+    arguments: [
+      ("fr", "04:11", "15:35"), ("tr", "04:11", "15:35"), ("id", "04.11", "15.35"),
+      ("en_GB", "04:11", "15:35"),
+    ])
+  func shortTimeFormat(identifier: String, morning: String, afternoon: String) throws {
+    let zone = try #require(TimeZone(identifier: "Asia/Riyadh"))
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = zone
+    let fajr = try #require(
+      calendar.date(from: DateComponents(year: 2026, month: 10, day: 14, hour: 4, minute: 11)))
+    let locale = Locale(identifier: identifier)
+    #expect(ScheduleTimeText.string(fajr, timeZone: zone, locale: locale) == morning)
+    #expect(
+      ScheduleTimeText.string(fajr.addingTimeInterval(41_040), timeZone: zone, locale: locale)
+        == afternoon)
   }
 
   @Test("day offsets use the locale's digits")

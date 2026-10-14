@@ -35,11 +35,18 @@ nonisolated struct CountdownContent: Hashable, Sendable {
 nonisolated enum ScheduleTimeText {
   /// The time of `date` as the locale writes a short time, in `timeZone` rather than the
   /// device's zone: a Makkah schedule reads Makkah's clock on a phone set to London.
+  ///
+  /// This is the locale's own short time format, as `DateFormatter`'s `.short` time style
+  /// gives it. `Date.FormatStyle`'s `.shortened` time drops the hour's leading zero in 24-hour
+  /// locales: French writes "04:11", not "4:11".
   static func string(_ date: Date, timeZone: TimeZone, locale: Locale) -> String {
-    let style = Date.FormatStyle(
-      date: .omitted, time: .shortened, locale: locale, calendar: locale.calendar,
-      timeZone: timeZone)
-    return date.formatted(style)
+    let formatter = DateFormatter()
+    formatter.locale = locale
+    formatter.calendar = locale.calendar
+    formatter.timeZone = timeZone
+    formatter.dateStyle = .none
+    formatter.timeStyle = .short
+    return formatter.string(from: date)
   }
 
   /// The civil days from an event's owning day to the date it occurs on, in the schedule's

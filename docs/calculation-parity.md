@@ -38,7 +38,7 @@ The counts add up over configurations, so a place that appears in several config
 | Component | Version |
 |---|---|
 | Salah | `salah-kit/Salah` at `4bc00e9`, the imported Guidance v3 rebuild |
-| adhan-swift | `batoulapps/adhan-swift` at `a6fa2de` (MIT), the version Salah builds with |
+| adhan-swift | `batoulapps/adhan-swift` at `a6fa2de` (1.5.0, MIT). Salah pinned 1.4.0 (`6dc8309`) until it moved onto SalahKit. In `Sources/`, 1.5.0 only removes the Objective-C bridge and fixes `Astronomical.approximateTransit` near the International Date Line, which none of the study's places is near; a rerun of the study's configurations against 1.4.0 gave the same counts ([#15](https://github.com/salah-kit/SalahKit/issues/15)) |
 | SalahKit | `salah-kit/SalahKit` at `723d9cc` (branch `b1/calculation`), with `SalahCalculation` and `SalahCore` |
 | SalahTimes | 0.1.0 (`42a291c`), resolved from `https://github.com/salah-kit/SalahTimes.git` |
 | Toolchain | Swift 6.4, Xcode 27.0, macOS 27 on Apple silicon, run on 2026-10-13 |

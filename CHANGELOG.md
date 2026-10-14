@@ -47,6 +47,14 @@ All notable changes to this project are documented here. The format follows
 - The stop signal's declaration in "Building widget timelines" is `nonisolated`, so an intent
   that isn't on the main actor can post it in a module that defaults to the main actor.
 
+### Fixed
+
+- SalahUI writes times in the locale's own short time format, as its documentation says: in
+  24-hour locales such as French, Turkish and Indonesian, the hour keeps its leading zero
+  ("04:11", not "4:11") ([#11](https://github.com/salah-kit/SalahKit/issues/11)).
+- `docs/calculation-parity.md` names adhan-swift 1.5.0 as the version compared, and 1.4.0 as
+  the one Salah pinned ([#15](https://github.com/salah-kit/SalahKit/issues/15)).
+
 ## [0.2.0] - 2026-10-14
 
 Widgets that build their own timelines, SwiftUI building blocks you restyle, and prayer
