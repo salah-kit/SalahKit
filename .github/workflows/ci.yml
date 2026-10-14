@@ -40,6 +40,22 @@ jobs:
       - name: Test
         run: swift test
 
+      # SalahUI's snapshot tests leave the image they rendered wherever a reference is missing
+      # or differs, so it can be compared or, for a new macOS version, recorded.
+      - name: Upload the snapshot failures
+        if: failure()
+        uses: actions/upload-artifact@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
+        with:
+          name: snapshot-failures
+          path: .build/snapshot-failures
+          if-no-files-found: ignore
+
+      # The Linux isolation job can't compile the code behind `canImport(SwiftUI)` and
+      # `canImport(WidgetKit)`, so macOS builds SalahUI and SalahWidgets with MainActor default
+      # isolation too (docs/rfcs/0001-core.md, section 6.3).
+      - name: Build with MainActor default isolation
+        run: SALAHKIT_DEFAULT_ISOLATION=MainActor swift build --build-tests --scratch-path .build/mainactor
+
       # Generic destinations compile for each simulator platform without booting a simulator.
       # Xcode 26 on macos-26 ships every simulator SDK the manifest supports. If a future image
       # drops one, the step reports it as skipped instead of failing (STANDARD.md, CI).

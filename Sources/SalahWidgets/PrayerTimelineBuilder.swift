@@ -3,7 +3,7 @@ import SalahCore
 
 /// Builds bounded widget timelines from a schedule, inside the widget extension.
 ///
-/// The extension loads the app's inputs, builds a ``PrayerSchedule`` and asks the builder for a
+/// The extension loads the app's inputs, builds a `PrayerSchedule` and asks the builder for a
 /// timeline. Nothing depends on the app having run since the last timeline, so a calculated
 /// widget keeps going for as long as WidgetKit keeps asking:
 ///
@@ -17,7 +17,7 @@ import SalahCore
 /// ```
 ///
 /// A timeline covers ``defaultHorizon`` (48 hours) unless you ask for another horizon. Its
-/// entries come from SalahCore's ``PrayerSchedule/refreshPlan(from:through:strategy:policy:limit:)``:
+/// entries come from SalahCore's `PrayerSchedule.refreshPlan`:
 /// one wherever the known state or its coverage changes, so a source gap, such as a timetable
 /// that ends, appears as a ``PrayerTimelineState/schedule(_:)`` state at its boundary. The last
 /// entry is always ``PrayerTimelineState/expired(knownThrough:)``, even for a calculation that
@@ -37,8 +37,8 @@ nonisolated public struct PrayerTimelineBuilder: Sendable {
   /// When a prayer counts as approaching or just started.
   public let policy: StatePolicy
 
-  /// How the entries' dates are chosen: ``RefreshStrategy/stateChanges`` for views that count
-  /// down by themselves, or ``RefreshStrategy/steps(fine:coarse:window:)`` for static text.
+  /// How the entries' dates are chosen: `RefreshStrategy.stateChanges` for views that count
+  /// down by themselves, or `RefreshStrategy.steps` for static text.
   public let strategy: RefreshStrategy
 
   /// The most entries a timeline holds, the expired entry included.
@@ -71,7 +71,7 @@ nonisolated public struct PrayerTimelineBuilder: Sendable {
   /// - Parameters:
   ///   - now: The first entry's date, usually the moment WidgetKit asked for the timeline.
   ///   - horizon: How far the timeline looks ahead. SalahCore clamps a horizon beyond
-  ///     ``PrayerSchedule/maximumQueryDays`` days.
+  ///     `PrayerSchedule.maximumQueryDays` days.
   /// - Returns: The timeline.
   /// - Throws: `RefreshPlanError` for a horizon that isn't positive, a ``limit`` below 2 or a
   ///   `steps` strategy with a step under a second or a negative window.

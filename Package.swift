@@ -113,8 +113,8 @@ let package = Package(
     .testTarget(
       name: "SalahWidgetsTests",
       dependencies: [
-        "DarwinSignalHelper", "SalahCalculation", "SalahCore", "SalahFixtures", "SalahWidgets",
-        .product(name: "SalahTimes", package: "SalahTimes"),
+        "DarwinSignalHelper", "SalahCalculation", "SalahCore", "SalahFixtures", "SalahUI",
+        "SalahWidgets", .product(name: "SalahTimes", package: "SalahTimes"),
       ],
       swiftSettings: defaultIsolation
     ),

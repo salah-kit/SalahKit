@@ -54,11 +54,13 @@ import Testing
       encoding: .utf8)
     let haystack = "\n\(Self.normalized(examples))\n"
     // Package manifest fragments aren't app code; SalahCalculation's tests check the
-    // calculation blocks (CalculationDocumentationTests) and SalahAlerts' tests the alerts
-    // blocks (AlertsDocumentationTests).
+    // calculation blocks (CalculationDocumentationTests), SalahAlerts' tests the alerts blocks
+    // (AlertsDocumentationTests), and SalahWidgets' and SalahUI's tests their own
+    // (WidgetsDocumentationTests, UIDocumentationTests).
     let blocks = try document.blocks("swift").filter {
       !$0.contains(".package(url:") && !$0.contains("CalculationSource")
         && !$0.contains("CalculationSettings") && !$0.contains("import SalahAlerts")
+        && !Self.isWidgetsOrUI($0)
     }
     #expect(!blocks.isEmpty)
     for block in blocks {
@@ -67,6 +69,14 @@ import Testing
         "\(document.path) has a Swift block that DocumentationExamples.swift doesn't run:\n\(block)"
       )
     }
+  }
+
+  /// Whether a block shows SalahWidgets or SalahUI, whose own tests check it.
+  nonisolated static func isWidgetsOrUI(_ block: String) -> Bool {
+    [
+      "SharedValue", "PrayerTimelineBuilder", "DarwinSignal", "PrayerTimesList", "NextPrayerView",
+      "PrayerCountdown", "PrayerRowStyle", "NextPrayerStyle", "ThemeColor", "ContrastCheck",
+    ].contains { block.contains($0) }
   }
 
   @Test func articleJSONDecodes() throws {

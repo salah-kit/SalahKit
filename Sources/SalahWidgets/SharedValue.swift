@@ -12,7 +12,10 @@ import Foundation
 ///
 /// ```swift
 /// extension SharedValue where Value == PhoneSettings {
-///   static let settings = SharedValue(appGroup: "group.com.example.prayers", key: "settings.v1")
+///   // Computed: a generic type can't have a stored static property.
+///   static var settings: Self {
+///     SharedValue(appGroup: "group.com.example.prayers", key: "settings.v1")
+///   }
 /// }
 ///
 /// // In the app, whenever the settings change:

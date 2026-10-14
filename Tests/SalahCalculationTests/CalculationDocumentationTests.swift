@@ -14,9 +14,15 @@ import Testing
   nonisolated static let article =
     "Sources/SalahCalculation/SalahCalculation.docc/CalculatedPrayerApp.md"
 
-  /// Whether a Swift block belongs to SalahCalculation's documentation.
+  /// Whether a Swift block belongs to SalahCalculation's documentation. A block that shows
+  /// SalahWidgets or SalahUI belongs to theirs (WidgetsDocumentationTests, UIDocumentationTests).
   nonisolated static func isCalculation(_ block: String) -> Bool {
-    block.contains("CalculationSource") || block.contains("CalculationSettings")
+    let widgetsOrUI = [
+      "SharedValue", "PrayerTimelineBuilder", "DarwinSignal", "PrayerTimesList", "NextPrayerView",
+      "PrayerCountdown", "PrayerRowStyle", "NextPrayerStyle", "ThemeColor", "ContrastCheck",
+    ].contains { block.contains($0) }
+    return (block.contains("CalculationSource") || block.contains("CalculationSettings"))
+      && !widgetsOrUI
   }
 
   @Test(arguments: [readme, article])

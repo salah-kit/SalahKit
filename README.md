@@ -1,6 +1,6 @@
 # SalahKit
 
-Swift packages for building prayer-time apps on Apple platforms: a typed prayer schedule with honest coverage, from calculated times or published timetables with iqama, the words and numbers to show them, and prayer alerts that fit the system's notification limit.
+Swift packages for building prayer-time apps on Apple platforms: a typed prayer schedule with honest coverage, from calculated times or published timetables with iqama, the words and numbers to show them, widget timelines that don't need the app to run, SwiftUI building blocks you restyle, and prayer alerts that fit the system's notification limit.
 
 [![CI](https://github.com/salah-kit/SalahKit/actions/workflows/ci.yml/badge.svg)](https://github.com/salah-kit/SalahKit/actions/workflows/ci.yml)
 [![Latest release](https://img.shields.io/github/v/release/salah-kit/SalahKit?include_prereleases&sort=semver)](https://github.com/salah-kit/SalahKit/releases)
@@ -14,6 +14,8 @@ SalahKit is the app layer of the [salah-kit](https://github.com/salah-kit) ecosy
 |---|---|
 | **SalahCore** | The schedule model and the `PrayerSource` contract; `TimetableSource` for published times, with wall-time resolution around clock changes; optional iqama rules; the prayer state at any moment; refresh planning; prayer names in a String Catalog; duration, numbering and Hijri formatting on Foundation |
 | **SalahCalculation** | Calculated times from [SalahTimes](https://github.com/salah-kit/SalahTimes) as a `PrayerSource`: `CalculationSettings` carries every calculation parameter to the engine unchanged, `CalculationSource` reports a time it can't calculate (a polar summer's Isha) as missing instead of guessing, and `CalculationMethod.suggested(for:)` offers a sourced starting method |
+| **SalahWidgets** | Widget timelines the extension builds by itself from shared inputs: `SharedValue` keeps a `Codable` value in an App Group and reloads widgets only when it changed, `PrayerTimelineBuilder` turns a schedule into a bounded timeline that ends with an explicit expired entry, and `DarwinSignal` reaches a running app from a widget's button |
+| **SalahUI** | SwiftUI components (`PrayerTimesList`, `NextPrayerView`, `PrayerCountdown`) that decide what to show, with row and next-prayer styles you replace; `ThemeColor` and `ContrastCheck` for checking a theme's colors |
 | **SalahFixtures** | Ready-made timetables and moments for previews and tests |
 | **SalahAlerts** | Prayer alerts: `AlertPlanner` plans every alert of a range and selects the requests that fit an app's notification budget, two complete days first; `NotificationScheduler` installs them under stable identifiers and reports what it confirmed; `InProcessAlertEngine` follows every alert in a running app, with catch-up after sleep |
 
@@ -21,7 +23,7 @@ SalahKit never invents a time. A timetable that ends on 31 December, skips a day
 
 What it deliberately isn't:
 - **Not a calculation engine.** SalahCalculation connects [SalahTimes](https://github.com/salah-kit/SalahTimes), the salah-kit engine, through `PrayerSource`. Any other engine or data feed can plug in the same way, and a timetable app that links only SalahCore never links SalahTimes.
-- **No UI, notifications or location services in the core.** Words and colors live at the edges; interface text other than prayer names belongs to your app. SalahAlerts plans and installs alerts, but your app asks for notification permission, writes the alerts' text and plays their sounds.
+- **No UI, notifications or location services in the core.** Words and colors live at the edges: SalahUI's components come with plain styles that you replace, and interface text other than prayer names belongs to your app. SalahAlerts plans and installs alerts, but your app asks for notification permission, writes the alerts' text and plays their sounds.
 - **No adhan recordings.** Your app ships its own sounds.
 
 ## Installation
@@ -44,6 +46,9 @@ targets: [
       // For prayer alerts.
       .product(name: "SalahAlerts", package: "SalahKit"),
       .product(name: "SalahTimes", package: "SalahTimes"),
+      // For widget timelines and SwiftUI views.
+      .product(name: "SalahWidgets", package: "SalahKit"),
+      .product(name: "SalahUI", package: "SalahKit"),
     ])
 ]
 ```
@@ -151,14 +156,62 @@ print("Alerts confirmed until", report.confirmedCoveredUntil ?? now)
 
 iOS keeps a limited number of pending notification requests per app, so the plan spends a budget (60 by default): every alert of the next two days, then prayer-time alerts as far as the budget reaches. The plan and the report say until when the alerts are complete; a missing prayer time, a failed request or denied permission shortens that, and nothing is invented. Ask for notification permission yourself, and replan when your app launches or becomes active and when the settings change. An always-running app also gives the whole schedule to `InProcessAlertEngine`, which reports every alert when it's due, reminders the plan left out included. `Examples/CalculatedPhone` schedules its alerts this way.
 
+### A widget that doesn't need its app
+
+The app saves its inputs to the App Group it shares with its widget extension, and the extension builds the schedule itself whenever WidgetKit asks, so the widget stays right on the days the app isn't opened:
+
+```swift
+import SalahCalculation
+import SalahCore
+import SalahWidgets
+
+// Compiled into the app and the widget extension, which both have the App Group capability.
+struct PrayerSettings: Codable, Equatable, Sendable {
+  var location: PrayerLocation
+  var calculation: CalculationSettings
+}
+
+extension SharedValue where Value == PrayerSettings {
+  static var prayers: Self {
+    SharedValue(appGroup: "group.com.example.prayers", key: "settings.v1")
+  }
+}
+
+// In the extension: two days of entries, ending with one that says the times ran out.
+func prayerTimeline(from now: Date) throws -> PrayerTimeline? {
+  guard let settings = SharedValue.prayers.load() else { return nil }
+  let schedule = PrayerSchedule(
+    source: CalculationSource(settings.calculation), location: settings.location)
+  return try PrayerTimelineBuilder(schedule: schedule).timeline(from: now)
+}
+```
+
+The app calls `SharedValue.prayers.save(settings, reloading: ["prayers"])` when the settings change; an unchanged value reloads nothing. The article "Building widget timelines without daily app launches" shows the whole provider and the states a widget has to word. `Examples/PhoneWidgets` is an iPhone app with Home Screen and Lock Screen widgets built this way, and `Examples/WatchComplication` gives a watch complication its own copy of the inputs over WatchConnectivity.
+
+### Your own look
+
+SalahUI's components decide which prayer is next, which rows have passed and whether a countdown can be shown; your styles decide how they look:
+
+```swift
+import SalahUI
+import SwiftUI
+
+// The day's times with your row style. Unknown times get no status and no countdown.
+PrayerTimesList(day: day, state: state, names: names)
+  .prayerRowStyle(LanternRow())
+```
+
+A `PrayerRowStyle` or `NextPrayerStyle` gets ready-made text for the name, the time in the schedule's zone and the countdown, or `nil` where the schedule doesn't know. The article "Styling rows and cards" covers cards, complications, digits and right-to-left layouts, and checking colors with `ContrastCheck`.
+
 ## Documentation
 
-The DocC documentation is at <https://salah-kit.github.io/SalahKit/>. Start with "A calculated prayer app with Core and Calculation", "Using a mosque timetable with iqama and incomplete coverage" or "Alerts within the 64-notification limit". The design and its contracts are in [RFC 0001](docs/rfcs/0001-core.md) (SalahCore), [RFC 0002](docs/rfcs/0002-calculation.md) (SalahCalculation) and [RFC 0003](docs/rfcs/0003-alerts.md) (SalahAlerts); the behavior every implementation must reproduce is in [`Vectors/`](Vectors/README.md). [`docs/calculation-parity.md`](docs/calculation-parity.md) compares SalahCalculation with the times Salah computed with adhan-swift.
+The DocC documentation is at <https://salah-kit.github.io/SalahKit/>. Start with "A calculated prayer app with Core and Calculation", "Using a mosque timetable with iqama and incomplete coverage" or "Alerts within the 64-notification limit", then "Building widget timelines without daily app launches" and "Styling rows and cards". The design and its contracts are in [RFC 0001](docs/rfcs/0001-core.md) (SalahCore), [RFC 0002](docs/rfcs/0002-calculation.md) (SalahCalculation), [RFC 0003](docs/rfcs/0003-alerts.md) (SalahAlerts) and [RFC 0004](docs/rfcs/0004-widgets-and-ui.md) (SalahWidgets and SalahUI); the behavior every implementation must reproduce is in [`Vectors/`](Vectors/README.md). [`docs/calculation-parity.md`](docs/calculation-parity.md) compares SalahCalculation with the times Salah computed with adhan-swift.
 
 ## Supported platforms
 
 - iOS 16, macOS 13, watchOS 9, tvOS 16 and visionOS 1 or later.
-- Linux: SalahCore, SalahCalculation and SalahFixtures build and pass their tests on Ubuntu with Swift 6.2 or later, and so does SalahAlerts' planner and in-process engine. `NotificationScheduler` needs UserNotifications: it's on iOS, macOS, watchOS and visionOS, and not on tvOS, whose notifications carry no text or sound.
+- SalahWidgets reloads widgets with WidgetKit on iOS, macOS, watchOS and visionOS 26 or later; tvOS has no widgets, so there `SharedValue` only stores values. SalahUI's components need SwiftUI.
+- Linux: SalahCore, SalahCalculation and SalahFixtures build and pass their tests on Ubuntu with Swift 6.2 or later, and so do SalahAlerts' planner and in-process engine, SalahWidgets' shared values and timelines, and SalahUI's `ThemeColor` and `ContrastCheck`. `NotificationScheduler` needs UserNotifications: it's on iOS, macOS, watchOS and visionOS, and not on tvOS, whose notifications carry no text or sound.
 - Swift 6.2 or later (Xcode 26 or later), in Swift 6 language mode. The API is `nonisolated` and `Sendable`, so it works the same in modules that default to `MainActor` isolation.
 
 ## Status and versioning

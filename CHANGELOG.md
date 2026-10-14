@@ -8,6 +8,30 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- **SalahWidgets**, specified in [RFC 0004](docs/rfcs/0004-widgets-and-ui.md): widget timelines
+  that the widget extension builds by itself from shared inputs.
+  - `SharedValue` keeps a `Codable` value in an App Group and asks WidgetKit to reload only when
+    the stored value changed; it throws instead of silently dropping a value it can't encode,
+    and takes an injected reloader for tests.
+  - `PrayerTimelineBuilder` turns a schedule's refresh plan into a bounded 48-hour timeline that
+    ends with an explicit `.expired(knownThrough:)` entry and reloads halfway; `PrayerTimeline`
+    exposes the entries, `validUntil`, `isTruncated` and the reload date, and the WidgetKit
+    `Timeline` is built from it.
+  - `DarwinSignal` signals a running app from a widget's App Intent, with an observation that
+    stops delivery on cancel or release.
+  - A privacy manifest declaring App Group `UserDefaults` access (`1C8F.1`).
+  - The DocC article "Building widget timelines without daily app launches".
+- **SalahUI**, specified in [RFC 0004](docs/rfcs/0004-widgets-and-ui.md): SwiftUI building
+  blocks with styles you replace.
+  - `PrayerTimesList`, `NextPrayerView` and `PrayerCountdown` (live or static): times in the
+    schedule's zone, statuses and countdowns only where the state knows them, day offsets for
+    times after or before midnight.
+  - `PrayerRowStyle` and `NextPrayerStyle` with `PlainPrayerRowStyle` and
+    `PlainNextPrayerStyle` defaults that follow Dynamic Type and mirror right to left.
+  - `ThemeColor` and `ContrastCheck`, Salah's WCAG contrast and reserved-color guardrails.
+  - Previews of every component at every SalahFixtures moment, and snapshot tests of the
+    default styles in English and Arabic.
+  - The DocC article "Styling rows and cards".
 - **SalahAlerts**, specified in [RFC 0003](docs/rfcs/0003-alerts.md): prayer alerts within the
   system's notification limit.
   - `AlertPlanner` plans every enabled alert of a range from a `PrayerSchedule` and per-prayer

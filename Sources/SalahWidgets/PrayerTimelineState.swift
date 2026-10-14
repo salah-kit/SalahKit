@@ -6,7 +6,7 @@ import SalahCore
 ///
 /// The two cases answer different questions, and a widget should word them differently:
 /// - ``schedule(_:)`` carries what the schedule knows. Its state can be complete, partial (a
-///   known previous prayer with an unknown next one) or ``ScheduleState/unavailable(_:changesAt:)``
+///   known previous prayer with an unknown next one) or `ScheduleState.unavailable`
 ///   when the source has no usable data, such as a timetable that ended. Reloading the widget
 ///   can't fix a source gap; only new data from the app can.
 /// - ``expired(knownThrough:)`` means the timeline ran out before WidgetKit asked for a new one.
