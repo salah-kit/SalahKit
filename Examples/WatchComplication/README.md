@@ -160,7 +160,7 @@ Scripts/paired-journeys.sh "$iphone" "$watch"
 xcrun simctl unpair "$pair"; xcrun simctl delete "$watch" "$iphone"
 ```
 
-CI runs the unit tests and both apps' own journeys, but not the paired journey (see the workflow's comment).
+CI runs the watch's unit tests and the companion's journey. It doesn't run the watch journeys, which timed out launching the app on hosted runners' watch simulators, or the paired journey (see the workflow's comments); run them locally as above.
 
 ### What the simulators showed
 
