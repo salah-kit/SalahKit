@@ -193,6 +193,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 | `alerts/plans.json` | Notification plans: the D7 example (30 near-term + 30 at-time requests), insufficient near-term capacity, equal fire dates at the budget's edge, reminders across midnight, horizon clipping, ranges that start after or end at or before now, past-only gaps and gaps that contain now, different coverage per kind, an expired timetable, zero and negative budgets (each negative value on its own) |
 | `alerts/errors.json` | `AlertPlanningError` and the order of its checks, gap subjects included |
 | `alerts/handled.json` | Exact excluded occurrences after a clock rollback: unconditional exclusion at and before fire dates, capacity in both selection phases, coverage with excluded alerts and gaps, changed fire dates, namespaces and reminders |
+| `alerts/retained.json` | Engine-owned exclusions: marks survive ordinary checks, marking never reports due alerts, newly due early reports remain eligible, query expiry without a check, and relaunch |
 
 **Input:**
 
@@ -219,6 +220,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 - **`alertSettings`**: the settings closure as a table. For a subject (day, prayer, observance): use `days[day]` when the day has an entry, else the top level; then the table's `jumuah` value when the observance is `jumuah` and the table has one, else `kinds[prayer]`. A missing entry is `nil` (no alerts). Each value is `AlertSettings` JSON (RFC 0003 §4.1): every key optional, offsets in seconds, sounds `"none"`, `"system"` or `{"named": "<file>"}`.
 - **`maximumReminderOffset`**: seconds; absent means the default, 7200.
 - **`query`**: `{"type": "schedule", "from", "to"}` calls `schedule(_:namespace:from:to:maximumReminderOffset:settings:)`; `{"type": "plan", "from", "to", "now", "budget", "excluding"}` calls it and then `notificationPlan(_:from: now, budget:excluding:)`. `budget` and each of its keys are optional (defaults 60, 172800 and 1209600 seconds). `excluding` is optional (default empty), with unique occurrence references: `id` is `<owning day>/<prayer>/<kind>`, `fireDate` names the exact occurrence, and `namespace` defaults to the input's namespace. Every occurrence in that set is excluded unconditionally (RFC 0003 §10.3). The planner takes no report timestamps; selecting an exclusion set is the caller's policy.
+- **`query.engineSteps`** is optional for a `plan`. A manual clock starts at `query.now`; each step's optional `now` changes it without firing a timer. Actions use the default catch-up policy: `update` supplies the planned alert schedule and checks it, `resync` checks the current engine schedule, `mark` calls `excludeHandledOccurrencesFromNotifications()` without a due check, `idle` does nothing, and `relaunch` replaces the engine and clock at the same instant with empty in-memory state. After all steps, the harness calls `notificationExclusions(at: query.now)` without another check and unions that set with explicit `excluding` references for the plan.
 
 **Expected:**
 
@@ -234,6 +236,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 - **`AlertRef`**: `{"id": "2026-06-02/dhuhr/before", "fireDate": "<instant>", "event": "<instant>", "observance": "ordinary", "sound": "system"}`. `id` is the identity without its namespace, `<owning day>/<prayer>/<kind>`; `event` is the event's time.
 - **`AlertGapRef`**: `{"start", "end", "kind": "before", "day": "YYYY-MM-DD", "prayers": ["isha"], "reason": "noPublishedData"}`, half-open; `prayers` are compared as a set.
 - `alerts` and `gaps` are compared as ordered lists (RFC 0003 §4.2–§4.3 orders). `omitted` is the eligible alerts in the effective range that the budget didn't select, in schedule order: a harness derives it from the schedule, plan and excluded set. Excluded handled occurrences aren't omitted and don't shorten coverage. `coverageByKind` is compared as a map. Offsets in errors are seconds.
+- With `engineSteps`, expected `exclusions` is the engine query's exact occurrences in fire-date/identity order, using `{"id", "fireDate"}` references. `engineReported` is the flattened report history across steps and relaunches, in callback order with the same reference shape. Checking both makes a mark that delivers alerts, or an expired exclusion outside the plan's range, observable.
 
 ## Reconciliation vectors
 

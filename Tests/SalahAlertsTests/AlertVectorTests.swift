@@ -11,14 +11,15 @@ import Testing
   nonisolated static let loaded = VectorFiles.load("alerts")
 
   @Test(arguments: loaded.vectors.map(AlertVector.init))
+  @MainActor
   func vector(_ vector: AlertVector) throws {
     try vector.run()
   }
 
   @Test func everyFileLoads() {
     #expect(Self.loaded.errors.isEmpty, "\(Self.loaded.errors)")
-    // 69 planning vectors in five files, including handled occurrences after a rollback.
-    #expect(Self.loaded.vectors.count == 69)
+    // 69 planner cases plus five engine-owned exclusion lifecycle cases, in six files.
+    #expect(Self.loaded.vectors.count == 74)
     let ids = Self.loaded.vectors.map(\.id)
     #expect(Set(ids).count == ids.count, "vector ids must be unique")
     #expect(ids.allSatisfy { $0.hasPrefix("alerts.") })
@@ -48,7 +49,7 @@ nonisolated struct AlertVector: Sendable, CustomTestStringConvertible {
     }
   }
 
-  func run() throws {
+  @MainActor func run() throws {
     let input = vector.input
     let expected = vector.expected
     let context = "\(vector.id) (\(vector.file))"
@@ -100,7 +101,12 @@ nonisolated struct AlertVector: Sendable, CustomTestStringConvertible {
         if let value = json["horizon"]?.number { budget.horizon = .seconds(value) }
       }
       let now = try query.required("now").instant()
-      let handled = try excludedOccurrences(query, namespace: namespace)
+      var handled = try excludedOccurrences(query, namespace: namespace)
+      if let steps = query["engineSteps"] {
+        handled.formUnion(
+          try retainedExclusions(
+            for: alertSchedule, steps: steps.requiredArray(), now: now, context))
+      }
       let plan = AlertPlanner().notificationPlan(
         alertSchedule, from: now, budget: budget, excluding: handled)
       try checkPlan(plan, schedule: alertSchedule, now: now, handled: handled, context)
@@ -150,6 +156,55 @@ nonisolated struct AlertVector: Sendable, CustomTestStringConvertible {
   }
 
   // MARK: Invariants every schedule keeps, whatever the vector checks
+
+  /// Exercises the public engine lifecycle with a manual clock; it never fires a real timer.
+  @MainActor
+  func retainedExclusions(
+    for schedule: AlertSchedule, steps: [JSON], now: Date, _ context: String
+  ) throws -> Set<AlertOccurrenceID> {
+    var clock = ManualAlertClock(now)
+    var reported: [AlertOccurrenceID] = []
+    var engine = InProcessAlertEngine(clock: clock) {
+      reported.append(contentsOf: $0.map(\.occurrenceID))
+    }
+    for step in steps {
+      if let instant = step["now"] { clock.now = try instant.instant() }
+      switch try step.required("action").requiredString() {
+      case "update": engine.update(schedule)
+      case "resync": engine.resync()
+      case "mark": engine.excludeHandledOccurrencesFromNotifications()
+      case "relaunch":
+        clock = ManualAlertClock(clock.now)
+        engine = InProcessAlertEngine(clock: clock) {
+          reported.append(contentsOf: $0.map(\.occurrenceID))
+        }
+      case "idle": break
+      case let action:
+        Issue.record("\(context): unknown engine action \(action)")
+      }
+    }
+    let excluded = engine.notificationExclusions(at: now)
+    let ordered = excluded.sorted {
+      $0.fireDate == $1.fireDate ? $0.notification < $1.notification : $0.fireDate < $1.fireDate
+    }
+    try checkOccurrences(ordered, vector.expected.required("exclusions"), "\(context): exclusions")
+    try checkOccurrences(
+      reported, vector.expected.required("engineReported"), "\(context): reports")
+    return excluded
+  }
+
+  func checkOccurrences(_ actual: [AlertOccurrenceID], _ expected: JSON, _ context: String) throws {
+    let expected = try expected.requiredArray()
+    #expect(
+      actual.count == expected.count, "\(context): got \(actual.count), expected \(expected.count)")
+    for (occurrence, reference) in zip(actual, expected) {
+      let identity = occurrence.notification
+      let id = "\(identity.scheduleDay)/\(identity.prayer.rawValue)/\(identity.kind.rawValue)"
+      #expect(id == (try reference.required("id").requiredString()), "\(context): identity")
+      try checkInstant(
+        occurrence.fireDate, reference.required("fireDate"), "\(context): fire date")
+    }
+  }
 
   func excludedOccurrences(_ query: JSON, namespace: String) throws -> Set<AlertOccurrenceID> {
     var result: Set<AlertOccurrenceID> = []

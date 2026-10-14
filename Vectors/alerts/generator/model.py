@@ -340,6 +340,61 @@ def notification_plan(schedule, now, budget, excluding=()):
 # The scheduler (RFC 0003 §4.5) ---------------------------------------------------------------
 
 
+def retained_notification_exclusions(schedule, steps, queried_at):
+    """RFC 0003: explicit marks survive every replan while the report remains retained.
+
+    Steps use the default catch-up policy and one-day retention, without real timers.
+    Marking and querying never check due alerts. Only update/resync report and prune.
+    """
+    def occurrence(alert):
+        return (schedule["namespace"], f"{alert['day']}/{alert['prayer']}/{alert['kind']}",
+                alert["fireDate"])
+
+    handled = {}
+    marked = set()
+    active = []
+    reported = []
+    now = queried_at
+    for step in steps:
+        if "now" in step:
+            now = parse_instant(step["now"])
+        action = step["action"]
+        if action == "mark":
+            marked.update(key for key, report_time in handled.items()
+                          if report_time > now - timedelta(days=1))
+        elif action == "relaunch":
+            handled, marked, active = {}, set(), []
+        elif action in ("update", "resync"):
+            if action == "update":
+                active = schedule["alerts"]
+            handled = {key: report_time for key, report_time in handled.items()
+                       if report_time > now - timedelta(days=1)}
+            marked.intersection_update(handled)
+            for alert in active:
+                key = occurrence(alert)
+                grace = 300 if alert["kind"] == "atTime" else 120
+                lateness = (now - alert["fireDate"]).total_seconds()
+                if (key not in handled and -1.5 <= lateness <= grace
+                        and (alert["kind"] != "before" or now < alert["event"])):
+                    handled[key] = now
+                    reported.append(alert)
+        elif action != "idle":
+            raise ValueError(f"unknown engine action: {action}")
+
+    valid = {key for key, report_time in handled.items()
+             if report_time > queried_at - timedelta(days=1)}
+    excluded = (marked & valid) | {key for key in valid if queried_at < handled[key]}
+
+    def reference_order(key):
+        namespace, identity, fire_date = key
+        day, prayer, kind = identity.split("/")
+        return (fire_date, namespace, day, ORDER[prayer], ALERT_ORDER[kind])
+
+    references = [{"namespace": namespace, "id": identity, "fireDate": fire_date}
+                  for namespace, identity, fire_date in sorted(excluded, key=reference_order)]
+    return references, reported
+
+
 @dataclass
 class Request:
     id: str

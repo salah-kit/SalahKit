@@ -15,6 +15,7 @@ from zoneinfo import ZoneInfo
 from model import (
     KINDS, ORDER, Center, Clock, FixedDays, PlanningError, Timetable, alert_schedule,
     apply_plan, deliver_alerts, iso, notification_plan, parse_instant,
+    retained_notification_exclusions,
 )
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -194,7 +195,14 @@ def alert_vector(file, description, vid, text, provenance, location, source, set
         else:
             budget = {"maxPending": 60, "nearTermWindow": 2 * DAY, "horizon": 14 * DAY}
             budget.update(query.get("budget", {}))
-            plan = notification_plan(schedule, t(query["now"]), budget, query.get("excluding", []))
+            excluding = query.get("excluding", [])
+            engine_excluded, engine_reported = None, None
+            if "engineSteps" in query:
+                engine_excluded, engine_reported = retained_notification_exclusions(
+                    schedule, query["engineSteps"], t(query["now"]))
+                excluding = [{**record, "fireDate": iso(record["fireDate"], zone)}
+                             for record in engine_excluded] + excluding
+            plan = notification_plan(schedule, t(query["now"]), budget, excluding)
             expected = {
                 "effectiveRange": [iso(plan["effectiveRange"][0], zone),
                                    iso(plan["effectiveRange"][1], zone)],
@@ -205,6 +213,11 @@ def alert_vector(file, description, vid, text, provenance, location, source, set
                                    sorted(plan["coverageByKind"].items(),
                                           key=lambda kv: ["atTime", "before", "after"].index(kv[0]))},
             }
+            if engine_excluded is not None:
+                expected["exclusions"] = [{"id": record["id"],
+                                           "fireDate": iso(record["fireDate"], zone)}
+                                          for record in engine_excluded]
+                expected["engineReported"] = [short_ref(alert, zone) for alert in engine_reported]
     add("alerts", file, description,
         {"id": vid, "description": text, "provenance": provenance, "input": inp,
          "expected": expected})
@@ -222,6 +235,9 @@ PLANS = ("Notification plans (RFC 0003 §4.4): near-term reservation, at-time fi
 ERRORS = "Planning errors (RFC 0003 §4.3), in the order they are checked."
 HANDLED = ("Notification plans after a clock rollback (RFC 0003 §10.3): exact excluded "
            "occurrences, request capacity and coverage.")
+RETAINED = ("Engine-owned notification exclusions: marks survive ordinary checks until report "
+            "retention ends, marking reports nothing, newly due early reports remain eligible, "
+            "and a relaunch starts empty.")
 
 
 def q_schedule(start_, end_):
@@ -689,6 +705,54 @@ def handled_vectors():
       "With no near-term window, Asr is excluded before the at-time fill spends its "
       "allowance of one on Maghrib; Isha ends the coverage.",
       provenance, MAKKAH, makkah(), AT_TIME_ONLY, query(maxPending=1, nearTermWindow=0))
+
+
+def retained_vectors():
+    v = lambda *a, **k: alert_vector("retained", RETAINED, *a, **k)
+    start_ = "2026-06-02T15:00:00+03:00"
+    end_ = "2026-06-02T21:00:00+03:00"
+    early = "2026-06-02T15:34:59+03:00"
+    back = "2026-06-02T15:34:59.500+03:00"
+    expiry = "2026-06-03T15:34:59+03:00"
+    settings = {"kinds": {"asr": every()}}
+    provenance = "RFC 0003 §4.6/§10.2–§10.3: the engine owns retained notification exclusions."
+
+    def query(now, steps):
+        value = q_plan(start_, end_, now)
+        value["engineSteps"] = steps
+        return value
+
+    v("alerts.retained.ordinary-checks-keep-the-mark",
+      "Asr is reported a second early. A clock-change mark half a second before its fire "
+      "date excludes it across an ordinary update and resync; neither reports Asr again.",
+      provenance, MAKKAH, makkah(), settings, query(back, [
+          {"action": "update", "now": early}, {"action": "mark", "now": back},
+          {"action": "update"}, {"action": "resync"}]))
+    v("alerts.retained.marking-never-checks-due-alerts",
+      "The engine has Asr in its schedule but hasn't reported it. Marking at a second "
+      "before Asr doesn't check due alerts or exclude its future system request.",
+      provenance, MAKKAH, makkah(), settings, query(early, [
+          {"action": "update", "now": "2026-06-02T15:34:00+03:00"},
+          {"action": "mark", "now": early}]))
+    v("alerts.retained.a-new-early-report-remains-eligible",
+      "An explicit clock-change mark precedes Asr's first early report. The subsequent "
+      "resync reports it, while a plan half a second before its fire date still includes it.",
+      provenance, MAKKAH, makkah(), settings, query(back, [
+          {"action": "update", "now": "2026-06-02T15:34:00+03:00"},
+          {"action": "mark", "now": early}, {"action": "resync"},
+          {"action": "idle", "now": back}]))
+    v("alerts.retained.query-expires-without-another-check",
+      "Asr is reported and marked, then the clock reaches exactly one day after its "
+      "report without another update or resync. Querying ignores the expired mark.",
+      provenance, MAKKAH, makkah(), settings, query(expiry, [
+          {"action": "update", "now": early}, {"action": "mark", "now": back},
+          {"action": "idle", "now": expiry}]))
+    v("alerts.retained.a-relaunch-starts-with-no-exclusions",
+      "Asr is reported and marked before a relaunch. The new engine has no report or "
+      "mark to restore; a future Asr remains eligible. Report history records the old engine.",
+      provenance, MAKKAH, makkah(), settings, query(back, [
+          {"action": "update", "now": early}, {"action": "mark", "now": back},
+          {"action": "relaunch"}]))
 
 
 def error_vectors():
@@ -1447,6 +1511,7 @@ def main():
     gap_vectors()
     plan_vectors()
     handled_vectors()
+    retained_vectors()
     error_vectors()
     reconciliation_vectors()
     ids = [v["id"] for f in FILES.values() for v in f["vectors"]]
