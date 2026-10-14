@@ -238,15 +238,15 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 
 | File | Covers |
 |---|---|
-| `reconciliation/apply.json` | A fresh install, unchanged requests, a fire date with a fraction of a second, the thread identifier |
+| `reconciliation/apply.json` | A fresh install, unchanged requests, a fire date with a fraction of a second, `confirmed` in plan order, the thread identifier |
 | `reconciliation/identity.json` | A moved reminder, a changed prayer time and wording under one identifier; Isha after midnight; Fajr before midnight |
-| `reconciliation/obsolete.json` | Only owned obsolete requests are removed; an empty plan; a passed alert with a stale request |
+| `reconciliation/obsolete.json` | Only owned obsolete requests are removed, sorted by identifier; an empty plan; a passed alert with a stale request |
 | `reconciliation/namespaces.json` | Foreign plans (empty ones too), foreign alerts and repeated identities, rejected before any call |
-| `reconciliation/failures.json` | A failed add that leaves an older request, stale content, a dropped request, failed reads, an alert that fires before the read-back, the plan's own coverage |
-| `reconciliation/authorization.json` | Denied, not determined, provisional |
+| `reconciliation/failures.json` | A failed add that leaves an older request, stale content, a dropped request, failed reads, an alert that fires before the read-back, an unsorted plan's coverage, the plan's own coverage |
+| `reconciliation/authorization.json` | Denied (nothing confirmed even when a matching request survives), not determined, provisional |
 | `reconciliation/housekeeping.json` | Delivered-notification retention, and none |
-| `reconciliation/pump.json` | Serialized applies; overlapping applies reconciled to the latest; a superseded batch's failures |
-| `reconciliation/deliver.json` | Posting due alerts, skipping pending and delivered occurrences (with the 1.5-second leeway), a failed pending read |
+| `reconciliation/pump.json` | Serialized applies; overlapping applies reconciled to the latest; a superseded batch's failures, and none before step 6; a rejected plan supersedes nothing |
+| `reconciliation/deliver.json` | Posting due alerts in identity order, skipping pending and delivered occurrences (with the 1.5-second leeway), a failed pending read, the delivered read without a retention |
 
 **Input:**
 

@@ -286,6 +286,90 @@
       }
     },
     {
+      "id": "reconciliation.apply.confirmed-in-plan-order",
+      "description": "A hand-made plan lists Isha before Maghrib: both are added and confirmed, in plan order.",
+      "provenance": "RFC 0003 §4.5 step 6 (adds in plan order) and The report (confirmed in plan order).",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/isha/atTime",
+                  "fireDate": "2026-06-02T20:30:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/maghrib/atTime",
+                  "fireDate": "2026-06-02T19:00:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/isha/atTime",
+                "fireDate": "2026-06-02T20:30:00+03:00"
+              },
+              {
+                "id": "2026-06-02/maghrib/atTime",
+                "fireDate": "2026-06-02T19:00:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00",
+            "title": "isha",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/maghrib/atTime",
+            "fireDate": "2026-06-02T19:00:00+03:00",
+            "title": "maghrib",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00"
+          },
+          {
+            "add": "salah.prayers/2026-06-02/maghrib/atTime",
+            "fireDate": "2026-06-02T19:00:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
       "id": "reconciliation.apply.no-thread",
       "description": "A scheduler without a thread identifier leaves the content's own (none here); a pending request with a thread no longer matches and is replaced.",
       "provenance": "RFC 0003 §4.5 Requests (the thread), Matching.",

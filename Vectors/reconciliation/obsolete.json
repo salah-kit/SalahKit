@@ -147,6 +147,94 @@
       }
     },
     {
+      "id": "reconciliation.obsolete.removals-sorted-by-identifier",
+      "description": "Dhuhr's and Asr's requests are obsolete: one removal call lists them sorted by identifier as text, Asr first, though Dhuhr comes first in identity order.",
+      "provenance": "RFC 0003 §4.5 step 4: sorted by identifier as text.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/dhuhr/atTime",
+              "fireDate": "2026-06-02T12:19:00+03:00",
+              "title": "dhuhr",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            },
+            {
+              "id": "salah.prayers/2026-06-02/asr/atTime",
+              "fireDate": "2026-06-02T15:35:00+03:00",
+              "title": "asr",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/isha/atTime",
+                  "fireDate": "2026-06-02T20:30:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/isha/atTime",
+                "fireDate": "2026-06-02T20:30:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00",
+            "title": "isha",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "removePending": [
+              "salah.prayers/2026-06-02/asr/atTime",
+              "salah.prayers/2026-06-02/dhuhr/atTime"
+            ]
+          },
+          {
+            "add": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
       "id": "reconciliation.obsolete.empty-plan-clears-the-namespace",
       "description": "An empty plan of the scheduler's namespace removes every owned request and nothing else.",
       "provenance": "RFC 0003 §4.5 step 4; A2's emptyScheduleClearsOwnRequestsAndDeliveries (retained for pending requests).",

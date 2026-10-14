@@ -865,6 +865,12 @@ def reconciliation_vectors():
           "RFC 0003 §4.5 Requests (rounded up to a whole second) and Matching.",
           [{"apply": plan([a(f"{D}/dhuhr/atTime", "2026-06-02T12:19:00.250+03:00")], COVER),
             "now": MORNING}])
+    recon("apply", "reconciliation.apply.confirmed-in-plan-order",
+          "A hand-made plan lists Isha before Maghrib: both are added and confirmed, in plan "
+          "order.",
+          "RFC 0003 §4.5 step 6 (adds in plan order) and The report (confirmed in plan order).",
+          [{"apply": plan([a(f"{D}/isha/atTime", ISHA), a(f"{D}/maghrib/atTime", MAGHRIB)],
+                          COVER), "now": MORNING}])
     recon("apply", "reconciliation.apply.no-thread",
           "A scheduler without a thread identifier leaves the content's own (none here); a "
           "pending request with a thread no longer matches and is replaced.",
@@ -930,6 +936,13 @@ def reconciliation_vectors():
               pend(rid(f"{D}/asr/atTime", namespace="mosque"), ASR, "asr", "v1 atTime"),
               pend("salah.prayers/legacy", ASR, "asr", "An older format", ""),
           ]})
+    recon("obsolete", "reconciliation.obsolete.removals-sorted-by-identifier",
+          "Dhuhr's and Asr's requests are obsolete: one removal call lists them sorted by "
+          "identifier as text, Asr first, though Dhuhr comes first in identity order.",
+          "RFC 0003 §4.5 step 4: sorted by identifier as text.",
+          [{"apply": plan([a(f"{D}/isha/atTime", ISHA)], COVER), "now": MORNING}],
+          center={"pending": [pend(rid(f"{D}/dhuhr/atTime"), DHUHR, "dhuhr", "v1 atTime"),
+                              pend(rid(f"{D}/asr/atTime"), ASR, "asr", "v1 atTime")]})
     recon("obsolete", "reconciliation.obsolete.empty-plan-clears-the-namespace",
           "An empty plan of the scheduler's namespace removes every owned request and nothing "
           "else.",
@@ -1073,6 +1086,15 @@ def reconciliation_vectors():
           center={"authorization": "denied",
                   "pending": [pend(rid(f"{D}/isha/atTime"), ISHA, "isha", "v1 atTime"),
                               pend("com.example.other", ISHA, "Other", "Another app", "")]})
+    recon("authorization", "reconciliation.authorization.denied-confirms-nothing",
+          "Notifications are denied and the first read fails, so nothing is known to be owned "
+          "and the matching Isha request stays. The read-back holds it, but nothing is confirmed "
+          "without authorization: Isha fails with notAuthorized.",
+          "RFC 0003 §4.5 The report: confirmed only when alerts are allowed.",
+          [{"apply": plan([a(f"{D}/isha/atTime", ISHA)], COVER),
+            "now": "2026-06-02T13:00:00+03:00"}],
+          center={"authorization": "denied", "failReads": [1],
+                  "pending": [pend(rid(f"{D}/isha/atTime"), ISHA, "isha", "v1 atTime")]})
     recon("authorization", "reconciliation.authorization.not-determined",
           "Authorization not determined: the scheduler doesn't ask (that's the app's), adds "
           "nothing and reports notAuthorized.",
@@ -1145,6 +1167,19 @@ def reconciliation_vectors():
                           COVER), "now": MORNING, "duringPrevious": True}],
           center={"failAdds": [rid(f"{D}/dhuhr/before")]})
 
+    recon("pump", "reconciliation.pump.superseded-before-step-6-reports-no-denial",
+          "Notifications are denied. The first apply is held in its third call, its delivered "
+          "read, and a valid plan arrives: the first stops before its removals and, not having "
+          "reached step 6, reports no failure. The second removes the owned request and reports "
+          "notAuthorized.",
+          "RFC 0003 §4.5: notAuthorized is recorded at step 6; a superseded batch reports the "
+          "failures it saw.",
+          [{"apply": plan([a(f"{D}/isha/atTime", ISHA)], COVER),
+            "now": "2026-06-02T13:00:00+03:00", "suspendAtCall": 3},
+           {"apply": plan([a(f"{D}/maghrib/atTime", MAGHRIB)], COVER),
+            "now": "2026-06-02T13:00:00+03:00", "duringPrevious": True}],
+          center={"authorization": "denied",
+                  "pending": [pend(rid(f"{D}/isha/atTime"), ISHA, "isha", "v1 atTime")]})
     recon("pump", "reconciliation.pump.rejected-plan-supersedes-nothing",
           "While a valid apply is held in its first add, an empty plan of another namespace "
           "arrives. Validation rejects it before it enters the pump, so it supersedes nothing: "

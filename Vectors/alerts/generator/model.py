@@ -475,9 +475,10 @@ def request_id(scheduler, alert_id, namespace=None):
 
 
 def ceil_second(instant):
-    if instant.microsecond:
+    """Rounded up to a whole second; less than a millisecond past one keeps it."""
+    if instant.microsecond >= 1000:
         return instant.replace(microsecond=0) + SECOND
-    return instant
+    return instant.replace(microsecond=0)
 
 
 def content(alert, wording, scheduler):

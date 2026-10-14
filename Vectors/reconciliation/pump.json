@@ -401,6 +401,97 @@
       }
     },
     {
+      "id": "reconciliation.pump.superseded-before-step-6-reports-no-denial",
+      "description": "Notifications are denied. The first apply is held in its third call, its delivered read, and a valid plan arrives: the first stops before its removals and, not having reached step 6, reports no failure. The second removes the owned request and reports notAuthorized.",
+      "provenance": "RFC 0003 §4.5: notAuthorized is recorded at step 6; a superseded batch reports the failures it saw.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "authorization": "denied",
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/isha/atTime",
+              "fireDate": "2026-06-02T20:30:00+03:00",
+              "title": "isha",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/isha/atTime",
+                  "fireDate": "2026-06-02T20:30:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T13:00:00+03:00",
+            "suspendAtCall": 3
+          },
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/maghrib/atTime",
+                  "fireDate": "2026-06-02T19:00:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T13:00:00+03:00",
+            "duringPrevious": true
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": true,
+            "verifiedAt": "2026-06-02T13:00:00+03:00",
+            "confirmed": [],
+            "failures": {},
+            "confirmedCoveredUntil": null
+          },
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T13:00:00+03:00",
+            "confirmed": [],
+            "failures": {
+              "2026-06-02/maghrib/atTime": "notAuthorized"
+            },
+            "confirmedCoveredUntil": "2026-06-02T19:00:00+03:00"
+          }
+        ],
+        "pending": [],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "removePending": [
+              "salah.prayers/2026-06-02/isha/atTime"
+            ]
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
       "id": "reconciliation.pump.rejected-plan-supersedes-nothing",
       "description": "While a valid apply is held in its first add, an empty plan of another namespace arrives. Validation rejects it before it enters the pump, so it supersedes nothing: the first apply finishes and confirms both requests.",
       "provenance": "RFC 0003 §4.5 The update pump: a call that validation rejects never enters the pump.",

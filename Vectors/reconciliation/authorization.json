@@ -89,6 +89,78 @@
       }
     },
     {
+      "id": "reconciliation.authorization.denied-confirms-nothing",
+      "description": "Notifications are denied and the first read fails, so nothing is known to be owned and the matching Isha request stays. The read-back holds it, but nothing is confirmed without authorization: Isha fails with notAuthorized.",
+      "provenance": "RFC 0003 §4.5 The report: confirmed only when alerts are allowed.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "authorization": "denied",
+          "failReads": [
+            1
+          ],
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/isha/atTime",
+              "fireDate": "2026-06-02T20:30:00+03:00",
+              "title": "isha",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/isha/atTime",
+                  "fireDate": "2026-06-02T20:30:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T13:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T13:00:00+03:00",
+            "confirmed": [],
+            "failures": {
+              "2026-06-02/isha/atTime": "notAuthorized"
+            },
+            "confirmedCoveredUntil": "2026-06-02T20:30:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/isha/atTime",
+            "fireDate": "2026-06-02T20:30:00+03:00",
+            "title": "isha",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          "pendingRequests"
+        ]
+      }
+    },
+    {
       "id": "reconciliation.authorization.not-determined",
       "description": "Authorization not determined: the scheduler doesn't ask (that's the app's), adds nothing and reports notAuthorized.",
       "provenance": "Proposal §7.5 'Stays in apps: authorization requests'; A2's authorizationIsRequestedOnlyWithSomethingToSchedule (app policy).",
