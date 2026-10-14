@@ -6,6 +6,11 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-14
+
+An always-running macOS example whose desktop widget stops the app's tone, MosqueBoard on
+Apple TV, the article "Lessons from Salah", and the RFC process. The public API is unchanged.
+
 ### Added
 
 - **Examples/MenuBar**, a macOS menu-bar app that keeps running: the next prayer in the menu
@@ -181,6 +186,7 @@ apps that prove them through the public API.
   that it links no calculation code) and CalculatedPhone; documentation published to GitHub
   Pages.
 
-[Unreleased]: https://github.com/salah-kit/SalahKit/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/salah-kit/SalahKit/compare/0.3.0...HEAD
+[0.3.0]: https://github.com/salah-kit/SalahKit/releases/tag/0.3.0
 [0.2.0]: https://github.com/salah-kit/SalahKit/releases/tag/0.2.0
 [0.1.0]: https://github.com/salah-kit/SalahKit/releases/tag/0.1.0
