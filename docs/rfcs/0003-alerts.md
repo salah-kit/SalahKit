@@ -408,7 +408,7 @@ Everything else above is specified. The scheduler keeps no state between calls b
 
 - `update(_:)` replaces the schedule and checks for due alerts at the clock's `now`.
 - `resync(now:)` checks for due alerts at `now`, or at the clock's `now` when it's nil. Apps call it when the device wakes, when the clock changes and when the app becomes active.
-- After each check, the engine arms one wake-up at the fire date of the next alert that isn't due yet, plus 0.15 seconds, and checks again when it fires. `SystemAlertClock` wakes with a tolerance of 0.75 seconds. Sleep and clock changes can make any timer late or early; `resync` covers both.
+- After each check, the engine arms one wake-up at the fire date of the next alert that isn't due yet, plus 0.15 seconds (for a before-reminder whose prayer begins sooner, one second before its prayer, inside its early leeway), and checks again when it fires. `SystemAlertClock` wakes with a tolerance of 0.75 seconds. Sleep and clock changes can make any timer late or early; `resync` covers both.
 
 **Due.** At `now`, an alert that hasn't been handled is due when `now − fireDate` lies in `[−1.5 s, grace]`, where the grace is `atTimeGrace` for an at-time alert and `reminderGrace` for a reminder (negative values count as zero), and, for a before-reminder, `now` is before its prayer's time. So an alert up to 1.5 seconds ahead counts as due, an at-time alert is caught up for 5 minutes by default and a reminder for 2, and a before-reminder never fires once its prayer has begun (§7.5 "Catch-up"). An alert past its grace is dropped silently.
 

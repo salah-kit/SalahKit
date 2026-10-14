@@ -188,6 +188,23 @@
         }
       }
     },
+    "%@, %@: %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%1$@، %2$@: %3$@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@, %2$@: %3$@"
+          }
+        }
+      }
+    },
     "%@: %@ (%@)": {
       "extractionState": "manual",
       "localizations": {
@@ -249,9 +266,21 @@
           }
         },
         "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld pending requests"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld pending request"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld pending requests"
+                }
+              }
+            }
           }
         }
       }

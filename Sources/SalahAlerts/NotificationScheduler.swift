@@ -5,6 +5,8 @@
   // immutable once created: a request copies the content it's given, and the scheduler never
   // mutates a content after building its request. Passing them between the scheduler's actor and
   // the center can't race, so the import doesn't ask for Sendable conformances.
+  // UNUserNotificationCenter isn't marked Sendable either; Apple documents it as safe to use
+  // from any thread, which is what AlertNotificationCenter's Sendable conformance relies on.
   @preconcurrency import UserNotifications
 
   /// What ``NotificationScheduler`` reads from a delivered notification: its identifier and

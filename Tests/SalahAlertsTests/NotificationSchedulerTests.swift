@@ -337,7 +337,7 @@
         event: PrayerEvent(scheduleDay: Fixture.day, kind: .isha, time: Fixture.time(.isha)),
         fireDate: clock.now, sound: .system)
       let deliver = Task { try await scheduler.deliver([reminder], content: { _ in .init() }) }
-      try await Task.sleep(for: .milliseconds(50))
+      try await wait { await scheduler.waitingCalls == 1 }
       center.release()
       let applied = try await apply.value
       let delivered = try await deliver.value

@@ -67,6 +67,16 @@ import Testing
     #expect(
       NotificationIdentity(requestIdentifier: "prayers/2026-06-02/dhuhr/before", prefix: "")
         == identity)
+    // A namespace that starts with a combining mark joins the prefix's last character, and
+    // still parses back.
+    let combining = NotificationIdentity(
+      namespace: "\u{301}x", scheduleDay: CivilDay(year: 2026, month: 6, day: 2), prayer: .dhuhr,
+      kind: .before)
+    #expect(NotificationIdentity.isValidNamespace(combining.namespace))
+    #expect(
+      NotificationIdentity(
+        requestIdentifier: combining.requestIdentifier(prefix: "salah."), prefix: "salah.")
+        == combining)
   }
 
   @Test(arguments: [

@@ -161,7 +161,11 @@ nonisolated public struct CatchUpPolicy: Hashable, Sendable {
     if let next = alerts.first(where: {
       $0.fireDate > earliest && !handled.contains($0.occurrenceID)
     }) {
-      clock.wake(at: next.fireDate.addingTimeInterval(0.15)) { [weak self] in
+      // Just after the fire date. A before-reminder whose prayer begins sooner wakes a second
+      // before its prayer instead, inside its early leeway, so a late timer can't miss it.
+      var wake = next.fireDate.addingTimeInterval(0.15)
+      if next.kind == .before { wake = min(wake, next.event.time.addingTimeInterval(-1)) }
+      clock.wake(at: wake) { [weak self] in
         guard let self else { return }
         self.check(at: self.clock.now)
       }

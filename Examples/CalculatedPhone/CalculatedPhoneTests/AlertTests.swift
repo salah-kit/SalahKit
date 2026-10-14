@@ -186,7 +186,8 @@ struct AlertTests {
     let snapshot = AlertsSnapshot.make(
       options: settings.alerts, authorization: coordinator.authorization, plan: coordinator.plan,
       report: coordinator.report, pending: coordinator.pending, fromFixture: true,
-      strings: PhoneStrings(language: "en"), timeZone: settings.place.location.timeZone)
+      strings: PhoneStrings(language: "en"), timeZone: settings.place.location.timeZone,
+      now: launch)
     #expect(snapshot.rows.count == AlertsSnapshot.shownRows)
     #expect(snapshot.rows.allSatisfy { $0.status == "Confirmed" })
   }
@@ -236,7 +237,8 @@ struct AlertTests {
     let snapshot = AlertsSnapshot.make(
       options: settings.alerts, authorization: coordinator.authorization, plan: coordinator.plan,
       report: coordinator.report, pending: coordinator.pending, fromFixture: true,
-      strings: PhoneStrings(language: "en"), timeZone: settings.place.location.timeZone)
+      strings: PhoneStrings(language: "en"), timeZone: settings.place.location.timeZone,
+      now: launch)
     #expect(snapshot.failures.count == 1)
     #expect(snapshot.failures.first?.hasSuffix("Couldn't be scheduled (\(reason))") == true)
   }
@@ -255,6 +257,30 @@ struct AlertTests {
     await coordinator.requestPermissionIfNeeded()
     #expect(asked.value == 1)
     #expect(coordinator.authorization == .authorized)
+  }
+
+  /// The card knows the authorization before the first batch ends, so it doesn't say "not
+  /// allowed yet" meanwhile.
+  @MainActor
+  @Test func theAuthorizationIsKnownBeforeTheFirstBatchEnds() async throws {
+    let center = RecordingCenter()
+    center.holdNextPendingRead()
+    let coordinator = AlertCoordinator(
+      options: LaunchOptions(), center: center, requestPermission: {})
+    var settings = AppSettings.defaults
+    settings.alerts.isOn = true
+    let replan = Task {
+      await coordinator.replan(settings: settings, strings: PhoneStrings(language: "en"))
+    }
+    for _ in 0..<2_000 where !center.isHolding {
+      try await Task.sleep(for: .milliseconds(5))
+    }
+    #expect(center.isHolding)
+    #expect(coordinator.authorization == .authorized)
+    #expect(coordinator.report == nil)
+    center.release()
+    await replan.value
+    #expect(coordinator.report != nil)
   }
 
   @MainActor final class Counter {
@@ -283,9 +309,13 @@ struct AlertTests {
         PendingAlert(identity: identity(.asr), fireDate: asr),
         PendingAlert(identity: identity(.maghrib), fireDate: maghrib.addingTimeInterval(-60)),
       ],
-      fromFixture: false, strings: PhoneStrings(language: "en"), timeZone: zone)
+      fromFixture: false, strings: PhoneStrings(language: "en"), timeZone: zone,
+      now: Self.makkahNoon)
     #expect(snapshot.status == "Notifications are allowed.")
-    #expect(snapshot.scheduledUntil?.filter(Self.isVisible) == "Scheduled until Wednesday 17:57")
+    #expect(
+      snapshot.scheduledUntil?.filter(Self.isVisible)
+        == "Scheduled until Wednesday, October 14, 2026 17:57")
+    #expect(snapshot.pendingCount == "2 pending requests")
     #expect(snapshot.rows.map(\.status) == ["Confirmed", "Couldn't be scheduled"])
     #expect(snapshot.rows.map(\.id) == ["2026-10-14/asr/atTime", "2026-10-14/maghrib/atTime"])
     #expect(snapshot.rows.last?.time == "Wednesday 17:56")
@@ -294,11 +324,55 @@ struct AlertTests {
         "Isha, Wednesday, October 14, 2026: Not confirmed"
       ])
 
+    // Alerts off: the app still applies an empty plan, whose coverage runs to the end of its
+    // range, but the card claims none.
+    let empty = NotificationPlan(
+      namespace: PhoneAlertPlanning.namespace,
+      effectiveRange: DateInterval(start: Self.makkahNoon, duration: 14 * 86_400), alerts: [],
+      coveredUntil: Self.makkahNoon.addingTimeInterval(14 * 86_400), coverageByKind: [:])
+    let emptyReport = NotificationApplyReport(
+      verifiedAt: Self.makkahNoon, confirmed: [], failures: [:], superseded: false,
+      confirmedCoveredUntil: empty.coveredUntil)
     let off = AlertsSnapshot.make(
-      options: PhoneAlertOptions(), authorization: nil, plan: nil, report: nil, pending: [],
-      fromFixture: false, strings: PhoneStrings(language: "en"), timeZone: zone)
+      options: PhoneAlertOptions(), authorization: .authorized, plan: empty, report: emptyReport,
+      pending: [], fromFixture: false, strings: PhoneStrings(language: "en"), timeZone: zone,
+      now: Self.makkahNoon)
     #expect(off.status == "Alerts are off. Turn them on in Settings.")
     #expect(off.pendingCount == nil)
+    #expect(off.scheduledUntil == nil)
+    #expect(off.plannedUntil == nil)
+  }
+
+  /// Requests that fired since the read-back drop off the card; the count follows, in the
+  /// language's plural, and a failure line uses the language's punctuation.
+  @Test func theCardDropsRequestsThatHaveFired() throws {
+    let zone = try #require(TimeZone(identifier: "Asia/Riyadh"))
+    let day = CivilDay(year: 2026, month: 10, day: 14)
+    func identity(_ prayer: PrayerKind) -> NotificationIdentity {
+      NotificationIdentity(namespace: "prayers", scheduleDay: day, prayer: prayer, kind: .atTime)
+    }
+    let asr = Self.makkahNoon.addingTimeInterval(3 * 3_600 + 27 * 60)
+    let maghrib = Self.makkahNoon.addingTimeInterval(5 * 3_600 + 57 * 60)
+    let pending = [
+      PendingAlert(identity: identity(.asr), fireDate: asr),
+      PendingAlert(identity: identity(.maghrib), fireDate: maghrib),
+    ]
+    let report = NotificationApplyReport(
+      verifiedAt: Self.makkahNoon, confirmed: [], failures: [identity(.isha): .unconfirmed],
+      superseded: false, confirmedCoveredUntil: maghrib)
+    func snapshot(_ language: String, at now: Date) -> AlertsSnapshot {
+      AlertsSnapshot.make(
+        options: PhoneAlertOptions(isOn: true), authorization: .authorized, plan: nil,
+        report: report, pending: pending, fromFixture: false,
+        strings: PhoneStrings(language: language), timeZone: zone, now: now)
+    }
+    let afterAsr = snapshot("en", at: asr.addingTimeInterval(1))
+    #expect(afterAsr.rows.map(\.id) == ["2026-10-14/maghrib/atTime"])
+    #expect(afterAsr.pendingCount == "1 pending request")
+    #expect(snapshot("en", at: maghrib).rows.isEmpty)
+    let arabic = snapshot("ar", at: Self.makkahNoon)
+    #expect(arabic.failures.count == 1)
+    #expect(arabic.failures.first?.contains("، ") == true)
   }
 
   /// A request's trigger names a whole second rounded up from its alert's fire date: the card
@@ -321,7 +395,8 @@ struct AlertTests {
         pending: [
           PendingAlert(identity: identity, fireDate: Self.makkahNoon.addingTimeInterval(seconds))
         ],
-        fromFixture: false, strings: PhoneStrings(language: "en"), timeZone: zone)
+        fromFixture: false, strings: PhoneStrings(language: "en"), timeZone: zone,
+        now: Self.makkahNoon)
       #expect(snapshot.rows.map(\.status) == [status], "pending at +\(seconds) s")
     }
   }
@@ -336,6 +411,8 @@ nonisolated final class RecordingCenter: AlertNotificationCenter, @unchecked Sen
   private var identifiers: [String] = []
   private var currentStatus: UNAuthorizationStatus
   private var rejecting: Int
+  private var holdsNextRead = false
+  private var gate: CheckedContinuation<Void, Never>?
 
   /// A center whose first `rejecting` adds fail.
   init(status: UNAuthorizationStatus = .authorized, rejecting: Int = 0) {
@@ -357,8 +434,33 @@ nonisolated final class RecordingCenter: AlertNotificationCenter, @unchecked Sen
 
   func authorizationStatus() async -> UNAuthorizationStatus { status }
 
+  /// Makes the next pending read wait for `release()`.
+  func holdNextPendingRead() {
+    lock.withLock { holdsNextRead = true }
+  }
+
+  /// Whether a pending read is waiting for `release()`.
+  var isHolding: Bool { lock.withLock { gate != nil } }
+
+  func release() {
+    let gate = lock.withLock {
+      defer { self.gate = nil }
+      return self.gate
+    }
+    gate?.resume()
+  }
+
   func pendingNotificationRequests() async throws -> [UNNotificationRequest] {
-    lock.withLock { Array(requests.values) }
+    let holds = lock.withLock {
+      defer { holdsNextRead = false }
+      return holdsNextRead
+    }
+    if holds {
+      await withCheckedContinuation { continuation in
+        lock.withLock { gate = continuation }
+      }
+    }
+    return lock.withLock { Array(requests.values) }
   }
 
   func add(_ request: UNNotificationRequest) async throws {

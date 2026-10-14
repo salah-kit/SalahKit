@@ -94,6 +94,11 @@ final class AlertCoordinator {
         alerts: [], coveredUntil: now, coverageByKind: [:])
     }
     let content = PhoneAlertContent(strings: strings, timeZone: zone)
+    // The authorization first, so the card doesn't say "not allowed yet" while the first batch
+    // runs.
+    let current = await center.authorizationStatus()
+    guard mine == generation else { return }
+    authorization = current
     // The system can reject requests after the user allows notifications ("Source is not
     // authorized"); the iOS 27.0 simulator did until it restarted. Rejected requests are tried
     // again after each retry delay, and the card shows every attempt; what still fails stays

@@ -215,13 +215,13 @@ nonisolated struct AlertsSnapshot: Equatable, Sendable {
 
   /// "Alerts are off" or the authorization.
   var status: String
-  /// "Scheduled until …" from the confirmed coverage, when there is a report.
+  /// "Scheduled until …" from the confirmed coverage, when alerts are on and there is a report.
   var scheduledUntil: String?
-  /// "Planned until …" from the plan.
+  /// "Planned until …" from the plan, when alerts are on.
   var plannedUntil: String?
-  /// "60 pending requests".
+  /// "60 pending requests": those still ahead of now.
   var pendingCount: String?
-  /// The first pending requests.
+  /// The first pending requests still ahead of now.
   var rows: [Row]
   /// Failures of alerts that have no pending request.
   var failures: [String]
@@ -233,16 +233,23 @@ nonisolated struct AlertsSnapshot: Equatable, Sendable {
   /// How many pending requests the card lists.
   static let shownRows = 6
 
+  /// The card at `now`, on the real clock: requests that have fired since the read-back are
+  /// no longer listed.
   static func make(
     options: PhoneAlertOptions, authorization: UNAuthorizationStatus?, plan: NotificationPlan?,
     report: NotificationApplyReport?, pending: [PendingAlert], fromFixture: Bool,
-    probe: (kept: Int, added: Int)? = nil, strings: PhoneStrings, timeZone: TimeZone
+    probe: (kept: Int, added: Int)? = nil, strings: PhoneStrings, timeZone: TimeZone, now: Date
   ) -> AlertsSnapshot {
     let format = PhoneFormat(strings: strings, timeZone: timeZone)
     func when(_ date: Date) -> String {
       let day = CivilDay(containing: date, in: timeZone)
       return "\(format.weekday(day)) \(format.time(date))"
     }
+    // Coverage reaches a week or two ahead, where a weekday alone is ambiguous.
+    func whenWithDate(_ date: Date) -> String {
+      "\(format.longDate(CivilDay(containing: date, in: timeZone))) \(format.time(date))"
+    }
+    let upcoming = pending.filter { $0.fireDate > now }
     let status: String =
       if !options.isOn {
         strings("Alerts are off. Turn them on in Settings.")
@@ -279,32 +286,35 @@ nonisolated struct AlertsSnapshot: Equatable, Sendable {
       case .after: return strings("After \(name)")
       }
     }
-    let shown = pending.prefix(shownRows).map { alert in
+    let shown = upcoming.prefix(shownRows).map { alert in
       Row(
         id:
           "\(alert.identity.scheduleDay)/\(alert.identity.prayer.rawValue)/\(alert.identity.kind.rawValue)",
         title: title(alert.identity), time: when(alert.fireDate),
         status: statusText(alert.identity, fireDate: alert.fireDate))
     }
-    let pendingIdentities = Set(pending.map(\.identity))
+    let pendingIdentities = Set(upcoming.map(\.identity))
     let failures = (report?.failures ?? [:])
       .filter { !pendingIdentities.contains($0.key) }
       .sorted { $0.key < $1.key }
       .prefix(shownRows)
       .map { identity, failure in
-        var line =
-          "\(title(identity)), \(format.longDate(identity.scheduleDay)): \(statusText(identity, fireDate: .distantPast))"
+        let date = format.longDate(identity.scheduleDay)
+        var line = strings(
+          "\(title(identity)), \(date): \(statusText(identity, fireDate: .distantPast))")
         // The system's own words for a rejected request.
         if case .addFailed(let message) = failure { line += " (\(message))" }
         return line
       }
+    // With alerts off, the empty plan's coverage would read as alerts scheduled for two weeks.
     return AlertsSnapshot(
       status: status,
-      scheduledUntil: report?.confirmedCoveredUntil.map {
-        strings("Scheduled until \(when($0))")
-      },
-      plannedUntil: plan.map { strings("Planned until \(when($0.coveredUntil))") },
-      pendingCount: options.isOn ? strings("\(pending.count) pending requests") : nil,
+      scheduledUntil: options.isOn
+        ? report?.confirmedCoveredUntil.map { strings("Scheduled until \(whenWithDate($0))") }
+        : nil,
+      plannedUntil: options.isOn
+        ? plan.map { strings("Planned until \(whenWithDate($0.coveredUntil))") } : nil,
+      pendingCount: options.isOn ? strings("\(upcoming.count) pending requests") : nil,
       rows: shown, failures: failures, fromFixture: fromFixture,
       probe: probe.map { strings("The system kept \($0.kept) of \($0.added) probe requests.") })
   }

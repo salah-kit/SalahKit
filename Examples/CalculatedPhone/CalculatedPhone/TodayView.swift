@@ -33,7 +33,8 @@ struct TodayView: View {
         alerts: AlertsSnapshot.make(
           options: settings.alerts, authorization: alerts.authorization, plan: alerts.plan,
           report: alerts.report, pending: alerts.pending, fromFixture: alerts.usesFixture,
-          probe: alerts.probe, strings: strings, timeZone: settings.place.location.timeZone),
+          probe: alerts.probe, strings: strings, timeZone: settings.place.location.timeZone,
+          now: context.date),
         strings: strings)
     }
   }

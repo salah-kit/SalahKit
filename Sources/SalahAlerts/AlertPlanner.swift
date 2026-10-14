@@ -12,7 +12,9 @@ import SalahCore
 /// ```swift
 /// let alerts = try AlertPlanner().schedule(
 ///   schedule, namespace: "prayers", from: now, to: now.addingTimeInterval(14 * 86_400),
-///   settings: { _ in AlertSettings(before: .seconds(10 * 60)) })
+///   settings: { subject in
+///     subject.prayer.isPrayer ? AlertSettings(before: .seconds(10 * 60)) : nil
+///   })
 /// let plan = AlertPlanner().notificationPlan(alerts, from: now)
 /// ```
 ///

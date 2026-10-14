@@ -220,6 +220,37 @@ import Testing
     #expect(!cancelled.value)
   }
 
+  /// A wake-up replaced while the main actor is busy past its date doesn't run once the main
+  /// actor is free: its task is cancelled before it resumes.
+  @Test func aReplacedWakeUpDoesNotRun() async throws {
+    let clock = SystemAlertClock()
+    let replaced = Woke()
+    clock.wake(at: Date().addingTimeInterval(0.05)) { replaced.value = true }
+    Self.blockTheMainActor(for: 1.0)
+    clock.wake(at: Date().addingTimeInterval(3_600)) {}
+    try await Task.sleep(for: .milliseconds(300))
+    #expect(!replaced.value)
+    clock.wake(at: nil) {}
+  }
+
+  /// A before-reminder whose prayer begins within the timer's margin wakes the engine a second
+  /// before its prayer, so it's reported rather than dropped once its prayer has begun.
+  @Test func aReminderJustBeforeItsPrayerIsReported() throws {
+    let start = Fixture.date(12, 0)
+    let (engine, clock, recorder) = engine(at: start)
+    let close = Fixture.settings(
+      AlertSettings(atTime: false, before: .milliseconds(100)), for: [.dhuhr])
+    engine.update(try Fixture.alerts(from: start, to: Fixture.date(13, 0), settings: close))
+    #expect(clock.armed == Fixture.time(.dhuhr).addingTimeInterval(-1))
+    clock.fire()
+    #expect(recorder.ids == [Fixture.identity(.dhuhr, .before)])
+  }
+
+  /// Blocks the main actor, as long synchronous work would.
+  static func blockTheMainActor(for seconds: TimeInterval) {
+    Thread.sleep(forTimeInterval: seconds)
+  }
+
   @MainActor final class Woke {
     var value = false
   }

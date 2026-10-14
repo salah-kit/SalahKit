@@ -162,7 +162,9 @@ engine.resync()
 ```
 
 ``NotificationScheduler/deliver(_:content:)`` posts a due alert at once unless the system will
-deliver it or already has, so the notification plan and the engine never alert twice.
+deliver it or already has, so the notification plan and the engine don't alert twice for an
+occurrence the system still holds. (A notification the user has already cleared is gone from
+the system's list, so `deliver` can't tell it was shown.)
 ``InProcessAlertEngine/preferredAlert(among:)`` picks one sound when several alerts fall due
 together. Include the catch-up interval in the engine's range, as above.
 

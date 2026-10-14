@@ -49,9 +49,12 @@ nonisolated public struct NotificationIdentity: Codable, Hashable, Comparable, S
   /// separated by `/`: a valid namespace, a valid day as `YYYY-MM-DD`, a `PrayerKind` raw value
   /// and an ``AlertKind`` raw value.
   public init?(requestIdentifier: String, prefix: String) {
-    guard requestIdentifier.hasPrefix(prefix) else { return nil }
-    let parts = requestIdentifier.dropFirst(prefix.count)
-      .split(separator: "/", omittingEmptySubsequences: false)
+    // Scalar by scalar: a namespace that starts with a combining mark joins the prefix's last
+    // character, so comparing characters would miss the prefix.
+    let scalars = requestIdentifier.unicodeScalars
+    guard scalars.starts(with: prefix.unicodeScalars) else { return nil }
+    let rest = String(String.UnicodeScalarView(scalars.dropFirst(prefix.unicodeScalars.count)))
+    let parts = rest.split(separator: "/", omittingEmptySubsequences: false)
     guard parts.count == 4, Self.isValidNamespace(String(parts[0])),
       let day = CivilDay(String(parts[1])), day.isValid,
       let prayer = PrayerKind(rawValue: String(parts[2])),
