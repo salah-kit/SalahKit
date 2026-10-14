@@ -73,7 +73,10 @@
   ///
   /// The next event is bold in the tint color, a prayer that just started is bold, and events
   /// that have passed are secondary. A time on another civil date than its owning day carries
-  /// its offset, such as `+1`. The row reads as one element in VoiceOver.
+  /// its offset, such as `+1`. The row reads as one element in VoiceOver: the name, the time and,
+  /// on the next event's row, the countdown. Statuses are visual only, because saying "next" or
+  /// "passed" takes interface text, which is your app's; a style that announces them adds its
+  /// own words with `accessibilityValue(_:)`.
   public struct PlainPrayerRowStyle: PrayerRowStyle {
     /// Creates the plain row style.
     public init() {}

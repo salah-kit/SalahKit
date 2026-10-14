@@ -96,7 +96,7 @@
 
   /// The locales the previews and snapshots use: English, left to right, and Arabic with its
   /// own digits, right to left.
-  public enum GalleryLocale {
+  nonisolated public enum GalleryLocale {
     /// English, written left to right.
     public static let english = Locale(identifier: "en_US")
     /// Arabic with Arabic-Indic digits, written right to left.

@@ -4,7 +4,7 @@
   import WidgetKit
 
   @available(visionOS 26.0, *)
-  extension PrayerTimelineBuilder {
+  nonisolated extension PrayerTimelineBuilder {
     /// A WidgetKit timeline from `now` through `now + horizon`, with your entry type.
     ///
     /// The entries are those of ``timeline(from:horizon:)``: each refresh-plan date with its

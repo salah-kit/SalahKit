@@ -18,12 +18,13 @@ import Testing
 // edit to a document that isn't mirrored here fails the tests.
 
 // Compiled into the app and the widget extension, which both have the App Group capability.
-struct PrayerSettings: Codable, Equatable, Sendable {
+// nonisolated: in a target that defaults to main-actor isolation, SharedValue needs it.
+nonisolated struct PrayerSettings: Codable, Equatable, Sendable {
   var location: PrayerLocation
   var calculation: CalculationSettings
 }
 
-extension SharedValue where Value == PrayerSettings {
+nonisolated extension SharedValue where Value == PrayerSettings {
   static var prayers: Self {
     SharedValue(appGroup: "group.com.example.prayers", key: "settings.v1")
   }
@@ -52,7 +53,7 @@ func saveForWidgets(_ settings: PrayerSettings) {
 #endif
 
 #if canImport(WidgetKit) && canImport(SwiftUI)
-  struct PrayerEntry: TimelineEntry {
+  nonisolated struct PrayerEntry: TimelineEntry {
     enum Content {
       case setupRequired
       case timeline(PrayerTimelineState, timeZone: TimeZone)
@@ -62,7 +63,7 @@ func saveForWidgets(_ settings: PrayerSettings) {
     var content: Content
   }
 
-  struct PrayerProvider: TimelineProvider {
+  nonisolated struct PrayerProvider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<PrayerEntry>) -> Void) {
       guard let settings = SharedValue.prayers.load() else {
         let entry = PrayerEntry(date: .now, content: .setupRequired)
@@ -126,10 +127,13 @@ struct WidgetsDocumentationExamples {
 
   @Test("the shared settings round-trip and gate reloads")
   func sharedSettings() throws {
-    defer {
+    // The examples use a fixed App Group, so start and end with it empty.
+    func clear() {
       UserDefaults(suiteName: "group.com.example.prayers")?.removePersistentDomain(
         forName: "group.com.example.prayers")
     }
+    clear()
+    defer { clear() }
     let settings = PrayerSettings(
       location: Self.makkah, calculation: CalculationSettings(method: .ummAlQura))
     #expect(try prayerTimeline(from: now) == nil)

@@ -4,13 +4,13 @@ import Testing
 @testable import SalahWidgets
 
 /// A settings value like an app's.
-private struct Settings: Codable, Equatable, Sendable {
+nonisolated private struct Settings: Codable, Equatable, Sendable {
   var method: String
   var offset: Double
 }
 
 /// Records the widget kinds a shared value asks to reload.
-private final class ReloadLog: Sendable {
+nonisolated private final class ReloadLog: Sendable {
   private let lock = NSLock()
   nonisolated(unsafe) private var calls: [[String]] = []
 

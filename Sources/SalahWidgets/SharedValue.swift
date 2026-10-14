@@ -11,7 +11,7 @@ import Foundation
 /// both targets compile:
 ///
 /// ```swift
-/// extension SharedValue where Value == PhoneSettings {
+/// nonisolated extension SharedValue where Value == PhoneSettings {
 ///   // Computed: a generic type can't have a stored static property.
 ///   static var settings: Self {
 ///     SharedValue(appGroup: "group.com.example.prayers", key: "settings.v1")
@@ -36,6 +36,11 @@ import Foundation
 /// does on its own schedule.
 ///
 /// `SharedValue` doesn't lock. Give each key one writer, usually the app.
+///
+/// `SharedValue` encodes, decodes and compares from whatever thread calls it. In a target that
+/// defaults to main-actor isolation, declare `Value` `nonisolated`
+/// (`nonisolated struct PhoneSettings: Codable, Equatable, Sendable`), or its conformances belong
+/// to the main actor and can't satisfy `SharedValue`'s requirements.
 nonisolated public struct SharedValue<Value: Codable & Equatable & Sendable>: Sendable {
   /// The App Group identifier, used as the `UserDefaults` suite name, such as
   /// `"group.com.example.prayers"`.

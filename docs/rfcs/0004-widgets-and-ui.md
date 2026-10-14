@@ -202,6 +202,7 @@ nonisolated public struct ContrastCheck: Hashable, Sendable {
 - **Reloads.** `init(appGroup:key:)` reloads with `WidgetCenter.shared.reloadTimelines(ofKind:)` per kind, on iOS, macOS, watchOS and visionOS 26 or later. Without WidgetKit (tvOS, Linux) it stores only. The injected function of the other initializer replaces WidgetKit entirely.
 - **Concurrency.** No locking: a read-compare-write from two processes at once can both report a change. Give each key one writer, usually the app. Cross-process visibility is the system's (`cfprefsd`).
 - A generic type has no stored static properties, so a value declared once for app and extension is a computed `static var` in a constrained extension. The proposal's `static let` doesn't compile.
+- **Targets that default to main-actor isolation** (new Xcode projects do). There, `struct S: Codable, Equatable, Sendable` gets main-actor-isolated conformances (isolated conformances, Swift 6.2), which can't satisfy `SharedValue`'s `Sendable` parameter, and a static in `extension SharedValue where Value == S` is main-actor-isolated. Declare both `nonisolated`, and the widget's provider and entry too, since WidgetKit calls them off the main thread. The article and the README show it.
 
 ### 4.2 Timelines
 
@@ -287,7 +288,11 @@ SalahWidgets declares `NSPrivacyAccessedAPICategoryUserDefaults` with reason `1C
 - `notify(3)` is the clang module `notify` in every Apple SDK. `UserDefaults` isn't `Sendable`, so `SharedValue` keeps the suite name and opens the defaults per call. WidgetKit is unavailable on tvOS and starts at visionOS 26.
 - A test target that depends on an executable target gets it built beside the test bundle; the `DarwinSignal` tests run it as a separate process.
 
-### 6.2 Found by the cross-process tests
+### 6.2 Found by the isolation builds
+
+CI builds SalahKit's targets, tests included, with MainActor default isolation. That build found that the documentation's `PrayerSettings`, written as a plain `struct`, fails exactly as an adopter's main-actor target would ("main actor-isolated conformance of 'PrayerSettings' to 'Decodable' cannot satisfy conformance requirement for a 'Sendable' type parameter"), and that the WidgetKit `timeline(from:horizon:entry:)`, declared in an extension without `nonisolated`, became main-actor-isolated in that build. The extension is now `nonisolated`, like SalahCore's, and the documentation shows the `nonisolated` declarations (§4.1).
+
+### 6.3 Found by the cross-process tests
 
 The first `observe` called `MainActor.assumeIsolated` inside the main-queue block. In the helper process, which services the main queue with `dispatchMain()`, it trapped ("Incorrect actor executor assumption"). With a `Task` hop, the runtime still reported "data race detected: @MainActor function … was not called on the main thread", because the block passed to `notify_register_dispatch` inherited `observe`'s main-actor isolation. The block is now `@Sendable` and hops to the main actor. The cross-process test fails when the helper writes anything to standard error, and fails on the earlier code.
 

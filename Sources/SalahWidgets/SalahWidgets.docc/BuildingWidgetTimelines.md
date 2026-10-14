@@ -26,17 +26,24 @@ and the extension compile. Give both targets the App Group capability. Link the 
 `SalahCalculation` and `SalahWidgets` products, and `SalahUI` if you use its views.
 
 ```swift
-struct PrayerSettings: Codable, Equatable, Sendable {
+nonisolated struct PrayerSettings: Codable, Equatable, Sendable {
   var location: PrayerLocation
   var calculation: CalculationSettings
 }
 
-extension SharedValue where Value == PrayerSettings {
+nonisolated extension SharedValue where Value == PrayerSettings {
   static var prayers: Self {
     SharedValue(appGroup: "group.com.example.prayers", key: "settings.v1")
   }
 }
 ```
+
+The value and the extension are `nonisolated`. In a target that defaults to main-actor
+isolation, as new Xcode projects do, the value's `Codable` and `Equatable` conformances would
+otherwise belong to the main actor, and `SharedValue`, which encodes and compares from any
+thread, couldn't use them; the extension's `prayers` would be out of the extension's reach. In a
+nonisolated target the keyword changes nothing. The same goes for the timeline provider and its entry below,
+which WidgetKit calls from its own threads.
 
 Put a version in the key. A stored value that no longer decodes reads as `nil`, so a widget
 from an older build asks for setup instead of crashing; change the key when the value's shape
@@ -66,7 +73,7 @@ The entry says what the widget shows: a setup prompt when there are no inputs ye
 ``PrayerTimelineState``. The provider builds the schedule from the inputs every time:
 
 ```swift
-struct PrayerEntry: TimelineEntry {
+nonisolated struct PrayerEntry: TimelineEntry {
   enum Content {
     case setupRequired
     case timeline(PrayerTimelineState, timeZone: TimeZone)
@@ -76,7 +83,7 @@ struct PrayerEntry: TimelineEntry {
   var content: Content
 }
 
-struct PrayerProvider: TimelineProvider {
+nonisolated struct PrayerProvider: TimelineProvider {
   func getTimeline(in context: Context, completion: @escaping (Timeline<PrayerEntry>) -> Void) {
     guard let settings = SharedValue.prayers.load() else {
       let entry = PrayerEntry(date: .now, content: .setupRequired)

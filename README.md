@@ -166,12 +166,13 @@ import SalahCore
 import SalahWidgets
 
 // Compiled into the app and the widget extension, which both have the App Group capability.
-struct PrayerSettings: Codable, Equatable, Sendable {
+// nonisolated: in a target that defaults to main-actor isolation, SharedValue needs it.
+nonisolated struct PrayerSettings: Codable, Equatable, Sendable {
   var location: PrayerLocation
   var calculation: CalculationSettings
 }
 
-extension SharedValue where Value == PrayerSettings {
+nonisolated extension SharedValue where Value == PrayerSettings {
   static var prayers: Self {
     SharedValue(appGroup: "group.com.example.prayers", key: "settings.v1")
   }
