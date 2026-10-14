@@ -20,7 +20,7 @@ The board redraws every second, which drives the countdown and also catches ever
 The tvOS app shows the same board from the same code, with the same launch arguments. What differs:
 
 - The TV is always landscape, so the next-prayer panel always sits beside the table, on the left in Arabic.
-- The whole board fits inside the TV's safe area. Nothing on the board takes focus, so it can't scroll. tvOS's text styles are already sized for reading across a room, so the TV uses smaller styles than the iPad, and a 140-point countdown.
+- The whole board fits inside the TV's safe area. Nothing on the board takes focus, so it can't scroll. tvOS's text styles are already sized for reading across a room, so the TV uses smaller styles than the iPad, and a 120-point countdown. The tallest board, every night from Isha to its iqama ("Isha has started", the next Fajr and the timetable it comes from), sets the TV's sizes.
 - The screen saver stays off while the app is open (`isIdleTimerDisabled`), because nobody touches a mosque's TV.
 - tvOS has no Dynamic Type setting and no system background colors, so the TV draws on its own background with translucent panels.
 
@@ -82,7 +82,7 @@ These come from the tvOS journeys on an Apple TV 4K (3rd generation) simulator w
 | A normal MUIS day | Arabic, right to left |
 | ![Isha after midnight on Apple TV](Screenshots/tv-04b-edinburgh-after-midnight.png) | ![The coverage banner on Apple TV](Screenshots/tv-03b-muis-expired.png) |
 | 00:30 on 22 June: the next prayer is 21 June's Isha | 1 January 2027: the MUIS timetable has ended |
-| ![The partial row of 24 June on Apple TV](Screenshots/tv-06a-edinburgh-partial-row.png) | |
+| ![The partial row of 24 June on Apple TV](Screenshots/tv-06a-edinburgh-partial-row.png) | ![Isha just started on Apple TV, the tallest board](Screenshots/tv-05-muis-isha-started.png) |
 | 23:00 on 24 June: no next prayer is named | |
 
 ## Building and running
@@ -129,7 +129,7 @@ Both apps take the same arguments. They read no location and store nothing, so t
   6. The partial row and the missing day show the banner, never invented times.
   7. Arabic names, Arabic-Indic digits and a right-to-left layout.
 - `MosqueBoardTVTests` also checks that the tvOS app keeps the screen saver off.
-- `MosqueBoardTVUITests` runs the iPad journeys' cases on Apple TV with the same instants and expectations: the normal MUIS day, Jumu'ah on a Friday, the expired timetable's banner, Isha after midnight, the partial row and Arabic. Because a TV board can't scroll, each also checks that the footer ends inside the safe area, and the normal day checks that the countdown isn't shrunk to fit.
+- `MosqueBoardTVUITests` runs the iPad journeys' cases on Apple TV with the same instants and expectations: the normal MUIS day, Jumu'ah on a Friday, the expired timetable's banner, Isha after midnight, the partial row and Arabic, plus the tallest board (Isha just started, in English and Arabic). Because a TV board can't scroll, each also checks that the footer ends inside the safe area, and the normal day checks that the countdown isn't shrunk to fit.
 
 ## Accessibility and languages
 

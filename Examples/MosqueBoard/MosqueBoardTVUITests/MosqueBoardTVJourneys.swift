@@ -106,7 +106,7 @@ nonisolated final class MosqueBoardTVJourneys: XCTestCase {
     XCTAssertEqual(label("row.isha.nextDay", in: app), "Next day")
     XCTAssertEqual(label("row.maghrib.status", in: app), "Passed")
     assertMissing("next.owningDay", in: app)
-    // The tallest board: a row with a "Next day" mark still fits.
+    // A row with a "Next day" mark still fits.
     assertFitsOnScreen(app)
     app.terminate()
 
@@ -120,6 +120,28 @@ nonisolated final class MosqueBoardTVJourneys: XCTestCase {
     XCTAssertEqual(label("row.fajr.status", in: app), "Upcoming")
     assertFitsOnScreen(app)
     screenshot("tv-04b-edinburgh-after-midnight")
+  }
+
+  /// The tallest board, every night from Isha to its iqama: "Isha has started", the next
+  /// Fajr with its countdown, and the timetable it comes from, in English and Arabic. The
+  /// licence's attribution still ends inside the safe area.
+  @MainActor
+  func testIshaJustStarted() {
+    var app = launchBoard("muis", at: "2026-10-14T20:05:00+08:00")
+    XCTAssertEqual(label("next.justStarted", in: app), "Isha has started")
+    XCTAssertEqual(label("next.name", in: app), "Fajr")
+    XCTAssertEqual(
+      label("next.owningDay", in: app), "From the timetable of Thursday, October 15, 2026")
+    assertFitsOnScreen(app)
+    screenshot("tv-05-muis-isha-started")
+    app.terminate()
+
+    app = launchBoard("muis", at: "2026-10-14T20:05:00+08:00", language: "ar")
+    XCTAssertTrue(element("next.justStarted", in: app).exists)
+    XCTAssertEqual(label("next.name", in: app), "الفجر")
+    XCTAssertTrue(element("next.owningDay", in: app).exists)
+    assertFitsOnScreen(app)
+    screenshot("tv-05-muis-isha-started-arabic")
   }
 
   /// The partial row of 24 June: Isha isn't published, so the board names no next prayer and no

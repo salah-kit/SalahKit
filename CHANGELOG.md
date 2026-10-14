@@ -24,8 +24,8 @@ All notable changes to this project are documented here. The format follows
 - **MosqueBoard for tvOS** (`MosqueBoardTV`, tvOS 17): the same board on a mosque's Apple TV,
   built from the iPad app's shared code. It links only SalahCore, fits the whole board inside
   the TV's safe area and keeps the screen saver off. Its unit tests and journeys (a normal day,
-  Jumu'ah, the expired timetable, Isha after midnight, a partial row, Arabic) run on an Apple TV
-  simulator.
+  Jumu'ah, the expired timetable, Isha after midnight, a partial row, Arabic, and the tallest
+  board, from Isha to its iqama) run on an Apple TV simulator.
 - The DocC article "Lessons from Salah": acting on the Darwin signal instead of the stored
   flag, reloading widgets only for real changes, and keeping the language's digits.
 - Governance: an RFC process in CONTRIBUTING.md, a GitHub Discussion for each RFC, and

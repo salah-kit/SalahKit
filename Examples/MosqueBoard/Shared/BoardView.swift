@@ -38,10 +38,14 @@ nonisolated enum BoardStyle {
     static let message = Font.headline
     static let nextName = Font.title.bold()
     static let nextTime = Font.title3
-    static let countdown = Font.system(size: 140, weight: .bold).monospacedDigit()
+    static let countdown = Font.system(size: 120, weight: .bold).monospacedDigit()
     /// The TV board is fitted to the screen, where a countdown that may shrink is the first
     /// text SwiftUI shrinks. The panel is wide enough for any countdown at full size.
     static let countdownMinimumScale: CGFloat = 1
+    /// The next-prayer panel's spacing. The TV's tallest panel, every night from Isha to its
+    /// iqama ("Isha has started", the next Fajr, its countdown and the timetable it comes
+    /// from), must leave room for the footer inside the safe area.
+    static let panelSpacing: CGFloat = 6
     static let gap = Font.callout
     static let timeWidth: CGFloat = 170
     static let statusWidth: CGFloat = 280
@@ -64,6 +68,7 @@ nonisolated enum BoardStyle {
     static let nextTime = Font.title2
     static let countdown = Font.system(size: 64, weight: .bold).monospacedDigit()
     static let countdownMinimumScale: CGFloat = 0.5
+    static let panelSpacing: CGFloat = 12
     static let gap = Font.body
     static let timeWidth: CGFloat = 96
     static let statusWidth: CGFloat = 150
@@ -296,7 +301,7 @@ private struct StatusPanel: View {
   let strings: BoardStrings
 
   var body: some View {
-    VStack(alignment: .leading, spacing: 12) {
+    VStack(alignment: .leading, spacing: BoardStyle.panelSpacing) {
       if let started = snapshot.justStarted {
         Text(verbatim: started)
           .font(BoardStyle.message.bold())
