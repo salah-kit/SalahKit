@@ -108,6 +108,11 @@ ends at the first alert that isn't there as planned, whether its add failed, per
 denied, or an older request sits under its identifier. It never claims more than the
 read-back showed, and neither it nor the plan proves that a notification was seen or heard.
 
+An add can fail even when the authorization status says alerts are allowed. On the iOS 27.0
+simulator, every request added after the user first allowed notifications was rejected ("Source
+is not authorized") until the simulator restarted. The report lists such alerts as `addFailed`,
+and the next `apply` tries them again.
+
 Replan when the app launches, when it becomes active, when the settings or the source change,
 and when background refresh gives you the chance. Background refresh is an opportunity, not a
 deadline: show the coverage, so your users know when to open the app.

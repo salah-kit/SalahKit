@@ -485,7 +485,25 @@ A ninth reviewer showed that the microsecond rule wasn't exact after all (the mu
 
 ## 8. Evidence
 
-To be completed with the implementation: the vectors, the characterization ports, the scheduler and engine tests, and CalculatedPhone's journey on an iPhone simulator, which accepts the permission through Springboard, schedules alerts a minute or two ahead, terminates the app, observes delivery, and reads the pending requests back after a time change and an injected failure.
+- **Vectors.** 60 alert-planning vectors (`Vectors/alerts/`) and 60 reconciliation vectors (`Vectors/reconciliation/`), generated from a model of this RFC written before the implementation and recomputed by independent reviewers (§7). `AlertVectorTests` runs the alert vectors on every platform, Linux included; `ReconciliationVectorTests` runs the reconciliation vectors where UserNotifications exists.
+- **Characterization.** A2's tests of Salah's `PrayerAlertScheduler`, ported as `CharacterizationPortTests` with the outcomes §6 lists.
+- **Unit tests.**
+  - `AlertPlannerTests` covers the planner.
+  - `NotificationSchedulerTests` covers every compared content field, triggers and their rounding, pending triggers' calendars and zones, threads, five overlapping plans, `deliver`'s turn and content, attachments, retention and extreme dates.
+  - `InProcessAlertEngineTests` covers catch-up, a before-reminder after its prayer, deduplication, and sleep, wake and clock changes with an injected clock.
+  - Review rounds 6 to 10 ran mutants of the scheduler against every rule of §4.5's table (§7).
+- **CalculatedPhone on an iPhone 17 simulator** (iOS 27.0, the real clock and the system's notification center; `CalculatedPhoneUITests/AlertJourneys`, 2026-10-14):
+  - Turning alerts on asked for permission through Springboard, and the journey allowed it.
+  - From a fixture timetable 100 seconds ahead, the app installed 60 requests and the read-back confirmed every one.
+  - With the app terminated, the first alert's banner appeared in Springboard.
+  - With the fixture's times moved by 500 seconds, the same identifiers were pending at the new times, all confirmed, and the scheduled coverage equalled the planned coverage.
+  - With Dhuhr's adds failing, Dhuhr's old request stayed pending and unconfirmed, and the scheduled coverage ended at Dhuhr's new time, before the planned coverage.
+  - With alerts off, a probe added 70 requests a day apart and the system kept 64.
+- **A simulator finding.** On the iOS 27.0 simulator, after the user first allowed notifications, every add failed with "Repository could not save notification. Source is not authorized.", although the authorization status read as allowed.
+  - It lasted more than two minutes, through relaunches, until the simulator restarted. CI's iOS 26 simulators accepted requests at once.
+  - The report showed each rejected alert as `addFailed`, as §4.5 says. CalculatedPhone tries again with growing delays and shows the system's reason.
+  - Whether an iOS 27 device does the same is a step of the iPhone check below.
+- **Still to observe on hardware**, listed as pending in the release notes: closed-app delivery on a real iPhone, and in-process reminders across real Mac sleep and wake.
 
 ## 9. Open questions
 
