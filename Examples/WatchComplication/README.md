@@ -175,7 +175,7 @@ The simulator was heavily loaded by other builds during these runs. Watch UI que
 
 ## Accessibility and languages
 
-Every complication family reads as one VoiceOver element: the next prayer, its time and the time remaining, or a message's title and detail. The watch app's text uses Dynamic Type styles and scrolls; the complications use the sizes their families allow. Colors are the system's, with states also told apart by symbols and wording. UI strings are in `Shared/Localizable.xcstrings` in English and Arabic; the Arabic strings are machine-drafted and marked as needing review. Prayer names come from SalahCore in the same locale.
+Every complication family reads as one VoiceOver element. For the next prayer, the rectangular family reads its name, time, time remaining and the place; the circular, corner and inline families read its name and the time remaining. The compact families show the abbreviation, such as "A", and VoiceOver reads the full name, "Asr", which SalahUI's `NextPrayerConfiguration.abbreviation` carries as its label. The corner family's element is the prayer's name with the time remaining as its value, because the curved label isn't a child it could combine. Messages read their title and detail. The watch app's text uses Dynamic Type styles and scrolls; the complications use the sizes their families allow. Colors are the system's, with states also told apart by symbols and wording. UI strings are in `Shared/Localizable.xcstrings` in English and Arabic; the Arabic strings are machine-drafted and marked as needing review. Prayer names come from SalahCore in the same locale.
 
 ## Pending
 

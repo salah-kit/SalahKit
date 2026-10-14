@@ -246,12 +246,17 @@ struct ComplicationStyle: NextPrayerStyle {
         }
         .accessibilityElement(children: .combine)
       } else {
+        // One VoiceOver element: the prayer's name, and the time remaining as its value. The
+        // curved label isn't a child the element could combine.
         abbreviation
           .font(.system(size: 20, weight: .bold))
           .widgetAccentable()
           .widgetLabel {
             configuration.countdown ?? name
           }
+          .accessibilityElement(children: .ignore)
+          .accessibilityLabel(name)
+          .accessibilityValue(configuration.countdown ?? Text(verbatim: ""))
       }
     }
   }

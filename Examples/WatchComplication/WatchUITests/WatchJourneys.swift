@@ -113,8 +113,9 @@ nonisolated final class WatchJourneys: WatchJourneyCase {
     assertLabel("states.setup.rectangular", in: app, contains: ["No settings yet"])
     // Makkah at 14:00: Asr at 3:27 PM, 1 hour 27 minutes away.
     assertLabel("states.next.rectangular", in: app, contains: ["Asr", "3:27", "Makkah"])
-    // The circular family has room for the abbreviation and the countdown only.
-    assertLabel("states.next.circular", in: app, contains: ["A", "1 hour, 27 minutes"])
+    // The compact families show the abbreviation, "A", and VoiceOver reads the full name.
+    assertLabel("states.next.circular", in: app, contains: ["Asr", "1 hour, 27 minutes"])
+    assertLabel("states.next.corner", in: app, contains: ["Asr", "1 hour, 27 minutes"])
     assertLabel("states.next.inline", in: app, contains: ["Asr"])
     // Late on the timetable's last day: Isha is known, the next prayer isn't.
     assertLabel(
