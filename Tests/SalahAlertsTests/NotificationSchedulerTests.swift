@@ -217,7 +217,11 @@
       #expect(applied.confirmed == [isha.occurrenceID])
       #expect(delivered.posted == [reminder.occurrenceID])
       // The whole apply batch, read-back included, runs before the deliver's first call.
-      let names = center.calls.map { $0.string ?? $0.object?.keys.first ?? "" }
+      let names = center.calls.map { call in
+        call.string
+          ?? ["add", "addImmediate", "removePending", "removeDelivered"].first { call[$0] != nil }
+          ?? "?"
+      }
       #expect(
         names == [
           "authorizationStatus", "pendingRequests", "deliveredNotifications", "add",
