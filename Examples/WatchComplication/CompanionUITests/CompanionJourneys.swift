@@ -23,10 +23,21 @@ nonisolated class CompanionJourneyCase: XCTestCase {
     app.descendants(matching: .any).matching(identifier: identifier).firstMatch
   }
 
+  /// Scrolls down until the element exists: the list draws only the rows on screen.
+  @MainActor
+  func reveal(_ identifier: String, in app: XCUIApplication) {
+    for _ in 0..<6 where !element(identifier, in: app).exists {
+      app.swipeUp()
+    }
+  }
+
   @MainActor
   func label(_ identifier: String, in app: XCUIApplication, timeout: TimeInterval = 15) -> String {
     let element = element(identifier, in: app)
-    XCTAssertTrue(element.waitForExistence(timeout: timeout), "\(identifier) is missing")
+    if !element.waitForExistence(timeout: timeout) {
+      reveal(identifier, in: app)
+    }
+    XCTAssertTrue(element.waitForExistence(timeout: 5), "\(identifier) is missing")
     return element.label.filter { $0 != "\u{2068}" && $0 != "\u{2069}" }
   }
 

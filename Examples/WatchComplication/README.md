@@ -125,7 +125,12 @@ Under `MainActor` default isolation, the types that cross processes or threads a
 5. the watch app receives and stores it, and shows the next prayer;
 6. the script terminates the companion and checks that it isn't running;
 7. a new launch of the watch app shows Makkah's schedule from its own storage;
-8. the script collects the complication's timeline log from the watch's App Group and both simulators' logs.
+8. the watch adds the example's widget to the Smart Stack, which makes WidgetKit run the complication extension;
+9. the watch app stores the ended timetable (`-preset mosqueEnded`) and reloads the complication;
+10. the watch app removes its inputs (`-resetInputs`) and reloads the complication;
+11. the script reads the complication's timeline log from the watch's App Group and fails unless the extension built, after the companion closed, a timeline from the Makkah inputs the companion sent, one with the ended-timetable state and one with the setup state; it also collects both simulators' logs.
+
+Steps 8 to 10 drive the watch's home app (`com.apple.Carousel`): from the face, a turn of the crown opens the Smart Stack, and its Edit button and add slot open the widget gallery, where the example is listed. The home app exposes no accessibility elements there, so the steps tap coordinates measured on an Apple Watch Series 11 (46 mm) with watchOS 27; another watch or system may need new ones. A complication on a watch face would work the same way, but the simulator's default face (Numerals Duo) has no complication slots.
 
 The steps skip unless `WATCHCOMPLICATION_PAIRED=1` reaches the test runner, which the script arranges, so the schemes' ordinary test runs skip them.
 

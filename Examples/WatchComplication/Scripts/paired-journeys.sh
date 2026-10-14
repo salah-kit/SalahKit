@@ -9,8 +9,13 @@
 #   5. watch:  receives and stores them, and shows the next prayer
 #   6. shell:  terminate the companion and check that it isn't running
 #   7. watch:  a new launch shows Makkah's schedule from the watch's own storage
-#   8. shell:  collect the complication extension's timeline log from the watch's App Group, and
-#              the example's os_log lines from both simulators
+#   8. watch:  add the complication to the Smart Stack, so WidgetKit runs the extension
+#   9. watch:  store the ended timetable (`-preset mosqueEnded`), which reloads the complication
+#  10. watch:  remove the inputs (`-resetInputs`), which reloads the complication
+#  11. shell:  read the complication extension's timeline log from the watch's App Group and
+#              check that the extension built, after the companion closed, a timeline from
+#              Makkah's inputs, one with the ended-timetable state and one with the setup
+#              state; collect the example's os_log lines from both simulators
 #
 # Usage: Scripts/paired-journeys.sh <iPhone UDID> <Watch UDID> [derived data path]
 #
@@ -99,15 +104,24 @@ echo "Companion not running since $(date -r "${closed}")"
 step 7-watch-phone-app-closed WatchComplicationWatch "${watch}" \
   WatchUITests/WatchPairedJourney/test4WorksWithThePhoneAppClosed
 
-echo "== Step 8: evidence"
+step 8-watch-smart-stack WatchComplicationWatch "${watch}" \
+  WatchUITests/WatchSmartStackJourney/test5AddTheComplicationToTheSmartStack
+step 9-watch-ended-in-complication WatchComplicationWatch "${watch}" \
+  WatchUITests/WatchSmartStackJourney/test6TheEndedTimetableReachesTheComplication
+step 10-watch-missing-in-complication WatchComplicationWatch "${watch}" \
+  WatchUITests/WatchSmartStackJourney/test7MissingSettingsReachTheComplication
+
+echo "== Step 11: evidence"
 sleep 5
+makkah="$(grep -ho 'WATCHCOMPLICATION sent makkah: [0-9a-f]*' "${results}/4-phone-send-makkah.log" \
+  | awk '{ print $4 }' | tail -n 1)"
 group="$(xcrun simctl get_app_container "${watch}" "${watch_id}" groups \
   | awk -v id="${group_id}" '$1 == id { print $2 }')"
 plist="${group}/Library/Preferences/${group_id}.plist"
-python3 - "${plist}" "${closed}" > "${results}/timeline-log.txt" <<'EOF'
+python3 - "${plist}" "${closed}" "${makkah}" > "${results}/timeline-log.txt" <<'EOF'
 import json, plistlib, sys
 from datetime import datetime, timezone
-path, closed = sys.argv[1], float(sys.argv[2])
+path, closed, makkah = sys.argv[1], float(sys.argv[2]), sys.argv[3]
 # JSONEncoder writes dates as seconds since 2001-01-01.
 reference = 978307200
 def iso(seconds):
@@ -117,12 +131,23 @@ with open(path, "rb") as f:
 print(f"App Group keys: {sorted(prefs)}")
 records = json.loads(prefs["timelineLog.v1"]) if "timelineLog.v1" in prefs else []
 print(f"Timeline records: {len(records)}; the companion closed at {iso(closed - reference)}")
+after_close = [r for r in records if r["requestedAt"] + reference >= closed]
+checks = {
+    f"a timeline from Makkah's inputs ({makkah}) after the companion closed":
+        any(r["inputs"] == makkah and r["states"].startswith("next×") for r in after_close),
+    "a timeline with the ended-timetable state":
+        any("timetableEnded×" in r["states"] for r in after_close),
+    "a timeline with the setup state and no inputs":
+        any(r["inputs"] == "none" and r["states"] == "setup×1" for r in after_close),
+}
 for record in records:
     after = " (after the companion closed)" if record["requestedAt"] + reference >= closed else ""
     for key in ("requestedAt", "firstEntry", "lastEntry", "validUntil"):
         if key in record:
             record[key] = iso(record[key])
     print(json.dumps(record, sort_keys=True) + after)
+for name, passed in checks.items():
+    print(("PASS " if passed else "FAIL ") + name)
 EOF
 cat "${results}/timeline-log.txt"
 predicate='subsystem == "io.github.salah-kit.WatchComplication"'
@@ -134,4 +159,8 @@ echo "-- watch log"
 cat "${results}/watch-log.txt"
 echo "-- iPhone log"
 cat "${results}/phone-log.txt"
+if grep -q '^FAIL ' "${results}/timeline-log.txt"; then
+  echo "error: the complication extension's log lacks a required timeline" >&2
+  exit 1
+fi
 echo "== Paired journey passed; results in ${results}"
