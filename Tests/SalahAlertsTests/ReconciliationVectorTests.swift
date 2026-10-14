@@ -17,8 +17,8 @@
 
     @Test func everyFileLoads() {
       #expect(Self.loaded.errors.isEmpty, "\(Self.loaded.errors)")
-      // 58 scheduler vectors in nine files.
-      #expect(Self.loaded.vectors.count == 58)
+      // 59 scheduler vectors in nine files.
+      #expect(Self.loaded.vectors.count == 59)
       let ids = Self.loaded.vectors.map(\.id)
       #expect(Set(ids).count == ids.count, "vector ids must be unique")
       #expect(ids.allSatisfy { $0.hasPrefix("reconciliation.") })

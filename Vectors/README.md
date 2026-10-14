@@ -246,7 +246,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 | `reconciliation/authorization.json` | Denied (nothing confirmed even when a matching request survives), not determined, provisional |
 | `reconciliation/housekeeping.json` | Delivered-notification retention, and none |
 | `reconciliation/pump.json` | Serialized applies; overlapping applies reconciled to the latest; a superseded batch's failures, none before step 6 and step 6's without a call; a rejected plan supersedes nothing; no check after the read-back |
-| `reconciliation/deliver.json` | Posting due alerts in identity order, skipping pending and delivered occurrences (with the 1.5-second leeway, and after a late delivery), a failed pending read, the delivered read without a retention, a future alert |
+| `reconciliation/deliver.json` | Posting due alerts in identity order, skipping pending and delivered occurrences (with the 1.5-second leeway, and after a late delivery), a failed pending read, the delivered read without a retention, a future alert, an empty list |
 
 **Input:**
 

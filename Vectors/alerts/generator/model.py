@@ -475,8 +475,8 @@ def request_id(scheduler, alert_id, namespace=None):
 
 
 def ceil_second(instant):
-    """Rounded up to a whole second; less than a millisecond past one keeps it."""
-    if instant.microsecond >= 1000:
+    """Rounded up to a whole second, ⌈s − 0.001⌉: up to a millisecond past one keeps it."""
+    if instant.microsecond > 1000:
         return instant.replace(microsecond=0) + SECOND
     return instant.replace(microsecond=0)
 
@@ -513,6 +513,7 @@ def apply_plan(scheduler, center, plan, wording):
         delivered = None
         retention = scheduler.get("deliveredRetention", 172800)
         if retention is not None:
+            retention = max(0, retention)  # A negative retention counts as zero.
             delivered = center.delivered_records()
 
         obsolete = sorted(owned) if not allowed else sorted(r for r in owned if r not in requests)

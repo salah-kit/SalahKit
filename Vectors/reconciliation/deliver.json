@@ -692,6 +692,71 @@
           }
         ]
       }
+    },
+    {
+      "id": "reconciliation.deliver.nothing-to-deliver",
+      "description": "An empty list still takes its turn: deliver reads authorization, the pending requests and the delivered notifications, posts nothing and changes nothing.",
+      "provenance": "RFC 0003 §4.5 Delivering due alerts: the reads come before the alerts are considered.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "pending": [
+            {
+              "id": "salah.prayers/2026-06-02/maghrib/atTime",
+              "fireDate": "2026-06-02T19:00:00+03:00",
+              "title": "maghrib",
+              "body": "v1 atTime",
+              "thread": "prayers"
+            }
+          ],
+          "delivered": [
+            {
+              "id": "salah.prayers/2026-06-02/asr/atTime",
+              "date": "2026-06-02T15:35:00+03:00"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "deliver": [],
+            "now": "2026-06-02T15:36:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "posted": [],
+            "skipped": [],
+            "failures": {}
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/maghrib/atTime",
+            "fireDate": "2026-06-02T19:00:00+03:00",
+            "title": "maghrib",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [
+          {
+            "id": "salah.prayers/2026-06-02/asr/atTime",
+            "date": "2026-06-02T15:35:00+03:00"
+          }
+        ],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications"
+        ]
+      }
     }
   ]
 }

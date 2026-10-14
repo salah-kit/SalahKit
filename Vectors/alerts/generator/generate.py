@@ -1347,6 +1347,14 @@ def reconciliation_vectors():
           "RFC 0003 §4.5 The report: confirmedCoveredUntil is max(verifiedAt, min(coveredUntil, "
           "u)).",
           [{"apply": plan([], MORNING), "now": MORNING, "readBackAt": f"{D}T06:01:00+03:00"}])
+    # Review round 7.
+    recon("deliver", "reconciliation.deliver.nothing-to-deliver",
+          "An empty list still takes its turn: deliver reads authorization, the pending requests "
+          "and the delivered notifications, posts nothing and changes nothing.",
+          "RFC 0003 §4.5 Delivering due alerts: the reads come before the alerts are considered.",
+          [{"deliver": [], "now": "2026-06-02T15:36:00+03:00"}],
+          center={"pending": [pend(rid(f"{D}/maghrib/atTime"), MAGHRIB, "maghrib", "v1 atTime")],
+                  "delivered": [{"id": rid(f"{D}/asr/atTime"), "date": ASR}]})
     recon("namespaces", "reconciliation.namespaces.deliver-foreign-alert-after-repeated-identity",
           "Delivering Asr's identity twice and then an alert of another namespace is rejected "
           "for the namespace: deliver checks namespaces first too.",

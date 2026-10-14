@@ -45,6 +45,7 @@
     private var authorization: UNAuthorizationStatus
     private var pendingRequests: [String: UNNotificationRequest] = [:]
     private var deliveredRecords: [DeliveredNotificationRecord] = []
+    private var postedRequests: [UNNotificationRequest] = []
     private var failAdds: Set<String> = []
     private var ignoreAdds: Set<String> = []
     private var dropAdds: Set<String> = []
@@ -70,6 +71,8 @@
 
     var pending: [String: UNNotificationRequest] { lock.withLock { pendingRequests } }
     var delivered: [DeliveredNotificationRecord] { lock.withLock { deliveredRecords } }
+    /// The immediate requests the center delivered, in order.
+    var posted: [UNNotificationRequest] { lock.withLock { postedRequests } }
     var calls: [JSON] { lock.withLock { log } }
     var isSuspended: Bool { lock.withLock { suspended } }
 
@@ -167,6 +170,7 @@
           return false
         }
         if request.trigger == nil {
+          postedRequests.append(request)
           recordDelivery(request.identifier, at: clock.now)
         } else {
           pendingRequests[request.identifier] = request
@@ -222,8 +226,9 @@
       deliveredRecords.append(DeliveredNotificationRecord(identifier: identifier, date: date))
     }
 
-    /// The instant a calendar trigger names, read in its components' time zone, else its
-    /// calendar's, else the device's (RFC 0003 §4.5 Matching).
+    /// When the modelled center fires a calendar trigger: in its components' time zone, else its
+    /// calendar's, else the device's. (The scheduler itself reads only triggers that carry both
+    /// a calendar and a zone; RFC 0003 §4.5 Matching.)
     static func fireDate(of request: UNNotificationRequest) -> Date? {
       guard let trigger = request.trigger as? UNCalendarNotificationTrigger else { return nil }
       var components = trigger.dateComponents

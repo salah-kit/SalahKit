@@ -137,13 +137,84 @@
       _ = try await scheduler(threaded, clock: clock, thread: "prayers").apply(
         plan([asrAlert()], at: clock.now), content: content)
       #expect(threaded.pending[Self.identifier]?.content.threadIdentifier == "prayers")
+
+      // `deliver` posts under the identifier, with the thread, as `apply` adds.
+      let posting = ModelCenter(clock: clock)
+      _ = try await scheduler(posting, clock: clock).deliver([asrAlert()], content: content)
+      #expect(posting.posted.map(\.identifier) == [Self.identifier])
+      #expect(posting.posted.first?.content.threadIdentifier == "from-the-app")
+      let threadedPosting = ModelCenter(clock: clock)
+      _ = try await scheduler(threadedPosting, clock: clock, thread: "prayers").deliver(
+        [asrAlert()], content: content)
+      #expect(threadedPosting.posted.map(\.identifier) == [Self.identifier])
+      #expect(threadedPosting.posted.first?.content.threadIdentifier == "prayers")
+    }
+
+    /// A pending trigger is read with its components' calendar in their time zone (Foundation
+    /// keeps the calendar's zone equal to theirs). Without a calendar or a zone it names no
+    /// instant and never matches, whatever zone its wall-clock time was written in (RFC 0003
+    /// §4.5 Matching).
+    @Test func aPendingTriggerIsReadWithItsOwnCalendarAndZone() async throws {
+      let utc = try #require(TimeZone(identifier: "UTC"))
+      let riyadh = try #require(TimeZone(identifier: "Asia/Riyadh"))
+      let kiritimati = try #require(TimeZone(identifier: "Pacific/Kiritimati"))
+      #expect(
+        try await addsOver(
+          Self.components(wallClockIn: riyadh, calendarZone: riyadh, zone: riyadh)) == false)
+      #expect(
+        try await addsOver(Self.components(wallClockIn: utc, calendarZone: riyadh, zone: riyadh)))
+      #expect(
+        try await addsOver(Self.components(wallClockIn: utc, calendarZone: utc, zone: utc))
+          == false)
+      for wallClock in [utc, riyadh, kiritimati, TimeZone.current] {
+        #expect(
+          try await addsOver(
+            Self.components(wallClockIn: wallClock, calendarZone: wallClock, zone: nil)))
+        #expect(
+          try await addsOver(
+            Self.components(wallClockIn: wallClock, calendarZone: nil, zone: wallClock)))
+        #expect(
+          try await addsOver(Self.components(wallClockIn: wallClock, calendarZone: nil, zone: nil)))
+      }
+    }
+
+    /// Asr's time as the wall-clock time of `zone`, with a Gregorian calendar in
+    /// `calendarZone` and the time zone `zone`, each left out when `nil`.
+    static func components(
+      wallClockIn wallClock: TimeZone, calendarZone: TimeZone?, zone: TimeZone?
+    ) -> DateComponents {
+      var gregorian = Calendar(identifier: .gregorian)
+      gregorian.timeZone = wallClock
+      var components = gregorian.dateComponents(
+        [.year, .month, .day, .hour, .minute, .second], from: Fixture.time(.asr))
+      components.calendar = calendarZone.map { calendarZone in
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = calendarZone
+        return calendar
+      }
+      components.timeZone = zone
+      return components
+    }
+
+    /// Whether `apply` adds Asr's request over a pending one with these trigger components and
+    /// the same content.
+    func addsOver(_ components: DateComponents) async throws -> Bool {
+      let clock = TestClock(Fixture.date(6, 0))
+      let pending = UNNotificationRequest(
+        identifier: Self.identifier, content: Self.fullContent(),
+        trigger: UNCalendarNotificationTrigger(dateMatching: components, repeats: false))
+      let center = ModelCenter(clock: clock, pending: [pending])
+      _ = try await scheduler(center, clock: clock).apply(
+        plan([asrAlert()], at: clock.now), content: { _ in Self.fullContent() })
+      return center.calls.contains { $0["add"] != nil }
     }
 
     /// Triggers round up to a whole second, so they never fire early; a thousandth of a second
     /// of arithmetic noise doesn't add a second (RFC 0003 §4.5 Requests).
     @Test func triggersRoundUpToAWholeSecond() async throws {
       let cases: [(Double, Double)] = [
-        (0, 0), (0.25, 1), (0.999, 1), (0.000_5, 0), (0.001_5, 1), (-0.000_5, 0), (-0.25, 0),
+        (0, 0), (0.25, 1), (0.999, 1), (0.000_5, 0), (0.000_9, 0), (0.001, 0), (0.001_1, 1),
+        (0.001_5, 1), (-0.000_5, 0), (-0.25, 0),
       ]
       for (fraction, expected) in cases {
         let clock = TestClock(Fixture.date(6, 0))

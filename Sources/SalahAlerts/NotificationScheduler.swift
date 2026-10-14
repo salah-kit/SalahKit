@@ -413,11 +413,13 @@
       return UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
     }
 
-    /// The instant a calendar trigger names, in its own calendar and time zone.
+    /// The instant a calendar trigger names, read with its components' calendar in their time
+    /// zone, or `nil` when they lack either: the scheduler doesn't guess when the system fires
+    /// such a trigger, so it never matches and the scheduler replaces it.
     static func instant(of trigger: UNCalendarNotificationTrigger) -> Date? {
       var components = trigger.dateComponents
-      var calendar = components.calendar ?? Calendar(identifier: .gregorian)
-      calendar.timeZone = components.timeZone ?? components.calendar?.timeZone ?? .current
+      guard var calendar = components.calendar, let zone = components.timeZone else { return nil }
+      calendar.timeZone = zone
       components.calendar = nil
       components.timeZone = nil
       return calendar.date(from: components)
