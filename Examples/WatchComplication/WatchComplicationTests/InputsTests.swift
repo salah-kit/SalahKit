@@ -213,12 +213,50 @@ struct ReceiverTests {
     defer { UserDefaults().removePersistentDomain(forName: suite) }
     let receiver = receiver
     _ = receiver.receive(context: try context(.makkah, sentAt: now), at: now)
-    receiver.reset()
+    receiver.reset(at: now + 10)
     #expect(receiver.inputs.load() == nil)
-    #expect(receiver.receipt.load() == nil)
+    #expect(receiver.receipt.load()?.origin == .reset)
+    #expect(receiver.receipt.load()?.sentAt == now + 10)
+    #expect(receiver.receipt.load()?.changed == true)
     #expect(recorder.requests.count == 2)
-    // Resetting again changes nothing and reloads nothing.
-    receiver.reset()
+    // Resetting again removes nothing and reloads nothing.
+    receiver.reset(at: now + 20)
+    #expect(receiver.receipt.load()?.changed == false)
     #expect(recorder.requests.count == 2)
+  }
+
+  /// The session's last context is read again at every launch. It mustn't bring back an older
+  /// send over inputs the watch stored or removed since; live deliveries still store.
+  @Test func theLastContextReadAtLaunchKeepsNewerLocalInputs() throws {
+    defer { UserDefaults().removePersistentDomain(forName: suite) }
+    let receiver = receiver
+    let sent = try context(.makkah, sentAt: now)
+    #expect(receiver.receive(context: sent, at: now) == .stored(changed: true))
+
+    // A launch with `-preset mosque`, after the send.
+    let mosque = InputsPreset.mosque.inputs(today: now)
+    #expect(
+      receiver.store(
+        InputsMessage(inputs: mosque, sentAt: now + 60), origin: .launchArguments, at: now + 60)
+        == .stored(changed: true))
+    // A plain launch reads the session's last context, the earlier send: the preset stays.
+    #expect(receiver.receiveLastContext(sent, at: now + 120) == .notNewer)
+    #expect(receiver.inputs.load() == mosque)
+    #expect(recorder.requests.count == 2)
+
+    // A launch with `-resetInputs`, then a plain launch: still no inputs.
+    receiver.reset(at: now + 180)
+    #expect(receiver.receiveLastContext(sent, at: now + 240) == .notNewer)
+    #expect(receiver.inputs.load() == nil)
+
+    // A send after the reset, whose delivery was missed, is stored by the re-read, once.
+    let later = try context(.makkah, sentAt: now + 300)
+    #expect(receiver.receiveLastContext(later, at: now + 360) == .stored(changed: true))
+    #expect(receiver.inputs.load() == InputsPreset.makkah.inputs(today: now))
+    #expect(receiver.receiveLastContext(later, at: now + 420) == .alreadyReceived)
+
+    // A live delivery is stored even when it's older than the receipt.
+    receiver.reset(at: now + 480)
+    #expect(receiver.receive(context: sent, at: now + 540) == .stored(changed: true))
   }
 }

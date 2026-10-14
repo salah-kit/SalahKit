@@ -14,7 +14,7 @@ WatchComplication is SalahKit's watch example (proposal §5.3 and §11). It uses
 
 A watch app doesn't share App Group storage with its iPhone app (proposal §5.3), so the watch keeps its own copy. The App Group `group.io.github.salah-kit.WatchComplication` belongs to the watch app and its complication only. The companion never writes to it; it can only send.
 
-**Why an application context.** The watch needs only the latest inputs. `updateApplicationContext(_:)` keeps one context: a newer one replaces a context the watch hasn't received yet, and the system delivers it when the watch app next runs, whether or not the companion is still running. `transferUserInfo(_:)` would queue every send and deliver stale inputs first. The context also persists on both sides (`applicationContext`, `receivedApplicationContext`), so the companion shows what the watch gets next even after it relaunches, and the watch app reads the last context again once its session is active, in case a delivery was missed. Delivery timing isn't guaranteed: the watch works from what it has until new inputs arrive.
+**Why an application context.** The watch needs only the latest inputs. `updateApplicationContext(_:)` keeps one context: a newer one replaces a context the watch hasn't received yet, and the system delivers it when the watch app next runs, whether or not the companion is still running. `transferUserInfo(_:)` would queue every send and deliver stale inputs first. The context also persists on both sides (`applicationContext`, `receivedApplicationContext`), so the companion shows what the watch gets next even after it relaunches, and the watch app reads the last context again once its session is active, in case a delivery was missed. That re-read stores the context only when it was sent after the watch's last receipt, so it never brings back an older send over inputs stored or removed since (by `-preset` or `-resetInputs`); a live delivery is always stored. Delivery timing isn't guaranteed: the watch works from what it has until new inputs arrive.
 
 **The receive-and-store path** (`InputsReceiver`): the context holds the inputs as JSON data under the versioned key `inputs.v1`, and the send time. The watch decodes them, saves them with `SharedValue.save(_:reloading:)` under the versioned key `inputs.v1`, and records a receipt. `SharedValue` reloads the complication only when the stored inputs changed: sending the same inputs again writes a new receipt ("unchanged") and costs no reload. A context that doesn't decode is rejected, and the watch keeps its last valid inputs. When the system wakes the watch app in the background to deliver a context, `.backgroundTask(.watchConnectivity)` gives the delegate time to store it.
 
@@ -114,7 +114,7 @@ Under `MainActor` default isolation, the types that cross processes or threads a
 | `-language en` or `-language ar` | UI strings, prayer names and digits. Add `-AppleLanguages (ar)` for the system's own right-to-left behavior |
 | `-preset makkah` | Companion: select a preset. Watch: store it through the receive path, as if the iPhone had sent it |
 | `-send` | Companion: send the selected preset once the session is active |
-| `-resetInputs` | Watch: start with no stored inputs, as a fresh install does |
+| `-resetInputs` | Watch: start with no stored inputs, as a fresh install does; the receipt records the reset, so an earlier send isn't stored again |
 | `-screen states` or `-screen diagnostics` | Watch: open that screen at launch |
 
 ## Tests

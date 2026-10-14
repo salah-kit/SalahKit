@@ -60,8 +60,10 @@ struct HomeView: View {
       if let receipt = model.receipt {
         Text(verbatim: receiptText(receipt))
           .accessibilityIdentifier("home.received")
-        Text(verbatim: strings("Inputs \(receipt.fingerprint)"))
-          .accessibilityIdentifier("home.fingerprint")
+        if receipt.origin != .reset {
+          Text(verbatim: strings("Inputs \(receipt.fingerprint)"))
+            .accessibilityIdentifier("home.fingerprint")
+        }
       }
       if let problem = model.problem {
         Text(verbatim: strings("Rejected: \(problem)"))
@@ -80,6 +82,7 @@ struct HomeView: View {
     switch receipt.origin {
     case .companion: return strings("Received \(time), \(change)")
     case .launchArguments: return strings("From launch arguments \(time), \(change)")
+    case .reset: return strings("Inputs cleared \(time)")
     }
   }
 

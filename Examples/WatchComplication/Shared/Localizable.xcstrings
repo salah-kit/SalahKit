@@ -277,6 +277,23 @@
         }
       }
     },
+    "Inputs cleared %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "مُسحت المدخلات %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inputs cleared %@"
+          }
+        }
+      }
+    },
     "Invalid location or settings" : {
       "extractionState" : "manual",
       "localizations" : {

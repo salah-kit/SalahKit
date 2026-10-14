@@ -43,9 +43,11 @@ nonisolated struct InputsReceipt: Codable, Equatable, Sendable {
     case companion
     /// From the `-preset` launch argument, for tests and demos.
     case launchArguments
+    /// Removed by the `-resetInputs` launch argument; there are no inputs.
+    case reset
   }
 
-  /// When the companion sent the inputs.
+  /// When the companion sent the inputs, or when the watch stored or removed them itself.
   var sentAt: Date
   /// When the watch app stored them.
   var receivedAt: Date

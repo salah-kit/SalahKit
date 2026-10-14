@@ -12,6 +12,9 @@ nonisolated struct InputsReceiver: Sendable {
     /// This send was already handled, such as the session's last context read again at
     /// launch.
     case alreadyReceived
+    /// The session's last context, read again at launch, is no newer than what the watch
+    /// stored since, such as inputs from launch arguments or a reset; the stored inputs stay.
+    case notNewer
     /// The context couldn't be used; the stored inputs stay as they were.
     case rejected(String)
   }
@@ -23,13 +26,31 @@ nonisolated struct InputsReceiver: Sendable {
   /// The widget kinds to reload when the inputs change.
   var widgetKinds: [String] = [WatchStorage.complicationKind]
 
-  /// Handles a context received from the companion.
+  /// Handles a context the companion delivered: WatchConnectivity delivers only contexts the
+  /// watch hasn't received, so it's stored.
   func receive(context: [String: Any], at now: Date) -> Outcome {
     let message: InputsMessage
     do {
       message = try InputsMessage(context: context)
     } catch {
       return .rejected(String(describing: error))
+    }
+    return store(message, origin: .companion, at: now)
+  }
+
+  /// Handles the session's last received context, read again once the session is active in
+  /// case its delivery was missed. It's stored only when it was sent after the last receipt:
+  /// inputs stored since, from launch arguments or a reset, aren't replaced by an older send.
+  func receiveLastContext(_ context: [String: Any], at now: Date) -> Outcome {
+    let message: InputsMessage
+    do {
+      message = try InputsMessage(context: context)
+    } catch {
+      return .rejected(String(describing: error))
+    }
+    if let last = receipt.load(), message.sentAt <= last.sentAt {
+      return last.origin == .companion && last.sentAt == message.sentAt
+        ? .alreadyReceived : .notNewer
     }
     return store(message, origin: .companion, at: now)
   }
@@ -54,10 +75,13 @@ nonisolated struct InputsReceiver: Sendable {
     return .stored(changed: changed)
   }
 
-  /// Removes the stored inputs and receipt, as on a fresh install, and reloads the
-  /// complication if there were inputs.
-  func reset() {
-    _ = try? inputs.save(nil, reloading: widgetKinds)
-    _ = try? receipt.save(nil)
+  /// Removes the stored inputs, as on a fresh install, and reloads the complication if there
+  /// were inputs. The receipt records the reset, so the session's last context, sent before
+  /// it, isn't stored again.
+  func reset(at now: Date) {
+    let changed = (try? inputs.save(nil, reloading: widgetKinds)) ?? false
+    _ = try? receipt.save(
+      InputsReceipt(
+        sentAt: now, receivedAt: now, changed: changed, fingerprint: "none", origin: .reset))
   }
 }

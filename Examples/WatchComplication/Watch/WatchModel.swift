@@ -40,12 +40,12 @@ final class WatchModel {
     self.options = options
     strings = AppStrings(language: options.language)
     if options.resetInputs {
-      receiver.reset()
+      receiver.reset(at: Date())
     }
     if let preset = options.preset {
       let now = options.date()
       let outcome = receiver.store(
-        InputsMessage(inputs: preset.inputs(today: now), sentAt: now), origin: .launchArguments,
+        InputsMessage(inputs: preset.inputs(today: now), sentAt: Date()), origin: .launchArguments,
         at: Date())
       Self.logger.notice(
         "Stored preset \(preset.rawValue, privacy: .public): \(String(describing: outcome), privacy: .public)"
@@ -54,7 +54,7 @@ final class WatchModel {
     reload()
     if WCSession.isSupported() {
       let bridge = WatchSessionBridge(
-        receiver: receiver, readsLastContext: !options.resetInputs && options.preset == nil
+        receiver: receiver
       ) { [weak self] event in
         Task { @MainActor in self?.handle(event) }
       }
@@ -105,21 +105,15 @@ nonisolated final class WatchSessionBridge: NSObject, WCSessionDelegate, Sendabl
   }
 
   private let receiver: InputsReceiver
-  private let readsLastContext: Bool
   private let report: @Sendable (Event) -> Void
 
   /// - Parameters:
   ///   - receiver: Stores received inputs.
-  ///   - readsLastContext: Whether to store the session's last received context once it's
-  ///     active, in case its delivery was missed. Off for a launch that resets or injects the
-  ///     inputs.
   ///   - report: Called with each event, on WatchConnectivity's queue.
   init(
-    receiver: InputsReceiver, readsLastContext: Bool,
-    report: @escaping @Sendable (Event) -> Void
+    receiver: InputsReceiver, report: @escaping @Sendable (Event) -> Void
   ) {
     self.receiver = receiver
-    self.readsLastContext = readsLastContext
     self.report = report
   }
 
@@ -129,8 +123,8 @@ nonisolated final class WatchSessionBridge: NSObject, WCSessionDelegate, Sendabl
   ) {
     report(.link(Self.link(of: session)))
     let last = session.receivedApplicationContext
-    if readsLastContext, !last.isEmpty {
-      report(.received(receiver.receive(context: last, at: Date())))
+    if !last.isEmpty {
+      report(.received(receiver.receiveLastContext(last, at: Date())))
     }
   }
 
