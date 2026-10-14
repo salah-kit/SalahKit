@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "description": "Namespace validation (RFC 0003 §4.5): a foreign plan or alert, including an empty plan, is rejected before any call.",
+  "description": "Plan validation (RFC 0003 §4.5): a foreign plan or alert, including an empty plan, and a repeated identity are rejected before any call.",
   "vectors": [
     {
       "id": "reconciliation.namespaces.foreign-plan",
@@ -148,6 +148,88 @@
         "reports": [
           {
             "error": "namespaceMismatch"
+          }
+        ],
+        "pending": [],
+        "delivered": [],
+        "calls": []
+      }
+    },
+    {
+      "id": "reconciliation.namespaces.duplicate-identity-in-a-plan",
+      "description": "A hand-made plan holds Asr's alert twice, at two times: it is rejected before any call, since one identifier can hold only one request.",
+      "provenance": "RFC 0003 §4.5 Validation.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/asr/atTime",
+                  "fireDate": "2026-06-02T15:35:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/asr/atTime",
+                  "fireDate": "2026-06-02T15:41:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "error": "duplicateIdentity"
+          }
+        ],
+        "pending": [],
+        "delivered": [],
+        "calls": []
+      }
+    },
+    {
+      "id": "reconciliation.namespaces.duplicate-identity-to-deliver",
+      "description": "Delivering the same identity twice is rejected too.",
+      "provenance": "RFC 0003 §4.5 Validation.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              },
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              }
+            ],
+            "now": "2026-06-02T15:36:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "error": "duplicateIdentity"
           }
         ],
         "pending": [],

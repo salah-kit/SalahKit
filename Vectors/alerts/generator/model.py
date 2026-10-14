@@ -30,9 +30,10 @@ def parse_instant(text):
 
 
 def iso(instant, zone):
-    """An instant written in the zone's offset, as the vectors write them."""
+    """An instant written in the zone's offset, as the vectors write them, with milliseconds
+    only when it has a fraction of a second."""
     local = instant.astimezone(zone)
-    return local.isoformat()
+    return local.isoformat(timespec="milliseconds" if local.microsecond else "seconds")
 
 
 def day_text(day):
@@ -379,11 +380,16 @@ class Center:
             raise Superseded()
         self.batch_calls += 1
 
+    def record_delivery(self, rid, when):
+        """A delivered notification replaces an older one with the same identifier."""
+        self.delivered = [d for d in self.delivered if d[0] != rid]
+        self.delivered.append((rid, when))
+
     def deliver_due(self):
-        for rid, request in sorted(self.pending.items()):
-            if request.fire <= self.clock.value:
-                del self.pending[rid]
-                self.delivered.append((rid, request.fire))
+        due = sorted((r.fire, rid) for rid, r in self.pending.items() if r.fire <= self.clock.value)
+        for fire, rid in due:
+            del self.pending[rid]
+            self.record_delivery(rid, fire)
 
     def authorization_status(self):
         self.call()
@@ -431,7 +437,7 @@ class Center:
             self.pending.pop(request.id, None)
             return None
         if request.fire is None:
-            self.delivered.append((request.id, self.clock.value))
+            self.record_delivery(request.id, self.clock.value)
         else:
             self.pending[request.id] = request
         return None
@@ -486,6 +492,8 @@ def apply_plan(scheduler, center, plan, wording):
     for value in found:
         if value != namespace:
             return {"error": "namespaceMismatch"}
+    if len({a["id"] for a in plan["alerts"]}) != len(plan["alerts"]):
+        return {"error": "duplicateIdentity"}
     t = center.clock.value
     desired = [a for a in plan["alerts"] if parse_instant(a["fireDate"]) > t]
     requests = {}
@@ -540,6 +548,9 @@ def apply_plan(scheduler, center, plan, wording):
     verified = center.clock.value
     report = {"superseded": False, "verifiedAt": verified}
     if read is None:
+        for a in desired:
+            if parse_instant(a["fireDate"]) > verified:
+                failures.setdefault(a["id"], "unconfirmed")
         report.update(confirmed=[], failures=failures, confirmedCoveredUntil=None)
         return report
     confirmed = []
@@ -569,6 +580,9 @@ def deliver_alerts(scheduler, center, alerts, wording):
     for a in alerts:
         if a.get("namespace", namespace) != namespace:
             return {"error": "namespaceMismatch"}
+    if len({a["id"] for a in alerts}) != len(alerts):
+        return {"error": "duplicateIdentity"}
+
     def order(alert):
         day, prayer, kind = alert["id"].split("/")
         return (parse_instant(alert["fireDate"]), day, ORDER[prayer], ALERT_ORDER[kind])

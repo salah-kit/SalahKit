@@ -4,7 +4,7 @@
   "vectors": [
     {
       "id": "reconciliation.deliver.due-alerts",
-      "description": "At 19:46 four alerts are due. Isha's before-reminder was left out of the plan and is posted at once. Maghrib's after-reminder is still pending and is skipped. Maghrib's alert was delivered at 19:00 and is skipped. Dhuhr's after-reminder moved to 19:45 after its earlier occurrence was delivered at 12:24, so it is posted.",
+      "description": "At 19:46 the app passes four alerts. Isha's before-reminder was left out of the plan and is posted at once. Maghrib's after-reminder still has its pending request and is skipped. Maghrib's alert was delivered at 19:00 and is skipped. Dhuhr's after-reminder moved to 19:45 after its earlier occurrence was delivered at 12:24, so it is posted, and its new delivery replaces the old one.",
       "provenance": "RFC 0003 §4.5 Delivering due alerts; A2's catchUpWindows (caught-up alerts get an immediate request).",
       "input": {
         "scheduler": {
@@ -97,10 +97,6 @@
           {
             "id": "salah.prayers/2026-06-02/maghrib/atTime",
             "date": "2026-06-02T19:00:00+03:00"
-          },
-          {
-            "id": "salah.prayers/2026-06-02/dhuhr/after",
-            "date": "2026-06-02T12:24:00+03:00"
           },
           {
             "id": "salah.prayers/2026-06-02/dhuhr/after",

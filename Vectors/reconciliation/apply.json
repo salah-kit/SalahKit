@@ -221,6 +221,71 @@
       }
     },
     {
+      "id": "reconciliation.apply.fractional-second-rounds-up",
+      "description": "A fire date half a second past 12:19 gets a trigger at 12:19:01, never before the fire date; the read-back matches it, and the confirmed occurrence keeps the plan's fire date.",
+      "provenance": "RFC 0003 §4.5 Requests (rounded up to a whole second) and Matching.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/dhuhr/atTime",
+                  "fireDate": "2026-06-02T12:19:00.500+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/dhuhr/atTime",
+                "fireDate": "2026-06-02T12:19:00.500+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/atTime",
+            "fireDate": "2026-06-02T12:19:01+03:00",
+            "title": "dhuhr",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/atTime",
+            "fireDate": "2026-06-02T12:19:01+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
+    },
+    {
       "id": "reconciliation.apply.no-thread",
       "description": "A scheduler without a thread identifier leaves the content's own (none here); a pending request with a thread no longer matches and is replaced.",
       "provenance": "RFC 0003 §4.5 Requests (the thread), Matching.",

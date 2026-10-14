@@ -221,7 +221,9 @@ nonisolated public protocol AlertNotificationCenter: AnyObject, Sendable {
   func deliveredNotificationRecords() async -> [DeliveredNotificationRecord]
   func removeDeliveredNotifications(withIdentifiers identifiers: [String]) async
 }
-extension UNUserNotificationCenter: AlertNotificationCenter {}
+/// authorizationStatus() and deliveredNotificationRecords() adapt notificationSettings() and
+/// deliveredNotifications(); the other requirements are the center's own methods.
+extension UNUserNotificationCenter: AlertNotificationCenter
 
 nonisolated public enum NotificationApplyFailure: Hashable, Sendable {
   case notAuthorized          // authorization doesn't allow alerts; nothing was added
@@ -246,6 +248,7 @@ nonisolated public struct NotificationDeliveryReport: Hashable, Sendable {
 
 nonisolated public enum NotificationSchedulerError: Error, Hashable, Sendable {
   case namespaceMismatch(expected: String, found: String)
+  case duplicateIdentity(NotificationIdentity)
 }
 
 /// One owner per namespace, with a serialized update pump.
@@ -277,7 +280,7 @@ nonisolated extension AlertSound {
 
 `AlertSettings` says which alerts a prayer gets: `atTime` at the event's instant, `before` at `time − before`, `after` at `time + after`. Each kind has its own sound. Offsets are elapsed time, unaffected by clock changes, like iqama's `.after` rule (Core §4.5).
 
-The planner asks for settings per `AlertSubject`: the owning day, the prayer (any `PrayerKind`, sunrise included, so an app can offer a sunrise alert) and the observance. `nil` means no alerts for that subject. A subject is what both a known event and a source gap can supply: an event gives its own day, kind and observance; a gap gives its day and each kind it holds. A gap on a Friday's Dhuhr can't say whether the source would have declared Jumu'ah, so the planner asks for both observances (§4.4). Settings may depend on the day, which is how an app gives Ramadan or a single date its own alerts, and on the observance, which is how Jumu'ah gets its own.
+The planner asks for settings per `AlertSubject`: the owning day, the prayer (any `PrayerKind`, sunrise included, so an app can offer a sunrise alert) and the observance. `nil` means no alerts for that subject. A subject is what both a known event and a source gap can supply: an event gives its own day, kind and observance; a gap gives its day and each kind it holds. A gap on a Friday's Dhuhr can't say whether the source would have declared Jumu'ah, so the planner asks for both observances (§4.3 Gaps). Settings may depend on the day, which is how an app gives Ramadan or a single date its own alerts, and on the observance, which is how Jumu'ah gets its own.
 
 **JSON.** `AlertSettings` encodes offsets as seconds. Every key is optional when decoding, with the initializer's defaults (`atTime` true, no reminders, `"system"` sounds). An offset must be a finite number; a larger one is clamped to the date limit, as `StatePolicy` does (Core §3). Decoding doesn't check the offset's range: the planner does, against the maximum it's given. `AlertSound` encodes as `"none"`, `"system"` or `{"named": "<file>"}`.
 
@@ -291,7 +294,7 @@ A `NotificationIdentity` is the namespace, the owning day, the prayer and the al
 
 **Occurrences.** `AlertOccurrenceID` adds the fire date. When a time changes, the identity stays and the occurrence changes, so the in-process engine can tell a new occurrence from one it has handled (§7.5).
 
-**Order.** Identities are ordered by namespace, then owning day, then prayer in canonical order (Core §3), then alert kind (`atTime`, `before`, `after`). Alerts are ordered by fire date, then identity. This is the "canonical logical identifier" that breaks equal-time ties everywhere below. At one instant, an owning day's alerts come before the next day's: in Kazan, 20 June's Isha and 21 June's Fajr fall at 23:45, and the Isha alert comes first.
+**Order.** Identities are ordered by namespace, then owning day, then prayer in canonical order (Core §3), then alert kind (`atTime`, `before`, `after`). Alerts are ordered by fire date, then identity. This is the "canonical logical identifier" that breaks equal-time ties everywhere below. At one instant, an owning day's alerts come before the next day's: in Kazan, 19 June's Isha and 20 June's Fajr fall at 23:45, and the Isha alert comes first.
 
 ### 4.3 The alert schedule
 
@@ -300,7 +303,7 @@ A `NotificationIdentity` is the namespace, the owning day, the prayer and the al
 **Errors**, checked in this order, the first that applies thrown:
 1. `invalidNamespace` when the namespace isn't valid (§4.2);
 2. `invalidMaximumReminderOffset` when `maximumReminderOffset` is negative or longer than `AlertPlanner.reminderOffsetLimit` (seven days);
-3. `reminderOffsetOutOfRange(subject, kind, offset)` when the settings for a subject give a `before` or `after` offset that isn't positive or is longer than `maximumReminderOffset`. Subjects are asked in this order: the known events of the query in events order (Core §4.6), then the gaps of §4.4 in order of their source gaps, by kind in canonical order, `.ordinary` before `.jumuah`. The first bad offset is thrown, `before` before `after`.
+3. `reminderOffsetOutOfRange(subject, kind, offset)` when the settings for a subject give a `before` or `after` offset that isn't positive or is longer than `maximumReminderOffset`. Subjects are asked in this order: the known events of the query in events order (Core §4.6), then the gaps (§4.3 Gaps) in order of their source gaps, by kind in canonical order, `.ordinary` before `.jumuah`. The first bad offset is thrown, `before` before `after`.
 
 **Candidates.** Let `m` be `maximumReminderOffset`. The planner reads `schedule.events(from: start − m, through: end + m)` once. That query covers every event whose alerts can fire in `[start, end)`: after-reminders of earlier prayers and before-reminders of later ones (§7.5 "The budget and coverage"). For each known event, in events order, it asks for the settings of the event's subject and makes:
 - an `atTime` alert at `time`, when `atTime` is on, with `sound`;
@@ -341,7 +344,7 @@ When the requested range starts after `now`, nothing is known before its start, 
 
 A `NotificationScheduler` owns one namespace under one identifier prefix. The app designates one scheduling process and one scheduler per namespace; extensions ask that owner to replan rather than writing the namespace themselves. Different namespaces still share the app's operating-system capacity, and a process-local actor can't coordinate several processes (§7.5).
 
-**Validation.** `apply` and `deliver` first check that the plan's namespace, and every alert's identity's namespace, equal the scheduler's. Otherwise they throw `namespaceMismatch` before any call to the center, including for an empty plan.
+**Validation.** `apply` and `deliver` first check that the plan's namespace, and every alert's identity's namespace, equal the scheduler's, and that no identity appears twice: one identifier holds one request. Otherwise they throw `namespaceMismatch` or `duplicateIdentity` before any call to the center, including for an empty plan. A planner's plan never repeats an identity; a hand-made one might.
 
 **The update pump.** Calls run one batch at a time, in the order they arrive, across suspension points; actor isolation alone would let two batches interleave. Every `apply` makes its plan the latest one. A batch checks, before each call to the center, whether a later `apply` has arrived; if so it stops, and its report says `superseded`. A call already made always finishes first, and nothing undoes an accepted add. An `apply` that is superseded before its batch starts makes no call at all. So the pump always reconciles toward the latest plan. `deliver` never supersedes an `apply` and isn't superseded.
 
@@ -362,12 +365,12 @@ Removing the obsolete requests before adding gives the new ones the room. Nothin
 
 **The report.**
 - When alerts aren't allowed, every desired alert fails with `notAuthorized`. Otherwise an alert whose add threw fails with `addFailed`.
-- After the read-back, a desired alert whose fire date is after `verifiedAt` is **confirmed** when the read-back holds a matching request, and then has no failure. Otherwise, if it has no failure yet, it fails with `unconfirmed`: its request is missing, or an older one with the same identifier is still there.
+- After the read-back, a desired alert whose fire date is after `verifiedAt` is **confirmed** when the read-back holds a matching request, and then has no failure. Otherwise, if it has no failure yet, it fails with `unconfirmed`: its request is missing, an older one with the same identifier is still there, or the read-back failed and confirms nothing.
 - A desired alert whose fire date has passed by `verifiedAt` is never confirmed or `unconfirmed`: the read-back can't tell a delivered request from a lost one.
 
-`confirmedCoveredUntil` is `max(verifiedAt, min(plan.coveredUntil, u))`, where `u` is the fire date of the first desired alert after `verifiedAt` that isn't confirmed. A failed read-back makes `confirmed` empty and `confirmedCoveredUntil` nil. A superseded batch reports `superseded`, the failures it saw, an empty `confirmed`, a nil `confirmedCoveredUntil`, and the instant it stopped as `verifiedAt`. So the report never claims more than the read-back showed, and a failure always shortens `confirmedCoveredUntil` when it falls within the plan's coverage. Neither field proves that a notification was presented or heard (§7.5).
+`confirmed` lists occurrences in plan order. `confirmedCoveredUntil` is `max(verifiedAt, min(plan.coveredUntil, u))`, where `u` is the fire date of the first desired alert after `verifiedAt` that isn't confirmed. A failed read-back makes `confirmed` empty and `confirmedCoveredUntil` nil. A superseded batch reports `superseded`, the failures it saw, an empty `confirmed`, a nil `confirmedCoveredUntil`, and the instant it stopped as `verifiedAt`. So the report never claims more than the read-back showed, and a failure always shortens `confirmedCoveredUntil` when it falls within the plan's coverage. Neither field proves that a notification was presented or heard (§7.5).
 
-**Delivering due alerts.** `deliver(_:content:)` is for apps that also run the in-process engine: an alert the plan left out (a later reminder) still deserves a banner when it comes due. In the pump's order, it calls `authorizationStatus()`; if alerts aren't allowed, every alert fails with `notAuthorized`. Otherwise it reads the pending requests and the delivered notifications, then for each alert, by fire date and identity: an alert with a pending request under its identifier is **skipped** (the system will deliver it); so is an alert with a delivered notification under its identifier dated no earlier than 1.5 seconds before its fire date (this occurrence was delivered); every other alert is posted at once, with no trigger, and is **posted** or fails with `addFailed`.
+**Delivering due alerts.** `deliver(_:content:)` is for apps that also run the in-process engine: an alert the plan left out (a later reminder) still deserves a banner when it comes due. In the pump's order, it calls `authorizationStatus()`; if alerts aren't allowed, every alert fails with `notAuthorized`. Otherwise it reads the pending requests and the delivered notifications, then for each alert, by fire date and identity: an alert with a pending request under its identifier is **skipped** (the system will deliver it); so is an alert with a delivered notification under its identifier dated no earlier than 1.5 seconds before its fire date (this occurrence was delivered); every other alert is posted at once, with no trigger, and is **posted** or fails with `addFailed`. `posted` and `skipped` list occurrences in that order.
 
 **Authorization** is the app's to request (§7.5 "Stays in apps"). The scheduler never asks; the protocol has no way to.
 
@@ -383,7 +386,7 @@ Removing the obsolete requests before adding gives the new ones the room. Nothin
 
 **Once.** Each due alert is handled once: the engine remembers its `AlertOccurrenceID` and calls `onDue` with every alert that became due in that check, by fire date and identity. Repeated updates and wake checks don't repeat it. A changed fire date is a new occurrence. The engine forgets an occurrence three hours after its fire date (longer when a grace is longer), so the memory stays small; it isn't persisted, and keeping handled alerts across a relaunch is the app's policy (§7.5 "Deduplication").
 
-**Audio.** `onDue` gets every due alert, whatever its sound; the app plays what it plays. `preferredAlert(among:)` is the documented default precedence for one sound among alerts due together: the latest fire date wins; at one instant `atTime` beats `before`, which beats `after`; and between two prayers' alerts of one kind at one instant, the later identity wins (Kazan's 21 June Fajr over 20 June's Isha). Apps first filter the alerts whose sound they play (§7.5 "Audio precedence").
+**Audio.** `onDue` gets every due alert, whatever its sound; the app plays what it plays. `preferredAlert(among:)` is the documented default precedence for one sound among alerts due together: the latest fire date wins; at one instant `atTime` beats `before`, which beats `after`; and between two prayers' alerts of one kind at one instant, the later identity wins (Kazan's 20 June Fajr over 19 June's Isha). Apps first filter the alerts whose sound they play (§7.5 "Audio precedence").
 
 An in-process caller includes its catch-up interval in the requested range: `schedule(…, from: now − 5 minutes, …)`.
 
@@ -438,7 +441,9 @@ A2 characterized Salah's `PrayerAlertScheduler` (Salah `a0206dd`, `GuidanceTests
 
 ## 7. Vectors
 
-`Vectors/README.md` documents the schema of `Vectors/alerts/` and `Vectors/reconciliation/`. Alert vectors run the planner on a `TimetableSource` or a `CalculationSource`; reconciliation vectors run the scheduler against a modelled notification center and assert what it holds afterwards, not what was requested. The expectations come from this RFC and §7.5, through a generator that models §4.3–§4.5 independently of the Swift implementation, and an independent reviewer checked them against §7.5 before the implementation started.
+`Vectors/README.md` documents the schema of `Vectors/alerts/` and `Vectors/reconciliation/`. Alert vectors run the planner on a `TimetableSource` or a `CalculationSource`; reconciliation vectors run the scheduler against a modelled notification center and assert what it holds afterwards, not what was requested. The expectations come from this RFC and §7.5, through a generator that models §4.3–§4.5 independently of the Swift implementation.
+
+**Review before implementation** (2026-10-14). A fresh reviewer recomputed every vector with its own model of §7.5, this RFC and RFC 0001 §4.6, and found no wrong expectation. It found two vectors that proved less than they claimed (the query's reach to `start − m` and `end + m` was never observable; negative budget values other than the horizon were never exercised), a failed read-back that this section left ambiguous, and a center model that didn't say how a delivered notification with a repeated identifier is kept. The fixes added the vectors `after-reminder-from-the-query-start`, `before-reminder-from-near-the-query-end`, `negative-max-pending-counts-as-zero` and `negative-near-term-window-counts-as-zero`; the read-back rule above (every alert unconfirmed); the README's center rules; and, from its minor findings, vectors for a fractional fire date, a superseded batch's failures, a Jumu'ah gap subject and a repeated identity, which `Validation` now rejects.
 
 ## 8. Evidence
 

@@ -300,8 +300,8 @@
     },
     {
       "id": "reconciliation.failures.read-back-fails",
-      "description": "The read-back fails: nothing is confirmed and confirmed coverage is unknown, though every add succeeded.",
-      "provenance": "Proposal §7.5: 'A failed read-back leaves it unknown.'",
+      "description": "The read-back fails: every add succeeded, but nothing is confirmed, every alert is unconfirmed, and confirmed coverage is unknown.",
+      "provenance": "Proposal §7.5: 'A failed read-back leaves it unknown'; 'A failure report never claims the desired plan was fully installed.' RFC 0003 §4.5 The report.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",
@@ -344,7 +344,11 @@
             "superseded": false,
             "verifiedAt": "2026-06-02T06:00:00+03:00",
             "confirmed": [],
-            "failures": {},
+            "failures": {
+              "2026-06-02/dhuhr/after": "unconfirmed",
+              "2026-06-02/dhuhr/atTime": "unconfirmed",
+              "2026-06-02/dhuhr/before": "unconfirmed"
+            },
             "confirmedCoveredUntil": null
           }
         ],

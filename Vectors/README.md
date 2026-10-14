@@ -188,10 +188,10 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 
 | File | Covers |
 |---|---|
-| `alerts/schedule.json` | Candidate alerts: every kind of a day, the half-open range, reminders of events outside the range, offsets at `maximumReminderOffset`, Isha after midnight (Edinburgh) and Fajr before midnight (Kazan, calculated) kept on their owning days, Jumu'ah and per-day settings, equal fire dates, sounds, sunrise alerts |
+| `alerts/schedule.json` | Candidate alerts: every kind of a day, the half-open range, reminders of events outside the range, offsets at `maximumReminderOffset` and events at the query's bounds (`start − m`, near `end + m`), Isha after midnight (Edinburgh) and Fajr before midnight (Kazan, calculated) kept on their owning days, Jumu'ah and per-day settings, equal fire dates, sounds, sunrise alerts |
 | `alerts/gaps.json` | Source gaps moved per alert kind: a missing Isha, a missing day, an expired timetable, a missing Friday Dhuhr with both observances, a missing sunrise, gaps of prayers without alerts, clipping |
-| `alerts/plans.json` | Notification plans: the D7 example (30 near-term + 30 at-time requests), insufficient near-term capacity, equal fire dates at the budget's edge, reminders across midnight, horizon clipping, ranges that start after or end at or before now, past-only gaps and gaps that contain now, different coverage per kind, an expired timetable, zero and negative budgets |
-| `alerts/errors.json` | `AlertPlanningError` and the order of its checks |
+| `alerts/plans.json` | Notification plans: the D7 example (30 near-term + 30 at-time requests), insufficient near-term capacity, equal fire dates at the budget's edge, reminders across midnight, horizon clipping, ranges that start after or end at or before now, past-only gaps and gaps that contain now, different coverage per kind, an expired timetable, zero and negative budgets (each negative value on its own) |
+| `alerts/errors.json` | `AlertPlanningError` and the order of its checks, gap subjects included |
 
 **Input:**
 
@@ -238,14 +238,14 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 
 | File | Covers |
 |---|---|
-| `reconciliation/apply.json` | A fresh install, unchanged requests, the thread identifier |
+| `reconciliation/apply.json` | A fresh install, unchanged requests, a fire date with a fraction of a second, the thread identifier |
 | `reconciliation/identity.json` | A moved reminder, a changed prayer time and wording under one identifier; Isha after midnight; Fajr before midnight |
 | `reconciliation/obsolete.json` | Only owned obsolete requests are removed; an empty plan; a passed alert with a stale request |
-| `reconciliation/namespaces.json` | Foreign plans (empty ones too) and foreign alerts, rejected before any call |
+| `reconciliation/namespaces.json` | Foreign plans (empty ones too), foreign alerts and repeated identities, rejected before any call |
 | `reconciliation/failures.json` | A failed add that leaves an older request, stale content, a dropped request, failed reads, an alert that fires before the read-back, the plan's own coverage |
 | `reconciliation/authorization.json` | Denied, not determined, provisional |
 | `reconciliation/housekeeping.json` | Delivered-notification retention, and none |
-| `reconciliation/pump.json` | Serialized applies; overlapping applies reconciled to the latest |
+| `reconciliation/pump.json` | Serialized applies; overlapping applies reconciled to the latest; a superseded batch's failures |
 | `reconciliation/deliver.json` | Posting due alerts, skipping pending and delivered occurrences |
 
 **Input:**
@@ -271,7 +271,8 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 - **`scheduler`**: `NotificationScheduler(identifierPrefix:namespace:threadIdentifier:center:deliveredRetention:now:)`; `threadIdentifier` and `deliveredRetention` (seconds) may be `null`.
 - **`center`**, the model every harness implements:
   - `authorization` is `"authorized"`, `"provisional"`, `"ephemeral"`, `"denied"` or `"notDetermined"`; `pending` holds requests with a non-repeating calendar trigger at `fireDate` (UTC) and the content `title`, `body` and `thread`; `delivered` holds delivered notifications. Each list key is optional.
-  - On each pending read, the center first delivers every pending request whose fire date is at or before the current instant: it leaves `pending` and joins `delivered`, dated at its fire date.
+  - On each pending read, the center first delivers every pending request whose fire date is at or before the current instant, in order of fire date, then identifier: it leaves `pending` and joins `delivered`, dated at its fire date. A read listed in `failReads` delivers first, then throws.
+  - A delivered notification replaces a delivered one with the same identifier: the older record leaves `delivered`, and the new one is appended.
   - `add` replaces a pending request with the same identifier, as Apple documents. An immediate request (no trigger) is delivered at once, dated at the current instant. For an identifier in `failAdds`, `add` throws and changes nothing; in `ignoreAdds`, it succeeds and changes nothing (stale content on read-back); in `dropAdds`, it succeeds, and the request, with any older one of that identifier, is gone (a system that keeps fewer requests).
   - `failReads` lists pending reads that throw, counted from 1 across the vector's steps.
 - **`steps`** run in order. `now` sets the instant (the scheduler's clock and the center's) when the step starts; for an `apply`, the read-back moves it to `readBackAt` (default `now`) before the center answers. `wording` (default `"v1"`) sets the content each step's `content` closure builds: title = the prayer's raw value, body = `"<wording> <kind>"`, no thread, sound or other fields. A plan's alert takes the plan's namespace unless it names its own `namespace`; its event is irrelevant to the scheduler.
@@ -287,7 +288,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
      "failures": {"2026-06-02/isha/atTime": "addFailed"},
      "confirmedCoveredUntil": "<instant>" | null},
     {"posted": [OccurrenceRef], "skipped": [OccurrenceRef], "failures": {}},
-    {"error": "namespaceMismatch"}
+    {"error": "namespaceMismatch" | "duplicateIdentity"}
   ],
   "pending": [PendingRef, ...],
   "delivered": [{"id": "...", "date": "<instant>"}, ...],
@@ -302,7 +303,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 
 ## Alert and reconciliation expectations
 
-A generator wrote both folders: `alerts/generator/` (`model.py` models RFC 0003 §4.3–§4.5 and the parts of RFC 0001 §4.4 and §4.6 the planner reads; `generate.py` holds the cases). It was written from RFC 0003 and the proposal's §7.5 before SalahAlerts' implementation, and doesn't read it. Kazan's instants are those of `calculation/owning-days.json`, from SalahTimes' reference. Regenerate with `python3 Vectors/alerts/generator/generate.py`, which rewrites the files byte for byte. An independent reviewer checked the expectations against §7.5 before the implementation started.
+A generator wrote both folders: `alerts/generator/` (`model.py` models RFC 0003 §4.3–§4.5 and the parts of RFC 0001 §4.4 and §4.6 the planner reads; `generate.py` holds the cases). It was written from RFC 0003 and the proposal's §7.5 before SalahAlerts' implementation, and doesn't read it. Kazan's instants are those of `calculation/owning-days.json`, from SalahTimes' reference. Regenerate with `python3 Vectors/alerts/generator/generate.py`, which rewrites the files byte for byte. An independent reviewer recomputed every expectation with its own model before the implementation started; RFC 0003 §7 records what it found.
 
 A change to an existing alert or reconciliation vector needs a written reason in RFC 0003 §10, in the same commit.
 
