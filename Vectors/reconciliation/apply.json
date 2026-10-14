@@ -222,7 +222,7 @@
     },
     {
       "id": "reconciliation.apply.fractional-second-rounds-up",
-      "description": "A fire date half a second past 12:19 gets a trigger at 12:19:01, never before the fire date; the read-back matches it, and the confirmed occurrence keeps the plan's fire date.",
+      "description": "A fire date a quarter of a second past 12:19 gets a trigger at 12:19:01, never before the fire date (rounding to the nearest second would give 12:19:00); the read-back matches it, and the confirmed occurrence keeps the plan's fire date.",
       "provenance": "RFC 0003 §4.5 Requests (rounded up to a whole second) and Matching.",
       "input": {
         "scheduler": {
@@ -240,7 +240,7 @@
               "alerts": [
                 {
                   "id": "2026-06-02/dhuhr/atTime",
-                  "fireDate": "2026-06-02T12:19:00.500+03:00"
+                  "fireDate": "2026-06-02T12:19:00.250+03:00"
                 }
               ]
             },
@@ -256,7 +256,7 @@
             "confirmed": [
               {
                 "id": "2026-06-02/dhuhr/atTime",
-                "fireDate": "2026-06-02T12:19:00.500+03:00"
+                "fireDate": "2026-06-02T12:19:00.250+03:00"
               }
             ],
             "failures": {},

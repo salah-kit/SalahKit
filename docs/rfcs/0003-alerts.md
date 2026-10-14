@@ -228,7 +228,7 @@ extension UNUserNotificationCenter: AlertNotificationCenter
 nonisolated public enum NotificationApplyFailure: Hashable, Sendable {
   case notAuthorized          // authorization doesn't allow alerts; nothing was added
   case addFailed(String)      // the center rejected the request (the error's description)
-  case unconfirmed            // read-back found no matching request
+  case unconfirmed            // read-back found no matching request, or failed
 }
 
 nonisolated public struct NotificationApplyReport: Hashable, Sendable {
@@ -344,7 +344,7 @@ When the requested range starts after `now`, nothing is known before its start, 
 
 A `NotificationScheduler` owns one namespace under one identifier prefix. The app designates one scheduling process and one scheduler per namespace; extensions ask that owner to replan rather than writing the namespace themselves. Different namespaces still share the app's operating-system capacity, and a process-local actor can't coordinate several processes (§7.5).
 
-**Validation.** `apply` and `deliver` first check that the plan's namespace, and every alert's identity's namespace, equal the scheduler's, and that no identity appears twice: one identifier holds one request. Otherwise they throw `namespaceMismatch` or `duplicateIdentity` before any call to the center, including for an empty plan. A planner's plan never repeats an identity; a hand-made one might.
+**Validation.** `apply` and `deliver` first check that the plan's namespace, and every alert's identity's namespace, equal the scheduler's, and that no identity appears twice: one identifier holds one request. Otherwise they throw `namespaceMismatch` or `duplicateIdentity` before any call to the center, including for an empty plan; namespaces are checked first. A planner's plan never repeats an identity; a hand-made one might.
 
 **The update pump.** Calls run one batch at a time, in the order they arrive, across suspension points; actor isolation alone would let two batches interleave. Every `apply` makes its plan the latest one. A batch checks, before each call to the center, whether a later `apply` has arrived; if so it stops, and its report says `superseded`. A call already made always finishes first, and nothing undoes an accepted add. An `apply` that is superseded before its batch starts makes no call at all. So the pump always reconciles toward the latest plan. `deliver` never supersedes an `apply` and isn't superseded.
 
@@ -370,7 +370,7 @@ Removing the obsolete requests before adding gives the new ones the room. Nothin
 
 `confirmed` lists occurrences in plan order. `confirmedCoveredUntil` is `max(verifiedAt, min(plan.coveredUntil, u))`, where `u` is the fire date of the first desired alert after `verifiedAt` that isn't confirmed. A failed read-back makes `confirmed` empty and `confirmedCoveredUntil` nil. A superseded batch reports `superseded`, the failures it saw, an empty `confirmed`, a nil `confirmedCoveredUntil`, and the instant it stopped as `verifiedAt`. So the report never claims more than the read-back showed, and a failure always shortens `confirmedCoveredUntil` when it falls within the plan's coverage. Neither field proves that a notification was presented or heard (§7.5).
 
-**Delivering due alerts.** `deliver(_:content:)` is for apps that also run the in-process engine: an alert the plan left out (a later reminder) still deserves a banner when it comes due. In the pump's order, it calls `authorizationStatus()`; if alerts aren't allowed, every alert fails with `notAuthorized`. Otherwise it reads the pending requests and the delivered notifications, then for each alert, by fire date and identity: an alert with a pending request under its identifier is **skipped** (the system will deliver it); so is an alert with a delivered notification under its identifier dated no earlier than 1.5 seconds before its fire date (this occurrence was delivered); every other alert is posted at once, with no trigger, and is **posted** or fails with `addFailed`. `posted` and `skipped` list occurrences in that order.
+**Delivering due alerts.** `deliver(_:content:)` is for apps that also run the in-process engine: an alert the plan left out (a later reminder) still deserves a banner when it comes due. In the pump's order, it calls `authorizationStatus()`; if alerts aren't allowed, every alert fails with `notAuthorized`. Otherwise it reads the pending requests (a read that throws leaves no request pending) and the delivered notifications, then for each alert, by fire date and identity: an alert with a pending request under its identifier is **skipped** (the system will deliver it); so is an alert with a delivered notification under its identifier dated no earlier than 1.5 seconds before its fire date (this occurrence was delivered); every other alert is posted at once, with no trigger, and is **posted** or fails with `addFailed`. `posted` and `skipped` list occurrences in that order.
 
 **Authorization** is the app's to request (§7.5 "Stays in apps"). The scheduler never asks; the protocol has no way to.
 
@@ -404,7 +404,7 @@ The planner is a pure function of its inputs: it reads the schedule once, over t
 | `AlertPlanner.reminderOffsetLimit` and `AlertPlanningError` | The sketch throws without saying what. A maximum offset beyond seven days would only widen the query; an offset outside the declared bound is rejected (§7.5). |
 | `NotificationIdentity` builds and parses request identifiers; namespaces can't contain `/` | The scheduler removes only requests of its prefix and namespace, so ownership must be decidable from the identifier alone. An app also needs the identity of a notification the user tapped. |
 | `NotificationScheduler.init` takes the center, a delivered-notification retention and a clock; `threadIdentifier` is optional | Tests inject failures through `AlertNotificationCenter` (§7.5 "Done means"); retention is configurable (§7.5 "Housekeeping"); a nil thread leaves the content's own. |
-| `apply` throws `NotificationSchedulerError` | Namespace validation happens before any mutation; a typed error says so without a report that looks like a scheduling result. |
+| `apply` and `deliver` throw `NotificationSchedulerError` | Validation (the namespace, and an identity that appears twice) happens before any mutation; a typed error says so without a report that looks like a scheduling result. |
 | `NotificationApplyReport.failures` holds `NotificationApplyFailure`, not `String` | An app and a test can tell "not allowed" from "rejected" from "not there on read-back". |
 | `deliver(_:content:)` and `NotificationDeliveryReport` | An always-running app posts due alerts the plan left out. Posting them through the namespace's one owner keeps the "one writer per namespace" rule, and the scheduler can skip an occurrence the system already delivered or will deliver (Salah's catch-up, A2's `catchUpWindows`). |
 | `AlertClock`, `SystemAlertClock`, and `resync(now: Date? = nil)` | The engine's timer and its checks use one clock that tests can inject (§7.5 "Done means": sleep, wake and clock changes). A default of `.now` would bypass an injected clock. |
@@ -445,6 +445,8 @@ A2 characterized Salah's `PrayerAlertScheduler` (Salah `a0206dd`, `GuidanceTests
 
 **Review before implementation** (2026-10-14). A fresh reviewer recomputed every vector with its own model of §7.5, this RFC and RFC 0001 §4.6, and found no wrong expectation. It found two vectors that proved less than they claimed (the query's reach to `start − m` and `end + m` was never observable; negative budget values other than the horizon were never exercised), a failed read-back that this section left ambiguous, and a center model that didn't say how a delivered notification with a repeated identifier is kept. The fixes added the vectors `after-reminder-from-the-query-start`, `before-reminder-from-near-the-query-end`, `negative-max-pending-counts-as-zero` and `negative-near-term-window-counts-as-zero`; the read-back rule above (every alert unconfirmed); the README's center rules; and, from its minor findings, vectors for a fractional fire date, a superseded batch's failures, a Jumu'ah gap subject and a repeated identity, which `Validation` now rejects.
 
+A second fresh reviewer recomputed the changed vectors and all reconciliation vectors with its own models, and ran mutants against each fix. It found no wrong expectation and two substantive gaps: a fire date half a second past a whole second can't tell rounding up from rounding to the nearest second, and `deliver` had no rule for a pending read that throws. The fixes: the fractional vector uses a quarter second; `deliver` treats a failed read as nothing pending (`reconciliation.deliver.failed-pending-read`); and, from its minor findings, `alerts.errors.gap-subject-ordinary-before-jumuah`, `reconciliation.deliver.delivered-within-the-leeway`, a repeated identity at two fire dates, the order of validation, and corrected wording. §10 lists the existing vectors these rounds changed.
+
 ## 8. Evidence
 
 To be completed with the implementation: the vectors, the characterization ports, the scheduler and engine tests, and CalculatedPhone's journey on an iPhone simulator, which accepts the permission through Springboard, schedules alerts a minute or two ahead, terminates the app, observes delivery, and reads the pending requests back after a time change and an injected failure.
@@ -456,4 +458,9 @@ To be completed with the implementation: the vectors, the characterization ports
 
 ## 10. Changes after review
 
-None yet.
+1. **During the pre-implementation review** (2026-10-14, §7), with the reasons there:
+   - `reconciliation.failures.read-back-fails`: a failed read-back now leaves every alert `unconfirmed`, so a failure report never looks like success.
+   - `reconciliation.deliver.due-alerts`: the new delivery of Dhuhr's after-reminder replaces its older delivered record, as the README's center now says.
+   - `reconciliation.apply.fractional-second-rounds-up`: its fire date is a quarter second past 12:19, not half, so rounding to the nearest second fails it.
+   - `reconciliation.namespaces.duplicate-identity-to-deliver`: the repeated identity has two fire dates, so rejecting only a repeated occurrence fails it.
+   - Wording only: `alerts.schedule.offsets-at-the-maximum`, `alerts.schedule.offset-at-the-maximum-on-the-range-end`, `alerts.schedule.reminders-of-events-outside-the-range`, `alerts.plan.negative-budget-counts-as-zero`, `alerts.errors.jumuah-gap-subject`.

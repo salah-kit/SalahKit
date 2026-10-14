@@ -251,8 +251,8 @@ def schedule_vectors():
       q_schedule("2026-06-02T12:19:00+03:00", "2026-06-02T15:35:00+03:00"))
 
     v("alerts.schedule.reminders-of-events-outside-the-range",
-      "Two short ranges: one holds only Dhuhr's before-reminder, though Dhuhr is after the "
-      "range; the other only Isha's after-reminder, though Isha is before it.",
+      "A short range holds only Dhuhr's before-reminder, though Dhuhr is after the range "
+      "(alerts.schedule.after-reminder-of-an-earlier-prayer is the other direction).",
       "RFC 0003 §4.3 Candidates; proposal §7.5: query events before and after the range to "
       "include after-reminders of earlier prayers and before-reminders of later ones.",
       MAKKAH, makkah(), ALL_THREE,
@@ -670,9 +670,16 @@ def error_vectors():
     v("alerts.errors.jumuah-gap-subject",
       "Friday 5 June publishes no Dhuhr, and the Jumu'ah settings have a zero reminder: the "
       "gap's .jumuah subject is rejected.",
-      "RFC 0003 §4.3 Errors 3 (gap subjects, .ordinary before .jumuah).", MAKKAH,
+      "RFC 0003 §4.3 Errors 3 (a Friday's Dhuhr gap asks both observances).", MAKKAH,
       makkah(changes={"2026-06-05": {"drop": ["dhuhr"]}}),
       {"kinds": {"dhuhr": every(before=600)}, "jumuah": every(before=0)},
+      q_schedule("2026-06-05T11:00:00+03:00", "2026-06-05T13:00:00+03:00"))
+    v("alerts.errors.gap-subject-ordinary-before-jumuah",
+      "Both the ordinary and the Jumu'ah settings for Friday's missing Dhuhr have bad "
+      "reminders: the ordinary subject is asked first and reported.",
+      "RFC 0003 §4.3 Errors 3 (gap subjects, .ordinary before .jumuah).", MAKKAH,
+      makkah(changes={"2026-06-05": {"drop": ["dhuhr"]}}),
+      {"kinds": {"dhuhr": every(before=-1)}, "jumuah": every(before=0)},
       q_schedule("2026-06-05T11:00:00+03:00", "2026-06-05T13:00:00+03:00"))
     v("alerts.errors.gap-subjects-are-checked-too",
       "A bad offset for a prayer that only a gap holds is rejected as well.",
@@ -832,11 +839,11 @@ def reconciliation_vectors():
                               pend(rid(f"{D}/dhuhr/atTime"), DHUHR, "dhuhr", "v1 atTime"),
                               pend(rid(f"{D}/dhuhr/after"), DHUHR_AFTER, "dhuhr", "v1 after")]})
     recon("apply", "reconciliation.apply.fractional-second-rounds-up",
-          "A fire date half a second past 12:19 gets a trigger at 12:19:01, never before the "
-          "fire date; the read-back matches it, and the confirmed occurrence keeps the plan's "
-          "fire date.",
+          "A fire date a quarter of a second past 12:19 gets a trigger at 12:19:01, never before "
+          "the fire date (rounding to the nearest second would give 12:19:00); the read-back "
+          "matches it, and the confirmed occurrence keeps the plan's fire date.",
           "RFC 0003 §4.5 Requests (rounded up to a whole second) and Matching.",
-          [{"apply": plan([a(f"{D}/dhuhr/atTime", "2026-06-02T12:19:00.500+03:00")], COVER),
+          [{"apply": plan([a(f"{D}/dhuhr/atTime", "2026-06-02T12:19:00.250+03:00")], COVER),
             "now": MORNING}])
     recon("apply", "reconciliation.apply.no-thread",
           "A scheduler without a thread identifier leaves the content's own (none here); a "
@@ -948,10 +955,10 @@ def reconciliation_vectors():
           [{"apply": plan([a(f"{D}/asr/atTime", ASR), a(f"{D}/asr/atTime", f"{D}T15:41:00+03:00")],
                           COVER), "now": MORNING}])
     recon("namespaces", "reconciliation.namespaces.duplicate-identity-to-deliver",
-          "Delivering the same identity twice is rejected too.",
+          "Delivering the same identity twice, at two fire dates, is rejected too.",
           "RFC 0003 §4.5 Validation.",
-          [{"deliver": [a(f"{D}/asr/atTime", ASR), a(f"{D}/asr/atTime", ASR)],
-            "now": "2026-06-02T15:36:00+03:00"}])
+          [{"deliver": [a(f"{D}/asr/atTime", ASR), a(f"{D}/asr/atTime", f"{D}T15:36:00+03:00")],
+            "now": "2026-06-02T15:36:30+03:00"}])
     recon("namespaces", "reconciliation.namespaces.deliver-foreign-alert",
           "Delivering an alert of another namespace is rejected before any call.",
           "RFC 0003 §4.5 Validation.",
@@ -1127,6 +1134,26 @@ def reconciliation_vectors():
             "now": "2026-06-02T15:40:01+03:00"}],
           center={"pending": [pend(rid(f"{D}/asr/atTime"), ASR, "asr", "v1 atTime")],
                   "failAdds": [rid(f"{D}/asr/after")]})
+    recon("deliver", "reconciliation.deliver.failed-pending-read",
+          "The pending read fails: no request counts as pending, so a due alert with no "
+          "delivered notification is posted.",
+          "RFC 0003 §4.5 Delivering due alerts: a pending read that throws leaves nothing "
+          "pending.",
+          [{"deliver": [a(f"{D}/isha/before", "2026-06-02T19:45:00+03:00")],
+            "now": "2026-06-02T19:45:30+03:00"}],
+          center={"failReads": [1]})
+    recon("deliver", "reconciliation.deliver.delivered-within-the-leeway",
+          "Two alerts fire at 19:45. Maghrib's after-reminder was delivered at 19:44:58.500, 1.5 "
+          "seconds early, which counts as this occurrence: skipped. Isha's before-reminder was "
+          "delivered at 19:44:58.400, earlier than that, so it was another occurrence: posted.",
+          "RFC 0003 §4.5 Delivering due alerts: a delivered notification dated no earlier than "
+          "1.5 seconds before the fire date.",
+          [{"deliver": [a(f"{D}/maghrib/after", "2026-06-02T19:45:00+03:00"),
+                        a(f"{D}/isha/before", "2026-06-02T19:45:00+03:00")],
+            "now": "2026-06-02T19:45:10+03:00"}],
+          center={"delivered": [
+              {"id": rid(f"{D}/maghrib/after"), "date": "2026-06-02T19:44:58.500+03:00"},
+              {"id": rid(f"{D}/isha/before"), "date": "2026-06-02T19:44:58.400+03:00"}]})
     recon("deliver", "reconciliation.deliver.not-authorized",
           "Without authorization nothing is posted.",
           "RFC 0003 §4.5 Delivering due alerts.",

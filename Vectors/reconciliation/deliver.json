@@ -194,6 +194,142 @@
       }
     },
     {
+      "id": "reconciliation.deliver.failed-pending-read",
+      "description": "The pending read fails: no request counts as pending, so a due alert with no delivered notification is posted.",
+      "provenance": "RFC 0003 §4.5 Delivering due alerts: a pending read that throws leaves nothing pending.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "failReads": [
+            1
+          ]
+        },
+        "steps": [
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/isha/before",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "now": "2026-06-02T19:45:30+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "posted": [
+              {
+                "id": "2026-06-02/isha/before",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "skipped": [],
+            "failures": {}
+          }
+        ],
+        "pending": [],
+        "delivered": [
+          {
+            "id": "salah.prayers/2026-06-02/isha/before",
+            "date": "2026-06-02T19:45:30+03:00"
+          }
+        ],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "addImmediate": "salah.prayers/2026-06-02/isha/before"
+          }
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.deliver.delivered-within-the-leeway",
+      "description": "Two alerts fire at 19:45. Maghrib's after-reminder was delivered at 19:44:58.500, 1.5 seconds early, which counts as this occurrence: skipped. Isha's before-reminder was delivered at 19:44:58.400, earlier than that, so it was another occurrence: posted.",
+      "provenance": "RFC 0003 §4.5 Delivering due alerts: a delivered notification dated no earlier than 1.5 seconds before the fire date.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {
+          "delivered": [
+            {
+              "id": "salah.prayers/2026-06-02/maghrib/after",
+              "date": "2026-06-02T19:44:58.500+03:00"
+            },
+            {
+              "id": "salah.prayers/2026-06-02/isha/before",
+              "date": "2026-06-02T19:44:58.400+03:00"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/maghrib/after",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              },
+              {
+                "id": "2026-06-02/isha/before",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "now": "2026-06-02T19:45:10+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "posted": [
+              {
+                "id": "2026-06-02/isha/before",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "skipped": [
+              {
+                "id": "2026-06-02/maghrib/after",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "failures": {}
+          }
+        ],
+        "pending": [],
+        "delivered": [
+          {
+            "id": "salah.prayers/2026-06-02/maghrib/after",
+            "date": "2026-06-02T19:44:58.500+03:00"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/isha/before",
+            "date": "2026-06-02T19:45:10+03:00"
+          }
+        ],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "addImmediate": "salah.prayers/2026-06-02/isha/before"
+          }
+        ]
+      }
+    },
+    {
       "id": "reconciliation.deliver.not-authorized",
       "description": "Without authorization nothing is posted.",
       "provenance": "RFC 0003 §4.5 Delivering due alerts.",

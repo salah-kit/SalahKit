@@ -860,7 +860,7 @@
     },
     {
       "id": "alerts.schedule.reminders-of-events-outside-the-range",
-      "description": "Two short ranges: one holds only Dhuhr's before-reminder, though Dhuhr is after the range; the other only Isha's after-reminder, though Isha is before it.",
+      "description": "A short range holds only Dhuhr's before-reminder, though Dhuhr is after the range (alerts.schedule.after-reminder-of-an-earlier-prayer is the other direction).",
       "provenance": "RFC 0003 §4.3 Candidates; proposal §7.5: query events before and after the range to include after-reminders of earlier prayers and before-reminders of later ones.",
       "input": {
         "location": {
