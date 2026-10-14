@@ -220,12 +220,16 @@ import Testing
     #expect(!cancelled.value)
   }
 
-  /// A wake-up replaced while the main actor is busy past its date doesn't run once the main
-  /// actor is free: its task is cancelled before it resumes.
+  /// A wake-up whose sleep ends while the main actor is busy, and which is replaced before the
+  /// main actor is free, doesn't run: its sleep has already finished, so only the replacement's
+  /// cancellation can stop it.
   @Test func aReplacedWakeUpDoesNotRun() async throws {
     let clock = SystemAlertClock()
     let replaced = Woke()
     clock.wake(at: Date().addingTimeInterval(0.05)) { replaced.value = true }
+    // Let the wake-up's task start its sleep, then keep the main actor busy past its date and
+    // tolerance.
+    try await Task.sleep(for: .milliseconds(10))
     Self.blockTheMainActor(for: 1.0)
     clock.wake(at: Date().addingTimeInterval(3_600)) {}
     try await Task.sleep(for: .milliseconds(300))
@@ -249,6 +253,30 @@ import Testing
   /// Blocks the main actor, as long synchronous work would.
   static func blockTheMainActor(for seconds: TimeInterval) {
     Thread.sleep(forTimeInterval: seconds)
+  }
+
+  /// A before-reminder dated after its prayer, which only a hand-made schedule can hold, arms
+  /// one wake-up within its early leeway rather than a past one the timer would fire at once,
+  /// again and again.
+  @Test func aReminderDatedAfterItsPrayerArmsNoPastWakeUp() throws {
+    let prayer = Fixture.time(.dhuhr)
+    let fireDate = prayer.addingTimeInterval(11 * 60)
+    let now = prayer.addingTimeInterval(60)
+    let (engine, clock, recorder) = engine(at: now)
+    let late = PlannedAlert(
+      id: Fixture.identity(.dhuhr, .before),
+      event: PrayerEvent(scheduleDay: Fixture.day, kind: .dhuhr, time: prayer),
+      fireDate: fireDate, sound: .system)
+    engine.update(
+      AlertSchedule(
+        namespace: "prayers", alerts: [late],
+        requestedRange: DateInterval(start: now, end: fireDate.addingTimeInterval(3_600)),
+        gaps: []))
+    // The 1.5-second early leeway.
+    #expect(clock.armed == fireDate.addingTimeInterval(-1.5))
+    clock.fire()
+    #expect(recorder.batches.isEmpty, "its prayer has begun")
+    #expect(clock.armed == nil)
   }
 
   @MainActor final class Woke {

@@ -78,6 +78,9 @@ nonisolated public struct CatchUpPolicy: Hashable, Sendable {
       } catch {
         return
       }
+      // A sleep that ended while the main actor was busy resumes even if the wake-up was
+      // replaced meanwhile; the replaced one doesn't run.
+      guard !Task.isCancelled else { return }
       action()
     }
   }
@@ -162,9 +165,14 @@ nonisolated public struct CatchUpPolicy: Hashable, Sendable {
       $0.fireDate > earliest && !handled.contains($0.occurrenceID)
     }) {
       // Just after the fire date. A before-reminder whose prayer begins sooner wakes a second
-      // before its prayer instead, inside its early leeway, so a late timer can't miss it.
+      // before its prayer instead, inside its early leeway, so a late timer can't miss it; never
+      // before the leeway, so a reminder dated after its prayer can't arm a past wake-up.
       var wake = next.fireDate.addingTimeInterval(0.15)
-      if next.kind == .before { wake = min(wake, next.event.time.addingTimeInterval(-1)) }
+      if next.kind == .before {
+        wake = max(
+          min(wake, next.event.time.addingTimeInterval(-1)),
+          next.fireDate.addingTimeInterval(-CatchUpPolicy.earlyLeeway))
+      }
       clock.wake(at: wake) { [weak self] in
         guard let self else { return }
         self.check(at: self.clock.now)

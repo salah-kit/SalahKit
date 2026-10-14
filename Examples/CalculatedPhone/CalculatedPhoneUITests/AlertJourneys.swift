@@ -208,17 +208,15 @@ nonisolated final class AlertJourneys: XCTestCase {
     // pending, the probe measures how many requests the system keeps for one app.
     let off = launch(["-alerts", "off", "-probeNotificationLimit", "70"])
     _ = waitForLabel("alerts.status", in: off) { $0.hasPrefix("Alerts are off") }
-    let requests = off.descendants(matching: .any)
-      .matching(NSPredicate(format: "identifier BEGINSWITH %@", "alerts.request."))
-    let removed = Date().addingTimeInterval(30)
-    while requests.count > 0, Date() < removed {
-      RunLoop.current.run(until: Date().addingTimeInterval(0.5))
-    }
-    XCTAssertEqual(requests.count, 0, "the app's requests are still pending")
     reveal("alerts.probe", in: off)
     let probe = waitForLabel("alerts.probe", in: off, timeout: 60) {
       $0.hasPrefix("The system kept")
     }
+    // The probe runs after the replan's read-back, so the card now lists what that read-back
+    // found: none of the app's requests.
+    let requests = off.descendants(matching: .any)
+      .matching(NSPredicate(format: "identifier BEGINSWITH %@", "alerts.request."))
+    XCTAssertEqual(requests.count, 0, "the app's requests are still pending")
     let attachment = XCTAttachment(string: probe)
     attachment.name = "pending-request-probe"
     attachment.lifetime = .keepAlways

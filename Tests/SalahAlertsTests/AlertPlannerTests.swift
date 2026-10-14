@@ -77,6 +77,16 @@ import Testing
       NotificationIdentity(
         requestIdentifier: combining.requestIdentifier(prefix: "salah."), prefix: "salah.")
         == combining)
+    // One that ends with a prepended scalar joins the following "/", and parses back too; a
+    // "/" hidden in such a character still makes a namespace invalid.
+    let prepended = NotificationIdentity(
+      namespace: "x\u{600}", scheduleDay: CivilDay(year: 2026, month: 6, day: 2), prayer: .dhuhr,
+      kind: .before)
+    #expect(
+      NotificationIdentity(
+        requestIdentifier: prepended.requestIdentifier(prefix: "salah."), prefix: "salah.")
+        == prepended)
+    #expect(!NotificationIdentity.isValidNamespace("x\u{600}/y"))
   }
 
   @Test(arguments: [

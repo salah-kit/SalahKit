@@ -370,9 +370,14 @@ struct AlertTests {
     #expect(afterAsr.rows.map(\.id) == ["2026-10-14/maghrib/atTime"])
     #expect(afterAsr.pendingCount == "1 pending request")
     #expect(snapshot("en", at: maghrib).rows.isEmpty)
+    // "العشاء، الأربعاء، …: …": the title and the date joined by the Arabic comma (the date has
+    // its own).
     let arabic = snapshot("ar", at: Self.makkahNoon)
+    let isha = PhoneStrings(language: "ar").names.name(of: PrayerKind.isha)
     #expect(arabic.failures.count == 1)
-    #expect(arabic.failures.first?.contains("، ") == true)
+    #expect(
+      arabic.failures.first?.filter(Self.isVisible).hasPrefix("\(isha)، ") == true,
+      "\(arabic.failures)")
   }
 
   /// A request's trigger names a whole second rounded up from its alert's fire date: the card

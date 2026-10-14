@@ -32,7 +32,8 @@ nonisolated public struct NotificationIdentity: Codable, Hashable, Comparable, S
 
   /// Whether a string can be a namespace: it isn't empty and has no `/`.
   public static func isValidNamespace(_ namespace: String) -> Bool {
-    !namespace.isEmpty && !namespace.contains("/")
+    // Scalars, not characters: a scalar such as U+0600 joins a following "/" into one character.
+    !namespace.isEmpty && !namespace.unicodeScalars.contains("/")
   }
 
   /// The identifier of the notification request for this identity:
@@ -49,12 +50,13 @@ nonisolated public struct NotificationIdentity: Codable, Hashable, Comparable, S
   /// separated by `/`: a valid namespace, a valid day as `YYYY-MM-DD`, a `PrayerKind` raw value
   /// and an ``AlertKind`` raw value.
   public init?(requestIdentifier: String, prefix: String) {
-    // Scalar by scalar: a namespace that starts with a combining mark joins the prefix's last
-    // character, so comparing characters would miss the prefix.
+    // Scalar by scalar: a namespace can start with a combining mark that joins the prefix's last
+    // character, or end with a scalar that joins the next "/", so characters would miss either.
     let scalars = requestIdentifier.unicodeScalars
     guard scalars.starts(with: prefix.unicodeScalars) else { return nil }
-    let rest = String(String.UnicodeScalarView(scalars.dropFirst(prefix.unicodeScalars.count)))
-    let parts = rest.split(separator: "/", omittingEmptySubsequences: false)
+    let parts = scalars.dropFirst(prefix.unicodeScalars.count)
+      .split(separator: "/", omittingEmptySubsequences: false)
+      .map { String(Substring($0)) }
     guard parts.count == 4, Self.isValidNamespace(String(parts[0])),
       let day = CivilDay(String(parts[1])), day.isValid,
       let prayer = PrayerKind(rawValue: String(parts[2])),
