@@ -74,9 +74,12 @@ nonisolated func exercisePublicAPI() throws -> String {
   _ = custom.day(friday)
 
   let names = PrayerNames(locale: Locale(identifier: "en"), overrides: [.name(.isha): "Isha"])
-  let clock = Date.FormatStyle(
-    date: .omitted, time: .shortened, locale: Locale(identifier: "en_GB"), timeZone: zone)
-  let iqamaText = jumuah.iqama.map { $0.formatted(clock) } ?? ""
+  let clock = DateFormatter()
+  clock.locale = Locale(identifier: "en_GB")
+  clock.timeZone = zone
+  clock.dateStyle = .none
+  clock.timeStyle = .short
+  let iqamaText = jumuah.iqama.map { clock.string(from: $0) } ?? ""
   _ = (names.locale, names.abbreviation(of: jumuah), names.abbreviation(of: .asr))
   _ = (names.name(of: PrayerKind.fajr), names.string(for: .jumuahAbbreviation))
 

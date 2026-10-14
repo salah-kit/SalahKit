@@ -44,18 +44,24 @@ nonisolated struct AppStrings: Sendable {
 
   /// A short clock time in `timeZone`, such as "15:27" or "3:27 PM", in the locale's digits.
   func time(_ date: Date, in timeZone: TimeZone) -> String {
-    date.formatted(
-      Date.FormatStyle(
-        date: .omitted, time: .shortened, locale: locale, calendar: locale.calendar,
-        timeZone: timeZone))
+    let formatter = DateFormatter()
+    formatter.locale = locale
+    formatter.calendar = locale.calendar
+    formatter.timeZone = timeZone
+    formatter.dateStyle = .none
+    formatter.timeStyle = .short
+    return formatter.string(from: date)
   }
 
   /// A short date and time in `timeZone`, such as "Oct 14, 15:27".
   func dateTime(_ date: Date, in timeZone: TimeZone) -> String {
-    date.formatted(
-      Date.FormatStyle(
-        date: .abbreviated, time: .shortened, locale: locale, calendar: locale.calendar,
-        timeZone: timeZone))
+    let formatter = DateFormatter()
+    formatter.locale = locale
+    formatter.calendar = locale.calendar
+    formatter.timeZone = timeZone
+    formatter.dateStyle = .medium
+    formatter.timeStyle = .short
+    return formatter.string(from: date)
   }
 
   /// A civil day, such as "Fri, Oct 16".

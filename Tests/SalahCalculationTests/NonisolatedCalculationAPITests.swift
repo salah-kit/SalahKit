@@ -39,9 +39,12 @@ nonisolated func exerciseCalculationAPI() throws -> String {
   guard let isha = schedule.day(ramadanDay).day?[.isha] else { return "" }
   _ = schedule.state(at: isha.time, through: isha.time.addingTimeInterval(86_400))
 
-  let clock = Date.FormatStyle(
-    date: .omitted, time: .shortened, locale: Locale(identifier: "en_GB"), timeZone: zone)
+  let clock = DateFormatter()
+  clock.locale = Locale(identifier: "en_GB")
+  clock.timeZone = zone
+  clock.dateStyle = .none
+  clock.timeStyle = .short
   return
     "\(method) | \(source.expectedKinds.count) | \(Int(source.maximumLead.components.seconds))"
-    + " | \(isha.scheduleDay)/\(isha.kind) \(isha.time.formatted(clock))"
+    + " | \(isha.scheduleDay)/\(isha.kind) \(clock.string(from: isha.time))"
 }
