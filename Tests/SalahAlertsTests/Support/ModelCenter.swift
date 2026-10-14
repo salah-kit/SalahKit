@@ -222,12 +222,13 @@
       deliveredRecords.append(DeliveredNotificationRecord(identifier: identifier, date: date))
     }
 
-    /// The instant a calendar trigger names, read with its own calendar and time zone.
+    /// The instant a calendar trigger names, read in its components' time zone, else its
+    /// calendar's, else the device's (RFC 0003 §4.5 Matching).
     static func fireDate(of request: UNNotificationRequest) -> Date? {
       guard let trigger = request.trigger as? UNCalendarNotificationTrigger else { return nil }
       var components = trigger.dateComponents
       var calendar = components.calendar ?? Calendar(identifier: .gregorian)
-      if let zone = components.timeZone ?? TimeZone(identifier: "UTC") { calendar.timeZone = zone }
+      calendar.timeZone = components.timeZone ?? components.calendar?.timeZone ?? .current
       components.calendar = nil
       components.timeZone = nil
       return calendar.date(from: components)

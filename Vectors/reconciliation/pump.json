@@ -587,6 +587,237 @@
           "pendingRequests"
         ]
       }
+    },
+    {
+      "id": "reconciliation.pump.denied-batch-stops-before-its-read-back",
+      "description": "Notifications are denied, the scheduler keeps no delivered-notification retention and no owned request is pending. The first apply is held in its second call, the pending read, and a valid plan arrives. With nothing to remove and no delivered read, its next call is the read-back: it stops just before it, having recorded notAuthorized at step 6, which makes no call. The second plan runs and reports notAuthorized too.",
+      "provenance": "RFC 0003 §4.5 The update pump: a batch checks immediately before each call to the center, and only then; notAuthorized is recorded at step 6.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": null
+        },
+        "center": {
+          "authorization": "denied"
+        },
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/isha/atTime",
+                  "fireDate": "2026-06-02T20:30:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T13:00:00+03:00",
+            "suspendAtCall": 2
+          },
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/maghrib/atTime",
+                  "fireDate": "2026-06-02T19:00:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T13:00:00+03:00",
+            "duringPrevious": true
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": true,
+            "verifiedAt": "2026-06-02T13:00:00+03:00",
+            "confirmed": [],
+            "failures": {
+              "2026-06-02/isha/atTime": "notAuthorized"
+            },
+            "confirmedCoveredUntil": null
+          },
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T13:00:00+03:00",
+            "confirmed": [],
+            "failures": {
+              "2026-06-02/maghrib/atTime": "notAuthorized"
+            },
+            "confirmedCoveredUntil": "2026-06-02T19:00:00+03:00"
+          }
+        ],
+        "pending": [],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "authorizationStatus",
+          "pendingRequests",
+          "pendingRequests"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.pump.plan-arriving-during-the-read-back",
+      "description": "The first apply is held in its last call, the read-back, when a second plan arrives that moves Dhuhr's alert to 12:20. A batch checks for a later plan only before a call, so the first finishes unsuperseded and confirms its three requests; then the second runs, replaces Dhuhr's alert and confirms all three.",
+      "provenance": "RFC 0003 §4.5 The update pump: there is no check after the read-back.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/dhuhr/before",
+                  "fireDate": "2026-06-02T12:09:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/dhuhr/atTime",
+                  "fireDate": "2026-06-02T12:19:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/dhuhr/after",
+                  "fireDate": "2026-06-02T12:24:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00",
+            "suspendAtCall": 7
+          },
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-04T00:00:00+03:00",
+              "alerts": [
+                {
+                  "id": "2026-06-02/dhuhr/before",
+                  "fireDate": "2026-06-02T12:09:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/dhuhr/atTime",
+                  "fireDate": "2026-06-02T12:20:00+03:00"
+                },
+                {
+                  "id": "2026-06-02/dhuhr/after",
+                  "fireDate": "2026-06-02T12:24:00+03:00"
+                }
+              ]
+            },
+            "now": "2026-06-02T06:00:00+03:00",
+            "duringPrevious": true
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/dhuhr/before",
+                "fireDate": "2026-06-02T12:09:00+03:00"
+              },
+              {
+                "id": "2026-06-02/dhuhr/atTime",
+                "fireDate": "2026-06-02T12:19:00+03:00"
+              },
+              {
+                "id": "2026-06-02/dhuhr/after",
+                "fireDate": "2026-06-02T12:24:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          },
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:00:00+03:00",
+            "confirmed": [
+              {
+                "id": "2026-06-02/dhuhr/before",
+                "fireDate": "2026-06-02T12:09:00+03:00"
+              },
+              {
+                "id": "2026-06-02/dhuhr/atTime",
+                "fireDate": "2026-06-02T12:20:00+03:00"
+              },
+              {
+                "id": "2026-06-02/dhuhr/after",
+                "fireDate": "2026-06-02T12:24:00+03:00"
+              }
+            ],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-04T00:00:00+03:00"
+          }
+        ],
+        "pending": [
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/after",
+            "fireDate": "2026-06-02T12:24:00+03:00",
+            "title": "dhuhr",
+            "body": "v1 after",
+            "thread": "prayers"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/atTime",
+            "fireDate": "2026-06-02T12:20:00+03:00",
+            "title": "dhuhr",
+            "body": "v1 atTime",
+            "thread": "prayers"
+          },
+          {
+            "id": "salah.prayers/2026-06-02/dhuhr/before",
+            "fireDate": "2026-06-02T12:09:00+03:00",
+            "title": "dhuhr",
+            "body": "v1 before",
+            "thread": "prayers"
+          }
+        ],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/before",
+            "fireDate": "2026-06-02T12:09:00+03:00"
+          },
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/atTime",
+            "fireDate": "2026-06-02T12:19:00+03:00"
+          },
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/after",
+            "fireDate": "2026-06-02T12:24:00+03:00"
+          },
+          "pendingRequests",
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "add": "salah.prayers/2026-06-02/dhuhr/atTime",
+            "fireDate": "2026-06-02T12:20:00+03:00"
+          },
+          "pendingRequests"
+        ]
+      }
     }
   ]
 }

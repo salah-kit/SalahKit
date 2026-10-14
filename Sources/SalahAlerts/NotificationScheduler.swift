@@ -168,12 +168,16 @@
     /// - Parameters:
     ///   - identifierPrefix: The prefix of every request identifier, such as the app's bundle
     ///     identifier and a dot.
-    ///   - namespace: The namespace it owns; plans and alerts of another are refused.
+    ///   - namespace: The namespace it owns; plans and alerts of another are refused. Use a
+    ///     valid namespace (``NotificationIdentity/isValidNamespace(_:)``): the scheduler
+    ///     recognizes its own requests by parsing their identifiers, so with any other it never
+    ///     removes a request and adds every request again on each `apply`.
     ///   - threadIdentifier: A thread the scheduler sets on every request, or `nil` to keep
     ///     the content's own.
     ///   - center: The notification center; the app's by default.
     ///   - deliveredRetention: How long delivered notifications of the namespace stay before
-    ///     an `apply` removes them, or `nil` to leave them all. Two days by default.
+    ///     an `apply` removes them, or `nil` to leave them all. Two days by default; a negative
+    ///     retention counts as zero.
     ///   - now: The scheduler's clock.
     public init(
       identifierPrefix: String, namespace: String, threadIdentifier: String? = nil,
@@ -191,6 +195,9 @@
 
     /// How many plans `apply` has accepted, for tests that interleave calls.
     package var submittedApplies: Int { generation }
+
+    /// How many calls wait for the pump, for tests that interleave calls.
+    package var waitingCalls: Int { waiting.count }
 
     /// Installs `plan` and reads it back.
     ///
@@ -221,12 +228,15 @@
       return await run(plan, generation: mine, content: content)
     }
 
-    /// Posts due alerts that the system won't deliver by itself, at once.
+    /// Posts alerts at once, unless the system will deliver them or already has.
     ///
     /// For apps that also run ``InProcessAlertEngine``: an alert the plan left out still gets a
     /// notification when it comes due. An alert whose request is still pending is skipped, as
     /// is one with a delivered notification dated no earlier than 1.5 seconds before its fire
-    /// date. It waits for any batch in progress and never supersedes an `apply`.
+    /// date. Each posted request has the alert's identifier and the scheduler's thread, as an
+    /// `apply`'s does, and no trigger. It doesn't check that an alert is due: pass the alerts
+    /// the engine reports. It waits for the calls that arrived before it, never supersedes an
+    /// `apply`, and is never superseded.
     ///
     /// - Throws: ``NotificationSchedulerError`` for an alert of another namespace or a repeated
     ///   identity, before any call to the center.
@@ -313,7 +323,8 @@
         await center.removePendingNotificationRequests(withIdentifiers: obsolete)
       }
       if let retention = deliveredRetention {
-        let cutoff = start.addingTimeInterval(-retention.timeInterval)
+        // A negative retention counts as zero.
+        let cutoff = start.addingTimeInterval(-max(0, retention.timeInterval))
         let expired = delivered.filter { owns($0.identifier) && $0.date < cutoff }
           .map(\.identifier).sorted()
         if !expired.isEmpty {

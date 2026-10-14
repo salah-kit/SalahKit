@@ -320,6 +320,50 @@
         "delivered": [],
         "calls": []
       }
+    },
+    {
+      "id": "reconciliation.namespaces.deliver-foreign-alert-after-repeated-identity",
+      "description": "Delivering Asr's identity twice and then an alert of another namespace is rejected for the namespace: deliver checks namespaces first too.",
+      "provenance": "RFC 0003 §4.5 Validation: namespaces are checked first.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:35:00+03:00"
+              },
+              {
+                "id": "2026-06-02/asr/atTime",
+                "fireDate": "2026-06-02T15:36:00+03:00"
+              },
+              {
+                "id": "2026-06-02/maghrib/atTime",
+                "fireDate": "2026-06-02T19:00:00+03:00",
+                "namespace": "mosque"
+              }
+            ],
+            "now": "2026-06-02T15:36:30+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "error": "namespaceMismatch"
+          }
+        ],
+        "pending": [],
+        "delivered": [],
+        "calls": []
+      }
     }
   ]
 }

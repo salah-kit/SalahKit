@@ -443,6 +443,50 @@
           "pendingRequests"
         ]
       }
+    },
+    {
+      "id": "reconciliation.apply.empty-plan-coverage-starts-at-the-read-back",
+      "description": "An empty plan covers until 06:00, when its batch starts; the read-back is at 06:01. Confirmed coverage never ends before verifiedAt, so it is 06:01.",
+      "provenance": "RFC 0003 §4.5 The report: confirmedCoveredUntil is max(verifiedAt, min(coveredUntil, u)).",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "apply": {
+              "namespace": "prayers",
+              "coveredUntil": "2026-06-02T06:00:00+03:00",
+              "alerts": []
+            },
+            "now": "2026-06-02T06:00:00+03:00",
+            "readBackAt": "2026-06-02T06:01:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "superseded": false,
+            "verifiedAt": "2026-06-02T06:01:00+03:00",
+            "confirmed": [],
+            "failures": {},
+            "confirmedCoveredUntil": "2026-06-02T06:01:00+03:00"
+          }
+        ],
+        "pending": [],
+        "delivered": [],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          "pendingRequests"
+        ]
+      }
     }
   ]
 }

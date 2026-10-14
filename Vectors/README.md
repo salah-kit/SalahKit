@@ -238,15 +238,15 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 
 | File | Covers |
 |---|---|
-| `reconciliation/apply.json` | A fresh install, unchanged requests, a fire date with a fraction of a second, `confirmed` in plan order, the thread identifier |
+| `reconciliation/apply.json` | A fresh install, unchanged requests, a fire date with a fraction of a second, `confirmed` in plan order, the thread identifier, an empty plan's coverage |
 | `reconciliation/identity.json` | A moved reminder, a changed prayer time and wording under one identifier; Isha after midnight; Fajr before midnight |
 | `reconciliation/obsolete.json` | Only owned obsolete requests are removed, sorted by identifier; an empty plan; a passed alert with a stale request |
-| `reconciliation/namespaces.json` | Foreign plans (empty ones too), foreign alerts and repeated identities, rejected before any call |
-| `reconciliation/failures.json` | A failed add that leaves an older request, stale content, a dropped request, failed reads, an alert that fires before the read-back, an unsorted plan's coverage, the plan's own coverage |
+| `reconciliation/namespaces.json` | Foreign plans (empty ones too), foreign alerts and repeated identities, rejected before any call, namespaces first |
+| `reconciliation/failures.json` | A failed add that leaves an older request, stale content, a dropped request, failed reads, alerts at the batch's start, at the read-back and before it, a passed alert's failure, a confirmed alert's add failure, an unsorted plan's coverage, the plan's own coverage |
 | `reconciliation/authorization.json` | Denied (nothing confirmed even when a matching request survives), not determined, provisional |
 | `reconciliation/housekeeping.json` | Delivered-notification retention, and none |
-| `reconciliation/pump.json` | Serialized applies; overlapping applies reconciled to the latest; a superseded batch's failures, and none before step 6; a rejected plan supersedes nothing |
-| `reconciliation/deliver.json` | Posting due alerts in identity order, skipping pending and delivered occurrences (with the 1.5-second leeway), a failed pending read, the delivered read without a retention |
+| `reconciliation/pump.json` | Serialized applies; overlapping applies reconciled to the latest; a superseded batch's failures, none before step 6 and step 6's without a call; a rejected plan supersedes nothing; no check after the read-back |
+| `reconciliation/deliver.json` | Posting due alerts in identity order, skipping pending and delivered occurrences (with the 1.5-second leeway, and after a late delivery), a failed pending read, the delivered read without a retention, a future alert |
 
 **Input:**
 
@@ -276,7 +276,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
   - `add` replaces a pending request with the same identifier, as Apple documents. An immediate request (no trigger) is delivered at once, dated at the current instant. For an identifier in `failAdds`, `add` throws and changes nothing; in `ignoreAdds`, it succeeds and changes nothing (stale content on read-back); in `dropAdds`, it succeeds, and the request, with any older one of that identifier, is gone (a system that keeps fewer requests).
   - `failReads` lists pending reads that throw, counted from 1 across the vector's steps.
 - **`steps`** run in order. `now` sets the instant (the scheduler's clock and the center's) when the step starts; for an `apply`, the read-back moves it to `readBackAt` (default `now`) before the center answers. `wording` (default `"v1"`) sets the content each step's `content` closure builds: title = the prayer's raw value, body = `"<wording> <kind>"`, no thread, sound or other fields. A plan's alert takes the plan's namespace, and a `deliver` step's alert the scheduler's, unless it names its own `namespace`; its event is irrelevant to the scheduler.
-- **Overlapping applies.** A step with `suspendAtCall: n` suspends inside its n-th center call. Every following step marked `"duringPrevious": true` is submitted while it is suspended, in order, sharing its `now`; then the call finishes. RFC 0003 §4.5's pump then stops the first batch before its next call and supersedes every waiting plan but the last. A plan that validation rejects reports its error and supersedes nothing.
+- **Overlapping applies.** A step with `suspendAtCall: n` suspends inside its n-th center call. Every following step marked `"duringPrevious": true` is submitted while it is suspended, in order, sharing its `now`; then the call finishes. RFC 0003 §4.5's pump then stops the first batch before its next call, if it makes another, and supersedes every waiting plan but the last. A plan that validation rejects reports its error and supersedes nothing. An overlapping group never sets `readBackAt`.
 
 **Expected:**
 

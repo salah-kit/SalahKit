@@ -562,6 +562,136 @@
           "authorizationStatus"
         ]
       }
+    },
+    {
+      "id": "reconciliation.deliver.a-late-delivery-counts",
+      "description": "At 19:47 the app delivers Isha's before-reminder of 19:45, two minutes late, and the center dates it 19:47. A second deliver of the same occurrence at 19:48 finds that delivery, dated no earlier than 1.5 seconds before the fire date, and skips it.",
+      "provenance": "RFC 0003 §4.5 Delivering due alerts: an occurrence with a delivered notification dated no earlier than 1.5 seconds before its fire date was delivered.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/isha/before",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "now": "2026-06-02T19:47:00+03:00"
+          },
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/isha/before",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "now": "2026-06-02T19:48:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "posted": [
+              {
+                "id": "2026-06-02/isha/before",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "skipped": [],
+            "failures": {}
+          },
+          {
+            "posted": [],
+            "skipped": [
+              {
+                "id": "2026-06-02/isha/before",
+                "fireDate": "2026-06-02T19:45:00+03:00"
+              }
+            ],
+            "failures": {}
+          }
+        ],
+        "pending": [],
+        "delivered": [
+          {
+            "id": "salah.prayers/2026-06-02/isha/before",
+            "date": "2026-06-02T19:47:00+03:00"
+          }
+        ],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "addImmediate": "salah.prayers/2026-06-02/isha/before"
+          },
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications"
+        ]
+      }
+    },
+    {
+      "id": "reconciliation.deliver.a-future-alert-is-posted-at-once",
+      "description": "deliver doesn't decide whether an alert is due; the engine does. Isha's alert, passed an hour before its fire date with no pending request or delivery, is posted at once.",
+      "provenance": "RFC 0003 §4.5 Delivering due alerts: every other alert is posted at once.",
+      "input": {
+        "scheduler": {
+          "identifierPrefix": "salah.",
+          "namespace": "prayers",
+          "threadIdentifier": "prayers",
+          "deliveredRetention": 172800
+        },
+        "center": {},
+        "steps": [
+          {
+            "deliver": [
+              {
+                "id": "2026-06-02/isha/atTime",
+                "fireDate": "2026-06-02T20:30:00+03:00"
+              }
+            ],
+            "now": "2026-06-02T19:30:00+03:00"
+          }
+        ]
+      },
+      "expected": {
+        "reports": [
+          {
+            "posted": [
+              {
+                "id": "2026-06-02/isha/atTime",
+                "fireDate": "2026-06-02T20:30:00+03:00"
+              }
+            ],
+            "skipped": [],
+            "failures": {}
+          }
+        ],
+        "pending": [],
+        "delivered": [
+          {
+            "id": "salah.prayers/2026-06-02/isha/atTime",
+            "date": "2026-06-02T19:30:00+03:00"
+          }
+        ],
+        "calls": [
+          "authorizationStatus",
+          "pendingRequests",
+          "deliveredNotifications",
+          {
+            "addImmediate": "salah.prayers/2026-06-02/isha/atTime"
+          }
+        ]
+      }
     }
   ]
 }

@@ -769,7 +769,9 @@ def recon(file, vid, text, provenance, steps, center=None, scheduler=None, zone=
         else:
             # The first batch makes `suspendAtCall` calls. A plan that validation rejects never
             # enters the pump. If a valid plan arrived, the first batch finds it before its next
-            # call and stops, every valid plan but the last is superseded, and the last runs.
+            # call, if it has one, and stops; every valid plan but the last is superseded, and
+            # the last runs. An overlapping group never sets `readBackAt`.
+            assert all("readBackAt" not in s for s in group), group
             later = []
             for step_ in group[1:]:
                 rejected = apply_plan(scheduler, Center({}, clock), step_["apply"], "v1") \
@@ -778,7 +780,8 @@ def recon(file, vid, text, provenance, steps, center=None, scheduler=None, zone=
             valid = [s for s, rejected in later if rejected is None]
             model.begin_batch(step["suspendAtCall"] if valid else None)
             first = apply_plan(scheduler, model, step["apply"], step.get("wording", "v1"))
-            assert bool(first.get("superseded")) == bool(valid), first
+            if not valid:
+                assert not first.get("superseded"), first
             reports.append(first)
             for step_, rejected in later:
                 if rejected is not None:
@@ -1264,6 +1267,93 @@ def reconciliation_vectors():
           "RFC 0003 §4.5 Delivering due alerts.",
           [{"deliver": [a(f"{D}/asr/atTime", ASR)], "now": "2026-06-02T15:36:00+03:00"}],
           center={"authorization": "denied"})
+
+    # Review round 6: the points at which a batch checks for a later plan, the report's
+    # boundaries, and deliver's own rules.
+    recon("pump", "reconciliation.pump.denied-batch-stops-before-its-read-back",
+          "Notifications are denied, the scheduler keeps no delivered-notification retention and "
+          "no owned request is pending. The first apply is held in its second call, the pending "
+          "read, and a valid plan arrives. With nothing to remove and no delivered read, its "
+          "next call is the read-back: it stops just before it, having recorded notAuthorized "
+          "at step 6, which makes no call. The second plan runs and reports notAuthorized too.",
+          "RFC 0003 §4.5 The update pump: a batch checks immediately before each call to the "
+          "center, and only then; notAuthorized is recorded at step 6.",
+          [{"apply": plan([a(f"{D}/isha/atTime", ISHA)], COVER),
+            "now": "2026-06-02T13:00:00+03:00", "suspendAtCall": 2},
+           {"apply": plan([a(f"{D}/maghrib/atTime", MAGHRIB)], COVER),
+            "now": "2026-06-02T13:00:00+03:00", "duringPrevious": True}],
+          center={"authorization": "denied"},
+          scheduler={**SCHEDULER, "deliveredRetention": None})
+    recon("pump", "reconciliation.pump.plan-arriving-during-the-read-back",
+          "The first apply is held in its last call, the read-back, when a second plan arrives "
+          "that moves Dhuhr's alert to 12:20. A batch checks for a later plan only before a "
+          "call, so the first finishes unsuperseded and confirms its three requests; then the "
+          "second runs, replaces Dhuhr's alert and confirms all three.",
+          "RFC 0003 §4.5 The update pump: there is no check after the read-back.",
+          [{"apply": plan(DHUHR_THREE, COVER), "now": MORNING, "suspendAtCall": 7},
+           {"apply": plan([DHUHR_THREE[0], a(f"{D}/dhuhr/atTime", f"{D}T12:20:00+03:00"),
+                           DHUHR_THREE[2]], COVER),
+            "now": MORNING, "duringPrevious": True}])
+    recon("deliver", "reconciliation.deliver.a-late-delivery-counts",
+          "At 19:47 the app delivers Isha's before-reminder of 19:45, two minutes late, and the "
+          "center dates it 19:47. A second deliver of the same occurrence at 19:48 finds that "
+          "delivery, dated no earlier than 1.5 seconds before the fire date, and skips it.",
+          "RFC 0003 §4.5 Delivering due alerts: an occurrence with a delivered notification "
+          "dated no earlier than 1.5 seconds before its fire date was delivered.",
+          [{"deliver": [a(f"{D}/isha/before", "2026-06-02T19:45:00+03:00")],
+            "now": "2026-06-02T19:47:00+03:00"},
+           {"deliver": [a(f"{D}/isha/before", "2026-06-02T19:45:00+03:00")],
+            "now": "2026-06-02T19:48:00+03:00"}])
+    recon("deliver", "reconciliation.deliver.a-future-alert-is-posted-at-once",
+          "deliver doesn't decide whether an alert is due; the engine does. Isha's alert, passed "
+          "an hour before its fire date with no pending request or delivery, is posted at once.",
+          "RFC 0003 §4.5 Delivering due alerts: every other alert is posted at once.",
+          [{"deliver": [a(f"{D}/isha/atTime", ISHA)], "now": "2026-06-02T19:30:00+03:00"}])
+    recon("failures", "reconciliation.failures.an-alert-at-the-batch-start",
+          "Asr's alert fires at 15:35:00, exactly when the batch starts. Desired alerts fire "
+          "after the start, so Asr's isn't added, confirmed or failed; Maghrib's is added and "
+          "confirmed.",
+          "RFC 0003 §4.5 An apply batch: the desired alerts fire after t.",
+          [{"apply": plan([a(f"{D}/asr/atTime", ASR), a(f"{D}/maghrib/atTime", MAGHRIB)], COVER),
+            "now": ASR}])
+    recon("failures", "reconciliation.failures.an-alert-firing-at-the-read-back",
+          "Dhuhr's after-reminder fires at 12:24:00, the instant of the read-back. It was added, "
+          "the center delivers it on the read-back, and since it doesn't fire after verifiedAt "
+          "it is neither confirmed nor a failure.",
+          "RFC 0003 §4.5 The report: only alerts that fire after verifiedAt are confirmed or "
+          "unconfirmed.",
+          [{"apply": plan([a(f"{D}/dhuhr/after", DHUHR_AFTER), a(f"{D}/asr/atTime", ASR)], COVER),
+            "now": "2026-06-02T12:23:00+03:00", "readBackAt": DHUHR_AFTER}])
+    recon("failures", "reconciliation.failures.a-passed-alert-keeps-its-failure",
+          "Adding Dhuhr's after-reminder (12:24) fails, and by the read-back at 12:25 it has "
+          "passed. It is neither confirmed nor unconfirmed, but its addFailed stays; a passed "
+          "alert doesn't shorten confirmed coverage.",
+          "RFC 0003 §4.5 The report: an alert that doesn't fire after verifiedAt keeps the "
+          "failure it has.",
+          [{"apply": plan([a(f"{D}/dhuhr/after", DHUHR_AFTER), a(f"{D}/asr/atTime", ASR)], COVER),
+            "now": "2026-06-02T12:23:00+03:00", "readBackAt": "2026-06-02T12:25:00+03:00"}],
+          center={"failAdds": [rid(f"{D}/dhuhr/after")]})
+    recon("failures", "reconciliation.failures.a-confirmed-alert-drops-its-add-failure",
+          "The first pending read fails, so no request is known to match and Asr's is added "
+          "again; that add fails. The read-back finds the original request, which matches: Asr "
+          "is confirmed, and its addFailed is dropped.",
+          "RFC 0003 §4.5 The report: a confirmed alert has no failure.",
+          [{"apply": plan([a(f"{D}/asr/atTime", ASR)], COVER), "now": MORNING}],
+          center={"pending": [pend(rid(f"{D}/asr/atTime"), ASR, "asr", "v1 atTime")],
+                  "failReads": [1], "failAdds": [rid(f"{D}/asr/atTime")]})
+    recon("apply", "reconciliation.apply.empty-plan-coverage-starts-at-the-read-back",
+          "An empty plan covers until 06:00, when its batch starts; the read-back is at 06:01. "
+          "Confirmed coverage never ends before verifiedAt, so it is 06:01.",
+          "RFC 0003 §4.5 The report: confirmedCoveredUntil is max(verifiedAt, min(coveredUntil, "
+          "u)).",
+          [{"apply": plan([], MORNING), "now": MORNING, "readBackAt": f"{D}T06:01:00+03:00"}])
+    recon("namespaces", "reconciliation.namespaces.deliver-foreign-alert-after-repeated-identity",
+          "Delivering Asr's identity twice and then an alert of another namespace is rejected "
+          "for the namespace: deliver checks namespaces first too.",
+          "RFC 0003 §4.5 Validation: namespaces are checked first.",
+          [{"deliver": [a(f"{D}/asr/atTime", ASR), a(f"{D}/asr/atTime", f"{D}T15:36:00+03:00"),
+                        a(f"{D}/maghrib/atTime", MAGHRIB, namespace="mosque")],
+            "now": "2026-06-02T15:36:30+03:00"}])
 
 
 def main():

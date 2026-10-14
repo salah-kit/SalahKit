@@ -140,9 +140,11 @@
     }
 
     /// Triggers round up to a whole second, so they never fire early; a thousandth of a second
-    /// of arithmetic noise doesn't add a second.
+    /// of arithmetic noise doesn't add a second (RFC 0003 §4.5 Requests).
     @Test func triggersRoundUpToAWholeSecond() async throws {
-      let cases: [(Double, Double)] = [(0, 0), (0.25, 1), (0.999, 1), (0.000_5, 0)]
+      let cases: [(Double, Double)] = [
+        (0, 0), (0.25, 1), (0.999, 1), (0.000_5, 0), (0.001_5, 1), (-0.000_5, 0), (-0.25, 0),
+      ]
       for (fraction, expected) in cases {
         let clock = TestClock(Fixture.date(6, 0))
         let center = ModelCenter(clock: clock)
@@ -217,13 +219,8 @@
       #expect(applied.confirmed == [isha.occurrenceID])
       #expect(delivered.posted == [reminder.occurrenceID])
       // The whole apply batch, read-back included, runs before the deliver's first call.
-      let names = center.calls.map { call in
-        call.string
-          ?? ["add", "addImmediate", "removePending", "removeDelivered"].first { call[$0] != nil }
-          ?? "?"
-      }
       #expect(
-        names == [
+        Self.names(center.calls) == [
           "authorizationStatus", "pendingRequests", "deliveredNotifications", "add",
           "pendingRequests", "authorizationStatus", "pendingRequests", "deliveredNotifications",
           "addImmediate",
@@ -296,6 +293,197 @@
     @Test func theSystemCenterConforms() {
       func accepts<Center: AlertNotificationCenter>(_: Center.Type) {}
       accepts(UNUserNotificationCenter.self)
+    }
+
+    /// A superseded batch reports the instant it stopped, and a queued batch's `t` is the clock
+    /// when the pump reaches it, not when `apply` was called (RFC 0003 §4.5).
+    @Test func queuedBatchesReadTheClockWhenThePumpReachesThem() async throws {
+      let clock = TestClock(Fixture.date(6, 0))
+      let center = ModelCenter(clock: clock)
+      let scheduler = scheduler(center, clock: clock)
+      func alert(_ prayer: PrayerKind, at fireDate: Date) -> PlannedAlert {
+        PlannedAlert(
+          id: Fixture.identity(prayer, .atTime),
+          event: PrayerEvent(scheduleDay: Fixture.day, kind: prayer, time: fireDate),
+          fireDate: fireDate, sound: .system)
+      }
+      let early = alert(.dhuhr, at: Fixture.date(6, 3))
+      let later = alert(.asr, at: Fixture.date(6, 10))
+      center.beginStep(readBackAt: nil, suspendAtCall: 1)
+      let first = Task {
+        try await scheduler.apply(plan([later], at: clock.now), content: { _ in .init() })
+      }
+      try await wait { center.isSuspended }
+      let second = Task {
+        try await scheduler.apply(plan([later], at: clock.now), content: { _ in .init() })
+      }
+      try await wait { await scheduler.submittedApplies == 2 }
+      let third = Task {
+        try await scheduler.apply(plan([early, later], at: clock.now), content: { _ in .init() })
+      }
+      try await wait { await scheduler.submittedApplies == 3 }
+      clock.set(Fixture.date(6, 5))
+      center.release()
+      let reports = [try await first.value, try await second.value, try await third.value]
+
+      #expect(reports.map(\.superseded) == [true, true, false])
+      #expect(reports.map(\.verifiedAt) == Array(repeating: Fixture.date(6, 5), count: 3))
+      // Dhuhr's 06:03 alert fired before the third batch started at 06:05: not desired, so
+      // not added, confirmed or failed.
+      #expect(reports[2].confirmed == [later.occurrenceID])
+      #expect(reports[2].failures.isEmpty)
+      #expect(
+        center.calls.compactMap { $0["add"]?.string } == ["salah.prayers/2026-06-02/asr/atTime"])
+    }
+
+    /// `deliver` takes its turn in the pump in arrival order: after the batch in progress and
+    /// before an `apply` that arrived after it, which still supersedes the first batch.
+    @Test func deliverTakesItsTurnInArrivalOrder() async throws {
+      let clock = TestClock(Fixture.time(.isha).addingTimeInterval(-3_600))
+      let center = ModelCenter(clock: clock)
+      let scheduler = scheduler(center, clock: clock)
+      let isha = PlannedAlert(
+        id: Fixture.identity(.isha, .atTime),
+        event: PrayerEvent(scheduleDay: Fixture.day, kind: .isha, time: Fixture.time(.isha)),
+        fireDate: Fixture.time(.isha), sound: .system)
+      let reminder = PlannedAlert(
+        id: Fixture.identity(.isha, .before),
+        event: PrayerEvent(scheduleDay: Fixture.day, kind: .isha, time: Fixture.time(.isha)),
+        fireDate: clock.now, sound: .system)
+      center.beginStep(readBackAt: nil, suspendAtCall: 1)
+      let first = Task {
+        try await scheduler.apply(plan([isha], at: clock.now), content: { _ in .init() })
+      }
+      try await wait { center.isSuspended }
+      let deliver = Task { try await scheduler.deliver([reminder], content: { _ in .init() }) }
+      try await wait { await scheduler.waitingCalls == 1 }
+      let second = Task {
+        try await scheduler.apply(plan([isha], at: clock.now), content: { _ in .init() })
+      }
+      try await wait { await scheduler.waitingCalls == 2 }
+      center.release()
+      let reports = [try await first.value, try await second.value]
+      let delivered = try await deliver.value
+
+      #expect(reports.map(\.superseded) == [true, false])
+      #expect(reports[1].confirmed == [isha.occurrenceID])
+      #expect(delivered.posted == [reminder.occurrenceID])
+      #expect(
+        Self.names(center.calls) == [
+          "authorizationStatus",
+          "authorizationStatus", "pendingRequests", "deliveredNotifications", "addImmediate",
+          "authorizationStatus", "pendingRequests", "deliveredNotifications", "add",
+          "pendingRequests",
+        ])
+    }
+
+    /// An `apply` that arrives while a `deliver` is held doesn't stop it.
+    @Test func anApplyDoesNotSupersedeADeliver() async throws {
+      let clock = TestClock(Fixture.time(.isha).addingTimeInterval(-3_600))
+      let center = ModelCenter(clock: clock)
+      let scheduler = scheduler(center, clock: clock)
+      let isha = PlannedAlert(
+        id: Fixture.identity(.isha, .atTime),
+        event: PrayerEvent(scheduleDay: Fixture.day, kind: .isha, time: Fixture.time(.isha)),
+        fireDate: Fixture.time(.isha), sound: .system)
+      let reminder = PlannedAlert(
+        id: Fixture.identity(.isha, .before),
+        event: PrayerEvent(scheduleDay: Fixture.day, kind: .isha, time: Fixture.time(.isha)),
+        fireDate: clock.now, sound: .system)
+      center.beginStep(readBackAt: nil, suspendAtCall: 1)
+      let deliver = Task { try await scheduler.deliver([reminder], content: { _ in .init() }) }
+      try await wait { center.isSuspended }
+      let apply = Task {
+        try await scheduler.apply(plan([isha], at: clock.now), content: { _ in .init() })
+      }
+      try await wait { await scheduler.waitingCalls == 1 }
+      center.release()
+      let delivered = try await deliver.value
+      let applied = try await apply.value
+
+      #expect(delivered.posted == [reminder.occurrenceID])
+      #expect(!applied.superseded)
+      #expect(applied.confirmed == [isha.occurrenceID])
+      #expect(
+        Self.names(center.calls) == [
+          "authorizationStatus", "pendingRequests", "deliveredNotifications", "addImmediate",
+          "authorizationStatus", "pendingRequests", "deliveredNotifications", "add",
+          "pendingRequests",
+        ])
+    }
+
+    /// Attachments aren't compared: the system moves their files, so a pending request with
+    /// one matches content without it, and the other way round (RFC 0003 §4.5 Matching).
+    @Test func attachmentsAreNotCompared() async throws {
+      let folder = FileManager.default.temporaryDirectory
+        .appendingPathComponent("SalahAlertsTests-\(UUID().uuidString)")
+      try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+      defer { try? FileManager.default.removeItem(at: folder) }
+      // A one-pixel PNG.
+      let png = try #require(
+        Data(
+          base64Encoded:
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+        ))
+      let file = folder.appendingPathComponent("star.png")
+      try png.write(to: file)
+      #expect(Self.content(attachment: file).attachments.count == 1)
+
+      let trigger = ModelCenter.request(
+        Self.identifier, fireDate: Fixture.time(.asr), title: "", body: "", thread: ""
+      ).trigger
+      for (pendingFile, desiredFile) in [(file, nil), (nil, file)] as [(URL?, URL?)] {
+        let clock = TestClock(Fixture.date(6, 0))
+        let center = ModelCenter(
+          clock: clock,
+          pending: [
+            UNNotificationRequest(
+              identifier: Self.identifier, content: Self.content(attachment: pendingFile),
+              trigger: trigger)
+          ])
+        let report = try await scheduler(center, clock: clock).apply(
+          plan([asrAlert()], at: clock.now), content: { _ in Self.content(attachment: desiredFile) }
+        )
+        #expect(!center.calls.contains { $0["add"] != nil })
+        #expect(report.confirmed.map(\.notification) == [Self.asr])
+      }
+    }
+
+    /// The full content, with an attachment of `file` when there is one.
+    nonisolated static func content(attachment file: URL?) -> UNMutableNotificationContent {
+      let content = fullContent()
+      if let file, let attachment = try? UNNotificationAttachment(identifier: "star", url: file) {
+        content.attachments = [attachment]
+      }
+      return content
+    }
+
+    /// A negative delivered-notification retention counts as zero: only notifications dated
+    /// before the batch's start are removed.
+    @Test func aNegativeRetentionCountsAsZero() async throws {
+      let clock = TestClock(Fixture.date(6, 0))
+      let past = "salah.prayers/2026-06-01/isha/atTime"
+      let ahead = "salah.prayers/2026-06-02/fajr/atTime"
+      let center = ModelCenter(
+        clock: clock,
+        delivered: [
+          DeliveredNotificationRecord(identifier: past, date: Fixture.date(5, 59)),
+          DeliveredNotificationRecord(identifier: ahead, date: Fixture.date(6, 0) + 30),
+        ])
+      let scheduler = NotificationScheduler(
+        identifierPrefix: "salah.", namespace: "prayers", center: center,
+        deliveredRetention: .seconds(-60), now: { clock.now })
+      _ = try await scheduler.apply(plan([], at: clock.now), content: { _ in .init() })
+      #expect(center.delivered.map(\.identifier) == [ahead])
+    }
+
+    /// The calls' names, adds and removals by their kind.
+    static func names(_ calls: [JSON]) -> [String] {
+      calls.map { call in
+        call.string
+          ?? ["add", "addImmediate", "removePending", "removeDelivered"].first { call[$0] != nil }
+          ?? "?"
+      }
     }
 
     func wait(_ condition: @Sendable () async -> Bool) async throws {

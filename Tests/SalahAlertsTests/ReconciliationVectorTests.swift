@@ -17,8 +17,8 @@
 
     @Test func everyFileLoads() {
       #expect(Self.loaded.errors.isEmpty, "\(Self.loaded.errors)")
-      // 48 scheduler vectors in nine files.
-      #expect(Self.loaded.vectors.count == 48)
+      // 58 scheduler vectors in nine files.
+      #expect(Self.loaded.vectors.count == 58)
       let ids = Self.loaded.vectors.map(\.id)
       #expect(Set(ids).count == ids.count, "vector ids must be unique")
       #expect(ids.allSatisfy { $0.hasPrefix("reconciliation.") })
@@ -120,6 +120,10 @@
     ) async throws -> [JSON] {
       guard let suspendAt = group[0]["suspendAtCall"]?.number.map({ Int($0) }) else {
         Issue.record("\(context): an overlapping group needs suspendAtCall")
+        return []
+      }
+      guard readBackAt == nil, group.allSatisfy({ $0["readBackAt"] == nil }) else {
+        Issue.record("\(context): an overlapping group never sets readBackAt")
         return []
       }
       center.beginStep(readBackAt: readBackAt, suspendAtCall: suspendAt)
