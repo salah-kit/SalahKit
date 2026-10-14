@@ -60,7 +60,7 @@ struct LanternRow: PrayerRowStyle {
     HStack {
       configuration.name.font(.title3)
       Spacer()
-      configuration.time.monospacedDigit()
+      (configuration.time ?? Text(verbatim: "–")).monospacedDigit()
     }
     .padding(8)
     .background(
@@ -203,3 +203,31 @@ default styles, left to right in English and right to left in Arabic.
 - ``PrayerTimesList``
 - ``NextPrayerView``
 - ``PrayerCountdown``
+
+
+### Select the focus
+
+`NextPrayerView` keeps its next-prayer default. Pass `selection: .justStartedOrNextEvent` to
+emphasize the just-started prayer, then count down to the next event, sunrise included.
+`.nextEvent` includes sunrise without preferring the count-up; `.justStartedOrNextPrayer`
+keeps sunrise out. The schedule decides the just-started window through `StatePolicy`.
+
+The configuration's `focus` gives the selected event and timer direction. Its name, time and
+abbreviation describe that event; `countdown` and `countUp` are mutually exclusive, and both
+are nil without a known focus. The count-up uses the same live/static mode as the countdown,
+with unsigned elapsed text so the style supplies its own “since” or plus sign. The plain style
+shows it without repeating the just-started name. `PrayerFocus(state:selection:)` makes the
+same selection for a string-based surface such as MenuBar's status-item title.
+
+### Missing times and row layout
+
+Pass the available day's partial-coverage dictionary as `missing:` to `PrayerTimesList`.
+It merges those kinds with known events in canonical order; a known event wins a conflicting
+missing key. A missing row's configuration has `kind` and `gapReason`, with nil event, time,
+status and countdown. The plain row displays a dash; a custom style can explain the reason.
+No prayer time is invented. Existing known-only lists keep their event order.
+
+A list normally supplies its own vertical stack. Its `rows` view supplies transparent rows
+for a consumer's own stack, so flexible heights and a focus row's layout priority belong to
+that stack. CalculatedPhone uses the missing-row API; Salah uses the same rows inside its
+widget and dropdown stacks.

@@ -6,6 +6,35 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `PrayerTimesList(missing:)` includes missing expected kinds in canonical order, with their
+  gap reasons. Its `rows` view places rows directly in an app's own stack. CalculatedPhone
+  adopts it for partial calculated days.
+- `PrayerFocus` and `NextPrayerView(selection:)` select the next prayer, the next event
+  including sunrise, or a just-started count-up before either. Styles receive the selected
+  focus and elapsed text; MenuBar uses the same selection for its title and cards.
+- `PrayerTimelineBuilder(includeDayBoundaries:)` adds civil-day starts within the timeline's
+  entry budget. PhoneWidgets and MenuBar use it so day lists turn over at midnight.
+- `InProcessAlertEngine.handledOccurrences` and the planner's `excluding:` input let an app
+  avoid requesting an alert again after its clock moves back.
+
+### Changed
+
+- **Style migration:** `PrayerRowConfiguration.event` and `time` are optional. Use `kind`
+  for every row, handle `gapReason` on missing rows, and unwrap the event before reading its
+  time or observance. Known-only lists keep their existing order and appearance.
+- Handled alerts are retained in memory for one day after they were reported, or longer
+  for a longer catch-up grace. The planner excludes them only while its clock is earlier
+  than that report, preserving requests that are still pending in the early-delivery window.
+
+### Fixed
+
+- An always-running alert consumer can now replan after a clock reversal without requesting
+  the same handled occurrence again within retention. A changed fire date remains eligible.
+- Documentation and example clock text use the locale's short time format, matching SalahUI's
+  leading zero in 24-hour locales.
+
 ## [0.3.0] - 2026-10-14
 
 An always-running macOS example whose desktop widget stops the app's tone, MosqueBoard on

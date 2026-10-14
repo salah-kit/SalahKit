@@ -78,9 +78,14 @@ let schedule = PrayerSchedule(source: CalculationSource(settings), location: ist
 
 let today = CivilDay(containing: Date(), in: zone)
 if case .available(let day, _) = schedule.day(today) {
-  let clock = Date.FormatStyle(date: .omitted, time: .shortened, timeZone: zone)
+  let clock = DateFormatter()
+  clock.locale = .current
+  clock.calendar = Calendar.current
+  clock.timeZone = zone
+  clock.dateStyle = .none
+  clock.timeStyle = .short
   for event in day.events {
-    print(event.kind, event.time.formatted(clock))
+    print(event.kind, clock.string(from: event.time))
   }
 }
 ```
@@ -201,6 +206,12 @@ import SwiftUI
 PrayerTimesList(day: day, state: state, names: names)
   .prayerRowStyle(LanternRow())
 ```
+
+In 0.4, pass a partial day's `missing:` dictionary to `PrayerTimesList` to keep unknown kinds
+visible. Its `rows` view fits an app's own stack. `NextPrayerView` accepts
+`selection: .justStartedOrNextEvent` for a just-started count-up followed by the next event,
+sunrise included; `PrayerFocus` shares that selection with non-view surfaces. CalculatedPhone
+uses missing rows, and MenuBar uses the focus API alongside Salah.
 
 A `PrayerRowStyle` or `NextPrayerStyle` gets ready-made text for the name, the time in the schedule's zone and the countdown, or `nil` where the schedule doesn't know. The article "Styling rows and cards" covers cards, complications, digits and right-to-left layouts, and checking colors with `ContrastCheck`.
 

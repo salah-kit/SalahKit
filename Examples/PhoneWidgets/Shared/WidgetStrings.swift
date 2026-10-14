@@ -70,18 +70,24 @@ nonisolated struct WidgetStrings: Sendable {
 
   /// A short clock time in `timeZone`, the schedule's, with the locale's digits.
   func time(_ date: Date, in timeZone: TimeZone) -> String {
-    date.formatted(
-      Date.FormatStyle(
-        date: .omitted, time: .shortened, locale: locale, calendar: locale.calendar,
-        timeZone: timeZone))
+    let formatter = DateFormatter()
+    formatter.locale = locale
+    formatter.calendar = locale.calendar
+    formatter.timeZone = timeZone
+    formatter.dateStyle = .none
+    formatter.timeStyle = .short
+    return formatter.string(from: date)
   }
 
   /// A day and time in `timeZone`, for the expired view and the log: "Oct 15, 15:27".
   func dayAndTime(_ date: Date, in timeZone: TimeZone) -> String {
-    date.formatted(
-      Date.FormatStyle(
-        date: .abbreviated, time: .shortened, locale: locale, calendar: locale.calendar,
-        timeZone: timeZone))
+    let formatter = DateFormatter()
+    formatter.locale = locale
+    formatter.calendar = locale.calendar
+    formatter.timeZone = timeZone
+    formatter.dateStyle = .medium
+    formatter.timeStyle = .short
+    return formatter.string(from: date)
   }
 
   /// Names joined as the locale joins a list: "Fajr, Sunrise, and Isha".

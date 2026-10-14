@@ -53,6 +53,22 @@
   }
 
   extension CountdownContent {
+    /// Elapsed time, using the same compact and spoken formatting as a countdown.
+    @MainActor
+    func elapsedText(mode: PrayerCountdown.Mode, locale: Locale, frozen: Bool = false) -> Text {
+      switch mode {
+      case .live:
+        if frozen {
+          return Text(
+            timerInterval: start...end, pauseTime: end, countsDown: false, showsHours: true)
+        }
+        return Text(timerInterval: start...Date.distantFuture, countsDown: false, showsHours: true)
+      case .staticText:
+        return Text(verbatim: compactText(locale: locale))
+          .accessibilityLabel(Text(verbatim: spokenText(locale: locale)))
+      }
+    }
+
     /// The countdown as text: a timer, or the compact time left with a spoken label.
     ///
     /// A frozen timer counts the same length of time over an interval far in the future, so it

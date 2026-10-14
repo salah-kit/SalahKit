@@ -40,22 +40,30 @@
     /// The state the view shows.
     public let state: PrayerState
 
-    /// The next prayer's name in the names' locale, Jumu'ah when the event declares it; `nil`
-    /// when the next prayer isn't known.
+    /// The known event selected by the view, and whether it counts down or up; `nil` when
+    /// the state does not know an event for that selection.
+    public let focus: PrayerFocus?
+
+    /// The focused event's name in the names' locale, Jumu'ah when the event declares it; `nil`
+    /// when the selected focus isn't known.
     public let name: Text?
 
-    /// The next prayer's abbreviation, for compact layouts; `nil` when the next prayer isn't
+    /// The focused event's abbreviation, for compact layouts; `nil` when the selected focus isn't
     /// known. VoiceOver reads it as the full name, so a circular complication that shows "A"
     /// still says "Asr".
     public let abbreviation: Text?
 
-    /// The next prayer's time, as the environment's locale writes a short time, in the view's
-    /// time zone; `nil` when the next prayer isn't known.
+    /// The focused event's time, as the environment's locale writes a short time, in the view's
+    /// time zone; `nil` when the selected focus isn't known.
     public let time: Text?
 
-    /// The countdown to the next prayer, live or static as the view was asked; `nil` when the
-    /// next prayer isn't known. It's never made up.
+    /// The countdown to the focused event, live or static as requested; `nil` for a count-up
+    /// or an unknown focus. It is never made up.
     public let countdown: Text?
+
+    /// The elapsed time since the focused prayer started, live or static as requested;
+    /// `nil` for a countdown or an unknown focus. The text is unsigned: styles supply wording.
+    public let countUp: Text?
 
     /// The name of the prayer that just started, while it's inside its just-started window;
     /// otherwise `nil`.
@@ -76,7 +84,7 @@
       // Each line stays one line and shrinks to fit, so a narrow complication never breaks a
       // time or a countdown in the middle.
       VStack(alignment: .leading, spacing: 2) {
-        if let justStarted = configuration.justStarted {
+        if let justStarted = configuration.justStarted, configuration.focus?.isCountUp != true {
           justStarted
             .font(.caption)
             .foregroundStyle(.tint)
@@ -93,8 +101,8 @@
           .foregroundStyle(.secondary)
           .lineLimit(1)
           .minimumScaleFactor(0.7)
-        if let countdown = configuration.countdown {
-          countdown
+        if let timer = configuration.countdown ?? configuration.countUp {
+          timer
             .font(.title2)
             .fontWeight(.semibold)
             .monospacedDigit()

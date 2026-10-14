@@ -11,7 +11,8 @@ times are written in. Styles decide *how* it looks:
 
 - ``PrayerTimesList`` shows one owning day's events, a row each, styled by a ``PrayerRowStyle``.
 - ``NextPrayerView`` shows the next prayer, its time and countdown, and the prayer that just
-  started, styled by a ``NextPrayerStyle``.
+  started, styled by a ``NextPrayerStyle``. Select a sunrise countdown or a just-started
+  count-up with ``PrayerFocus/Selection``.
 - ``PrayerCountdown`` counts down to a prayer, live with `Text(timerInterval:)` or as static text.
 
 The components never invent a time or a countdown: where the state doesn't know the next
@@ -34,6 +35,7 @@ they work in tests on every platform, Linux included.
 
 - ``PrayerTimesList``
 - ``NextPrayerView``
+- ``PrayerFocus``
 - ``PrayerCountdown``
 
 ### Row styles

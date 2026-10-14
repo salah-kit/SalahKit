@@ -77,8 +77,12 @@ always reaches the next prayer.
 
 ```swift
 let names = PrayerNames(locale: Locale(identifier: "en_GB"))
-let clock = Date.FormatStyle(
-  date: .omitted, time: .shortened, locale: names.locale, timeZone: location.timeZone)
+let clock = DateFormatter()
+clock.locale = names.locale
+clock.calendar = names.locale.calendar
+clock.timeZone = location.timeZone
+clock.dateStyle = .none
+clock.timeStyle = .short
 
 func headline(at now: Date) -> String {
   switch schedule.state(at: now, through: now.addingTimeInterval(2 * 86_400)) {
@@ -86,7 +90,7 @@ func headline(at now: Date) -> String {
     guard let next = state.nextPrayer else { return "The next prayer can't be calculated" }
     let remaining = PrayerDurationFormat.string(
       next.time.timeIntervalSince(now), locale: names.locale)
-    return "\(names.name(of: next)) at \(next.time.formatted(clock)), in \(remaining)"
+    return "\(names.name(of: next)) at \(clock.string(from: next.time)), in \(remaining)"
   case .unavailable:
     return "Prayer times can't be calculated here now"
   }
@@ -113,7 +117,7 @@ func row(_ event: PrayerEvent) -> String {
   var note = ""
   if date > event.scheduleDay { note = " (next day)" }
   if date < event.scheduleDay { note = " (previous evening)" }
-  return "\(names.name(of: event)) \(event.time.formatted(clock))\(note)"
+  return "\(names.name(of: event)) \(clock.string(from: event.time))\(note)"
 }
 ```
 

@@ -52,7 +52,7 @@ struct UIDocumentationExamples {
       HStack {
         configuration.name.font(.title3)
         Spacer()
-        configuration.time.monospacedDigit()
+        (configuration.time ?? Text(verbatim: "–")).monospacedDigit()
       }
       .padding(8)
       .background(

@@ -54,6 +54,13 @@ struct DisplayTests {
     #expect(after.text.contains(strings.time(maghrib.time, in: zone)))
   }
 
+  @Test("after Fajr's count-up the title follows sunrise, without counting sunrise up")
+  func sunriseFocus() throws {
+    let sunrise = try Fixture.event(.sunrise)
+    #expect(title(at: sunrise.time.addingTimeInterval(-27 * 60)).text == "Sunrise 27m")
+    #expect(title(at: sunrise.time).text.hasPrefix("Dhuhr "))
+  }
+
   @Test("in Arabic, the title has Arabic names and digits")
   func arabic() throws {
     var settings = Fixture.makkah

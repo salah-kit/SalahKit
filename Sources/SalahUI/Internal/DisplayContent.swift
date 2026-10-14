@@ -96,7 +96,9 @@ nonisolated struct RowContent: Hashable, Sendable {
 
 /// What a next-prayer view shows.
 nonisolated struct NextPrayerContent: Hashable, Sendable {
-  /// The next prayer's name, Jumu'ah when declared; `nil` when the next prayer isn't known.
+  /// The selected known event and timer direction.
+  var focus: PrayerFocus?
+  /// The selected event's name, Jumu'ah when declared.
   var name: String?
   /// The next prayer's abbreviation; `nil` when the next prayer isn't known.
   var abbreviation: String?
@@ -104,15 +106,26 @@ nonisolated struct NextPrayerContent: Hashable, Sendable {
   var time: String?
   /// The countdown to the next prayer; `nil` when it isn't known, never invented.
   var countdown: CountdownContent?
+  /// The elapsed interval of a count-up, when selected.
+  var countUp: CountdownContent?
   /// The name of the prayer that just started, while it's inside its window.
   var justStarted: String?
 
-  init(state: PrayerState, names: PrayerNames, timeZone: TimeZone, locale: Locale) {
-    if let next = state.nextPrayer {
-      name = names.name(of: next)
-      abbreviation = names.abbreviation(of: next)
-      time = ScheduleTimeText.string(next.time, timeZone: timeZone, locale: locale)
-      countdown = CountdownContent(from: state.date, to: next.time)
+  init(
+    state: PrayerState, names: PrayerNames, timeZone: TimeZone, locale: Locale,
+    selection: PrayerFocus.Selection = .nextPrayer
+  ) {
+    focus = PrayerFocus(state: state, selection: selection)
+    if let focus {
+      let event = focus.event
+      name = names.name(of: event)
+      abbreviation = names.abbreviation(of: event)
+      time = ScheduleTimeText.string(event.time, timeZone: timeZone, locale: locale)
+      if focus.isCountUp {
+        countUp = CountdownContent(from: event.time, to: state.date)
+      } else {
+        countdown = CountdownContent(from: state.date, to: event.time)
+      }
     }
     justStarted = state.justStarted.map { names.name(of: $0) }
   }

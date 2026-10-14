@@ -81,13 +81,18 @@ import Testing
 
     // Show a day
     let names = PrayerNames(locale: Locale(identifier: "en_GB"))
-    let clock = Date.FormatStyle(date: .omitted, time: .shortened, timeZone: location.timeZone)
+    let clock = DateFormatter()
+    clock.locale = names.locale
+    clock.calendar = names.locale.calendar
+    clock.timeZone = location.timeZone
+    clock.dateStyle = .none
+    clock.timeStyle = .short
 
     let friday = CivilDay(year: 2026, month: 10, day: 16)
     if case .available(let day, let coverage) = schedule.day(friday) {
       for event in day.events {
-        let iqama = event.iqama.map { " (iqama \($0.formatted(clock)))" } ?? ""
-        print("\(names.name(of: event)) \(event.time.formatted(clock))\(iqama)")
+        let iqama = event.iqama.map { " (iqama \(clock.string(from: $0)))" } ?? ""
+        print("\(names.name(of: event)) \(clock.string(from: event.time))\(iqama)")
       }
       print(coverage == .complete)  // true
     }
@@ -157,7 +162,7 @@ import Testing
     let noon = try Date("2026-10-16T12:00:00+01:00", strategy: .iso8601)
     let plan = try schedule.refreshPlan(from: noon, through: noon.addingTimeInterval(6 * 3_600))
     for entry in plan.entries {
-      print(entry.date.formatted(clock), entry.state.prayerState?.justStarted != nil)
+      print(clock.string(from: entry.date), entry.state.prayerState?.justStarted != nil)
     }
 
     let expectedDates = try [

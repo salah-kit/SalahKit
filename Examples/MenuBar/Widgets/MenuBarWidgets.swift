@@ -84,7 +84,8 @@ struct PrayerWidgetView: View {
       case .schedule(.available(let prayer, _)):
         HStack(alignment: .top, spacing: 12) {
           NextPrayerView(
-            state: prayer, names: strings.names, timeZone: zone, countdown: .staticText)
+            state: prayer, names: strings.names, timeZone: zone, countdown: .staticText,
+            selection: .justStartedOrNextEvent)
           if family == .systemMedium, let day = context.day.day {
             PrayerTimesList(day: day, state: prayer, names: strings.names, countdown: .staticText)
               .font(.caption)

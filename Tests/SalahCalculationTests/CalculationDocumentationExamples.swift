@@ -22,9 +22,14 @@ import Testing
 
     let today = CivilDay(containing: Date(), in: zone)
     if case .available(let day, _) = schedule.day(today) {
-      let clock = Date.FormatStyle(date: .omitted, time: .shortened, timeZone: zone)
+      let clock = DateFormatter()
+      clock.locale = .current
+      clock.calendar = Calendar.current
+      clock.timeZone = zone
+      clock.dateStyle = .none
+      clock.timeStyle = .short
       for event in day.events {
-        print(event.kind, event.time.formatted(clock))
+        print(event.kind, clock.string(from: event.time))
       }
     }
 
@@ -68,8 +73,12 @@ import Testing
 
     // Show today and what's next
     let names = PrayerNames(locale: Locale(identifier: "en_GB"))
-    let clock = Date.FormatStyle(
-      date: .omitted, time: .shortened, locale: names.locale, timeZone: location.timeZone)
+    let clock = DateFormatter()
+    clock.locale = names.locale
+    clock.calendar = names.locale.calendar
+    clock.timeZone = location.timeZone
+    clock.dateStyle = .none
+    clock.timeStyle = .short
 
     func headline(at now: Date) -> String {
       switch schedule.state(at: now, through: now.addingTimeInterval(2 * 86_400)) {
@@ -77,7 +86,7 @@ import Testing
         guard let next = state.nextPrayer else { return "The next prayer can't be calculated" }
         let remaining = PrayerDurationFormat.string(
           next.time.timeIntervalSince(now), locale: names.locale)
-        return "\(names.name(of: next)) at \(next.time.formatted(clock)), in \(remaining)"
+        return "\(names.name(of: next)) at \(clock.string(from: next.time)), in \(remaining)"
       case .unavailable:
         return "Prayer times can't be calculated here now"
       }
@@ -93,7 +102,7 @@ import Testing
       var note = ""
       if date > event.scheduleDay { note = " (next day)" }
       if date < event.scheduleDay { note = " (previous evening)" }
-      return "\(names.name(of: event)) \(event.time.formatted(clock))\(note)"
+      return "\(names.name(of: event)) \(clock.string(from: event.time))\(note)"
     }
 
     let ramadanDay = try #require(schedule.day(CivilDay(year: 2026, month: 3, day: 1)).day)
@@ -148,21 +157,26 @@ import Testing
     var schedule = PrayerSchedule(
       source: CalculationSource(CalculationSettings(method: .muslimWorldLeague)),
       location: location)
-    var clock = Date.FormatStyle(
-      date: .omitted, time: .shortened, locale: names.locale, timeZone: location.timeZone)
+    let clock = DateFormatter()
+    clock.locale = names.locale
+    clock.calendar = names.locale.calendar
+    clock.timeZone = location.timeZone
+    clock.dateStyle = .none
+    clock.timeStyle = .short
 
     func row(_ event: PrayerEvent) -> String {
       let date = CivilDay(containing: event.time, in: location.timeZone)
       var note = ""
       if date > event.scheduleDay { note = " (next day)" }
       if date < event.scheduleDay { note = " (previous evening)" }
-      return "\(names.name(of: event)) \(event.time.formatted(clock))\(note)"
+      return "\(names.name(of: event)) \(clock.string(from: event.time))\(note)"
     }
 
     let kashgarDay = try #require(schedule.day(CivilDay(year: 2026, month: 6, day: 21)).day)
     let isha = try #require(kashgarDay[.isha])
     #expect(isha.time == (try instant("2026-06-22T00:19:00+08:00")))
-    #expect(row(isha) == "Isha \(isha.time.formatted(clock)) (next day)")
+    #expect(clock.string(from: isha.time) == "00:19")
+    #expect(row(isha) == "Isha \(clock.string(from: isha.time)) (next day)")
     let afterMidnight = try instant("2026-06-22T00:05:00+08:00")
     let kashgarState = schedule.state(at: afterMidnight, through: afterMidnight + 2 * 86_400)
     #expect(kashgarState.prayerState?.nextPrayer?.id == kashgarDay[.isha]?.id)
@@ -174,8 +188,7 @@ import Testing
     middle.highLatitudeRule = .middleOfTheNight
     schedule = PrayerSchedule(
       source: CalculationSource(CalculationSettings(parameters: middle)), location: location)
-    clock = Date.FormatStyle(
-      date: .omitted, time: .shortened, locale: names.locale, timeZone: location.timeZone)
+    clock.timeZone = location.timeZone
     let kazanDay = try #require(schedule.day(CivilDay(year: 2026, month: 6, day: 21)).day)
     let fajr = try #require(kazanDay[.fajr])
     #expect(fajr.time == (try instant("2026-06-20T23:45:00+03:00")))
@@ -187,8 +200,7 @@ import Testing
     schedule = PrayerSchedule(
       source: CalculationSource(CalculationSettings(method: .muslimWorldLeague)),
       location: location)
-    clock = Date.FormatStyle(
-      date: .omitted, time: .shortened, locale: names.locale, timeZone: location.timeZone)
+    clock.timeZone = location.timeZone
 
     func lines(for day: CivilDay) -> [String] {
       switch schedule.day(day) {

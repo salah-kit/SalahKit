@@ -345,3 +345,48 @@ The first `observe` called `MainActor.assumeIsolated` inside the main-queue bloc
 
 1. **Review round R1** (2026-10-14, session C1). The snapshot comparison allowed 0.1 % of an image to differ, which let a time a minute late pass; it now allows 8 pixels. The test of a device in another zone set only SwiftUI's environment, and the Mac that recorded the references was at Makkah's offset; CI now reruns the snapshots at UTC+14. The plain row style let a countdown or a time wrap mid-number in a narrow row ("4:14:0"); numbers no longer wrap. DarwinSignal now receives notify(3)'s callbacks on a private queue, which makes the weak hop testable: a signal that arrives while the main actor is busy no longer reaches a cancelled observation. `save(nil)` removes an object under the key that isn't data. The figures for `steps` timelines were corrected.
 2. **Review round R2** (2026-10-14, session C1). R1's fix kept numbers from wrapping but let the next row's name shrink to "…" at 140 points, where the countdown and the time took the whole row; the row now leaves out its countdown first. `SharedValue` compares with, and loads, the App Group's own storage only, so a default registered in one process can't make every `save(nil)` reload or hide a value from the others. The `steps` figures now hold beyond Makkah.
+
+
+### 10.1 Open-issues amendment for 0.4.0 (2026-10-14)
+
+The one-week comment window for issues #12, #13 and #14 is waived under Amendment 11 of
+the build's approved amendments. Later API changes follow CONTRIBUTING's normal process.
+
+**#13: a shared focus.** `PrayerFocus` is a nonisolated, Sendable value with
+`countdown(PrayerEvent)` and `countUp(PrayerEvent)`, `event` and `isCountUp`. Its failable
+`init(state:selection:)` centralizes selection. `Selection` offers `nextPrayer` (the existing
+default), `nextEvent` (sunrise included), `justStartedOrNextPrayer` and
+`justStartedOrNextEvent`. The latter two prefer `state.justStarted` while Core says it is
+inside its window. They never infer an event from incomplete coverage.
+
+`NextPrayerView` accepts the same `selection`, defaulting to `nextPrayer`. Its style gets
+`focus`; the existing name, abbreviation and time describe that focus. `countdown` is set
+only for a countdown and the new `countUp` only for a count-up. Both use the existing
+live/static mode; elapsed text is unsigned, so a style supplies its own sign or wording.
+`justStarted` remains the separate just-started name for existing styles. The plain style
+shows the count-up in place of the countdown and avoids repeating its name as a caption.
+
+Salah uses `justStartedOrNextEvent` across its menu and widget; MenuBar uses it in its title,
+dropdown and widget. Both remove their own selection branches. Salah retains its last-minute
+live timer, reminder phrases and colors: these are presentation choices, not shared policy.
+
+
+**#12: missing rows.** `PrayerTimesList` accepts `missing: [PrayerKind: ScheduleGapReason] = [:]`.
+With gaps present it merges known events and missing kinds in canonical order; a known event
+wins a conflicting key. The row configuration gains `kind` and `gapReason`; `event` and `time`
+become optional. A missing row has no event, time, status or countdown, a zero day offset and
+no offset text. The plain style shows a dash. Existing known-only lists keep their event order.
+The public `rows` view is transparent so a consumer's stack owns its flexible row heights and
+focus priority; the list's default body still supplies a vertical stack. CalculatedPhone uses
+the API for partial days, and Salah uses it for widget and dropdown rows. Existing styles must
+unwrap the event or use `kind`, and provide a fallback for `time`.
+
+**#14: civil-day entries.** `PrayerTimelineBuilder` adds `includeDayBoundaries: Bool = false`.
+PhoneWidgets, MenuBar and Salah pass true for widgets that list the current day's prayers,
+replacing their provider loops. The builder merges each civil day's first instant in the
+schedule's time zone with refresh dates, evaluates state there using the same policy and
+lookahead derived from the clamped horizon, and removes duplicate dates. Calendar-day starts
+honor DST and skipped dates. The entry budget includes these dates and the final expired
+entry; validity ends at the first omitted date and reload remains halfway to that cutoff.
+A boundary at the first entry or validUntil adds no duplicate schedule entry. Default behavior
+is unchanged.

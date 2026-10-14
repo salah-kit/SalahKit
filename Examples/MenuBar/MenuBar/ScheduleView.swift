@@ -100,8 +100,11 @@ private struct ScheduleSection: View {
       if let content {
         switch content.state {
         case .available(let state, _):
-          NextPrayerView(state: state, names: strings.names, timeZone: zone, countdown: .staticText)
-            .accessibilityIdentifier("nextPrayer")
+          NextPrayerView(
+            state: state, names: strings.names, timeZone: zone, countdown: .staticText,
+            selection: .justStartedOrNextEvent
+          )
+          .accessibilityIdentifier("nextPrayer")
         case .unavailable(let coverage, _):
           GapList(
             gaps: coverage.gaps, strings: strings, title: strings("No prayer times are known now"))

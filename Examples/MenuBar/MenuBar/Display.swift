@@ -2,6 +2,7 @@ import Foundation
 import Observation
 import SalahAlerts
 import SalahCore
+import SalahUI
 
 /// The menu bar's title: short text, and what VoiceOver reads.
 nonisolated struct MenuBarTitle: Hashable, Sendable {
@@ -61,18 +62,19 @@ nonisolated enum MenuBarDisplay {
       return MenuBarTitle(
         text: strings("No times"), accessibilityLabel: strings("No prayer times are known now"))
     }
-    if let started = prayer.justStarted {
+    guard let focus = PrayerFocus(state: prayer, selection: .justStartedOrNextEvent) else {
+      return MenuBarTitle(
+        text: strings("Next unknown"),
+        accessibilityLabel: strings("The next prayer time isn't known"))
+    }
+    if case .countUp(let started) = focus {
       let name = strings.names.name(of: started)
       let elapsed = date.timeIntervalSince(started.time)
       return MenuBarTitle(
         text: "\(name) \(strings.elapsed(elapsed))",
         accessibilityLabel: strings("\(name) started \(strings.spoken(elapsed)) ago"))
     }
-    guard let next = prayer.nextPrayer else {
-      return MenuBarTitle(
-        text: strings("Next unknown"),
-        accessibilityLabel: strings("The next prayer time isn't known"))
-    }
+    let next = focus.event
     let name = strings.names.name(of: next)
     let remaining = next.time.timeIntervalSince(date)
     if remaining <= TimeInterval(countdownWindow) {
