@@ -120,8 +120,9 @@ struct TimelineProviderTests {
       .events.filter { $0.kind.isPrayer && $0.time > Self.start }.map(\.id)
     #expect(shown.nextPrayers == Array(prayers.prefix(shown.nextPrayers.count)))
     #expect(shown.nextPrayers.count >= 35)
-    // The listed day turned over at each of the seven midnights.
+    // The listed day turned over at each of the seven midnights, at midnight.
     #expect(shown.days.count == 8)
+    #expect(shown.days.first == CivilDay(year: 2026, month: 10, day: 13))
   }
 
   @Test("a provider call later than the validity shows the expired entry until it comes")
@@ -180,7 +181,7 @@ struct TimelineProviderTests {
     #expect(times.state.nextPrayer?.kind == .maghrib)
   }
 
-  @Test("Tromsø's partial midsummer days: known times, an unknown next prayer, no expiry")
+  @Test("Tromsø at midsummer: a partial day with a known next prayer, unavailable after Asr")
   func partialDays() throws {
     let tromso = WidgetSettings(place: .tromso, method: .ummAlQura, language: .english)
     // 2026-06-15 12:00 UTC.
@@ -246,6 +247,8 @@ struct TimelineProviderTests {
   struct Shown {
     var expired: [Date] = []
     var nextPrayers: [String] = []
+    /// The days the entries on show listed at the first sample of each civil day, in order,
+    /// without repeats.
     var days: [CivilDay] = []
     var partial = 0
   }
@@ -266,6 +269,7 @@ struct TimelineProviderTests {
       }
     }
     var shown = Shown()
+    var sampleDay: CivilDay?
     for date in samples.sorted() where date >= start && date <= end {
       guard let (call, entry) = host.displayed(at: date) else {
         Issue.record("nothing shown at \(date)")
@@ -294,8 +298,13 @@ struct TimelineProviderTests {
         if context.day.day.map(\.day) != day && context.day != settings.schedule.day(day) {
           Issue.record("at \(date): lists \(context.day), expected \(day)")
         }
-        if shown.days.last != day {
-          shown.days.append(day)
+        // The day the entry on show lists, at the first sample of each civil day: without an
+        // entry at midnight it would still be the day before.
+        if day != sampleDay {
+          sampleDay = day
+          if let listed = context.day.day?.day, shown.days.last != listed {
+            shown.days.append(listed)
+          }
         }
         if let next = scheduleState.prayerState?.nextPrayer?.id, shown.nextPrayers.last != next {
           shown.nextPrayers.append(next)
