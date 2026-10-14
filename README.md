@@ -196,10 +196,11 @@ The app calls `SharedValue.prayers.save(settings, reloading: ["prayers"])` when 
 
 For day lists, set `PrayerTimelineBuilder(includeDayBoundaries: true)` so the bounded timeline
 changes at civil-day starts as well as prayer-state changes. PhoneWidgets and MenuBar use it.
-An always-running alert consumer can pass `engine.handledOccurrences` to
-`planner.notificationPlan(_:from:budget:excluding:)` when replanning after a clock change.
-The in-memory record prevents a handled occurrence returning after a rollback within its
-one-day retention; MenuBar demonstrates the scheduler and engine ordering.
+An always-running alert consumer can snapshot the keys of `engine.handledOccurrences`
+before resyncing after a clock change, then pass that set to
+`planner.notificationPlan(_:from:budget:excluding:)`. Normal replans keep requests that are
+still pending during an early engine report. MenuBar demonstrates both paths and the
+scheduler/engine ordering; the handled record is retained in memory for one day.
 
 ### Your own look
 

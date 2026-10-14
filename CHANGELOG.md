@@ -27,8 +27,9 @@ All notable changes to this project are documented here. The format follows
   for every row, handle `gapReason` on missing rows, and unwrap the event before reading its
   time or observance. Known-only lists keep their existing order and appearance.
 - Handled alerts are retained in memory for one day after they were reported, or longer
-  for a longer catch-up grace. The planner excludes them only while its clock is earlier
-  than that report, preserving requests that are still pending in the early-delivery window.
+  for a longer catch-up grace. The planner excludes the supplied exact occurrence set.
+  MenuBar snapshots previously handled occurrences on clock changes, while normal replans
+  keep requests still pending during the early-report window.
 
 ### Fixed
 
