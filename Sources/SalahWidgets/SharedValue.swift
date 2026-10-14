@@ -82,8 +82,13 @@ nonisolated public struct SharedValue<Value: Codable & Equatable & Sendable>: Se
   }
 
   /// The stored value, or `nil` when there is none or it doesn't decode as `Value`.
+  ///
+  /// Only the App Group's own storage counts. A default registered in this process, or passed
+  /// as a launch argument, isn't shared with the other processes, so it isn't loaded.
   public func load() -> Value? {
-    guard let data = UserDefaults(suiteName: appGroup)?.data(forKey: key) else { return nil }
+    guard let data = UserDefaults(suiteName: appGroup).flatMap(stored(in:)) as? Data else {
+      return nil
+    }
     return try? JSONDecoder().decode(Value.self, from: data)
   }
 
@@ -93,7 +98,7 @@ nonisolated public struct SharedValue<Value: Codable & Equatable & Sendable>: Se
   /// The stored value changes when no value was stored, when the stored one differs from
   /// `value` by `==`, or when the stored data no longer decodes. Saving `nil` changes it when
   /// anything is stored under the key. An unchanged value isn't written again and reloads
-  /// nothing.
+  /// nothing. Like ``load()``, the comparison reads only the App Group's own storage.
   ///
   /// - Parameters:
   ///   - value: The value to store, or `nil` to remove it.
@@ -110,7 +115,7 @@ nonisolated public struct SharedValue<Value: Codable & Equatable & Sendable>: Se
     guard let defaults = UserDefaults(suiteName: appGroup) else {
       throw .appGroupUnavailable(appGroup)
     }
-    let stored = defaults.data(forKey: key)
+    let stored = stored(in: defaults)
     if let value {
       let data: Data
       do {
@@ -118,19 +123,27 @@ nonisolated public struct SharedValue<Value: Codable & Equatable & Sendable>: Se
       } catch {
         throw .encodingFailed(String(describing: error))
       }
-      if let stored, (try? JSONDecoder().decode(Value.self, from: stored)) == value {
+      if let stored = stored as? Data,
+        (try? JSONDecoder().decode(Value.self, from: stored)) == value
+      {
         return false
       }
       defaults.set(data, forKey: key)
     } else {
       // Anything under the key counts, even an object another version wrote that isn't data.
-      guard defaults.object(forKey: key) != nil else { return false }
+      guard stored != nil else { return false }
       defaults.removeObject(forKey: key)
     }
     if !widgetKinds.isEmpty {
       reloadTimelines(widgetKinds)
     }
     return true
+  }
+
+  /// The object stored under ``key`` in the App Group's own storage, without the defaults this
+  /// process registered or received as arguments, which other processes don't see.
+  private func stored(in defaults: UserDefaults) -> Any? {
+    defaults.persistentDomain(forName: appGroup)?[key]
   }
 
   /// Asks WidgetKit to reload each kind, where WidgetKit exists.

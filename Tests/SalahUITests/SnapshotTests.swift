@@ -54,6 +54,24 @@
         named: "\(id)-\(direction.rawValue)")
     }
 
+    /// Rows 140 points wide, as in a small widget: the next row leaves out its countdown and
+    /// keeps its name and time whole.
+    @Test(
+      "narrow rows keep the next prayer's name",
+      arguments: [("justStarted", Direction.leftToRight), ("beforeFajr", .rightToLeft)])
+    func narrowRows(_ id: String, _ direction: Direction) throws {
+      let moment = try #require(PrayerFixtures.moments.first { $0.id == id })
+      let state = try #require(moment.state().prayerState)
+      let day = try #require(moment.schedule.day(containing: moment.date).day)
+      let list = PrayerTimesList(
+        day: day, state: state, names: PrayerNames(locale: direction.locale)
+      )
+      .environment(\.locale, direction.locale)
+      .environment(\.layoutDirection, direction.layout)
+      .environment(\.prayerTimerFrozen, true)
+      Snapshot.check(list, named: "narrow-\(id)-\(direction.rawValue)", width: 140)
+    }
+
     /// SwiftUI's time zone doesn't change the times: with the environment set to Los Angeles or
     /// Tokyo, Makkah's schedule still reads Makkah's clock, the reference image.
     ///

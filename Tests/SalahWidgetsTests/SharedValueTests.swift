@@ -116,6 +116,27 @@ struct SharedValueTests {
     #expect(fixture.log.all == [["prayers"]])
   }
 
+  /// Defaults registered in a process, like launch arguments, live outside the App Group and
+  /// no other process sees them, so they're neither loaded nor compared with.
+  @Test("defaults registered in this process don't count as stored")
+  func registeredDefaults() throws {
+    let fixture = Fixture()
+    // Registered defaults apply to every suite in the process, so the key is unique.
+    let key = "registered.\(UUID().uuidString)"
+    let shared = fixture.value(key: key)
+    let settings = Settings(method: "isna", offset: 0)
+    let registered = try JSONEncoder().encode(settings)
+    fixture.defaults?.register(defaults: [key: registered])
+
+    #expect(shared.load() == nil)
+    #expect(try shared.save(nil, reloading: ["prayers"]) == false)
+    #expect(try shared.save(settings, reloading: ["prayers"]))
+    #expect(shared.load() == settings)
+    #expect(try shared.save(nil, reloading: ["prayers"]))
+    #expect(try shared.save(nil, reloading: ["prayers"]) == false)
+    #expect(fixture.log.all == [["prayers"], ["prayers"]])
+  }
+
   @Test("stored data that doesn't decode reads as nil and counts as a change")
   func undecodableData() throws {
     let fixture = Fixture()
