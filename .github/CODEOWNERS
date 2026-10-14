@@ -1,0 +1,36 @@
+# Who reviews changes to each part of SalahKit (STANDARD.md, Governance; proposal §12: an owner
+# for each product). Later lines win, so the catch-all comes first. Add a product's maintainers to
+# its lines as the project grows.
+
+*                               @omar-hanafy
+
+# SalahCore and SalahFixtures (RFC 0001)
+/Sources/SalahCore/             @omar-hanafy
+/Sources/SalahFixtures/         @omar-hanafy
+/Tests/SalahCoreTests/          @omar-hanafy
+/Tests/SalahFixturesTests/      @omar-hanafy
+
+# SalahCalculation (RFC 0002)
+/Sources/SalahCalculation/      @omar-hanafy
+/Tests/SalahCalculationTests/   @omar-hanafy
+
+# SalahAlerts (RFC 0003)
+/Sources/SalahAlerts/           @omar-hanafy
+/Tests/SalahAlertsTests/        @omar-hanafy
+
+# SalahWidgets and SalahUI (RFC 0004)
+/Sources/SalahWidgets/          @omar-hanafy
+/Sources/SalahUI/               @omar-hanafy
+/Sources/SalahUIPreviews/       @omar-hanafy
+/Tests/SalahWidgetsTests/       @omar-hanafy
+/Tests/SalahUITests/            @omar-hanafy
+/Tests/DarwinSignalHelper/      @omar-hanafy
+
+# The behavior every implementation reproduces, and the API contracts
+/Vectors/                       @omar-hanafy
+/docs/rfcs/                     @omar-hanafy
+
+# Examples, CI and release tooling
+/Examples/                      @omar-hanafy
+/.github/                       @omar-hanafy
+/scripts/                       @omar-hanafy

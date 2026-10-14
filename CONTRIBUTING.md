@@ -66,13 +66,26 @@ swift format --in-place --recursive Sources Tests Package.swift Examples    # fi
 
 ## Examples
 
-`Examples/MosqueBoard` is an iPad app generated with [XcodeGen](https://github.com/yonaskolb/XcodeGen)
-from `project.yml`; both the spec and the generated project are committed. After changing the spec
-or adding a file, run `xcodegen` in `Examples/MosqueBoard` from a clone whose folder is named
-`SalahKit` (the project records that folder's name), and commit both. CI regenerates the project
-and fails if anything differs, then builds the app under both default-isolation settings and runs
-its unit tests and journeys on an iPad simulator (build-only, with a warning, on a runner that has
-no iPad simulator).
+Every example in `Examples/` is an Xcode project generated with
+[XcodeGen](https://github.com/yonaskolb/XcodeGen) from its `project.yml`; both the spec and the
+generated project are committed. After changing a spec or adding, moving or removing a file, run
+`xcodegen` in the example's folder from a clone whose folder is named `SalahKit` (the project
+records that folder's name, and XcodeGen resolves symbolic links), and commit both. CI
+regenerates each project and fails if anything differs, builds it under both default-isolation
+settings and runs its tests on a simulator or on the runner's Mac (build-only, with a warning,
+where a runner lacks the destination). Each example's README lists its tests and how to run
+them.
+
+| Example | Platform | Needs a signing team to run locally |
+|---|---|---|
+| `CalculatedPhone` | iOS simulator | No |
+| `MosqueBoard` | iPadOS and tvOS simulators | No |
+| `PhoneWidgets` | iOS simulator | No |
+| `WatchComplication` | iOS and watchOS simulators | No |
+| `MenuBar` | macOS | Yes, for the App Group its app, widget extension and stop harness share |
+
+Simulator builds need no signing. To sign an example, copy its `Config/Local.xcconfig.example` to
+`Config/Local.xcconfig` (gitignored) and set your team there; never commit a team.
 
 ## Vectors
 
@@ -105,8 +118,38 @@ python3 -m http.server --directory /tmp/salahkit-docs 8000
 ## Proposing changes
 
 - Small fixes: open a pull request. CI must pass.
-- Public API and behavior: write or amend an RFC in [`docs/rfcs/`](docs/rfcs/) first. RFC 0001
-  covers SalahCore and SalahFixtures, RFC 0002 SalahCalculation, RFC 0003 SalahAlerts, and
-  RFC 0004 SalahWidgets and SalahUI. Public API stays small and needs a consumer that justifies
-  it.
-- Record user-visible changes in `CHANGELOG.md` under Unreleased.
+- User-visible changes: record them in `CHANGELOG.md` under Unreleased.
+- Public API and behavior: write or amend an RFC first (below). Public API stays small and needs
+  a consumer that justifies it: an example, Salah, or an app outside this organization.
+
+### RFCs
+
+Public API changes to a package go through a short RFC (STANDARD.md, Governance). The RFCs live
+in [`docs/rfcs/`](docs/rfcs/) and are discussed in
+[GitHub Discussions](https://github.com/salah-kit/SalahKit/discussions), in the Ideas category:
+
+| RFC | Products | Discussion |
+|---|---|---|
+| [0001](docs/rfcs/0001-core.md) | SalahCore, SalahFixtures | [#6](https://github.com/salah-kit/SalahKit/discussions/6) |
+| [0002](docs/rfcs/0002-calculation.md) | SalahCalculation | [#7](https://github.com/salah-kit/SalahKit/discussions/7) |
+| [0003](docs/rfcs/0003-alerts.md) | SalahAlerts | [#8](https://github.com/salah-kit/SalahKit/discussions/8) |
+| [0004](docs/rfcs/0004-widgets-and-ui.md) | SalahWidgets, SalahUI | [#9](https://github.com/salah-kit/SalahKit/discussions/9) |
+
+To change the API:
+
+1. **Start a discussion** in the Ideas category, titled `RFC: <what changes>`: the consumer that
+   needs the change, what it can't do today, and the API you propose. Small amendments to an
+   existing RFC can go in that RFC's discussion instead.
+2. **Write the RFC** in a pull request: a new `docs/rfcs/NNNN-title.md` with the next free
+   number, or an amendment to an existing RFC in its "Changes" section. Start from the existing
+   RFCs' shape: status, products, summary, scope, the API and its behavior, open questions and
+   consumer findings. Link the discussion.
+3. **One week for comments.** The pull request stays open for at least seven days after the
+   discussion starts, so people outside the project can answer. Changes to `Vectors/` need a
+   written reason in the RFC.
+4. **Implement** in the same or a later pull request: the code, its tests and vectors, its DocC
+   documentation, and a working consumer. Every public symbol has a DocC comment.
+5. **Update the RFC's status line** when the change ships, with the version.
+
+Before 1.0, a minor release may change the API; every change is listed in the CHANGELOG. The
+RFCs stay open to findings from real adopters until 1.0 (STANDARD.md, Releases).

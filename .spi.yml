@@ -1,0 +1,6 @@
+# Swift Package Index configuration (https://swiftpackageindex.com/SwiftPackageIndex/SPIManifest).
+# The documentation is built without a package plugin and published to GitHub Pages
+# (STANDARD.md, Documentation), so the index links to it instead of building its own.
+version: 1
+external_links:
+  documentation: "https://salah-kit.github.io/SalahKit/documentation/"

@@ -2,6 +2,7 @@
 
 - **Status:** Draft for 0.1.0. `CalculatedPhone` has reported: its findings are in §9 and §10. Open to findings from Salah's migration and other adopters until 1.0 (STANDARD.md, Releases).
 - **Products:** SalahCalculation.
+- **Discussion:** [salah-kit/SalahKit#7](https://github.com/salah-kit/SalahKit/discussions/7).
 - **Started:** 2026-10-13.
 - **Supersedes:** the SalahAdhan sketch in the SalahKit proposal, §7.2, read with Amendment 3 (SalahTimes replaces adhan-swift).
 - **Depends on:** RFC 0001 (SalahCore's source contract), and SalahTimes' RFC 0001 (its API).
