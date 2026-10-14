@@ -18,8 +18,9 @@ All notable changes to this project are documented here. The format follows
   focus and elapsed text; MenuBar uses the same selection for its title and cards.
 - `PrayerTimelineBuilder(includeDayBoundaries:)` adds civil-day starts within the timeline's
   entry budget. PhoneWidgets and MenuBar use it so day lists turn over at midnight.
-- `InProcessAlertEngine.handledOccurrences` and the planner's `excluding:` input let an app
-  avoid requesting an alert again after its clock moves back.
+- `InProcessAlertEngine.excludeHandledOccurrencesFromNotifications()`,
+  `notificationExclusions(at:)` and the planner's `excluding:` input let an app avoid
+  requesting an alert again after its clock moves back, including on later refreshes.
 
 ### Changed
 
@@ -28,8 +29,8 @@ All notable changes to this project are documented here. The format follows
   time or observance. Known-only lists keep their existing order and appearance.
 - Handled alerts are retained in memory for one day after they were reported, or longer
   for a longer catch-up grace. The planner excludes the supplied exact occurrence set.
-  MenuBar snapshots previously handled occurrences on clock changes, while normal replans
-  keep requests still pending during the early-report window.
+  The engine retains clock-change exclusions alongside that record; MenuBar uses them on
+  every replan. Normal early reports keep their pending system requests.
 
 ### Fixed
 

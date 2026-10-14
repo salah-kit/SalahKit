@@ -16,11 +16,12 @@ identifiers, reads them back, and reports only what it confirmed. ``InProcessAle
 follows the whole schedule inside an app that keeps running, catches up after sleep, and
 reports each alert once.
 
-An always-running app chooses excluded occurrence keys from the engine's
-``InProcessAlertEngine/handledOccurrences`` and passes them to
-``AlertPlanner/notificationPlan(_:from:budget:excluding:)``. Clock changes capture prior keys
-before resyncing; ordinary replans preserve future requests during early delivery. The record
-lasts a day in memory; it records engine reports, not system delivery.
+On an actual clock change, an always-running app calls
+``InProcessAlertEngine/excludeHandledOccurrencesFromNotifications()`` before checking due alerts.
+Every plan passes ``InProcessAlertEngine/notificationExclusions(at:)`` to
+``AlertPlanner/notificationPlan(_:from:budget:excluding:)``. The engine retains those exclusions
+across later refreshes while preserving future requests for new early reports. The record
+lasts a day in memory by default; it records engine reports, not system delivery.
 
 SalahAlerts never invents an alert. A missing prayer time gets none and shortens the coverage
 the planner reports; a request the system didn't keep shortens the coverage the scheduler
