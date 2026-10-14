@@ -141,9 +141,11 @@ coarse steps. Entries a minute apart also go below
 WidgetKit's guidance, so it may show some of them late; a live countdown keeps the entries far
 apart and the countdown exact.
 
-Nothing in the schedule's state changes at midnight, so the timeline has no entry there. A
-widget that shows the day's list needs one at each midnight in the place's zone, with the state
-of the entry before it, which still holds; the `PhoneWidgets` example adds them.
+A civil date can change without a schedule-state change. For a widget that lists the day,
+pass `includeDayBoundaries: true` to `PrayerTimelineBuilder`. It adds each civil day's first
+instant in the place's zone, with the state computed there. Those entries count toward `limit`,
+so the first omitted boundary or refresh ends validity and the expired entry still fits.
+PhoneWidgets and MenuBar use this option; no provider-owned midnight loop is needed.
 
 To inspect the entries, log them, or choose another reload policy, call
 ``PrayerTimelineBuilder/timeline(from:horizon:)``, which returns a ``PrayerTimeline`` and throws
