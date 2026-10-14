@@ -7,50 +7,14 @@ import XCTest
 /// The class is `nonisolated` and its members `@MainActor`, so it compiles under both default
 /// isolation settings: XCTestCase's initializers and `setUp` aren't main-actor isolated.
 nonisolated final class MosqueBoardJourneys: XCTestCase {
+  /// Launches the board in an orientation (`launchBoard` in JourneySupport).
   @MainActor
   private func launch(
     _ board: String, at instant: String, language: String = "en",
     orientation: UIDeviceOrientation = .portrait
   ) -> XCUIApplication {
-    continueAfterFailure = false
     XCUIDevice.shared.orientation = orientation
-    let app = XCUIApplication()
-    app.launchArguments = [
-      "-board", board, "-now", instant, "-frozen", "-language", language,
-      "-AppleLanguages", "(\(language))", "-AppleLocale", language,
-    ]
-    app.launch()
-    XCTAssertTrue(app.wait(for: .runningForeground, timeout: 30))
-    XCTAssertTrue(element("header.title", in: app).waitForExistence(timeout: 30))
-    return app
-  }
-
-  @MainActor
-  private func element(_ identifier: String, in app: XCUIApplication) -> XCUIElement {
-    app.descendants(matching: .any).matching(identifier: identifier).firstMatch
-  }
-
-  /// The element's accessibility label, without the directional isolates (U+2068, U+2069) that
-  /// Foundation puts around arguments interpolated into right-to-left strings.
-  @MainActor
-  private func label(_ identifier: String, in app: XCUIApplication) -> String {
-    let element = element(identifier, in: app)
-    XCTAssertTrue(element.waitForExistence(timeout: 10), "\(identifier) is missing")
-    return element.label.filter { $0 != "\u{2068}" && $0 != "\u{2069}" }
-  }
-
-  @MainActor
-  private func assertMissing(_ identifier: String, in app: XCUIApplication) {
-    XCTAssertFalse(element(identifier, in: app).exists, "\(identifier) shouldn't be shown")
-  }
-
-  /// The screen as a person sees it. `XCUIScreen` keeps landscape screenshots upright.
-  @MainActor
-  private func screenshot(_ name: String, of app: XCUIApplication) {
-    let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
-    attachment.name = name
-    attachment.lifetime = .keepAlways
-    add(attachment)
+    return launchBoard(board, at: instant, language: language)
   }
 
   /// 1. A normal MUIS day: the app's iqama rules, a passed row, the next row and the countdown.
@@ -75,7 +39,7 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
     // Landscape: the next-prayer panel sits beside the table, to its right.
     XCTAssertGreaterThan(
       element("next.name", in: app).frame.minX, element("row.fajr.status", in: app).frame.maxX)
-    screenshot("01-muis-normal-day", of: app)
+    screenshot("01-muis-normal-day")
   }
 
   /// 2. Jumu'ah only where declared: a MUIS Friday by app policy, and not the Thursday before.
@@ -85,7 +49,7 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
     XCTAssertEqual(label("row.dhuhr.name", in: app), "Jumuah")
     XCTAssertEqual(label("row.dhuhr.iqama", in: app), "Iqama 13:22")
     XCTAssertEqual(label("next.name", in: app), "Jumuah")
-    screenshot("02-muis-friday-jumuah", of: app)
+    screenshot("02-muis-friday-jumuah")
     app.terminate()
 
     app = launch("muis", at: "2026-10-15T12:30:00+08:00")
@@ -102,7 +66,7 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
     XCTAssertEqual(label("row.isha.status", in: app), "Passed")
     assertMissing("next.name", in: app)
     assertMissing("next.countdown", in: app)
-    screenshot("03a-muis-after-last-isha", of: app)
+    screenshot("03a-muis-after-last-isha")
     app.terminate()
 
     app = launch("muis", at: "2027-01-01T09:00:00+08:00")
@@ -116,7 +80,7 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
     assertMissing("row.fajr", in: app)
     assertMissing("next.name", in: app)
     assertMissing("next.countdown", in: app)
-    screenshot("03b-muis-expired", of: app)
+    screenshot("03b-muis-expired")
   }
 
   /// 4. Isha after midnight: next across midnight, and owned by the previous day after it.
@@ -131,7 +95,7 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
     assertMissing("row.isha.iqamaNextDay", in: app)
     XCTAssertEqual(label("row.maghrib.status", in: app), "Passed")
     assertMissing("next.owningDay", in: app)
-    screenshot("04a-edinburgh-before-midnight", of: app)
+    screenshot("04a-edinburgh-before-midnight")
     app.terminate()
 
     app = launch("edinburgh", at: "2026-06-22T00:30:00+01:00")
@@ -142,7 +106,7 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
       label("next.owningDay", in: app), "From the timetable of Sunday, June 21, 2026")
     XCTAssertEqual(label("row.fajr.time", in: app), "Begins 03:32")
     XCTAssertEqual(label("row.fajr.status", in: app), "Upcoming")
-    screenshot("04b-edinburgh-after-midnight", of: app)
+    screenshot("04b-edinburgh-after-midnight")
     app.terminate()
 
     // Isha begins before midnight and its iqama is after it: the iqama carries the mark.
@@ -160,7 +124,7 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
     XCTAssertEqual(label("next.name", in: app), "Fajr")
     XCTAssertEqual(label("next.time", in: app), "Begins 05:17")
     XCTAssertEqual(label("next.countdown", in: app), "Time remaining: 5 hours, 17 minutes")
-    screenshot("05-edinburgh-spring-forward", of: app)
+    screenshot("05-edinburgh-spring-forward")
     app.terminate()
 
     app = launch("edinburgh", at: "2026-10-24T23:00:00+01:00")
@@ -179,7 +143,7 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
     assertMissing("next.countdown", in: app)
     // The schedule can't say which prayer is current, so no row claims a status.
     XCTAssertEqual(label("row.fajr.status", in: app), "Unknown")
-    screenshot("06a-edinburgh-partial-row", of: app)
+    screenshot("06a-edinburgh-partial-row")
     app.terminate()
 
     app = launch("edinburgh", at: "2026-06-26T12:00:00+01:00")
@@ -187,7 +151,7 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
     XCTAssertTrue(label("coverage.gap.0", in: app).hasPrefix("Friday, June 26, 2026:"))
     XCTAssertTrue(element("day.unavailable", in: app).exists)
     assertMissing("row.dhuhr", in: app)
-    screenshot("06b-edinburgh-missing-day", of: app)
+    screenshot("06b-edinburgh-missing-day")
   }
 
   /// 7. Arabic: names, Arabic-Indic digits and a right-to-left layout.
@@ -208,6 +172,6 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
     // In landscape the next-prayer panel sits on the left, beside the table.
     XCTAssertLessThan(
       element("next.name", in: app).frame.maxX, element("row.fajr.status", in: app).frame.minX)
-    screenshot("07-muis-arabic", of: app)
+    screenshot("07-muis-arabic")
   }
 }

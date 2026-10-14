@@ -7,22 +7,53 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2F93D5DAF3FD107360660FE1 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 43E0682D52907A223BE64D40 /* Localizable.xcstrings */; };
-		3A6439FDE8374AA43B00F572 /* MosqueBoardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9951F48E7A0CDDB3CDDC929 /* MosqueBoardApp.swift */; };
+		003238B36EE3D765EFF1C8FF /* edinburgh-synthetic.json in Resources */ = {isa = PBXBuildFile; fileRef = 72E22724BA18ED762B2501CF /* edinburgh-synthetic.json */; };
+		0F4372E1382A2C11093D6269 /* LaunchOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0127C048AB6AAE574EB00D1A /* LaunchOptions.swift */; };
+		1DBF81DADAC3F5E77BAF8C47 /* BoardSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85136FFE90E1043B44E72D6 /* BoardSnapshotTests.swift */; };
+		2CFC4DD29BECC73B8E1A2255 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2922AB05D266B3492EBA7AC4 /* Board.swift */; };
+		3BA9ED0AB35956FD7CA0BB9A /* MosqueBoardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B068D797AA53D62041FDF620 /* MosqueBoardApp.swift */; };
 		3C010973E0B94CD2D2596052 /* MosqueBoardJourneys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302BA8757D9492104F8755EB /* MosqueBoardJourneys.swift */; };
-		4ECBC10546150307786D3E1B /* LaunchOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D269AA40D0F955A7B6465C24 /* LaunchOptions.swift */; };
-		6C54E5B214AFC963616E1EC6 /* BoardSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1194C5B1A05F57AE64C3ED5 /* BoardSnapshot.swift */; };
-		77A52A4403D574F4C22C3D24 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6145BD42FE8C1954366ACAB0 /* Board.swift */; };
+		44FDCCF1E16CB84F75125AA3 /* MosqueBoardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B068D797AA53D62041FDF620 /* MosqueBoardApp.swift */; };
+		45B5EE9850501802373F18D6 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = BEC8BA29B2905A31FAFFCC77 /* Localizable.xcstrings */; };
+		4DBBC6339208AC7CE0B3B8D4 /* BoardSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DAB9518CC1E3219C070D4B /* BoardSnapshot.swift */; };
+		503F7C921EA85C8445ADAB29 /* BoardStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DA9CED6826C49E6F484CE9 /* BoardStrings.swift */; };
+		50B6CFA881CD5A96B95D8242 /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F32BB02C3CAD73BAA2EE76 /* BoardView.swift */; };
+		5C2BB901421601C0B8F20092 /* SalahCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0DA9FF5330FE26EB23BA187E /* SalahCore */; };
+		5D7614B01503B609BE17FDFE /* TVAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDD8A2BE079B0E8987149D67 /* TVAppDelegate.swift */; };
+		64DEE5057C79D14922C0E635 /* LaunchOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0127C048AB6AAE574EB00D1A /* LaunchOptions.swift */; };
+		6AD849448C0B2E5F6E4D14B5 /* TVAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFD930F66EA8398B28E82A1 /* TVAppTests.swift */; };
+		7494805F8E5E01056E8393D3 /* BoardSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DAB9518CC1E3219C070D4B /* BoardSnapshot.swift */; };
+		7E2C211E2F7EE65C5FAB2663 /* BoardStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DA9CED6826C49E6F484CE9 /* BoardStrings.swift */; };
 		891B32722B7A70C12EB01B5D /* TimetableDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC72A7ED79F9F1E1543C602 /* TimetableDataTests.swift */; };
-		95C979EEE4AD556090208C8C /* muis-2026.json in Resources */ = {isa = PBXBuildFile; fileRef = 2671688BA75E7B1C8229938F /* muis-2026.json */; };
 		980EA882C6072FC66022A8EE /* SalahCore in Frameworks */ = {isa = PBXBuildFile; productRef = 4DAED609B73D82F3026076BB /* SalahCore */; };
-		9D62E50A8639DF0BB1F58C27 /* edinburgh-synthetic.json in Resources */ = {isa = PBXBuildFile; fileRef = 0FB704AF25F9A843E48F0E7C /* edinburgh-synthetic.json */; };
-		CFDAA05DDDC0DFA8A5558271 /* BoardStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E0AF4166F8381C001F7B2E /* BoardStrings.swift */; };
+		AE0817D4101B21FD2989BF2D /* BoardJourney.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D295DDE417B6F26DB7704D5 /* BoardJourney.swift */; };
+		B08F642FA09F640F1F97D449 /* muis-2026.json in Resources */ = {isa = PBXBuildFile; fileRef = 1D6A18FE72955E3098B4F343 /* muis-2026.json */; };
+		B1BD08006E15598D0AF85438 /* TimetableDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC72A7ED79F9F1E1543C602 /* TimetableDataTests.swift */; };
+		B4890192240736454A051155 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = BEC8BA29B2905A31FAFFCC77 /* Localizable.xcstrings */; };
+		B87E94DAFA49460D6AA22631 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2922AB05D266B3492EBA7AC4 /* Board.swift */; };
+		D3DEB568B63CBC814A5B75DF /* muis-2026.json in Resources */ = {isa = PBXBuildFile; fileRef = 1D6A18FE72955E3098B4F343 /* muis-2026.json */; };
 		D60BB56CF382DCA29799E99A /* BoardSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85136FFE90E1043B44E72D6 /* BoardSnapshotTests.swift */; };
-		E41AB9BBE51B029521C5E78A /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530E243A1B6934F148FA31D8 /* BoardView.swift */; };
+		D613596B3E65D7848A526A69 /* MosqueBoardTVJourneys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299E859A07A8F104B03CFBCC /* MosqueBoardTVJourneys.swift */; };
+		DE7C638D170CA3187D36BBFD /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F32BB02C3CAD73BAA2EE76 /* BoardView.swift */; };
+		E0E64355D5FC96A874A2A401 /* BoardJourney.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D295DDE417B6F26DB7704D5 /* BoardJourney.swift */; };
+		FC4D5893EB7F7342E7BA044F /* edinburgh-synthetic.json in Resources */ = {isa = PBXBuildFile; fileRef = 72E22724BA18ED762B2501CF /* edinburgh-synthetic.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2BB2465DD683881E155D90CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D18490BFF55EF74590562C29 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AAD3F39CB524A813C9E64D5D;
+			remoteInfo = MosqueBoardTV;
+		};
+		474E560D76CDC1643B9C74BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D18490BFF55EF74590562C29 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AAD3F39CB524A813C9E64D5D;
+			remoteInfo = MosqueBoardTV;
+		};
 		5BDA8707BAC761E385DD8455 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D18490BFF55EF74590562C29 /* Project object */;
@@ -40,26 +71,41 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		09E0AF4166F8381C001F7B2E /* BoardStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardStrings.swift; sourceTree = "<group>"; };
-		0FB704AF25F9A843E48F0E7C /* edinburgh-synthetic.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "edinburgh-synthetic.json"; sourceTree = "<group>"; };
-		2671688BA75E7B1C8229938F /* muis-2026.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "muis-2026.json"; sourceTree = "<group>"; };
+		0127C048AB6AAE574EB00D1A /* LaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptions.swift; sourceTree = "<group>"; };
+		08DA9CED6826C49E6F484CE9 /* BoardStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardStrings.swift; sourceTree = "<group>"; };
+		0DA4E90E01E231180C3C7F7C /* MosqueBoardTVTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MosqueBoardTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6A18FE72955E3098B4F343 /* muis-2026.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "muis-2026.json"; sourceTree = "<group>"; };
+		2922AB05D266B3492EBA7AC4 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		299E859A07A8F104B03CFBCC /* MosqueBoardTVJourneys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosqueBoardTVJourneys.swift; sourceTree = "<group>"; };
 		302BA8757D9492104F8755EB /* MosqueBoardJourneys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosqueBoardJourneys.swift; sourceTree = "<group>"; };
-		43E0682D52907A223BE64D40 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
-		530E243A1B6934F148FA31D8 /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
-		6145BD42FE8C1954366ACAB0 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		30F97DC249324ACA2A8CEA06 /* MosqueBoard.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MosqueBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		72E22724BA18ED762B2501CF /* edinburgh-synthetic.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "edinburgh-synthetic.json"; sourceTree = "<group>"; };
+		77BD5259B1D36550D9DD58C8 /* MosqueBoardTVUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MosqueBoardTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A69C91BBA39D721A3140414 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
+		8CFD930F66EA8398B28E82A1 /* TVAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVAppTests.swift; sourceTree = "<group>"; };
+		8D295DDE417B6F26DB7704D5 /* BoardJourney.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardJourney.swift; sourceTree = "<group>"; };
 		96F3E68D6BE5DBB98B448BFD /* MosqueBoardTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MosqueBoardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6BB3421B708ABE9918F8AEA /* SalahKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SalahKit; path = ../..; sourceTree = SOURCE_ROOT; };
-		C1194C5B1A05F57AE64C3ED5 /* BoardSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSnapshot.swift; sourceTree = "<group>"; };
+		B068D797AA53D62041FDF620 /* MosqueBoardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosqueBoardApp.swift; sourceTree = "<group>"; };
+		BEC8BA29B2905A31FAFFCC77 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		C4DAB9518CC1E3219C070D4B /* BoardSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSnapshot.swift; sourceTree = "<group>"; };
 		CDC72A7ED79F9F1E1543C602 /* TimetableDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableDataTests.swift; sourceTree = "<group>"; };
-		D269AA40D0F955A7B6465C24 /* LaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptions.swift; sourceTree = "<group>"; };
 		D483CBD9714237BF6487D803 /* MosqueBoard.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MosqueBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D9951F48E7A0CDDB3CDDC929 /* MosqueBoardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosqueBoardApp.swift; sourceTree = "<group>"; };
 		EC7251AEE38E338479D0C103 /* MosqueBoardUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MosqueBoardUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7F32BB02C3CAD73BAA2EE76 /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
 		F85136FFE90E1043B44E72D6 /* BoardSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSnapshotTests.swift; sourceTree = "<group>"; };
+		FDD8A2BE079B0E8987149D67 /* TVAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVAppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2FC9E9D51A885E25678C2A9C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5C2BB901421601C0B8F20092 /* SalahCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F02B877453B07FF93AC08E4A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -79,28 +125,12 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
-		30838C990CFBA914910603D3 /* MosqueBoard */ = {
+		667A6B0271A1174EE3D093CB /* MosqueBoardTVTests */ = {
 			isa = PBXGroup;
 			children = (
-				6145BD42FE8C1954366ACAB0 /* Board.swift */,
-				C1194C5B1A05F57AE64C3ED5 /* BoardSnapshot.swift */,
-				09E0AF4166F8381C001F7B2E /* BoardStrings.swift */,
-				530E243A1B6934F148FA31D8 /* BoardView.swift */,
-				D269AA40D0F955A7B6465C24 /* LaunchOptions.swift */,
-				43E0682D52907A223BE64D40 /* Localizable.xcstrings */,
-				D9951F48E7A0CDDB3CDDC929 /* MosqueBoardApp.swift */,
-				3C29BFE08B31E77D964CE1F1 /* Timetables */,
+				8CFD930F66EA8398B28E82A1 /* TVAppTests.swift */,
 			);
-			path = MosqueBoard;
-			sourceTree = "<group>";
-		};
-		3C29BFE08B31E77D964CE1F1 /* Timetables */ = {
-			isa = PBXGroup;
-			children = (
-				0FB704AF25F9A843E48F0E7C /* edinburgh-synthetic.json */,
-				2671688BA75E7B1C8229938F /* muis-2026.json */,
-			);
-			path = Timetables;
+			path = MosqueBoardTVTests;
 			sourceTree = "<group>";
 		};
 		6844A8ED7C8A6B5E1FCC2190 /* MosqueBoardUITests */ = {
@@ -111,11 +141,23 @@
 			path = MosqueBoardUITests;
 			sourceTree = "<group>";
 		};
+		6A1FD4CDF7D7F21AFA7C0A64 /* Timetables */ = {
+			isa = PBXGroup;
+			children = (
+				72E22724BA18ED762B2501CF /* edinburgh-synthetic.json */,
+				1D6A18FE72955E3098B4F343 /* muis-2026.json */,
+			);
+			path = Timetables;
+			sourceTree = "<group>";
+		};
 		72ED143A202AC9A36491843A /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				D483CBD9714237BF6487D803 /* MosqueBoard.app */,
+				30F97DC249324ACA2A8CEA06 /* MosqueBoard.app */,
 				96F3E68D6BE5DBB98B448BFD /* MosqueBoardTests.xctest */,
+				0DA4E90E01E231180C3C7F7C /* MosqueBoardTVTests.xctest */,
+				77BD5259B1D36550D9DD58C8 /* MosqueBoardTVUITests.xctest */,
 				EC7251AEE38E338479D0C103 /* MosqueBoardUITests.xctest */,
 			);
 			name = Products;
@@ -130,6 +172,37 @@
 			path = MosqueBoardTests;
 			sourceTree = "<group>";
 		};
+		859D8A9D5E1F7C12CEA99D0E /* MosqueBoardTV */ = {
+			isa = PBXGroup;
+			children = (
+				FDD8A2BE079B0E8987149D67 /* TVAppDelegate.swift */,
+			);
+			path = MosqueBoardTV;
+			sourceTree = "<group>";
+		};
+		C8085CE517B2D7740AC8CE50 /* JourneySupport */ = {
+			isa = PBXGroup;
+			children = (
+				8D295DDE417B6F26DB7704D5 /* BoardJourney.swift */,
+			);
+			path = JourneySupport;
+			sourceTree = "<group>";
+		};
+		D7BF3AC59C727C564C3F5804 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				2922AB05D266B3492EBA7AC4 /* Board.swift */,
+				C4DAB9518CC1E3219C070D4B /* BoardSnapshot.swift */,
+				08DA9CED6826C49E6F484CE9 /* BoardStrings.swift */,
+				F7F32BB02C3CAD73BAA2EE76 /* BoardView.swift */,
+				0127C048AB6AAE574EB00D1A /* LaunchOptions.swift */,
+				BEC8BA29B2905A31FAFFCC77 /* Localizable.xcstrings */,
+				B068D797AA53D62041FDF620 /* MosqueBoardApp.swift */,
+				6A1FD4CDF7D7F21AFA7C0A64 /* Timetables */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		DC5CAF87063AB23EA1A1FFFB /* Packages */ = {
 			isa = PBXGroup;
 			children = (
@@ -142,12 +215,24 @@
 			isa = PBXGroup;
 			children = (
 				0F2D62047526DD59D7C38151 /* Config */,
-				30838C990CFBA914910603D3 /* MosqueBoard */,
+				C8085CE517B2D7740AC8CE50 /* JourneySupport */,
 				7A88EC39E529DAFE358B4FA7 /* MosqueBoardTests */,
+				859D8A9D5E1F7C12CEA99D0E /* MosqueBoardTV */,
+				667A6B0271A1174EE3D093CB /* MosqueBoardTVTests */,
+				EE029D245C06A7DD788ABED3 /* MosqueBoardTVUITests */,
 				6844A8ED7C8A6B5E1FCC2190 /* MosqueBoardUITests */,
 				DC5CAF87063AB23EA1A1FFFB /* Packages */,
+				D7BF3AC59C727C564C3F5804 /* Shared */,
 				72ED143A202AC9A36491843A /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		EE029D245C06A7DD788ABED3 /* MosqueBoardTVUITests */ = {
+			isa = PBXGroup;
+			children = (
+				299E859A07A8F104B03CFBCC /* MosqueBoardTVJourneys.swift */,
+			);
+			path = MosqueBoardTVUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -209,6 +294,62 @@
 			productReference = EC7251AEE38E338479D0C103 /* MosqueBoardUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		772B30F990BFE1C6B89B3AD6 /* MosqueBoardTVTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4149A97450FB60B13A26947 /* Build configuration list for PBXNativeTarget "MosqueBoardTVTests" */;
+			buildPhases = (
+				F787DDE8D0066D8E31895BE5 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EC882F39C5FDD06AC374CEF3 /* PBXTargetDependency */,
+			);
+			name = MosqueBoardTVTests;
+			packageProductDependencies = (
+			);
+			productName = MosqueBoardTVTests;
+			productReference = 0DA4E90E01E231180C3C7F7C /* MosqueBoardTVTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		981C99F5886F0B3702B83C31 /* MosqueBoardTVUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E264DC47473A40C2A3ADDDEB /* Build configuration list for PBXNativeTarget "MosqueBoardTVUITests" */;
+			buildPhases = (
+				5D40EDF88F46F23C37895F11 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E8DC3583D0E342CD7B828947 /* PBXTargetDependency */,
+			);
+			name = MosqueBoardTVUITests;
+			packageProductDependencies = (
+			);
+			productName = MosqueBoardTVUITests;
+			productReference = 77BD5259B1D36550D9DD58C8 /* MosqueBoardTVUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		AAD3F39CB524A813C9E64D5D /* MosqueBoardTV */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 342421E9E4EC98F62DC58380 /* Build configuration list for PBXNativeTarget "MosqueBoardTV" */;
+			buildPhases = (
+				E7985B4726356E2E2EFDEE35 /* Sources */,
+				E1200F0C882DD4F198004AAE /* Resources */,
+				2FC9E9D51A885E25678C2A9C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MosqueBoardTV;
+			packageProductDependencies = (
+				0DA9FF5330FE26EB23BA187E /* SalahCore */,
+			);
+			productName = MosqueBoardTV;
+			productReference = 30F97DC249324ACA2A8CEA06 /* MosqueBoard.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -230,6 +371,19 @@
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 						TestTargetID = 0271CA3076439F309C2F109E;
+					};
+					772B30F990BFE1C6B89B3AD6 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					981C99F5886F0B3702B83C31 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+						TestTargetID = AAD3F39CB524A813C9E64D5D;
+					};
+					AAD3F39CB524A813C9E64D5D = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -254,6 +408,9 @@
 				0271CA3076439F309C2F109E /* MosqueBoard */,
 				15678ED42E40D4C7CF987EF3 /* MosqueBoardTests */,
 				6772CCB5252437036622CDCC /* MosqueBoardUITests */,
+				AAD3F39CB524A813C9E64D5D /* MosqueBoardTV */,
+				772B30F990BFE1C6B89B3AD6 /* MosqueBoardTVTests */,
+				981C99F5886F0B3702B83C31 /* MosqueBoardTVUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -263,9 +420,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F93D5DAF3FD107360660FE1 /* Localizable.xcstrings in Resources */,
-				9D62E50A8639DF0BB1F58C27 /* edinburgh-synthetic.json in Resources */,
-				95C979EEE4AD556090208C8C /* muis-2026.json in Resources */,
+				B4890192240736454A051155 /* Localizable.xcstrings in Resources */,
+				003238B36EE3D765EFF1C8FF /* edinburgh-synthetic.json in Resources */,
+				B08F642FA09F640F1F97D449 /* muis-2026.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1200F0C882DD4F198004AAE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45B5EE9850501802373F18D6 /* Localizable.xcstrings in Resources */,
+				FC4D5893EB7F7342E7BA044F /* edinburgh-synthetic.json in Resources */,
+				D3DEB568B63CBC814A5B75DF /* muis-2026.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,7 +443,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE0817D4101B21FD2989BF2D /* BoardJourney.swift in Sources */,
 				3C010973E0B94CD2D2596052 /* MosqueBoardJourneys.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D40EDF88F46F23C37895F11 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0E64355D5FC96A874A2A401 /* BoardJourney.swift in Sources */,
+				D613596B3E65D7848A526A69 /* MosqueBoardTVJourneys.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,12 +470,36 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				77A52A4403D574F4C22C3D24 /* Board.swift in Sources */,
-				6C54E5B214AFC963616E1EC6 /* BoardSnapshot.swift in Sources */,
-				CFDAA05DDDC0DFA8A5558271 /* BoardStrings.swift in Sources */,
-				E41AB9BBE51B029521C5E78A /* BoardView.swift in Sources */,
-				4ECBC10546150307786D3E1B /* LaunchOptions.swift in Sources */,
-				3A6439FDE8374AA43B00F572 /* MosqueBoardApp.swift in Sources */,
+				2CFC4DD29BECC73B8E1A2255 /* Board.swift in Sources */,
+				7494805F8E5E01056E8393D3 /* BoardSnapshot.swift in Sources */,
+				7E2C211E2F7EE65C5FAB2663 /* BoardStrings.swift in Sources */,
+				50B6CFA881CD5A96B95D8242 /* BoardView.swift in Sources */,
+				64DEE5057C79D14922C0E635 /* LaunchOptions.swift in Sources */,
+				44FDCCF1E16CB84F75125AA3 /* MosqueBoardApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E7985B4726356E2E2EFDEE35 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B87E94DAFA49460D6AA22631 /* Board.swift in Sources */,
+				4DBBC6339208AC7CE0B3B8D4 /* BoardSnapshot.swift in Sources */,
+				503F7C921EA85C8445ADAB29 /* BoardStrings.swift in Sources */,
+				DE7C638D170CA3187D36BBFD /* BoardView.swift in Sources */,
+				0F4372E1382A2C11093D6269 /* LaunchOptions.swift in Sources */,
+				3BA9ED0AB35956FD7CA0BB9A /* MosqueBoardApp.swift in Sources */,
+				5D7614B01503B609BE17FDFE /* TVAppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F787DDE8D0066D8E31895BE5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1DBF81DADAC3F5E77BAF8C47 /* BoardSnapshotTests.swift in Sources */,
+				6AD849448C0B2E5F6E4D14B5 /* TVAppTests.swift in Sources */,
+				B1BD08006E15598D0AF85438 /* TimetableDataTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,6 +511,16 @@
 			target = 0271CA3076439F309C2F109E /* MosqueBoard */;
 			targetProxy = 73D842557FBDAA35EB37B4DC /* PBXContainerItemProxy */;
 		};
+		E8DC3583D0E342CD7B828947 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AAD3F39CB524A813C9E64D5D /* MosqueBoardTV */;
+			targetProxy = 474E560D76CDC1643B9C74BC /* PBXContainerItemProxy */;
+		};
+		EC882F39C5FDD06AC374CEF3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AAD3F39CB524A813C9E64D5D /* MosqueBoardTV */;
+			targetProxy = 2BB2465DD683881E155D90CD /* PBXContainerItemProxy */;
+		};
 		F53564CCAA909AC881703AE5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0271CA3076439F309C2F109E /* MosqueBoard */;
@@ -318,6 +529,23 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		18F0FE3CF44008692DA97AA6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoardTVTests";
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MosqueBoard.app/MosqueBoard";
+			};
+			name = Debug;
+		};
 		40F81856D70A7498773DFD90 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -356,6 +584,40 @@
 			};
 			name = Debug;
 		};
+		52971DA52D9E803F54446C8F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoardTVTests";
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MosqueBoard.app/MosqueBoard";
+			};
+			name = Release;
+		};
+		5DE4D65DDF1B506BB781A226 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoardTVUITests";
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = MosqueBoardTV;
+			};
+			name = Debug;
+		};
 		625666AA11CA2AF43A796E21 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -370,6 +632,63 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				TEST_TARGET_NAME = MosqueBoard;
+			};
+			name = Release;
+		};
+		63E52027F92A8F279784B7BE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MosqueBoard;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoard";
+				PRODUCT_NAME = MosqueBoard;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Debug;
+		};
+		64538F9DBBEB1677C8AE21AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoardTVUITests";
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = MosqueBoardTV;
+			};
+			name = Release;
+		};
+		6E6183A3AD6EBCE49F1CE51F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MosqueBoard;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MosqueBoard";
+				PRODUCT_NAME = MosqueBoard;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Release;
 		};
@@ -426,11 +745,11 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
 			};
 			name = Release;
 		};
@@ -511,11 +830,11 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
 			};
 			name = Debug;
 		};
@@ -560,6 +879,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		342421E9E4EC98F62DC58380 /* Build configuration list for PBXNativeTarget "MosqueBoardTV" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				63E52027F92A8F279784B7BE /* Debug */,
+				6E6183A3AD6EBCE49F1CE51F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		3501E23B8A16B04B9E53BB89 /* Build configuration list for PBXNativeTarget "MosqueBoardUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -596,6 +924,24 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		E264DC47473A40C2A3ADDDEB /* Build configuration list for PBXNativeTarget "MosqueBoardTVUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DE4D65DDF1B506BB781A226 /* Debug */,
+				64538F9DBBEB1677C8AE21AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F4149A97450FB60B13A26947 /* Build configuration list for PBXNativeTarget "MosqueBoardTVTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18F0FE3CF44008692DA97AA6 /* Debug */,
+				52971DA52D9E803F54446C8F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -606,6 +952,10 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0DA9FF5330FE26EB23BA187E /* SalahCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SalahCore;
+		};
 		4DAED609B73D82F3026076BB /* SalahCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SalahCore;

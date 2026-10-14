@@ -9,6 +9,7 @@ options:
   bundleIdPrefix: io.github.salah-kit
   deploymentTarget:
     iOS: "17.0"
+    tvOS: "17.0"
   developmentLanguage: en
   createIntermediateGroups: true
 configFiles:
@@ -31,7 +32,8 @@ targets:
     type: application
     platform: iOS
     sources:
-      - path: MosqueBoard
+      # The app's code and resources, which the tvOS app compiles too.
+      - path: Shared
     dependencies:
       - package: SalahKit
         product: SalahCore
@@ -67,6 +69,7 @@ targets:
     platform: iOS
     sources:
       - path: MosqueBoardUITests
+      - path: JourneySupport
     dependencies:
       - target: MosqueBoard
     settings:
@@ -75,6 +78,56 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         TARGETED_DEVICE_FAMILY: "2"
         TEST_TARGET_NAME: MosqueBoard
+  # The same board on a mosque's TV. It compiles the iPad app's sources and resources (Shared)
+  # and adds only what a TV needs (MosqueBoardTV).
+  MosqueBoardTV:
+    type: application
+    platform: tvOS
+    # The same product and module name as the iPad app, so the unit tests' `@testable import
+    # MosqueBoard` and the link check's `MosqueBoard.app` work on both platforms. `productName`
+    # names the product XcodeGen references and the tests' host; PRODUCT_NAME is the setting.
+    productName: MosqueBoard
+    sources:
+      - path: Shared
+      - path: MosqueBoardTV
+    dependencies:
+      - package: SalahKit
+        product: SalahCore
+    settings:
+      base:
+        PRODUCT_NAME: MosqueBoard
+        # One App Store record for the iPad and the TV app (universal purchase).
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MosqueBoard
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: MosqueBoard
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIUserInterfaceStyle: Automatic
+  MosqueBoardTVTests:
+    type: bundle.unit-test
+    platform: tvOS
+    sources:
+      # The iPad app's unit tests: the logic they test is the same code on both platforms.
+      - path: MosqueBoardTests
+      - path: MosqueBoardTVTests
+    dependencies:
+      - target: MosqueBoardTV
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MosqueBoardTVTests
+        GENERATE_INFOPLIST_FILE: YES
+  MosqueBoardTVUITests:
+    type: bundle.ui-testing
+    platform: tvOS
+    sources:
+      - path: MosqueBoardTVUITests
+      - path: JourneySupport
+    dependencies:
+      - target: MosqueBoardTV
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MosqueBoardTVUITests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: MosqueBoardTV
 schemes:
   MosqueBoard:
     build:
@@ -86,3 +139,13 @@ schemes:
       targets:
         - MosqueBoardTests
         - MosqueBoardUITests
+  MosqueBoardTV:
+    build:
+      targets:
+        MosqueBoardTV: all
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - MosqueBoardTVTests
+        - MosqueBoardTVUITests

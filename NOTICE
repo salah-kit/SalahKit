@@ -7,7 +7,7 @@ software. Each item below says what it is, where it came from and its terms.
 
 1. MUIS prayer timetable (MosqueBoard example)
 
-File: Examples/MosqueBoard/MosqueBoard/Timetables/muis-2026.json
+File: Examples/MosqueBoard/Shared/Timetables/muis-2026.json
 
 Contains information from Muslim Prayer Timetable 2026 accessed on 2026-10-13
 from data.gov.sg (Majlis Ugama Islam Singapura) which is made available under
@@ -25,7 +25,7 @@ as an official MUIS product.
    calculation parity report)
 
 Files: the timetable data in Sources/SalahFixtures,
-Examples/MosqueBoard/MosqueBoard/Timetables/edinburgh-synthetic.json, and the
+Examples/MosqueBoard/Shared/Timetables/edinburgh-synthetic.json, and the
 comparison figures in docs/calculation-parity.md
 
 The prayer times in the SalahFixtures sample data, the begin times in the

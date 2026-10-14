@@ -16,6 +16,61 @@ struct BoardTimelineSchedule: TimelineSchedule {
   }
 }
 
+/// The board's sizes and colors: an iPad's, or a TV's, which people read from across a room.
+///
+/// tvOS's text styles are already sized for the distance, so the TV uses smaller styles than
+/// the iPad to fit the whole board on one screen: a TV board can't scroll, because nothing on
+/// it takes focus. tvOS has no Dynamic Type setting and no system background colors.
+nonisolated enum BoardStyle {
+  #if os(tvOS)
+    static let spacing: CGFloat = 20
+    static let padding: CGFloat = 0
+    static let background = Color.clear
+    static let panel = Color.primary.opacity(0.1)
+    static let title = Font.title.bold()
+    static let clock = Font.title.monospacedDigit()
+    static let subtitle = Font.callout
+    static let date = Font.headline
+    static let columnHeading = Font.callout
+    static let row = Font.title3
+    static let missing = Font.callout
+    static let status = Font.headline
+    static let message = Font.headline
+    static let nextName = Font.title.bold()
+    static let nextTime = Font.title3
+    static let countdown = Font.system(size: 140, weight: .bold).monospacedDigit()
+    /// The TV board is fitted to the screen, where a countdown that may shrink is the first
+    /// text SwiftUI shrinks. The panel is wide enough for any countdown at full size.
+    static let countdownMinimumScale: CGFloat = 1
+    static let gap = Font.callout
+    static let timeWidth: CGFloat = 170
+    static let statusWidth: CGFloat = 280
+    static let rowPadding: CGFloat = 4
+  #else
+    static let spacing: CGFloat = 24
+    static let padding: CGFloat = 24
+    static let background = Color(.systemBackground)
+    static let panel = Color(.secondarySystemBackground)
+    static let title = Font.largeTitle.bold()
+    static let clock = Font.largeTitle.monospacedDigit()
+    static let subtitle = Font.title3
+    static let date = Font.title2
+    static let columnHeading = Font.headline
+    static let row = Font.title
+    static let missing = Font.title3
+    static let status = Font.title3
+    static let message = Font.title2
+    static let nextName = Font.system(.largeTitle, weight: .bold)
+    static let nextTime = Font.title2
+    static let countdown = Font.system(size: 64, weight: .bold).monospacedDigit()
+    static let countdownMinimumScale: CGFloat = 0.5
+    static let gap = Font.body
+    static let timeWidth: CGFloat = 96
+    static let statusWidth: CGFloat = 150
+    static let rowPadding: CGFloat = 8
+  #endif
+}
+
 /// The whole board: header, the day's prayers, the next prayer or the coverage banner.
 struct BoardView: View {
   let board: Board
@@ -39,10 +94,10 @@ struct BoardContent: View {
   var body: some View {
     GeometryReader { geometry in
       ScrollView {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: BoardStyle.spacing) {
           HeaderView(snapshot: snapshot)
           if geometry.size.width > geometry.size.height {
-            HStack(alignment: .top, spacing: 24) {
+            HStack(alignment: .top, spacing: BoardStyle.spacing) {
               PrayerTable(snapshot: snapshot, strings: strings)
                 .frame(maxWidth: .infinity)
               StatusPanel(snapshot: snapshot, strings: strings)
@@ -54,11 +109,11 @@ struct BoardContent: View {
           }
           FooterView(snapshot: snapshot)
         }
-        .padding(24)
+        .padding(BoardStyle.padding)
         .frame(minHeight: geometry.size.height, alignment: .top)
       }
     }
-    .background(Color(.systemBackground))
+    .background(BoardStyle.background)
     .foregroundStyle(Color.primary)
   }
 }
@@ -70,23 +125,23 @@ private struct HeaderView: View {
     VStack(alignment: .leading, spacing: 6) {
       HStack(alignment: .firstTextBaseline) {
         Text(verbatim: snapshot.title)
-          .font(.largeTitle.bold())
+          .font(BoardStyle.title)
           .accessibilityAddTraits(.isHeader)
           .accessibilityIdentifier("header.title")
         Spacer(minLength: 16)
         Text(verbatim: snapshot.clock)
-          .font(.largeTitle.monospacedDigit())
+          .font(BoardStyle.clock)
           .accessibilityIdentifier("header.clock")
       }
       Text(verbatim: snapshot.subtitle)
-        .font(.title3)
+        .font(BoardStyle.subtitle)
         .foregroundStyle(Color.secondary)
         .accessibilityIdentifier("header.subtitle")
       Text(verbatim: snapshot.gregorianDate)
-        .font(.title2)
+        .font(BoardStyle.date)
         .accessibilityIdentifier("header.gregorian")
       Text(verbatim: snapshot.hijriDate)
-        .font(.title2)
+        .font(BoardStyle.date)
         .accessibilityIdentifier("header.hijri")
     }
   }
@@ -95,17 +150,17 @@ private struct HeaderView: View {
 private struct PrayerTable: View {
   let snapshot: BoardSnapshot
   let strings: BoardStrings
-  @ScaledMetric(relativeTo: .title) private var timeWidth: CGFloat = 96
-  @ScaledMetric(relativeTo: .title) private var statusWidth: CGFloat = 150
+  @ScaledMetric(relativeTo: .title) private var timeWidth = BoardStyle.timeWidth
+  @ScaledMetric(relativeTo: .title) private var statusWidth = BoardStyle.statusWidth
 
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
       if let unavailable = snapshot.dayUnavailable {
         Text(verbatim: unavailable)
-          .font(.title2)
+          .font(BoardStyle.message)
           .padding()
           .frame(maxWidth: .infinity, alignment: .leading)
-          .background(Color(.secondarySystemBackground), in: .rect(cornerRadius: 12))
+          .background(BoardStyle.panel, in: .rect(cornerRadius: 12))
           .accessibilityIdentifier("day.unavailable")
       } else {
         HStack {
@@ -114,7 +169,7 @@ private struct PrayerTable: View {
           Text(verbatim: strings("Iqama")).frame(width: timeWidth, alignment: .leading)
           Text(verbatim: strings("Status")).frame(width: statusWidth, alignment: .leading)
         }
-        .font(.headline)
+        .font(BoardStyle.columnHeading)
         .foregroundStyle(Color.secondary)
         .accessibilityHidden(true)
         ForEach(snapshot.rows) { row in
@@ -141,13 +196,13 @@ private struct PrayerRowView: View {
     let id = "row.\(row.kind.rawValue)"
     HStack {
       Text(verbatim: row.name)
-        .font(.title.weight(isNext ? .bold : .regular))
+        .font(BoardStyle.row.weight(isNext ? .bold : .regular))
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityIdentifier("\(id).name")
       VStack(alignment: .leading, spacing: 0) {
         if let time = row.time {
           Text(verbatim: time)
-            .font(.title.monospacedDigit().weight(isNext ? .bold : .regular))
+            .font(BoardStyle.row.monospacedDigit().weight(isNext ? .bold : .regular))
             .accessibilityLabel(Text(verbatim: strings("Begins \(time)")))
             .accessibilityIdentifier("\(id).time")
           if row.isNextDay {
@@ -157,7 +212,7 @@ private struct PrayerRowView: View {
           }
         } else {
           Text(verbatim: row.missingText ?? "")
-            .font(.title3)
+            .font(BoardStyle.missing)
             .accessibilityLabel(
               Text(verbatim: strings("Begin time: \(row.missingReason ?? "")"))
             )
@@ -169,7 +224,7 @@ private struct PrayerRowView: View {
         if let iqama = row.iqama {
           VStack(alignment: .leading, spacing: 0) {
             Text(verbatim: iqama)
-              .font(.title.monospacedDigit())
+              .font(BoardStyle.row.monospacedDigit())
               .accessibilityLabel(Text(verbatim: strings("Iqama \(iqama)")))
               .accessibilityIdentifier("\(id).iqama")
             if row.iqamaIsNextDay {
@@ -179,7 +234,7 @@ private struct PrayerRowView: View {
             }
           }
         } else {
-          Text(verbatim: "–").font(.title).accessibilityHidden(true)
+          Text(verbatim: "–").font(BoardStyle.row).accessibilityHidden(true)
         }
       }
       .frame(width: timeWidth, alignment: .leading)
@@ -187,11 +242,9 @@ private struct PrayerRowView: View {
         .frame(width: statusWidth, alignment: .leading)
         .accessibilityIdentifier("\(id).status")
     }
-    .padding(.vertical, 8)
+    .padding(.vertical, BoardStyle.rowPadding)
     .padding(.horizontal, 12)
-    .background(
-      isNext ? Color(.secondarySystemBackground) : Color.clear, in: .rect(cornerRadius: 12)
-    )
+    .background(isNext ? BoardStyle.panel : Color.clear, in: .rect(cornerRadius: 12))
     .overlay {
       if isNext {
         RoundedRectangle(cornerRadius: 12).strokeBorder(Color.primary, lineWidth: 2)
@@ -212,7 +265,7 @@ private struct StatusLabel: View {
         .accessibilityHidden(true)
       Text(verbatim: text ?? "")
     }
-    .font(.title3.weight(emphasized ? .semibold : .regular))
+    .font(BoardStyle.status.weight(emphasized ? .semibold : .regular))
     .foregroundStyle(status == .passed ? Color.secondary : Color.primary)
     .accessibilityElement(children: .ignore)
     .accessibilityLabel(Text(verbatim: text ?? ""))
@@ -246,7 +299,7 @@ private struct StatusPanel: View {
     VStack(alignment: .leading, spacing: 12) {
       if let started = snapshot.justStarted {
         Text(verbatim: started)
-          .font(.title2.bold())
+          .font(BoardStyle.message.bold())
           .accessibilityIdentifier("next.justStarted")
       }
       if let banner = snapshot.banner {
@@ -255,17 +308,17 @@ private struct StatusPanel: View {
       switch snapshot.next {
       case .prayer(let name, let time, let countdown, let spoken, let owningDay):
         Text(verbatim: strings("Next prayer"))
-          .font(.headline)
+          .font(BoardStyle.columnHeading)
           .foregroundStyle(Color.secondary)
         Text(verbatim: name)
-          .font(.system(.largeTitle, weight: .bold))
+          .font(BoardStyle.nextName)
           .accessibilityIdentifier("next.name")
         Text(verbatim: strings("Begins \(time)"))
-          .font(.title2)
+          .font(BoardStyle.nextTime)
           .accessibilityIdentifier("next.time")
         Text(verbatim: countdown)
-          .font(.system(size: 64, weight: .bold).monospacedDigit())
-          .minimumScaleFactor(0.5)
+          .font(BoardStyle.countdown)
+          .minimumScaleFactor(BoardStyle.countdownMinimumScale)
           .lineLimit(1)
           .accessibilityLabel(Text(verbatim: strings("Time remaining: \(spoken)")))
           .accessibilityIdentifier("next.countdown")
@@ -276,7 +329,7 @@ private struct StatusPanel: View {
         }
       case .unpublished(let message):
         Text(verbatim: message)
-          .font(.title2)
+          .font(BoardStyle.message)
           .accessibilityIdentifier("next.unpublished")
       case nil:
         EmptyView()
@@ -284,7 +337,7 @@ private struct StatusPanel: View {
     }
     .padding(20)
     .frame(maxWidth: .infinity, alignment: .leading)
-    .background(Color(.secondarySystemBackground), in: .rect(cornerRadius: 16))
+    .background(BoardStyle.panel, in: .rect(cornerRadius: 16))
   }
 }
 
@@ -300,10 +353,10 @@ private struct BannerView: View {
         Image(systemName: "exclamationmark.triangle.fill")
           .accessibilityHidden(true)
       }
-      .font(.title2.bold())
+      .font(BoardStyle.message.bold())
       ForEach(banner.gaps.indices, id: \.self) { index in
         Text(verbatim: banner.gaps[index])
-          .font(.body)
+          .font(BoardStyle.gap)
           .accessibilityIdentifier("coverage.gap.\(index)")
       }
     }

@@ -4,7 +4,7 @@
 Usage:
     python3 -I check-timetables.py [timetable.json ...]
 
-With no arguments it checks every file in ../MosqueBoard/Timetables. Each file
+With no arguments it checks every file in ../Shared/Timetables. Each file
 needs a known time zone (ZONES below). Standard library only.
 
 Checked for every row (RFC §4.4 row checks and prayerDay steps):
@@ -366,7 +366,7 @@ def fmt(offset):
 def main(argv):
     here = os.path.dirname(os.path.abspath(argv[0]))
     paths = argv[1:] or sorted(
-        os.path.join(here, "..", "MosqueBoard", "Timetables", name) for name in ZONES
+        os.path.join(here, "..", "Shared", "Timetables", name) for name in ZONES
     )
     problems = Problems()
     for path in paths:

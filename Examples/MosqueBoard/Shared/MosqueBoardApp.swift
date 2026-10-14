@@ -2,6 +2,9 @@ import SwiftUI
 
 @main
 struct MosqueBoardApp: App {
+  #if os(tvOS)
+    @UIApplicationDelegateAdaptor(TVAppDelegate.self) private var delegate
+  #endif
   private let options = LaunchOptions(arguments: ProcessInfo.processInfo.arguments)
 
   var body: some Scene {

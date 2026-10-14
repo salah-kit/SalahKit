@@ -1,6 +1,6 @@
 # MosqueBoard timetables
 
-MosqueBoard runs on published prayer times and calculates nothing. It bundles two timetables in SalahKit's `TimetableSource` JSON shape (RFC 0001 §4.4), in `MosqueBoard/Timetables/`:
+MosqueBoard runs on published prayer times and calculates nothing. The iPad and the tvOS app bundle the same two timetables, in `Shared/Timetables/`, in SalahKit's `TimetableSource` JSON shape (RFC 0001 §4.4):
 
 | File | What it is | Zone | Days |
 |---|---|---|---|
@@ -43,7 +43,7 @@ The licence asks that the use doesn't suggest MUIS or data.gov.sg endorses the a
 **How it was converted.** The input is the dataset's response from the data.gov.sg datastore API, with all 365 records in one page (for example `https://data.gov.sg/api/action/datastore_search?resource_id=d_d441e7242e78efc566024dd5b0d9829c&limit=400`). To reproduce the file:
 
 ```sh
-python3 -I Scripts/convert-muis.py <datastore-response.json> MosqueBoard/Timetables/muis-2026.json
+python3 -I Scripts/convert-muis.py <datastore-response.json> Shared/Timetables/muis-2026.json
 ```
 
 The converter uses the standard library only. It fails unless there are exactly 365 rows, one for every date of 2026, each date `YYYY-MM-DD` and each time 24-hour `HH:MM`, with the six times strictly increasing on every row. The raw download isn't committed.
