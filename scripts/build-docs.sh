@@ -17,7 +17,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-readonly modules=(SalahCore SalahCalculation SalahFixtures)
+readonly modules=(SalahCore SalahCalculation SalahFixtures SalahAlerts)
 readonly site_dir="${1:-.build/docs-site}"
 readonly derived_data="${DERIVED_DATA_PATH:-.derived/docs}"
 readonly hosting_base_path="${HOSTING_BASE_PATH:-SalahKit}"

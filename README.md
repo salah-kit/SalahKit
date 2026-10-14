@@ -1,6 +1,6 @@
 # SalahKit
 
-Swift packages for building prayer-time apps on Apple platforms: a typed prayer schedule with honest coverage, from calculated times or published timetables with iqama, and the words and numbers to show them.
+Swift packages for building prayer-time apps on Apple platforms: a typed prayer schedule with honest coverage, from calculated times or published timetables with iqama, the words and numbers to show them, and prayer alerts that fit the system's notification limit.
 
 [![CI](https://github.com/salah-kit/SalahKit/actions/workflows/ci.yml/badge.svg)](https://github.com/salah-kit/SalahKit/actions/workflows/ci.yml)
 [![Latest release](https://img.shields.io/github/v/release/salah-kit/SalahKit?include_prereleases&sort=semver)](https://github.com/salah-kit/SalahKit/releases)
@@ -15,12 +15,13 @@ SalahKit is the app layer of the [salah-kit](https://github.com/salah-kit) ecosy
 | **SalahCore** | The schedule model and the `PrayerSource` contract; `TimetableSource` for published times, with wall-time resolution around clock changes; optional iqama rules; the prayer state at any moment; refresh planning; prayer names in a String Catalog; duration, numbering and Hijri formatting on Foundation |
 | **SalahCalculation** | Calculated times from [SalahTimes](https://github.com/salah-kit/SalahTimes) as a `PrayerSource`: `CalculationSettings` carries every calculation parameter to the engine unchanged, `CalculationSource` reports a time it can't calculate (a polar summer's Isha) as missing instead of guessing, and `CalculationMethod.suggested(for:)` offers a sourced starting method |
 | **SalahFixtures** | Ready-made timetables and moments for previews and tests |
+| **SalahAlerts** | Prayer alerts: `AlertPlanner` plans every alert of a range and selects the requests that fit an app's notification budget, two complete days first; `NotificationScheduler` installs them under stable identifiers and reports what it confirmed; `InProcessAlertEngine` follows every alert in a running app, with catch-up after sleep |
 
 SalahKit never invents a time. A timetable that ends on 31 December, skips a day or leaves Isha blank produces a schedule that says so: the state after the last published Isha has no next prayer, and a missing day is a gap with a reason, not yesterday's times. A calculation that has no Isha in a polar summer says so too. A Friday is a date; Jumu'ah appears only where your data or your app declares it.
 
 What it deliberately isn't:
 - **Not a calculation engine.** SalahCalculation connects [SalahTimes](https://github.com/salah-kit/SalahTimes), the salah-kit engine, through `PrayerSource`. Any other engine or data feed can plug in the same way, and a timetable app that links only SalahCore never links SalahTimes.
-- **No UI, notifications or location services in the core.** Words and colors live at the edges; interface text other than prayer names belongs to your app.
+- **No UI, notifications or location services in the core.** Words and colors live at the edges; interface text other than prayer names belongs to your app. SalahAlerts plans and installs alerts, but your app asks for notification permission, writes the alerts' text and plays their sounds.
 - **No adhan recordings.** Your app ships its own sounds.
 
 ## Installation
@@ -40,6 +41,8 @@ targets: [
       .product(name: "SalahCore", package: "SalahKit"),
       // For calculated times. A timetable app needs only SalahCore.
       .product(name: "SalahCalculation", package: "SalahKit"),
+      // For prayer alerts.
+      .product(name: "SalahAlerts", package: "SalahKit"),
       .product(name: "SalahTimes", package: "SalahTimes"),
     ])
 ]
@@ -118,14 +121,44 @@ case .unavailable(let coverage, _):
 
 `Examples/MosqueBoard` is a complete iPad app built this way, with a real published timetable, overnight times, a clock change and declared Jumu'ah.
 
+### Prayer alerts
+
+Two weeks of alerts, with a reminder ten minutes before each prayer, on any `PrayerSchedule`:
+
+```swift
+import SalahAlerts
+import UserNotifications
+
+let planner = AlertPlanner()
+let now = Date()
+let alerts = try planner.schedule(
+  schedule, namespace: "prayers", from: now, to: now.addingTimeInterval(14 * 86_400),
+  settings: { subject in
+    subject.prayer.isPrayer ? AlertSettings(before: .seconds(10 * 60)) : nil
+  })
+let plan = planner.notificationPlan(alerts, from: now)
+
+let scheduler = NotificationScheduler(
+  identifierPrefix: "com.example.prayers.", namespace: "prayers")
+let report = try await scheduler.apply(plan) { alert in
+  let content = UNMutableNotificationContent()
+  content.title = PrayerNames(locale: Locale(identifier: "en")).name(of: alert.event)
+  content.sound = alert.sound.notificationSound
+  return content
+}
+print("Alerts confirmed until", report.confirmedCoveredUntil ?? now)
+```
+
+iOS keeps a limited number of pending notification requests per app, so the plan spends a budget (60 by default): every alert of the next two days, then prayer-time alerts as far as the budget reaches. The plan and the report say until when the alerts are complete; a missing prayer time, a failed request or denied permission shortens that, and nothing is invented. Ask for notification permission yourself, and replan when your app launches or becomes active and when the settings change. An always-running app also gives the whole schedule to `InProcessAlertEngine`, which reports every alert when it's due, reminders the plan left out included. `Examples/CalculatedPhone` schedules its alerts this way.
+
 ## Documentation
 
-The DocC documentation is at <https://salah-kit.github.io/SalahKit/>. Start with "A calculated prayer app with Core and Calculation" or "Using a mosque timetable with iqama and incomplete coverage". The design and its contracts are in [RFC 0001](docs/rfcs/0001-core.md) (SalahCore) and [RFC 0002](docs/rfcs/0002-calculation.md) (SalahCalculation); the behavior every implementation must reproduce is in [`Vectors/`](Vectors/README.md). [`docs/calculation-parity.md`](docs/calculation-parity.md) compares SalahCalculation with the times Salah computed with adhan-swift.
+The DocC documentation is at <https://salah-kit.github.io/SalahKit/>. Start with "A calculated prayer app with Core and Calculation", "Using a mosque timetable with iqama and incomplete coverage" or "Alerts within the 64-notification limit". The design and its contracts are in [RFC 0001](docs/rfcs/0001-core.md) (SalahCore), [RFC 0002](docs/rfcs/0002-calculation.md) (SalahCalculation) and [RFC 0003](docs/rfcs/0003-alerts.md) (SalahAlerts); the behavior every implementation must reproduce is in [`Vectors/`](Vectors/README.md). [`docs/calculation-parity.md`](docs/calculation-parity.md) compares SalahCalculation with the times Salah computed with adhan-swift.
 
 ## Supported platforms
 
 - iOS 16, macOS 13, watchOS 9, tvOS 16 and visionOS 1 or later.
-- Linux: SalahCore, SalahCalculation and SalahFixtures build and pass their tests on Ubuntu with Swift 6.2 or later.
+- Linux: SalahCore, SalahCalculation and SalahFixtures build and pass their tests on Ubuntu with Swift 6.2 or later, and so does SalahAlerts' planner and in-process engine. `NotificationScheduler` needs UserNotifications: it's on iOS, macOS, watchOS and visionOS, and not on tvOS, whose notifications carry no text or sound.
 - Swift 6.2 or later (Xcode 26 or later), in Swift 6 language mode. The API is `nonisolated` and `Sendable`, so it works the same in modules that default to `MainActor` isolation.
 
 ## Status and versioning
