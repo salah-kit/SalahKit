@@ -221,10 +221,13 @@ struct TimelineProviderTests {
       displays.last == .expired(knownThrough: try #require(timeline.prayerTimeline?.validUntil)))
   }
 
-  @Test("an entry at each midnight keeps the state that holds and lists the new day")
+  @Test("the builder's midnight entries evaluate the exact state and list the new day")
   func midnightEntries() throws {
     let timeline = PrayerTimelineProvider.timeline(settings: Self.makkah, now: Self.start)
+    let planned = try #require(timeline.prayerTimeline)
     let zone = Place.makkah.location.timeZone
+    let lookahead = CivilDay(containing: planned.horizon.end, in: zone).adding(days: 2)
+      .start(in: zone)
     let midnights = (1...2).map {
       CivilDay(containing: Self.start, in: zone).adding(days: $0).start(in: zone)
     }
@@ -236,10 +239,61 @@ struct TimelineProviderTests {
         Issue.record("no timeline entries around \(midnight)")
         continue
       }
-      #expect(state == before)
+      #expect(state == .schedule(Self.makkah.schedule.state(at: midnight, through: lookahead)))
+      #expect(state.prayerState?.date == midnight)
+      // Only the listed day changes; the prayer facts still agree with the preceding entry.
+      if case .schedule(let exact) = state, case .schedule(let earlier) = before {
+        #expect(ShownState(exact) == ShownState(earlier))
+      }
       #expect(context.day.day?.day == CivilDay(containing: midnight, in: zone))
     }
     #expect(timeline.entries.map(\.date) == timeline.entries.map(\.date).sorted())
+    #expect(timeline.entries.map(\.date) == planned.entries.map(\.date))
+  }
+
+  @Test("the real provider maps the bounded builder timeline without adding entries")
+  func boundedConstruction() throws {
+    // A long horizon fills the builder's budget; provider-added midnights used to exceed it.
+    let horizon = Duration.seconds(14 * 86_400)
+    let timeline = PrayerTimelineProvider.timeline(
+      settings: Self.makkah, now: Self.start, horizon: horizon)
+    let expected = try PrayerTimelineBuilder(
+      schedule: Self.makkah.schedule, includeDayBoundaries: true
+    ).timeline(from: Self.start, horizon: horizon)
+    #expect(timeline.prayerTimeline == expected)
+    #expect(timeline.entries.count == 96)
+    #expect(expected.isTruncated)
+    #expect(timeline.entries.map(\.date) == expected.entries.map(\.date))
+    for (entry, planned) in zip(timeline.entries, expected.entries) {
+      guard case .timeline(let state, let context) = entry.content else {
+        Issue.record("settings produced a setup entry")
+        continue
+      }
+      #expect(state == planned.state)
+      #expect(context.day == Self.makkah.schedule.day(containing: entry.date))
+    }
+  }
+
+  @Test("the real provider turns over London's list through a 23-hour day")
+  func dstConstruction() throws {
+    let settings = WidgetSettings(place: .london, method: .muslimWorldLeague, language: .english)
+    let zone = settings.place.location.timeZone
+    let day = CivilDay(year: 2026, month: 3, day: 28)
+    let start = day.start(in: zone).addingTimeInterval(12 * 3_600)
+    let timeline = PrayerTimelineProvider.timeline(
+      settings: settings, now: start, horizon: .seconds(3 * 86_400))
+    let first = day.adding(days: 1).start(in: zone)
+    let second = day.adding(days: 2).start(in: zone)
+    #expect(second.timeIntervalSince(first) == 23 * 3_600)
+    for midnight in [first, second] {
+      let entry = try #require(timeline.entries.first { $0.date == midnight })
+      guard case .timeline(.schedule(let state), let context) = entry.content else {
+        Issue.record("a midnight lacks a schedule entry")
+        continue
+      }
+      #expect(state.prayerState?.date == midnight)
+      #expect(context.day.day?.day == CivilDay(containing: midnight, in: zone))
+    }
   }
 
   // MARK: Checking what a host shows

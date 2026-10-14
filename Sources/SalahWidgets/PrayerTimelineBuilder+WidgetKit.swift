@@ -7,9 +7,10 @@
   nonisolated extension PrayerTimelineBuilder {
     /// A WidgetKit timeline from `now` through `now + horizon`, with your entry type.
     ///
-    /// The entries are those of ``timeline(from:horizon:)``: each refresh-plan date with its
-    /// schedule state, then ``PrayerTimelineState/expired(knownThrough:)`` at the end of the
-    /// timeline's validity. The reload policy asks for the next timeline halfway there,
+    /// The entries are those of ``timeline(from:horizon:)``: each refresh-plan date and any
+    /// enabled civil-day boundary with its schedule state, then
+    /// ``PrayerTimelineState/expired(knownThrough:)`` at the end of the timeline's validity.
+    /// The reload policy asks for the next timeline halfway there,
     /// `.after(_:)` the timeline's ``PrayerTimeline/reloadDate``.
     ///
     /// ```swift

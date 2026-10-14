@@ -18,7 +18,7 @@ struct WidgetTimelineTests {
     #expect(reload == nil)
   }
 
-  @Test("a steps timeline: a minute grid near prayers, the expired entry last, midnights added")
+  @Test("a steps timeline: a minute grid near prayers, the expired entry last, day boundaries")
   func stepsTimeline() throws {
     let asr = try Fixture.event(.asr)
     let now = asr.time.addingTimeInterval(-45 * 60)
@@ -86,13 +86,48 @@ extension WidgetTimelineTests {
     let (entries, _) = MenuBarTimeline.timeline(settings: Fixture.makkah, nowPlaying: nil, now: now)
     let midnight = Fixture.day.adding(days: 1).start(in: Place.makkah.location.timeZone)
     let entry = try #require(entries.first { $0.date == midnight })
-    guard case .timeline(.schedule, let context) = entry.content else {
+    guard case .timeline(.schedule(let state), let context) = entry.content else {
       Issue.record("the midnight entry has no schedule state")
       return
     }
+    let planned = try PrayerTimelineBuilder(
+      schedule: Fixture.makkah.schedule, strategy: MenuBarTimeline.strategy,
+      includeDayBoundaries: true
+    ).timeline(from: now)
+    let lookahead = CivilDay(
+      containing: planned.horizon.end, in: Place.makkah.location.timeZone
+    ).adding(days: 2).start(in: Place.makkah.location.timeZone)
+    #expect(state == Fixture.makkah.schedule.state(at: midnight, through: lookahead))
+    #expect(state.prayerState?.date == midnight)
     #expect(context.day.day?.day == Fixture.day.adding(days: 1))
     let before = try #require(entries.last { $0.date < midnight })
     guard case .timeline(_, let earlier) = before.content else { return }
     #expect(earlier.day.day?.day == Fixture.day)
+  }
+
+  @Test("the real widget timeline maps the builder's dates and keeps its 96-entry budget")
+  func boundedConstruction() throws {
+    let isha = try Fixture.event(.isha)
+    let now = isha.time.addingTimeInterval(31 * 60)
+    let playing = NowPlaying(alert: nil, startedAt: now)
+    let (entries, reload) = MenuBarTimeline.timeline(
+      settings: Fixture.makkah, nowPlaying: playing, now: now)
+    let expected = try PrayerTimelineBuilder(
+      schedule: Fixture.makkah.schedule, strategy: MenuBarTimeline.strategy,
+      includeDayBoundaries: true
+    ).timeline(from: now)
+    #expect(expected.isTruncated)
+    #expect(entries.count == 96)
+    #expect(entries.map(\.date) == expected.entries.map(\.date))
+    #expect(reload == expected.reloadDate)
+    for (entry, planned) in zip(entries, expected.entries) {
+      guard case .timeline(let state, let context) = entry.content else {
+        Issue.record("settings produced a setup entry")
+        continue
+      }
+      #expect(state == planned.state)
+      #expect(context.day == Fixture.makkah.schedule.day(containing: entry.date))
+      #expect(entry.nowPlaying == playing)
+    }
   }
 }

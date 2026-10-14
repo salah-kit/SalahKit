@@ -66,9 +66,9 @@ nonisolated enum PrayerTimelineProvider {
   /// Without settings, one setup-required entry and no reload until the app saves settings and
   /// asks for one. With settings, the extension builds its own schedule and SalahWidgets'
   /// `.stateChanges` timeline over the default 48-hour horizon: an entry wherever the state
-  /// changes, the timeline-expired entry at its end, and a reload halfway there. The provider
-  /// adds an entry at each midnight in the place's zone, with the state that holds then, so the
-  /// listed day turns over with the date.
+  /// changes and at each civil-day start in the place's zone, the timeline-expired entry at
+  /// its end, and a reload halfway there. The builder's day boundaries turn over the listed
+  /// day with the date.
   ///
   /// - Parameters:
   ///   - settings: The settings from the App Group, or `nil` when there are none.
@@ -85,7 +85,6 @@ nonisolated enum PrayerTimelineProvider {
         reload: .never, prayerTimeline: nil)
     }
     let schedule = settings.schedule
-    let zone = settings.place.location.timeZone
     func context(at date: Date) -> EntryContext {
       EntryContext(
         language: settings.language, place: settings.place,
@@ -94,7 +93,8 @@ nonisolated enum PrayerTimelineProvider {
 
     let planned: PrayerTimeline
     do {
-      planned = try PrayerTimelineBuilder(schedule: schedule).timeline(from: now, horizon: horizon)
+      planned = try PrayerTimelineBuilder(schedule: schedule, includeDayBoundaries: true)
+        .timeline(from: now, horizon: horizon)
     } catch {
       // Only an invalid horizon fails; show the problem until the app reloads the widget, as
       // SalahWidgets' own WidgetKit timeline does.
@@ -105,19 +105,8 @@ nonisolated enum PrayerTimelineProvider {
         reload: .never, prayerTimeline: nil)
     }
 
-    var entries: [PrayerEntry] = []
-    for (index, entry) in planned.entries.enumerated() {
-      entries.append(
-        PrayerEntry(date: entry.date, content: .timeline(entry.state, context(at: entry.date))))
-      // Midnights before the next entry: the state still holds, the day changes.
-      guard index + 1 < planned.entries.count, case .schedule = entry.state else { continue }
-      let end = planned.entries[index + 1].date
-      var midnight = CivilDay(containing: entry.date, in: zone).adding(days: 1).start(in: zone)
-      while midnight < end {
-        entries.append(
-          PrayerEntry(date: midnight, content: .timeline(entry.state, context(at: midnight))))
-        midnight = CivilDay(containing: midnight, in: zone).adding(days: 1).start(in: zone)
-      }
+    let entries = planned.entries.map { entry in
+      PrayerEntry(date: entry.date, content: .timeline(entry.state, context(at: entry.date)))
     }
     return WidgetTimeline(
       entries: entries, reload: .after(planned.reloadDate), prayerTimeline: planned)

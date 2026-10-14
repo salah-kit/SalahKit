@@ -42,8 +42,8 @@ nonisolated enum MenuBarTimeline {
   /// The entries from `now`, and when to ask for the next timeline.
   ///
   /// Without settings: one setup entry, and no reload until the app asks. With settings: the
-  /// entries of SalahWidgets' `.steps` timeline, ending with its expired entry, plus an entry at
-  /// each midnight in the place's zone, so the listed day turns over with the date.
+  /// entries of SalahWidgets' `.steps` timeline, including civil-day starts in the place's
+  /// zone so the listed day turns over with the date, and ending with its expired entry.
   static func timeline(
     settings: MenuBarSettings?, nowPlaying: NowPlaying?, now: Date
   ) -> (entries: [MenuBarEntry], reloadDate: Date?) {
@@ -51,7 +51,6 @@ nonisolated enum MenuBarTimeline {
       return ([MenuBarEntry(date: now, content: .setupRequired, nowPlaying: nowPlaying)], nil)
     }
     let schedule = settings.schedule
-    let zone = settings.place.location.timeZone
     func entry(_ date: Date, _ state: PrayerTimelineState) -> MenuBarEntry {
       MenuBarEntry(
         date: date,
@@ -63,22 +62,15 @@ nonisolated enum MenuBarTimeline {
         nowPlaying: nowPlaying)
     }
     guard
-      let planned = try? PrayerTimelineBuilder(schedule: schedule, strategy: strategy)
-        .timeline(from: now)
+      let planned = try? PrayerTimelineBuilder(
+        schedule: schedule, strategy: strategy, includeDayBoundaries: true
+      )
+      .timeline(from: now)
     else {
       // Only an invalid horizon fails, and the default one is valid.
       return ([entry(now, .expired(knownThrough: now))], nil)
     }
-    var entries: [MenuBarEntry] = []
-    for (index, item) in planned.entries.enumerated() {
-      entries.append(entry(item.date, item.state))
-      guard index + 1 < planned.entries.count, case .schedule = item.state else { continue }
-      var midnight = CivilDay(containing: item.date, in: zone).adding(days: 1).start(in: zone)
-      while midnight < planned.entries[index + 1].date {
-        entries.append(entry(midnight, item.state))
-        midnight = CivilDay(containing: midnight, in: zone).adding(days: 1).start(in: zone)
-      }
-    }
+    let entries = planned.entries.map { entry($0.date, $0.state) }
     return (entries, planned.reloadDate)
   }
 }
