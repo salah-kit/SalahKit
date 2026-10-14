@@ -104,6 +104,31 @@ struct PrayerFocusTests {
   }
 
   extension PrayerFocusTests {
+    @Test("a frozen live count-up shows the elapsed interval")
+    @MainActor
+    func frozenLiveCountUp() throws {
+      let moment = PrayerFixtures.justStarted
+      let state = try #require(moment.state().prayerState)
+      let actual = NextPrayerView(
+        state: state, names: names, timeZone: moment.place.location.timeZone,
+        selection: .justStartedOrNextEvent
+      )
+      .nextPrayerStyle(FocusProbeStyle())
+      .environment(\.locale, locale)
+      .environment(\.prayerTimerFrozen, true)
+      let expected = VStack {
+        Text(verbatim: "Dhuhr")
+        Text(verbatim: DisplayContentTests.clock("13:07"))
+        Text(verbatim: "4:00").monospacedDigit()
+      }
+      let image = try #require(Snapshot.render(actual, width: 200))
+      let reference = try #require(Snapshot.render(expected, width: 200))
+      if Snapshot.compare(image, reference) != nil {
+        Snapshot.write(image, to: Snapshot.failures.appendingPathComponent("focus-live.png"))
+      }
+      #expect(Snapshot.compare(image, reference) == nil)
+    }
+
     @Test("the public next-prayer view passes the selected count-up to its style")
     @MainActor
     func renderedCountUp() throws {

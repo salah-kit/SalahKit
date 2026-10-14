@@ -11,9 +11,9 @@
   /// }
   /// ```
   ///
-  /// The view shows what the state knows and nothing more. When the state's next prayer is
+  /// The view shows what the state knows and nothing more. When the selected focus is
   /// unknown, as after the last published day of a timetable, it has no name, time or
-  /// countdown to show; the style shows a placeholder. An unavailable schedule state has no
+  /// timer to show; the style shows a placeholder. An unavailable schedule state has no
   /// `PrayerState` at all: show your own wording for it instead of this view.
   ///
   /// The time is in `timeZone`, the schedule's zone, rather than the device's, and is written

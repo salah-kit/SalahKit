@@ -4,7 +4,7 @@
 
   /// The look of a ``NextPrayerView``: a card, a widget's main content or a watch complication.
   ///
-  /// The configuration's text is `nil` wherever the state doesn't know the next prayer, such as
+  /// The configuration's text is `nil` wherever the state doesn't know the selected focus, such as
   /// after the last published day of a timetable. A style must keep that uncertainty visible:
   /// show a placeholder or your own wording, never a time or a countdown of its own.
   ///
