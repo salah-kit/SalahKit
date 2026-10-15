@@ -1492,7 +1492,7 @@ def reconciliation_vectors():
           [{"deliver": [], "now": "2026-06-02T15:36:00+03:00"}],
           center={"pending": [pend(rid(f"{D}/maghrib/atTime"), MAGHRIB, "maghrib", "v1 atTime")],
                   "delivered": [{"id": rid(f"{D}/asr/atTime"), "date": ASR}]})
-    # deliver's order: fire date before identity (RFC 0003 §4.5).
+    # deliver's order, and the order of its validation (RFC 0003 §4.5).
     recon("deliver", "reconciliation.deliver.fire-date-before-identity",
           "At 19:46 the app delivers Dhuhr's after-reminder, moved to 19:45, and Asr's alert of "
           "15:35, in that order. They are posted by fire date, Asr's first, although Dhuhr's "
