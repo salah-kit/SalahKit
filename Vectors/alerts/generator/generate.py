@@ -1148,7 +1148,7 @@ def reconciliation_vectors():
           "still there with the same identifier; it isn't removed, and it isn't confirmed. "
           "Confirmed coverage ends at Asr's new time.",
           "RFC 0003 §4.5 Matching and The report: an older request under the same identifier "
-          "doesn't match, so it confirms nothing.",
+          "with a different fire date doesn't match, so it confirms nothing.",
           [{"apply": plan([a(f"{D}/dhuhr/atTime", DHUHR),
                            a(f"{D}/asr/atTime", f"{D}T15:41:00+03:00"),
                            a(f"{D}/maghrib/atTime", MAGHRIB)], COVER), "now": MORNING}],
@@ -1209,7 +1209,8 @@ def reconciliation_vectors():
     recon("failures", "reconciliation.failures.coverage-ends-at-the-plans",
           "Every request is confirmed, but the plan's own coverage ends at 16:00 (a gap or an "
           "omitted alert): confirmed coverage is the plan's, not later.",
-          "RFC 0003 §4.5 The report: confirmedCoveredUntil is never past the plan's coveredUntil.",
+          "RFC 0003 §4.5 The report: confirmedCoveredUntil is at most the plan's coveredUntil, "
+          "or verifiedAt when that is later.",
           [{"apply": plan([a(f"{D}/asr/atTime", ASR)], f"{D}T16:00:00+03:00"), "now": MORNING}])
 
     recon("authorization", "reconciliation.authorization.denied",

@@ -163,7 +163,7 @@ SalahTimes' own vectors (`Vectors/times/`, copied into `Tests/Data/SalahTimes-0.
 
 - Unit tests: settings pass every parameter through, round-trip and hash honestly; the Ramadan opt-in changes only its field and only Isha on Ramadan days; every §4.5 case; a year of days at seven places and methods passes the schedule's contract checks with no invalid-data gap.
 - Salah's `PrayerTimesInvarianceTests`, migrated.
-- `docs/calculation-parity.md`: moving from adhan-swift. SalahCalculation against adhan-swift 1.5.0 over every day of 2026 in Salah's settings, with every difference over a minute explained.
+- `docs/calculation-parity.md`: moving from adhan-swift. SalahCalculation against adhan-swift 1.5.0 over 2026 in Salah's settings, with every difference over a minute explained.
 - `Examples/CalculatedPhone`: an iPhone app on the public API, with XCUITest journeys.
 
 ## 9. Open questions

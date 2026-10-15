@@ -1,6 +1,5 @@
-# Who reviews changes to each part of SalahKit (STANDARD.md, Governance): each product has an
-# owner. Later lines win, so the catch-all comes first. Add a product's maintainers to its lines
-# as the project grows.
+# Who reviews changes to each part of SalahKit: each product has an owner. Later lines win, so
+# the catch-all comes first. Add a product's maintainers to its lines as the project grows.
 
 *                               @omar-hanafy
 

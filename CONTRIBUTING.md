@@ -187,8 +187,10 @@ A maintainer releases from `main`. Versions follow Semantic Versioning, and tags
 [STANDARD.md](https://github.com/salah-kit/.github/blob/main/STANDARD.md#releases) hold.
 
 1. **Prepare the release** in a pull request: move the CHANGELOG's Unreleased entries into a new
-   `## [X.Y.Z] - YYYY-MM-DD` section, update the version in the README's installation snippet,
-   and update the status line of every RFC whose change ships.
+   `## [X.Y.Z] - YYYY-MM-DD` section and update the links at its end (`[Unreleased]` compares
+   `X.Y.Z...HEAD`, and a new `[X.Y.Z]` compares the previous tag with `X.Y.Z`), update the
+   version in the README's installation snippet, and update the status line of every RFC whose
+   change ships.
 2. **Merge it, and wait for CI and Docs to pass** on the commit you'll tag.
 3. **Tag that commit** and push the tag:
    ```sh
