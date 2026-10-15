@@ -1,14 +1,17 @@
 # Contributing to SalahKit
 
-Thanks for helping. This page covers building, testing and formatting this repository. The
-organization's code of conduct, security policy, support page and issue and pull-request
-templates live once, in [salah-kit/.github](https://github.com/salah-kit/.github), and apply here.
+Thanks for helping. This page covers building, testing, formatting and releasing this
+repository. The organization's code of conduct, security policy, support page and issue and
+pull-request templates live once, in [salah-kit/.github](https://github.com/salah-kit/.github),
+and apply here.
 
 ## Requirements
 
 - Swift 6.2 or later (`swift-tools-version: 6.2`). CI uses the newest Xcode 26 on macOS, and the
   `swift:6.2-noble` and `swift:latest` images on Linux.
 - Xcode 26 or later for the Apple-platform builds and the documentation.
+- [XcodeGen](https://github.com/yonaskolb/XcodeGen), only to regenerate an example's project.
+- Python 3.10 or later, only to regenerate the vectors (standard library only).
 
 ## Build and test
 
@@ -66,15 +69,14 @@ swift format --in-place --recursive Sources Tests Package.swift Examples    # fi
 
 ## Examples
 
-Every example in `Examples/` is an Xcode project generated with
-[XcodeGen](https://github.com/yonaskolb/XcodeGen) from its `project.yml`; both the spec and the
-generated project are committed. After changing a spec or adding, moving or removing a file, run
-`xcodegen` in the example's folder from a clone whose folder is named `SalahKit` (the project
-records that folder's name, and XcodeGen resolves symbolic links), and commit both. CI
-regenerates each project and fails if anything differs, builds it under both default-isolation
-settings and runs its tests on a simulator or on the runner's Mac (build-only, with a warning,
-where a runner lacks the destination). Each example's README lists its tests and how to run
-them.
+Every example in `Examples/` is an Xcode project that
+[XcodeGen](https://github.com/yonaskolb/XcodeGen) generates from its `project.yml`; both the spec
+and the generated project are committed. After changing a spec or adding, moving or removing a file,
+run `xcodegen` in the example's folder from a clone whose folder is named `SalahKit` (the project
+records that folder's name, and XcodeGen resolves symbolic links), and commit both. CI regenerates
+each project and fails if anything differs, builds it under both default-isolation settings and runs
+its tests on a simulator or on the runner's Mac (build-only, with a warning, where a runner lacks
+the destination). Each example's README lists its tests and how to run them.
 
 | Example | Platform | Needs a signing team to run locally |
 |---|---|---|
@@ -90,9 +92,20 @@ Simulator builds need no signing. To sign an example, copy its `Config/Local.xcc
 ## Vectors
 
 The JSON vectors in `Vectors/` pin the package's behavior across platforms and implementations.
-`Vectors/README.md` documents their schema. A change to an existing vector needs a written reason
-in [RFC 0001, section 10](docs/rfcs/0001-core.md#10-changes-after-the-vector-review), in the same
-pull request.
+`Vectors/README.md` documents their schema. `swift test` runs every file.
+
+- `Vectors/state/` and `Vectors/refresh/` are written by hand.
+- `Vectors/alerts/` and `Vectors/reconciliation/` are generated: change
+  `Vectors/alerts/generator/`, then run `python3 Vectors/alerts/generator/generate.py`.
+- `Vectors/calculation/` is generated from SalahTimes' reference results:
+  `Vectors/calculation/generator/README.md` says how, with a SalahTimes checkout.
+
+The generators rewrite their files byte for byte, so commit the generator and its output together. A
+change to an existing vector needs a written reason in the Changes section of the RFC it belongs to,
+in the same pull request: [RFC 0001](docs/rfcs/0001-core.md#10-changes-after-the-vector-review) for
+`state/` and `refresh/`, [RFC 0002](docs/rfcs/0002-calculation.md#10-changes-after-review) for
+`calculation/`, and [RFC 0003](docs/rfcs/0003-alerts.md#10-changes-after-review) for `alerts/` and
+`reconciliation/`. Adding a vector needs no entry, but never reuse or rename an id.
 
 ## Documentation
 
@@ -138,7 +151,7 @@ in [`docs/rfcs/`](docs/rfcs/) and are discussed in
 To change the API:
 
 1. **Start a discussion** in the Ideas category, titled `RFC: <what changes>`: the consumer that
-   needs the change, what it can't do today, and the API you propose. Small amendments to an
+   needs the change, what it can't do today, and the API you propose. A small amendment to an
    existing RFC can go in that RFC's discussion instead.
 2. **Write the RFC** in a pull request: a new `docs/rfcs/NNNN-title.md` with the next free
    number, or an amendment to an existing RFC in its "Changes" section. Start from the existing
@@ -153,3 +166,43 @@ To change the API:
 
 Before 1.0, a minor release may change the API; every change is listed in the CHANGELOG. The
 RFCs stay open to findings from real adopters until 1.0 (STANDARD.md, Releases).
+
+## Checks that need a device or a native speaker
+
+Some behavior can only be checked on real hardware, over days, or by a native speaker: alerts on
+an iPhone with the app closed, widgets left alone for a week, a real Apple Watch, Apple TV or
+Mac sleep, VoiceOver, and the translations. Each such check is an issue labelled
+[`help wanted`][help-wanted], with the steps, what to record and how to report it.
+[`good first issue`][good-first-issue] marks the small ones, and [`translation`][translation] the
+language reviews. Results go in a comment on the issue.
+
+[help-wanted]: https://github.com/salah-kit/SalahKit/labels/help%20wanted
+[good-first-issue]: https://github.com/salah-kit/SalahKit/labels/good%20first%20issue
+[translation]: https://github.com/salah-kit/SalahKit/labels/translation
+
+## Releasing
+
+A maintainer releases from `main`. Versions follow Semantic Versioning, and tags have no `v`
+(`0.4.0`). The package stays below 1.0 until the conditions in
+[STANDARD.md](https://github.com/salah-kit/.github/blob/main/STANDARD.md#releases) hold.
+
+1. **Prepare the release** in a pull request: move the CHANGELOG's Unreleased entries into a new
+   `## [X.Y.Z] - YYYY-MM-DD` section, update the version in the README's installation snippet,
+   and update the status line of every RFC whose change ships.
+2. **Merge it, and wait for CI and Docs to pass** on the commit you'll tag.
+3. **Tag that commit** and push the tag:
+   ```sh
+   git tag -a X.Y.Z -m "SalahKit X.Y.Z"
+   git push origin X.Y.Z
+   ```
+   Apps pin tags, so never move or delete one; a mistake is fixed with a new release.
+4. **Publish a GitHub release** for the tag, with three headings:
+   - **Proven:** the gates and their evidence, such as the CI runs on the tagged commit and what
+     ran on which simulator or device;
+   - **Pending:** what still needs a person, a device or elapsed time, each item linked to the
+     `help wanted` issue that tracks it (open one if none exists);
+   - **Known limitations.**
+
+   A check that didn't run is never listed as proven.
+5. **Check the documentation site** at https://salah-kit.github.io/SalahKit/ once the Docs
+   workflow has deployed `main`.

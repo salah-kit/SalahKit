@@ -8,8 +8,9 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
-- The calculation-parity study distinguishes its historical baseline from the shipped app and
-  documents Salah's retained Ramadan, Tehran-tie and country-suggestion policies.
+- `docs/calculation-parity.md` is now a guide for apps moving from adhan-swift: how its settings
+  map onto `CalculationSettings`, which times change and why, and which an app must show as
+  missing, with Salah's Ramadan, tie and country-table choices as an example of app policy.
 - MosqueBoard's synthetic summer timetable is identified as a day-offset test fixture rather
   than evidence of a real Scottish mosque's practice, with links to a primary comparison.
   The MUIS notes record the confirmed SODL distribution grant and date interpretation.
@@ -21,6 +22,10 @@ All notable changes to this project are documented here. The format follows
 - The README explains the examples' naming and platform differences, the original Core and
   Calculation RFCs identify their shipped status, and MenuBar's pending device checks can be
   followed from a standalone clone.
+- The RFCs state their design decisions and their reasons directly, and the vectors' notes cite
+  the RFC section behind each expectation; no input or expected output changed.
+- The examples' pending device and language checks link the help-wanted issues that give their
+  steps, and CONTRIBUTING describes how the vectors are regenerated and how a release is made.
 
 ## [0.4.0] - 2026-10-14
 

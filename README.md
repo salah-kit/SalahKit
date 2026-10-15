@@ -227,7 +227,7 @@ A `PrayerRowStyle` or `NextPrayerStyle` gets ready-made text for the name, the t
 
 ## Documentation
 
-The DocC documentation is at <https://salah-kit.github.io/SalahKit/>. Start with "A calculated prayer app with Core and Calculation", "Using a mosque timetable with iqama and incomplete coverage" or "Alerts within the 64-notification limit", then "Building widget timelines without daily app launches", "Styling rows and cards" and "Lessons from Salah". The design and its contracts are in [RFC 0001](docs/rfcs/0001-core.md) (SalahCore), [RFC 0002](docs/rfcs/0002-calculation.md) (SalahCalculation), [RFC 0003](docs/rfcs/0003-alerts.md) (SalahAlerts) and [RFC 0004](docs/rfcs/0004-widgets-and-ui.md) (SalahWidgets and SalahUI); the behavior every implementation must reproduce is in [`Vectors/`](Vectors/README.md). [`docs/calculation-parity.md`](docs/calculation-parity.md) compares SalahCalculation with the times Salah computed with adhan-swift.
+The DocC documentation is at <https://salah-kit.github.io/SalahKit/>. Start with "A calculated prayer app with Core and Calculation", "Using a mosque timetable with iqama and incomplete coverage" or "Alerts within the 64-notification limit", then "Building widget timelines without daily app launches", "Styling rows and cards" and "Lessons from Salah". The design and its contracts are in [RFC 0001](docs/rfcs/0001-core.md) (SalahCore), [RFC 0002](docs/rfcs/0002-calculation.md) (SalahCalculation), [RFC 0003](docs/rfcs/0003-alerts.md) (SalahAlerts) and [RFC 0004](docs/rfcs/0004-widgets-and-ui.md) (SalahWidgets and SalahUI); the behavior every implementation must reproduce is in [`Vectors/`](Vectors/README.md). [`docs/calculation-parity.md`](docs/calculation-parity.md) is the guide to moving from adhan-swift: how its settings map, and how and why SalahCalculation's times differ.
 
 The examples are complete apps on the public API, each with its own README, tests and CI job:
 
@@ -255,11 +255,11 @@ APIs. Those example requirements do not raise the package minimums below.
 
 SalahKit is pre-1.0 and follows [Semantic Versioning](https://semver.org). Until 1.0, a minor release may change the API; every change goes through an RFC in [`docs/rfcs/`](docs/rfcs/), discussed in [GitHub Discussions](https://github.com/salah-kit/SalahKit/discussions), and is listed in [CHANGELOG.md](CHANGELOG.md). Version 1.0 waits for two shipped apps that differ in platform and data source, at least one maintained outside this organization, and for native-speaker review of the prayer names.
 
-Prayer names come from a String Catalog seeded from the Salah app. English, Arabic and French are reviewed; Urdu, Persian, Bengali, Turkish, Indonesian and Malay are marked `needs_review` until a native speaker checks them. Corrections are welcome.
+Prayer names come from a String Catalog seeded from the Salah app. English, Arabic and French are reviewed; Urdu, Persian, Bengali, Turkish, Indonesian and Malay are marked `needs_review` until a native speaker checks them. Corrections are welcome: each language has a [`translation` issue](https://github.com/salah-kit/SalahKit/labels/translation) that lists its entries.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for building, testing and formatting, and for the RFC process that public API changes go through. Questions and RFC discussions are in [GitHub Discussions](https://github.com/salah-kit/SalahKit/discussions). The org-wide code of conduct and security policy live in [salah-kit/.github](https://github.com/salah-kit/.github).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for building, testing, formatting and releasing, and for the RFC process that public API changes go through. Checks that need a real device or a native speaker are [`help wanted` issues](https://github.com/salah-kit/SalahKit/labels/help%20wanted), each with its steps. Questions and RFC discussions are in [GitHub Discussions](https://github.com/salah-kit/SalahKit/discussions). The org-wide code of conduct and security policy live in [salah-kit/.github](https://github.com/salah-kit/.github).
 
 ## License
 
