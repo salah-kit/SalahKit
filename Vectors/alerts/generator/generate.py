@@ -1405,8 +1405,8 @@ def reconciliation_vectors():
           [{"deliver": [a(f"{D}/asr/atTime", ASR)], "now": "2026-06-02T15:36:00+03:00"}],
           center={"authorization": "denied"})
 
-    # Added after the sixth review (RFC 0003 §7): the points at which a batch checks for a later
-    # plan, the report's boundaries, and deliver's own rules.
+    # The points at which a batch checks for a later plan, the report's boundaries, and deliver's
+    # own rules (RFC 0003 §4.5).
     recon("pump", "reconciliation.pump.denied-batch-stops-before-its-read-back",
           "Notifications are denied, the scheduler keeps no delivered-notification retention and "
           "no owned request is pending. The first apply is held in its second call, the pending "
@@ -1484,7 +1484,7 @@ def reconciliation_vectors():
           "RFC 0003 §4.5 The report: confirmedCoveredUntil is max(verifiedAt, min(coveredUntil, "
           "u)).",
           [{"apply": plan([], MORNING), "now": MORNING, "readBackAt": f"{D}T06:01:00+03:00"}])
-    # Added after the seventh review (RFC 0003 §7).
+    # An empty deliver (RFC 0003 §4.5).
     recon("deliver", "reconciliation.deliver.nothing-to-deliver",
           "An empty list still takes its turn: deliver reads authorization, the pending requests "
           "and the delivered notifications, posts nothing and changes nothing.",
@@ -1492,7 +1492,7 @@ def reconciliation_vectors():
           [{"deliver": [], "now": "2026-06-02T15:36:00+03:00"}],
           center={"pending": [pend(rid(f"{D}/maghrib/atTime"), MAGHRIB, "maghrib", "v1 atTime")],
                   "delivered": [{"id": rid(f"{D}/asr/atTime"), "date": ASR}]})
-    # Added after the ninth review (RFC 0003 §7).
+    # deliver's order: fire date before identity (RFC 0003 §4.5).
     recon("deliver", "reconciliation.deliver.fire-date-before-identity",
           "At 19:46 the app delivers Dhuhr's after-reminder, moved to 19:45, and Asr's alert of "
           "15:35, in that order. They are posted by fire date, Asr's first, although Dhuhr's "

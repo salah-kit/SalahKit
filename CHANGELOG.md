@@ -161,8 +161,8 @@ alerts within the system's notification limit, each with working examples.
     prayer has begun, reports each occurrence once, and offers the default audio precedence.
   - The DocC article "Alerts within the 64-notification limit".
 - **Vectors**: 60 alert-planning vectors in `Vectors/alerts/` and 60 scheduler vectors in
-  `Vectors/reconciliation/`, against a modelled notification center, written from RFC 0003 and
-  reviewed independently before the implementation.
+  `Vectors/reconciliation/`, against a modelled notification center, generated from a model of
+  RFC 0003 and checked as its section 7 describes.
 - **CalculatedPhone** schedules prayer alerts through SalahAlerts: alerts and a reminder in
   Settings, an Alerts card that shows the pending requests read back and until when they're
   confirmed, and an XCUITest journey that allows notifications through Springboard, watches an
@@ -225,9 +225,9 @@ apps that prove them through the public API.
   previews and tests (late Isha, events after midnight, a spring-forward day, declared Jumu'ah,
   Ramadan, a partial row, a missing day and the last published day).
 - **Vectors**: 159 language-neutral JSON vectors for days, events, state and refresh plans in
-  `Vectors/`, written from the RFC before the implementation and checked independently, and
-  calculation vectors in `Vectors/calculation/` with instants from SalahTimes' independent
-  reference implementation. SalahTimes' own vectors also run through the adapter.
+  `Vectors/`, written from the RFC before the implementation and recomputed with a separate
+  model, and calculation vectors in `Vectors/calculation/` with instants from SalahTimes'
+  independent reference implementation. SalahTimes' own vectors also run through the adapter.
 - **MosqueBoard**, an iPad example that shows MUIS's 2026 Singapore timetable and a synthetic
   Edinburgh one, with iqama, coverage banners, Isha after midnight, clock changes and Arabic,
   and XCUITest journeys for each.

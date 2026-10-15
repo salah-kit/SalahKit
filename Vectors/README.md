@@ -316,4 +316,4 @@ A change to an existing alert or reconciliation vector needs a written reason in
 
 ## Changing a vector
 
-These vectors are the contract SalahCore is tested against. After the independent review, a change to an existing vector, its input or its expected output needs a written reason in RFC 0001 §10, in the same commit. Adding a vector needs no entry, but its id must be new: never reuse or rename an existing id. A change to the file shape increments `schemaVersion` in every file and this README.
+These vectors are the contract SalahCore is tested against. A change to an existing vector, its input or its expected output needs a written reason in RFC 0001 §10, in the same commit. Adding a vector needs no entry, but its id must be new: never reuse or rename an existing id. A change to the file shape increments `schemaVersion` in every file and this README.
