@@ -33,7 +33,7 @@
     {
       "id": "state.coverage.day.partial-missing-kind",
       "description": "A row without Isha is available and partial, Isha missing with reason noPublishedData; its other times are listed.",
-      "provenance": "RFC 0001 §4.3 rule 7, §4.4 step 8; proposal §7.1 'Coverage is a source contract'",
+      "provenance": "RFC 0001 §4.3 rule 7, §4.4 step 8",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -117,7 +117,7 @@
     {
       "id": "state.coverage.day.empty-timetable",
       "description": "A timetable with no rows: every day is unavailable(noPublishedData).",
-      "provenance": "RFC 0001 §4.4 step 2; proposal §9 'empty ... timetables'",
+      "provenance": "RFC 0001 §4.4 step 2",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {"expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "rows": []},
@@ -149,7 +149,7 @@
     {
       "id": "state.coverage.state.empty-timetable",
       "description": "state over an empty timetable is unavailable; it changes at 12-02 00:00, where the set of gaps containing the instant changes (11-30's window ends, 12-02's begins).",
-      "provenance": "RFC 0001 §4.7 Availability, changesAt (gap set); proposal §7.3 'An initially empty source also produces an unavailable entry'",
+      "provenance": "RFC 0001 §4.7 Availability, changesAt (gap set; 'an expired or empty timetable changes state at every midnight')",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {"expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "rows": []},

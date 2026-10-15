@@ -5,7 +5,7 @@
     {
       "id": "state.highlat.day.maghrib-and-isha-after-midnight",
       "description": "A Reykjavik-like June row: Maghrib (00:04) and Isha (01:06) fall on the next civil day and belong to 06-20.",
-      "provenance": "RFC 0001 §4.2 dayOffset, §4.3 rule 4; proposal §9 high-latitude vectors",
+      "provenance": "RFC 0001 §4.2 dayOffset, §4.3 rule 4",
       "input": {
         "location": {"latitude": 64.15, "longitude": -21.94, "timeZone": "Atlantic/Reykjavik"},
         "source": {
@@ -38,7 +38,7 @@
     {
       "id": "state.highlat.state.after-midnight-before-isha",
       "description": "At 00:30 on 06-21, previous is 06-20's Maghrib and next is 06-20's Isha (01:06), both owned by the previous day. The 06-21/06-22 overlap appears in coverage.",
-      "provenance": "proposal §7.1 'State crosses midnight using owning-day context'; RFC 0001 §4.6, §4.7",
+      "provenance": "RFC 0001 §4.6 Context, §4.7",
       "input": {
         "location": {"latitude": 64.15, "longitude": -21.94, "timeZone": "Atlantic/Reykjavik"},
         "source": {

@@ -5,7 +5,7 @@
     {
       "id": "refresh.coverage.timetable-expires-in-horizon",
       "description": "The timetable ends on 12-31. Entries keep useful known state after Isha (available, next null) and add an unavailable entry where 2027-01-01's gap opens; validUntil is still the requested end.",
-      "provenance": "proposal §7.1 'Refresh planning includes coverage boundaries...', §7.3 'How it works'; RFC 0001 §4.8",
+      "provenance": "RFC 0001 §4.7 'What this means' (first bullet); §4.8 Transitions ('including a coverage boundary in a partial or expired timetable'), Budget",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -120,7 +120,7 @@
     {
       "id": "refresh.coverage.partial-row",
       "description": "12-12 has no Isha: the plan adds an unavailable entry at Maghrib, where the Isha window opens, and the next entry at 12-13's Fajr, where it closes.",
-      "provenance": "proposal §7.1 'Both strategies insert dates when coverage changes'; RFC 0001 §4.8 Transitions",
+      "provenance": "RFC 0001 §4.8 Transitions ('every instant in (s, e) where the known state or coverage changes')",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -213,7 +213,7 @@
     {
       "id": "refresh.coverage.empty-timetable",
       "description": "An initially empty timetable still produces a plan: one unavailable entry at the start.",
-      "provenance": "proposal §7.3 'An initially empty source also produces an unavailable entry'; RFC 0001 §4.8",
+      "provenance": "RFC 0001 §4.8 Dates (s is always a date); §4.7 Availability",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {"expectedKinds": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"], "rows": []},
@@ -241,7 +241,7 @@
     {
       "id": "refresh.delayed-request.first-plan",
       "description": "First of two plans over a timetable ending 12-31: 19:00-21:00. Its last entry (20:35) is strictly before its validUntil (21:00), where SalahWidgets places the expired entry.",
-      "provenance": "proposal §9 refresh ('a delayed next timeline request so gaps never silently reuse the last valid entry'); RFC 0001 §4.8 Budget, validUntil",
+      "provenance": "RFC 0001 §4.8 Budget, validUntil ('where SalahWidgets places its timeline-expired entry')",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -338,7 +338,7 @@
     {
       "id": "refresh.delayed-request.second-plan",
       "description": "The next provider call comes late, at 00:30 on 2027-01-01, after the first plan's validUntil. Its first entry is computed at its own start: unavailable, not the first plan's last state (available, previous = 12-31 Isha).",
-      "provenance": "proposal §9 refresh; RFC 0001 §4.8 (every entry's state is state(at: date, through: B))",
+      "provenance": "RFC 0001 §4.8 (every entry's state is state(at: date, through: B)); §4.3 rule 9 (old values never stand in for a missing day)",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {

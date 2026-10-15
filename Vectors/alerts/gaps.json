@@ -5,7 +5,7 @@
     {
       "id": "alerts.gaps.missing-isha-per-kind",
       "description": "3 June publishes no Isha, so Isha may fall anywhere from Maghrib (19:00) to the next Fajr (04:11). Isha's alert is unknown in that interval, its 15-minute before-reminder 15 minutes earlier, and its 10-minute after-reminder 10 minutes later.",
-      "provenance": "RFC 0003 §4.3 Gaps; RFC 0001 §4.6 missing-event windows; proposal §7.5: an unknown future prayer can make its before-reminder unknown sooner.",
+      "provenance": "RFC 0003 §4.3 Gaps: an unknown Isha makes its before-reminder unknown earlier than its alert; RFC 0001 §4.6 missing-event windows.",
       "input": {
         "location": {
           "latitude": 21.4225,

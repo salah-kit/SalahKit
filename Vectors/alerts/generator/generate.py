@@ -35,7 +35,8 @@ EDINBURGH = {"latitude": 55.9533, "longitude": -3.1883, "timeZone": "Europe/Lond
 KAZAN = {"latitude": 55.7963, "longitude": 49.1088, "timeZone": "Europe/Moscow",
          "countryCode": "RU", "name": "Kazan"}
 
-# Salah's characterization fixture (A2): Makkah, Tuesday 2 June 2026, every day the same.
+# The fixture of Salah's characterization tests (salah-kit/Salah at a0206dd): Makkah, Tuesday
+# 2 June 2026, every day the same.
 MAKKAH_TIMES = {"fajr": "04:11", "sunrise": "05:38", "dhuhr": "12:19", "asr": "15:35",
                 "maghrib": "19:00", "isha": "20:30"}
 # Synthetic midsummer times for Edinburgh: Isha after midnight belongs to the evening before.
@@ -257,7 +258,7 @@ def schedule_vectors():
     v("alerts.schedule.every-kind-one-day",
       "Every prayer with an at-time alert, a 10-minute before-reminder and a 5-minute "
       "after-reminder over one day: fifteen alerts by fire date. Sunrise has no settings.",
-      "RFC 0003 §4.3 Candidates; proposal §7.5 (fifteen requests for a full day).",
+      "RFC 0003 §4.3 Candidates; §4.4's arithmetic example counts fifteen alerts a day.",
       MAKKAH, makkah(), ALL_THREE,
       q_schedule("2026-06-02T00:00:00+03:00", "2026-06-03T00:00:00+03:00"))
 
@@ -271,8 +272,8 @@ def schedule_vectors():
     v("alerts.schedule.reminders-of-events-outside-the-range",
       "A short range holds only Dhuhr's before-reminder, though Dhuhr is after the range "
       "(alerts.schedule.after-reminder-of-an-earlier-prayer is the other direction).",
-      "RFC 0003 §4.3 Candidates; proposal §7.5: query events before and after the range to "
-      "include after-reminders of earlier prayers and before-reminders of later ones.",
+      "RFC 0003 §4.3 Candidates: the query reaches before and after the range to include "
+      "after-reminders of earlier prayers and before-reminders of later ones.",
       MAKKAH, makkah(), ALL_THREE,
       q_schedule("2026-06-02T12:05:00+03:00", "2026-06-02T12:15:00+03:00"))
     v("alerts.schedule.after-reminder-of-an-earlier-prayer",
@@ -298,15 +299,13 @@ def schedule_vectors():
       "The range starts at 22:30, exactly two hours after Isha. Isha is read at the query's "
       "first instant (start − m), and its two-hour after-reminder fires at the range's start, "
       "which is included.",
-      "RFC 0003 §4.3 Candidates: events(from: start − m, through: end + m) includes its start; "
-      "proposal §7.5: this boundary behavior is part of the vectors.",
+      "RFC 0003 §4.3 Candidates: events(from: start − m, through: end + m) includes its start.",
       MAKKAH, makkah(), two_hours,
       q_schedule("2026-06-02T22:30:00+03:00", "2026-06-03T00:00:00+03:00"))
     v("alerts.schedule.before-reminder-from-near-the-query-end",
       "The range ends at 02:12. Fajr at 04:11 is a minute inside the query's end (end + m), "
       "and its two-hour before-reminder at 02:11 is in the range.",
-      "RFC 0003 §4.3 Candidates: the query reaches m past the range's end; proposal §7.5: this "
-      "boundary behavior is part of the vectors.",
+      "RFC 0003 §4.3 Candidates: the query reaches m past the range's end.",
       MAKKAH, makkah(), two_hours,
       q_schedule("2026-06-02T00:00:00+03:00", "2026-06-02T02:12:00+03:00"))
 
@@ -400,8 +399,8 @@ def gap_vectors():
       "3 June publishes no Isha, so Isha may fall anywhere from Maghrib (19:00) to the next "
       "Fajr (04:11). Isha's alert is unknown in that interval, its 15-minute before-reminder "
       "15 minutes earlier, and its 10-minute after-reminder 10 minutes later.",
-      "RFC 0003 §4.3 Gaps; RFC 0001 §4.6 missing-event windows; proposal §7.5: an unknown "
-      "future prayer can make its before-reminder unknown sooner.",
+      "RFC 0003 §4.3 Gaps: an unknown Isha makes its before-reminder unknown earlier than its "
+      "alert; RFC 0001 §4.6 missing-event windows.",
       MAKKAH, no_isha, isha_all,
       q_schedule("2026-06-03T00:00:00+03:00", "2026-06-05T00:00:00+03:00"))
     v("alerts.gaps.no-alerts-for-the-missing-prayer",
@@ -463,14 +462,14 @@ def plan_vectors():
     v = lambda *a, **k: alert_vector("plans", PLANS, *a, **k)
     fourteen = ("2026-06-01T00:00:00+03:00", "2026-06-15T00:00:00+03:00")
     d7 = v("alerts.plan.d7-two-complete-days-and-eight-days-at-time",
-           "Proposal D7: five prayers, each with an at-time alert, a 10-minute before- and a "
-           "5-minute after-reminder; now at midnight; the default budget (60 requests, two "
-           "near-term days, a 14-day horizon). The two near-term days reserve 30 requests and "
-           "the other 30 go to the at-time alerts of the next six days: eight days of at-time "
-           "alerts, two of reminders. Coverage ends at the third day's first reminder; at-time "
-           "coverage runs to the ninth day's Fajr.",
-           "Proposal §7.5 ('30 near-term requests + 30 later at-time requests = eight days of "
-           "at-time alerts and two days of reminders') and Appendix D7; RFC 0003 §4.4.",
+           "RFC 0003 §4.4's arithmetic example: five prayers, each with an at-time alert, a "
+           "10-minute before- and a 5-minute after-reminder; now at midnight; the default "
+           "budget (60 requests, two near-term days, a 14-day horizon). The two near-term days "
+           "reserve 30 requests and the other 30 go to the at-time alerts of the next six days: "
+           "eight days of at-time alerts, two of reminders. Coverage ends at the third day's "
+           "first reminder; at-time coverage runs to the ninth day's Fajr.",
+           "RFC 0003 §4.4, the arithmetic example: 30 near-term requests and 30 later at-time "
+           "requests make eight days of at-time alerts and two days of reminders.",
            MAKKAH, makkah(), ALL_THREE, q_plan(*fourteen, now=fourteen[0]))
     assert len(d7["alerts"]) == 60
     assert d7["coveredUntil"] == "2026-06-03T04:01:00+03:00", d7["coveredUntil"]
@@ -483,8 +482,8 @@ def plan_vectors():
       "20 are kept in order and nothing later is selected. Coverage ends at the first omitted "
       "alert, 2 June's Dhuhr after-reminder; each kind's coverage ends at its own first "
       "omitted alert.",
-      "Proposal §7.5 rule 3 ('keep the earliest alerts up to the allowance … record the first "
-      "omitted alert as the completeness cutoff'); RFC 0003 §4.4.",
+      "RFC 0003 §4.4 Selection 1 (more near-term alerts than maxPending: the first are kept and "
+      "nothing else is selected) and Coverage (a kind's cutoff is its first alert not selected).",
       MAKKAH, makkah(), ALL_THREE, q_plan(*fourteen, now=fourteen[0], maxPending=20))
 
     ties = {"kinds": {"maghrib": every(after=45 * MIN), "isha": every(before=45 * MIN)}}
@@ -492,8 +491,7 @@ def plan_vectors():
       "Maghrib's after-reminder and Isha's before-reminder both fire at 19:45, and the budget "
       "of two ends between them. Identity order keeps Maghrib's; Isha's is the first omitted "
       "alert, so coverage ends at 19:45 though an alert at 19:45 was selected.",
-      "Proposal §7.5 rule 3 ('Break equal-time ties by the canonical logical identifier'); "
-      "RFC 0003 §4.2 Order, §4.4.",
+      "RFC 0003 §4.2 Order (the canonical logical identifier breaks equal-time ties), §4.4.",
       MAKKAH, makkah(), ties,
       q_plan("2026-06-02T19:00:00+03:00", "2026-06-03T00:00:00+03:00",
              now="2026-06-02T19:00:00+03:00", maxPending=2))
@@ -511,35 +509,35 @@ def plan_vectors():
     v("alerts.plan.horizon-clips-the-range",
       "A 14-day range with a 3-day horizon: nothing after the third day can be selected, so "
       "at-time coverage ends at the horizon, not at an omitted alert.",
-      "Proposal §7.5: the effective range is [now, min(candidateRange.end, now + horizon)); "
-      "RFC 0003 §4.4.",
+      "RFC 0003 §4.4 Effective range: [now, E) with E = max(now, min(requestedRange.end, "
+      "now + horizon)).",
       MAKKAH, makkah(), ALL_THREE, q_plan(*fourteen, now=fourteen[0], horizon=3 * DAY))
     v("alerts.plan.near-window-longer-than-the-horizon",
       "A five-day near-term window with a one-day horizon: the window is clipped to the "
       "horizon, which ends coverage of every kind.",
-      "Proposal §7.5: 'A near-term window longer than the horizon cannot extend coverage or "
-      "select requests beyond it.'",
+      "RFC 0003 §4.4 Effective range: N = min(now + nearTermWindow, E), so a window longer than "
+      "the horizon can't extend the plan.",
       MAKKAH, makkah(), ALL_THREE,
       q_plan(*fourteen, now=fourteen[0], nearTermWindow=5 * DAY, horizon=DAY))
 
     v("alerts.plan.range-starts-after-now",
       "The range starts at noon, twelve hours after now: alerts from noon are selected, but "
       "nothing is known before noon, so every cutoff is now.",
-      "Proposal §7.5: 'if candidates begin later than now, the initial uncovered interval "
-      "likewise makes coveredUntil == now'; RFC 0003 §4.4.",
+      "RFC 0003 §4.4 Coverage: when the requested range starts after now, nothing is known "
+      "before its start, so every cutoff is now.",
       MAKKAH, makkah(), ALL_THREE,
       q_plan("2026-06-01T12:00:00+03:00", "2026-06-03T00:00:00+03:00",
              now="2026-06-01T00:00:00+03:00"))
     v("alerts.plan.range-ends-before-now",
       "A range that ended before now: an empty effective range, no alerts, coverage at now.",
-      "Proposal §7.5: 'A candidate range ending at/before now produces an empty plan with "
-      "coverage ending at now'.",
+      "RFC 0003 §4.4 Effective range: a requested range that ends at or before now gives an "
+      "empty effective range and an empty plan.",
       MAKKAH, makkah(), ALL_THREE,
       q_plan("2026-06-01T00:00:00+03:00", "2026-06-03T00:00:00+03:00",
              now="2026-06-05T00:00:00+03:00"))
     v("alerts.plan.range-ends-at-now",
       "A range that ends exactly at now is empty too.",
-      "Proposal §7.5; RFC 0003 §4.4.",
+      "RFC 0003 §4.4 Effective range: a range that ends at or before now gives an empty plan.",
       MAKKAH, makkah(), ALL_THREE,
       q_plan("2026-06-01T00:00:00+03:00", "2026-06-03T00:00:00+03:00",
              now="2026-06-03T00:00:00+03:00"))
@@ -550,14 +548,14 @@ def plan_vectors():
       "1 June's Isha is missing, but now is 06:00 on the 2nd, after every interval that gap "
       "makes: it doesn't shorten coverage. The range starts at midnight, as an in-process "
       "caller's would, and alerts before now aren't selected.",
-      "Proposal §7.5: 'a past-only gap does not shorten future coverage'; RFC 0003 §4.4.",
+      "RFC 0003 §4.4 Coverage: a gap entirely before now changes nothing.",
       MAKKAH, missing_isha_1, isha_settings,
       q_plan("2026-06-01T00:00:00+03:00", "2026-06-04T00:00:00+03:00",
              now="2026-06-02T06:00:00+03:00", nearTermWindow=DAY))
     v("alerts.plan.gap-containing-now",
       "At 01:00 on 2 June, 1 June's Isha may still be to come: every kind's interval contains "
       "now, so coverage is now.",
-      "Proposal §7.5: 'a gap containing now yields now'.",
+      "RFC 0003 §4.4 Coverage: a gap that contains now gives now.",
       MAKKAH, missing_isha_1, isha_settings,
       q_plan("2026-06-01T00:00:00+03:00", "2026-06-04T00:00:00+03:00",
              now="2026-06-02T01:00:00+03:00", nearTermWindow=DAY))
@@ -569,8 +567,8 @@ def plan_vectors():
       "3 June publishes no Isha; the budget holds everything. Before-reminder coverage ends "
       "at 18:00, an hour before the window opens at Maghrib; at-time coverage runs to 19:00 "
       "and after-reminder coverage to 19:20. Overall coverage is the earliest, 18:00.",
-      "Proposal §7.5: 'Each enabled kind's coverage uses its own offset transformation; "
-      "at-time coverage is not shortened solely by a before-reminder's lookahead'; RFC 0003 §4.4.",
+      "RFC 0003 §4.4 Coverage: each kind's cutoff uses its own offsets, so an unknown future "
+      "prayer that hides a before-reminder doesn't shorten the at-time coverage.",
       MAKKAH, missing_isha_3, one_hour,
       q_plan("2026-06-02T00:00:00+03:00", "2026-06-06T00:00:00+03:00",
              now="2026-06-02T00:00:00+03:00", maxPending=200, nearTermWindow=5 * DAY))
@@ -580,8 +578,8 @@ def plan_vectors():
       "The timetable ends on 3 June: every known alert fits, and coverage ends where the "
       "first unknown day's reminder could fall (Fajr's 30-minute reminder, 23:30 on the 3rd); "
       "at-time coverage ends at the 4th's midnight.",
-      "Proposal §7.5: 'A partial/expired timetable or a too-small budget shortens coverage "
-      "without inventing missing alerts.'",
+      "RFC 0003 §1 (a missing prayer time never becomes an alert, and it shortens the coverage "
+      "the planner reports), §4.4 Coverage.",
       MAKKAH, expired, {"kinds": {"fajr": every(before=30 * MIN), "isha": every()}},
       q_plan("2026-06-02T00:00:00+03:00", "2026-06-09T00:00:00+03:00",
              now="2026-06-02T00:00:00+03:00"))
@@ -620,8 +618,8 @@ def plan_vectors():
       "Fajr only, with a reminder, over 14 days: the plan has room for all 28 alerts, yet "
       "after the two near-term days it selects at-time alerts only. Before-reminder coverage "
       "ends at the third day's reminder.",
-      "Proposal §7.5 rule 2: 'Later reminders stay in AlertSchedule for the in-process engine "
-      "but are omitted from NotificationPlan.'",
+      "RFC 0003 §4.4 Selection 2: later reminders are never selected; they stay in the "
+      "AlertSchedule for the in-process engine.",
       MAKKAH, makkah(), fajr_two, q_plan(*fourteen, now=fourteen[0]))
 
     v("alerts.plan.nothing-enabled",
@@ -781,8 +779,8 @@ def error_vectors():
       "RFC 0003 §4.3 Errors (order).", MAKKAH, makkah(),
       {"kinds": {"dhuhr": every(before=0)}}, one_day, maximum=-1)
     v("alerts.errors.zero-offset", "A before-reminder of zero isn't positive.",
-      "RFC 0003 §4.3 Errors 3; proposal §7.5: reject settings outside the declared positive "
-      "offset bound.", MAKKAH, makkah(), {"kinds": {"dhuhr": every(before=0)}}, one_day)
+      "RFC 0003 §4.3 Errors 3: an offset that isn't positive is rejected.", MAKKAH, makkah(),
+      {"kinds": {"dhuhr": every(before=0)}}, one_day)
     v("alerts.errors.negative-offset", "A negative after-reminder is rejected.",
       "RFC 0003 §4.3 Errors 3.", MAKKAH, makkah(), {"kinds": {"asr": every(after=-300)}},
       one_day)
@@ -1019,15 +1017,17 @@ def reconciliation_vectors():
           "Dhuhr's before-reminder moves from 10 to 15 minutes (12:09 to 12:04). Its identifier "
           "has no time in it, so the request is replaced by one add and never removed; the "
           "confirmed occurrence carries the new fire date.",
-          "Proposal §7.5 'Identity and updates'; RFC 0003 §4.2, §4.5 step 4 and 6. Corrects "
-          "A2's characterizesAMovedAlertIsRemovedBeforeItsReplacementIsAdded and "
-          "characterizesIdentifiersCarryTheFireTimestamp.",
+          "RFC 0003 §4.2, §4.5 step 4 and 6. Corrects Salah's characterization tests "
+          "characterizesAMovedAlertIsRemovedBeforeItsReplacementIsAdded and "
+          "characterizesIdentifiersCarryTheFireTimestamp (salah-kit/Salah at a0206dd), as "
+          "RFC 0003 §6 records.",
           [{"apply": plan([a(f"{D}/dhuhr/before", DHUHR_BEFORE_10)], COVER), "now": MORNING},
            {"apply": plan([a(f"{D}/dhuhr/before", DHUHR_BEFORE_15)], COVER), "now": MORNING}])
     recon("identity", "reconciliation.identity.changed-prayer-time",
           "A recalculation moves Asr from 15:35 to 15:41: the same request is replaced with "
           "the new trigger.",
-          "Proposal §7.5: changing a calculation updates the same logical request.",
+          "RFC 0003 §4.2: changing a calculation keeps the identity; §4.5 step 6 replaces the "
+          "request.",
           [{"apply": plan([a(f"{D}/asr/atTime", ASR)], COVER), "now": MORNING},
            {"apply": plan([a(f"{D}/asr/atTime", f"{D}T15:41:00+03:00")], COVER), "now": MORNING}])
     recon("identity", "reconciliation.identity.changed-wording",
@@ -1049,8 +1049,8 @@ def reconciliation_vectors():
     recon("identity", "reconciliation.identity.fajr-before-midnight",
           "In Kazan, 20 June's Fajr alert fires at 23:45 on the 19th, the same instant as the "
           "19th's Isha alert. They are two requests, each of its own day.",
-          "RFC 0003 §4.2 (owning days, order); B1's note: an at-time alert for the next day's "
-          "Fajr can fire before midnight.",
+          "RFC 0003 §4.2 (owning days, order): a calculated Fajr at 23:45, and its at-time alert "
+          "before midnight, belong to the next day; RFC 0001 §10 #1 (maximumLead).",
           [{"apply": plan([a("2026-06-19/isha/atTime", "2026-06-19T23:45:00+03:00"),
                            a("2026-06-20/fajr/atTime", "2026-06-19T23:45:00+03:00")],
                           "2026-06-21T00:00:00+03:00"), "now": "2026-06-19T22:00:00+03:00"}],
@@ -1061,8 +1061,8 @@ def reconciliation_vectors():
           "it still wants (Maghrib), another app's request, a request of another namespace "
           "under the same prefix, and one under the prefix that isn't an identity. Only Asr's "
           "is removed, in one call; Isha's is added.",
-          "RFC 0003 §4.2 Request identifiers, §4.5 step 4; A2's "
-          "obsoleteOwnRequestsAreRemovedAndOthersKept (retained).",
+          "RFC 0003 §4.2 Request identifiers, §4.5 step 4; retains Salah's characterization test "
+          "obsoleteOwnRequestsAreRemovedAndOthersKept (salah-kit/Salah at a0206dd).",
           [{"apply": plan([a(f"{D}/maghrib/atTime", MAGHRIB), a(f"{D}/isha/atTime", ISHA)],
                           COVER), "now": "2026-06-02T13:00:00+03:00"}],
           center={"pending": [
@@ -1082,8 +1082,9 @@ def reconciliation_vectors():
     recon("obsolete", "reconciliation.obsolete.empty-plan-clears-the-namespace",
           "An empty plan of the scheduler's namespace removes every owned request and nothing "
           "else.",
-          "RFC 0003 §4.5 step 4; A2's emptyScheduleClearsOwnRequestsAndDeliveries (retained "
-          "for pending requests).",
+          "RFC 0003 §4.5 step 4; retains Salah's characterization test "
+          "emptyScheduleClearsOwnRequestsAndDeliveries (salah-kit/Salah at a0206dd) for pending "
+          "requests.",
           [{"apply": plan([], COVER), "now": MORNING}],
           center={"pending": [pend(rid(f"{D}/isha/atTime"), ISHA, "isha", "v1 atTime"),
                               pend(rid("2026-06-03/fajr/before", namespace="mosque"),
@@ -1101,19 +1102,20 @@ def reconciliation_vectors():
 
     recon("namespaces", "reconciliation.namespaces.foreign-plan",
           "A plan of another namespace is rejected before any call.",
-          "Proposal §7.5: validate the plan's namespace before any mutation; RFC 0003 §4.5.",
+          "RFC 0003 §4.5 Validation: the plan's namespace is checked before any call to the "
+          "center.",
           [{"apply": plan([a(f"{D}/asr/atTime", ASR)], COVER, namespace="mosque"),
             "now": MORNING}],
           center={"pending": [pend(rid(f"{D}/isha/atTime"), ISHA, "isha", "v1 atTime")]})
     recon("namespaces", "reconciliation.namespaces.empty-foreign-plan",
           "An empty plan of another namespace is rejected too, so it can't clear this "
           "scheduler's requests.",
-          "Proposal §7.5: 'including for an empty plan'.",
+          "RFC 0003 §4.5 Validation: before any call to the center, including for an empty plan.",
           [{"apply": plan([], COVER, namespace="mosque"), "now": MORNING}],
           center={"pending": [pend(rid(f"{D}/isha/atTime"), ISHA, "isha", "v1 atTime")]})
     recon("namespaces", "reconciliation.namespaces.foreign-alert-in-a-plan",
           "A plan of this namespace holding one alert of another namespace is rejected whole.",
-          "Proposal §7.5: 'also reject alerts from another namespace'.",
+          "RFC 0003 §4.5 Validation: every alert's namespace must equal the scheduler's.",
           [{"apply": plan([a(f"{D}/asr/atTime", ASR),
                            a(f"{D}/maghrib/atTime", MAGHRIB, namespace="mosque")], COVER),
             "now": MORNING}])
@@ -1145,8 +1147,8 @@ def reconciliation_vectors():
           "Asr moves to 15:41, but adding the new request fails. The old request (15:35) is "
           "still there with the same identifier; it isn't removed, and it isn't confirmed. "
           "Confirmed coverage ends at Asr's new time.",
-          "Proposal §7.5: 'an unsuccessful replacement is not reported as confirmed merely "
-          "because an older request shares its logical identifier'; RFC 0003 §4.5 The report.",
+          "RFC 0003 §4.5 Matching and The report: an older request under the same identifier "
+          "doesn't match, so it confirms nothing.",
           [{"apply": plan([a(f"{D}/dhuhr/atTime", DHUHR),
                            a(f"{D}/asr/atTime", f"{D}T15:41:00+03:00"),
                            a(f"{D}/maghrib/atTime", MAGHRIB)], COVER), "now": MORNING}],
@@ -1155,8 +1157,7 @@ def reconciliation_vectors():
     recon("failures", "reconciliation.failures.stale-content-on-read-back",
           "The center accepts the new wording for Maghrib but still holds the old content on "
           "read-back: Maghrib is unconfirmed, and confirmed coverage ends at its time.",
-          "Proposal §7.5: matching checks include the desired fire date and content; RFC 0003 "
-          "§4.5 Matching.",
+          "RFC 0003 §4.5 Matching: the trigger's instant and the content must match.",
           [{"apply": plan([a(f"{D}/asr/atTime", ASR), a(f"{D}/maghrib/atTime", MAGHRIB)], COVER),
             "now": MORNING, "wording": "v2"}],
           center={"pending": [pend(rid(f"{D}/asr/atTime"), ASR, "asr", "v1 atTime"),
@@ -1172,8 +1173,8 @@ def reconciliation_vectors():
     recon("failures", "reconciliation.failures.read-back-fails",
           "The read-back fails: every add succeeded, but nothing is confirmed, every alert is "
           "unconfirmed, and confirmed coverage is unknown.",
-          "Proposal §7.5: 'A failed read-back leaves it unknown'; 'A failure report never claims "
-          "the desired plan was fully installed.' RFC 0003 §4.5 The report.",
+          "RFC 0003 §4.5 The report: a failed read-back confirms nothing, every alert without a "
+          "failure fails with unconfirmed, and confirmedCoveredUntil is nil.",
           [{"apply": plan(DHUHR_THREE, COVER), "now": MORNING}],
           center={"failReads": [2]})
     recon("failures", "reconciliation.failures.first-read-fails",
@@ -1192,7 +1193,7 @@ def reconciliation_vectors():
           "read-back (12:25): it was added, the center delivered it, and it is neither "
           "confirmed nor a failure. Confirmed coverage is measured from the read-back.",
           "RFC 0003 §4.5 The report: a desired alert whose fire date has passed by verifiedAt "
-          "is neither; proposal §7.5: confirmed coverage is measured from verifiedAt.",
+          "is neither, and confirmedCoveredUntil is never before verifiedAt.",
           [{"apply": plan([a(f"{D}/dhuhr/after", DHUHR_AFTER), a(f"{D}/asr/atTime", ASR)],
                           COVER), "now": "2026-06-02T12:23:00+03:00",
             "readBackAt": "2026-06-02T12:25:00+03:00"}])
@@ -1208,14 +1209,14 @@ def reconciliation_vectors():
     recon("failures", "reconciliation.failures.coverage-ends-at-the-plans",
           "Every request is confirmed, but the plan's own coverage ends at 16:00 (a gap or an "
           "omitted alert): confirmed coverage is the plan's, not later.",
-          "Proposal §7.5: the report's coverage can't exceed what the plan intended.",
+          "RFC 0003 §4.5 The report: confirmedCoveredUntil is never past the plan's coveredUntil.",
           [{"apply": plan([a(f"{D}/asr/atTime", ASR)], f"{D}T16:00:00+03:00"), "now": MORNING}])
 
     recon("authorization", "reconciliation.authorization.denied",
           "Notifications are denied: the owned request is removed, nothing is added, and every "
           "desired alert fails with notAuthorized. Confirmed coverage ends at the first one.",
-          "A2's deniedAuthorizationRemovesOwnRequestsAndAddsNone (retained); RFC 0003 §4.5 "
-          "step 4.",
+          "RFC 0003 §4.5 step 4; retains Salah's characterization test "
+          "deniedAuthorizationRemovesOwnRequestsAndAddsNone (salah-kit/Salah at a0206dd).",
           [{"apply": plan([a(f"{D}/isha/atTime", ISHA), a("2026-06-03/fajr/atTime",
                                                          "2026-06-03T04:11:00+03:00")], COVER),
             "now": "2026-06-02T13:00:00+03:00"}],
@@ -1234,8 +1235,9 @@ def reconciliation_vectors():
     recon("authorization", "reconciliation.authorization.not-determined",
           "Authorization not determined: the scheduler doesn't ask (that's the app's), adds "
           "nothing and reports notAuthorized.",
-          "Proposal §7.5 'Stays in apps: authorization requests'; A2's "
-          "authorizationIsRequestedOnlyWithSomethingToSchedule (app policy).",
+          "RFC 0003 §4.5 Authorization: the app requests it and the scheduler never asks; Salah's "
+          "characterization test authorizationIsRequestedOnlyWithSomethingToSchedule "
+          "(salah-kit/Salah at a0206dd) is app policy.",
           [{"apply": plan([a(f"{D}/isha/atTime", ISHA)], COVER),
             "now": "2026-06-02T13:00:00+03:00"}],
           center={"authorization": "notDetermined"})
@@ -1250,8 +1252,9 @@ def reconciliation_vectors():
           "At 13:00 the two-day retention cutoff is 13:00 on 31 May. An owned notification "
           "delivered a second before it is removed; one delivered at the cutoff, a recent one, "
           "another app's and another namespace's old ones stay.",
-          "A2's launchHousekeepingRemovesOnlyOldOwnDeliveredNotifications (retained); proposal "
-          "§7.5 'Housekeeping'; RFC 0003 §4.5 step 5.",
+          "RFC 0003 §4.5 step 5; retains Salah's characterization test "
+          "launchHousekeepingRemovesOnlyOldOwnDeliveredNotifications (salah-kit/Salah at "
+          "a0206dd).",
           [{"apply": plan([a(f"{D}/isha/atTime", ISHA)], COVER),
             "now": "2026-06-02T13:00:00+03:00"}],
           center={"delivered": [
@@ -1274,7 +1277,8 @@ def reconciliation_vectors():
     recon("pump", "reconciliation.pump.serialized-applies",
           "Two applies, one after the other: the second sees what the first installed and "
           "changes only what differs.",
-          "Proposal §7.5: the update pump serializes complete batches.",
+          "RFC 0003 §4.5 The update pump: apply calls run one at a time, in the order they "
+          "arrive.",
           [{"apply": plan(DHUHR_THREE, COVER), "now": MORNING},
            {"apply": plan([a(f"{D}/dhuhr/before", DHUHR_BEFORE_15), a(f"{D}/dhuhr/atTime", DHUHR)],
                           COVER), "now": "2026-06-02T06:05:00+03:00"}])
@@ -1284,9 +1288,8 @@ def reconciliation_vectors():
           "never makes a call; the third reconciles the center to itself, keeping the request "
           "the first added because it still matches. The first two reports say superseded "
           "and confirm nothing.",
-          "Proposal §7.5: 'A superseded update finishes any already-started system operation "
-          "before the latest generation reconciles; cancellation does not undo an accepted "
-          "add'; RFC 0003 §4.5 The update pump.",
+          "RFC 0003 §4.5 The update pump: a call already made always finishes first, nothing "
+          "undoes an accepted add, and the pump reconciles toward the latest plan.",
           [{"apply": plan(DHUHR_THREE, COVER), "now": MORNING, "suspendAtCall": 4},
            {"apply": plan([a(f"{D}/asr/atTime", ASR)], COVER), "now": MORNING,
             "duringPrevious": True},
@@ -1331,8 +1334,8 @@ def reconciliation_vectors():
           "skipped. Maghrib's alert was delivered at 19:00 and is skipped. Dhuhr's "
           "after-reminder moved to 19:45 after its earlier occurrence was delivered at 12:24, so "
           "it is posted, and its new delivery replaces the old one.",
-          "RFC 0003 §4.5 Delivering due alerts; A2's catchUpWindows (caught-up alerts get an "
-          "immediate request).",
+          "RFC 0003 §4.5 Delivering due alerts; Salah's characterization test catchUpWindows "
+          "(salah-kit/Salah at a0206dd): caught-up alerts get an immediate request.",
           [{"deliver": [a(f"{D}/isha/before", "2026-06-02T19:45:00+03:00"),
                         a(f"{D}/maghrib/after", "2026-06-02T19:50:00+03:00"),
                         a(f"{D}/maghrib/atTime", MAGHRIB),
@@ -1401,8 +1404,8 @@ def reconciliation_vectors():
           [{"deliver": [a(f"{D}/asr/atTime", ASR)], "now": "2026-06-02T15:36:00+03:00"}],
           center={"authorization": "denied"})
 
-    # Review round 6: the points at which a batch checks for a later plan, the report's
-    # boundaries, and deliver's own rules.
+    # Added after the sixth review (RFC 0003 §7): the points at which a batch checks for a later
+    # plan, the report's boundaries, and deliver's own rules.
     recon("pump", "reconciliation.pump.denied-batch-stops-before-its-read-back",
           "Notifications are denied, the scheduler keeps no delivered-notification retention and "
           "no owned request is pending. The first apply is held in its second call, the pending "
@@ -1480,7 +1483,7 @@ def reconciliation_vectors():
           "RFC 0003 §4.5 The report: confirmedCoveredUntil is max(verifiedAt, min(coveredUntil, "
           "u)).",
           [{"apply": plan([], MORNING), "now": MORNING, "readBackAt": f"{D}T06:01:00+03:00"}])
-    # Review round 7.
+    # Added after the seventh review (RFC 0003 §7).
     recon("deliver", "reconciliation.deliver.nothing-to-deliver",
           "An empty list still takes its turn: deliver reads authorization, the pending requests "
           "and the delivered notifications, posts nothing and changes nothing.",
@@ -1488,7 +1491,7 @@ def reconciliation_vectors():
           [{"deliver": [], "now": "2026-06-02T15:36:00+03:00"}],
           center={"pending": [pend(rid(f"{D}/maghrib/atTime"), MAGHRIB, "maghrib", "v1 atTime")],
                   "delivered": [{"id": rid(f"{D}/asr/atTime"), "date": ASR}]})
-    # Review round 9.
+    # Added after the ninth review (RFC 0003 §7).
     recon("deliver", "reconciliation.deliver.fire-date-before-identity",
           "At 19:46 the app delivers Dhuhr's after-reminder, moved to 19:45, and Asr's alert of "
           "15:35, in that order. They are posted by fire date, Asr's first, although Dhuhr's "

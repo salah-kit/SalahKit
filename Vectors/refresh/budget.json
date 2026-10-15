@@ -5,7 +5,7 @@
     {
       "id": "refresh.budget.truncated",
       "description": "limit 4 with 7 required dates: entries are the first 3 dates and validUntil is the 4th (13:24).",
-      "provenance": "RFC 0001 §4.8 Budget; proposal §7.1 'The budget reserves a final cutoff entry'",
+      "provenance": "RFC 0001 §4.8 Budget ('The plan reserves one slot for its cutoff')",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -65,7 +65,7 @@
     {
       "id": "refresh.budget.one-short",
       "description": "limit 7 with 7 required dates: one slot is reserved for the cutoff, so 6 entries and validUntil 16:42.",
-      "provenance": "RFC 0001 §4.8 Budget; proposal §7.1 'The budget reserves a final cutoff entry'",
+      "provenance": "RFC 0001 §4.8 Budget ('The plan reserves one slot for its cutoff')",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -165,7 +165,7 @@
     {
       "id": "refresh.budget.exact-fit",
       "description": "limit 8 with 7 required dates: count + 1 <= limit, so every date is an entry and validUntil is the end.",
-      "provenance": "RFC 0001 §4.8 Budget; proposal §7.1 'The budget reserves a final cutoff entry'",
+      "provenance": "RFC 0001 §4.8 Budget ('The plan reserves one slot for its cutoff')",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -277,7 +277,7 @@
     {
       "id": "refresh.budget.minimum-limit",
       "description": "limit 2, the smallest allowed: one entry at the start and validUntil at the first transition.",
-      "provenance": "RFC 0001 §4.8 Budget; proposal §7.1 'The budget reserves a final cutoff entry'",
+      "provenance": "RFC 0001 §4.8 Budget ('The plan reserves one slot for its cutoff')",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {

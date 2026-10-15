@@ -5,7 +5,7 @@
     {
       "id": "state.friday.declared-jumuah",
       "description": "A Friday row that declares Dhuhr as Jumu'ah gives the Dhuhr event observance jumuah; isFriday is true.",
-      "provenance": "proposal §7.1 'Friday is a date fact; Jumu'ah is declared policy'; RFC 0001 §4.4 step 7, §4.3 rule 11",
+      "provenance": "RFC 0001 §4.4 step 7, §4.3 rule 11 (.jumuah only when the source declares it)",
       "input": {
         "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
         "source": {
@@ -33,7 +33,7 @@
     {
       "id": "state.friday.ordinary-friday-dhuhr",
       "description": "The same Friday without a declaration keeps an ordinary Dhuhr; isFriday is still true.",
-      "provenance": "proposal §7.1 'isFriday does not automatically label Dhuhr as Jumu'ah'; RFC 0001 §3 PrayerDay.isFriday",
+      "provenance": "RFC 0001 §3 PrayerDay.isFriday; §4.3 rule 11 ('A source never infers it from the weekday')",
       "input": {
         "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
         "source": {

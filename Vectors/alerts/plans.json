@@ -4,8 +4,8 @@
   "vectors": [
     {
       "id": "alerts.plan.d7-two-complete-days-and-eight-days-at-time",
-      "description": "Proposal D7: five prayers, each with an at-time alert, a 10-minute before- and a 5-minute after-reminder; now at midnight; the default budget (60 requests, two near-term days, a 14-day horizon). The two near-term days reserve 30 requests and the other 30 go to the at-time alerts of the next six days: eight days of at-time alerts, two of reminders. Coverage ends at the third day's first reminder; at-time coverage runs to the ninth day's Fajr.",
-      "provenance": "Proposal §7.5 ('30 near-term requests + 30 later at-time requests = eight days of at-time alerts and two days of reminders') and Appendix D7; RFC 0003 §4.4.",
+      "description": "RFC 0003 §4.4's arithmetic example: five prayers, each with an at-time alert, a 10-minute before- and a 5-minute after-reminder; now at midnight; the default budget (60 requests, two near-term days, a 14-day horizon). The two near-term days reserve 30 requests and the other 30 go to the at-time alerts of the next six days: eight days of at-time alerts, two of reminders. Coverage ends at the third day's first reminder; at-time coverage runs to the ninth day's Fajr.",
+      "provenance": "RFC 0003 §4.4, the arithmetic example: 30 near-term requests and 30 later at-time requests make eight days of at-time alerts and two days of reminders.",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -1398,7 +1398,7 @@
     {
       "id": "alerts.plan.insufficient-near-term-capacity",
       "description": "The same fixture with a budget of 20: the 30 near-term alerts don't fit, so the first 20 are kept in order and nothing later is selected. Coverage ends at the first omitted alert, 2 June's Dhuhr after-reminder; each kind's coverage ends at its own first omitted alert.",
-      "provenance": "Proposal §7.5 rule 3 ('keep the earliest alerts up to the allowance … record the first omitted alert as the completeness cutoff'); RFC 0003 §4.4.",
+      "provenance": "RFC 0003 §4.4 Selection 1 (more near-term alerts than maxPending: the first are kept and nothing else is selected) and Coverage (a kind's cutoff is its first alert not selected).",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -2674,7 +2674,7 @@
     {
       "id": "alerts.plan.equal-fire-dates-at-the-budget-edge",
       "description": "Maghrib's after-reminder and Isha's before-reminder both fire at 19:45, and the budget of two ends between them. Identity order keeps Maghrib's; Isha's is the first omitted alert, so coverage ends at 19:45 though an alert at 19:45 was selected.",
-      "provenance": "Proposal §7.5 rule 3 ('Break equal-time ties by the canonical logical identifier'); RFC 0003 §4.2 Order, §4.4.",
+      "provenance": "RFC 0003 §4.2 Order (the canonical logical identifier breaks equal-time ties), §4.4.",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -3305,7 +3305,7 @@
     {
       "id": "alerts.plan.horizon-clips-the-range",
       "description": "A 14-day range with a 3-day horizon: nothing after the third day can be selected, so at-time coverage ends at the horizon, not at an omitted alert.",
-      "provenance": "Proposal §7.5: the effective range is [now, min(candidateRange.end, now + horizon)); RFC 0003 §4.4.",
+      "provenance": "RFC 0003 §4.4 Effective range: [now, E) with E = max(now, min(requestedRange.end, now + horizon)).",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -3966,7 +3966,7 @@
     {
       "id": "alerts.plan.near-window-longer-than-the-horizon",
       "description": "A five-day near-term window with a one-day horizon: the window is clipped to the horizon, which ends coverage of every kind.",
-      "provenance": "Proposal §7.5: 'A near-term window longer than the horizon cannot extend coverage or select requests beyond it.'",
+      "provenance": "RFC 0003 §4.4 Effective range: N = min(now + nearTermWindow, E), so a window longer than the horizon can't extend the plan.",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -4447,7 +4447,7 @@
     {
       "id": "alerts.plan.range-starts-after-now",
       "description": "The range starts at noon, twelve hours after now: alerts from noon are selected, but nothing is known before noon, so every cutoff is now.",
-      "provenance": "Proposal §7.5: 'if candidates begin later than now, the initial uncovered interval likewise makes coveredUntil == now'; RFC 0003 §4.4.",
+      "provenance": "RFC 0003 §4.4 Coverage: when the requested range starts after now, nothing is known before its start, so every cutoff is now.",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -5008,7 +5008,7 @@
     {
       "id": "alerts.plan.range-ends-before-now",
       "description": "A range that ended before now: an empty effective range, no alerts, coverage at now.",
-      "provenance": "Proposal §7.5: 'A candidate range ending at/before now produces an empty plan with coverage ending at now'.",
+      "provenance": "RFC 0003 §4.4 Effective range: a requested range that ends at or before now gives an empty effective range and an empty plan.",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -5379,7 +5379,7 @@
     {
       "id": "alerts.plan.range-ends-at-now",
       "description": "A range that ends exactly at now is empty too.",
-      "provenance": "Proposal §7.5; RFC 0003 §4.4.",
+      "provenance": "RFC 0003 §4.4 Effective range: a range that ends at or before now gives an empty plan.",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -5750,7 +5750,7 @@
     {
       "id": "alerts.plan.past-only-gap",
       "description": "1 June's Isha is missing, but now is 06:00 on the 2nd, after every interval that gap makes: it doesn't shorten coverage. The range starts at midnight, as an in-process caller's would, and alerts before now aren't selected.",
-      "provenance": "Proposal §7.5: 'a past-only gap does not shorten future coverage'; RFC 0003 §4.4.",
+      "provenance": "RFC 0003 §4.4 Coverage: a gap entirely before now changes nothing.",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -6290,7 +6290,7 @@
     {
       "id": "alerts.plan.gap-containing-now",
       "description": "At 01:00 on 2 June, 1 June's Isha may still be to come: every kind's interval contains now, so coverage is now.",
-      "provenance": "Proposal §7.5: 'a gap containing now yields now'.",
+      "provenance": "RFC 0003 §4.4 Coverage: a gap that contains now gives now.",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -6845,7 +6845,7 @@
     {
       "id": "alerts.plan.coverage-differs-by-kind",
       "description": "3 June publishes no Isha; the budget holds everything. Before-reminder coverage ends at 18:00, an hour before the window opens at Maghrib; at-time coverage runs to 19:00 and after-reminder coverage to 19:20. Overall coverage is the earliest, 18:00.",
-      "provenance": "Proposal §7.5: 'Each enabled kind's coverage uses its own offset transformation; at-time coverage is not shortened solely by a before-reminder's lookahead'; RFC 0003 §4.4.",
+      "provenance": "RFC 0003 §4.4 Coverage: each kind's cutoff uses its own offsets, so an unknown future prayer that hides a before-reminder doesn't shorten the at-time coverage.",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -7325,7 +7325,7 @@
     {
       "id": "alerts.plan.expired-timetable",
       "description": "The timetable ends on 3 June: every known alert fits, and coverage ends where the first unknown day's reminder could fall (Fajr's 30-minute reminder, 23:30 on the 3rd); at-time coverage ends at the 4th's midnight.",
-      "provenance": "Proposal §7.5: 'A partial/expired timetable or a too-small budget shortens coverage without inventing missing alerts.'",
+      "provenance": "RFC 0003 §1 (a missing prayer time never becomes an alert, and it shortens the coverage the planner reports), §4.4 Coverage.",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -9425,7 +9425,7 @@
     {
       "id": "alerts.plan.later-reminders-stay-out-with-room-left",
       "description": "Fajr only, with a reminder, over 14 days: the plan has room for all 28 alerts, yet after the two near-term days it selects at-time alerts only. Before-reminder coverage ends at the third day's reminder.",
-      "provenance": "Proposal §7.5 rule 2: 'Later reminders stay in AlertSchedule for the in-process engine but are omitted from NotificationPlan.'",
+      "provenance": "RFC 0003 §4.4 Selection 2: later reminders are never selected; they stay in the AlertSchedule for the in-process engine.",
       "input": {
         "location": {
           "latitude": 21.4225,

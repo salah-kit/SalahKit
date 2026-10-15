@@ -2,7 +2,7 @@
 
 Language-neutral JSON test vectors for SalahCore (RFC 0001, `docs/rfcs/0001-core.md`), SalahCalculation (RFC 0002) and SalahAlerts (RFC 0003). Each vector pairs its input with the output the RFC requires. The Swift tests run every file here, and a Kotlin or TypeScript port can run the same files.
 
-The vectors were written from the RFC and the SalahKit proposal before any implementation existed. Every expectation was derived by hand from the RFC's rules, and the time-zone arithmetic was checked with Python's `zoneinfo` (tzdata 2026c/2026e). The inputs of `state/` and `refresh/` are `TimetableSource` data; `calculation/` holds the calculated source's vectors (below).
+The vectors were written from the RFC before any implementation existed. Every expectation was derived by hand from the RFC's rules, and the time-zone arithmetic was checked with Python's `zoneinfo` (tzdata 2026c/2026e). The inputs of `state/` and `refresh/` are `TimetableSource` data; `calculation/` holds the calculated source's vectors (below).
 
 ## Layout
 
@@ -36,7 +36,7 @@ The vectors were written from the RFC and the SalahKit proposal before any imple
     {
       "id": "state.overnight.state.tuesday-0020-previous-is-monday-isha",
       "description": "One or two sentences.",
-      "provenance": "Where the expectation comes from: RFC 0001 and proposal sections.",
+      "provenance": "Where the expectation comes from: RFC 0001 sections.",
       "input": {
         "location": { "latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London" },
         "source": { "expectedKinds": ["fajr", "..."], "wallTimeResolution": { "...": "..." }, "rows": ["..."] },
@@ -190,7 +190,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 |---|---|
 | `alerts/schedule.json` | Candidate alerts: every kind of a day, the half-open range, reminders of events outside the range, offsets at `maximumReminderOffset` and events at the query's bounds (`start − m`, near `end + m`), Isha after midnight (Edinburgh) and Fajr before midnight (Kazan, calculated) kept on their owning days, Jumu'ah and per-day settings, equal fire dates, sounds, sunrise alerts |
 | `alerts/gaps.json` | Source gaps moved per alert kind: a missing Isha, a missing day, an expired timetable, a missing Friday Dhuhr with both observances, a missing sunrise, gaps of prayers without alerts, clipping |
-| `alerts/plans.json` | Notification plans: the D7 example (30 near-term + 30 at-time requests), insufficient near-term capacity, equal fire dates at the budget's edge, reminders across midnight, horizon clipping, ranges that start after or end at or before now, past-only gaps and gaps that contain now, different coverage per kind, an expired timetable, zero and negative budgets (each negative value on its own) |
+| `alerts/plans.json` | Notification plans: RFC 0003 §4.4's arithmetic example (30 near-term + 30 at-time requests), insufficient near-term capacity, equal fire dates at the budget's edge, reminders across midnight, horizon clipping, ranges that start after or end at or before now, past-only gaps and gaps that contain now, different coverage per kind, an expired timetable, zero and negative budgets (each negative value on its own) |
 | `alerts/errors.json` | `AlertPlanningError` and the order of its checks, gap subjects included |
 | `alerts/handled.json` | Exact excluded occurrences after a clock rollback: unconditional exclusion at and before fire dates, capacity in both selection phases, coverage with excluded alerts and gaps, changed fire dates, namespaces and reminders |
 | `alerts/retained.json` | Engine-owned exclusions: marks survive ordinary checks, marking never reports due alerts, newly due early reports remain eligible, query expiry without a check, and relaunch |
@@ -310,7 +310,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 
 ## Alert and reconciliation expectations
 
-A generator wrote both folders: `alerts/generator/` (`model.py` models RFC 0003 §4.3–§4.5 and the parts of RFC 0001 §4.4 and §4.6 the planner reads; `generate.py` holds the cases). It was written from RFC 0003 and the proposal's §7.5 before SalahAlerts' implementation, and doesn't read it. Kazan's instants are those of `calculation/owning-days.json`, from SalahTimes' reference. Regenerate with `python3 Vectors/alerts/generator/generate.py`, which rewrites the files byte for byte. Independent reviewers recomputed the expectations with their own models before the implementation started; RFC 0003 §7 records what they found.
+A generator wrote both folders: `alerts/generator/` (`model.py` models RFC 0003 §4.3–§4.5 and the parts of RFC 0001 §4.4 and §4.6 the planner reads; `generate.py` holds the cases). It was written from RFC 0003 before SalahAlerts' implementation, and doesn't read it. Kazan's instants are those of `calculation/owning-days.json`, from SalahTimes' reference. Regenerate with `python3 Vectors/alerts/generator/generate.py`, which rewrites the files byte for byte. Independent reviewers recomputed the expectations with their own models before the implementation started; RFC 0003 §7 records what they found.
 
 A change to an existing alert or reconciliation vector needs a written reason in RFC 0003 §10, in the same commit.
 

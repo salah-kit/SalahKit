@@ -5,7 +5,7 @@
     {
       "id": "reconciliation.failures.failed-add-keeps-the-old-request",
       "description": "Asr moves to 15:41, but adding the new request fails. The old request (15:35) is still there with the same identifier; it isn't removed, and it isn't confirmed. Confirmed coverage ends at Asr's new time.",
-      "provenance": "Proposal §7.5: 'an unsuccessful replacement is not reported as confirmed merely because an older request shares its logical identifier'; RFC 0003 §4.5 The report.",
+      "provenance": "RFC 0003 §4.5 Matching and The report: an older request under the same identifier doesn't match, so it confirms nothing.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",
@@ -119,7 +119,7 @@
     {
       "id": "reconciliation.failures.stale-content-on-read-back",
       "description": "The center accepts the new wording for Maghrib but still holds the old content on read-back: Maghrib is unconfirmed, and confirmed coverage ends at its time.",
-      "provenance": "Proposal §7.5: matching checks include the desired fire date and content; RFC 0003 §4.5 Matching.",
+      "provenance": "RFC 0003 §4.5 Matching: the trigger's instant and the content must match.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",
@@ -301,7 +301,7 @@
     {
       "id": "reconciliation.failures.read-back-fails",
       "description": "The read-back fails: every add succeeded, but nothing is confirmed, every alert is unconfirmed, and confirmed coverage is unknown.",
-      "provenance": "Proposal §7.5: 'A failed read-back leaves it unknown'; 'A failure report never claims the desired plan was fully installed.' RFC 0003 §4.5 The report.",
+      "provenance": "RFC 0003 §4.5 The report: a failed read-back confirms nothing, every alert without a failure fails with unconfirmed, and confirmedCoveredUntil is nil.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",
@@ -510,7 +510,7 @@
     {
       "id": "reconciliation.failures.alert-fires-before-read-back",
       "description": "Dhuhr's after-reminder fires at 12:24, after the batch starts (12:23) and before its read-back (12:25): it was added, the center delivered it, and it is neither confirmed nor a failure. Confirmed coverage is measured from the read-back.",
-      "provenance": "RFC 0003 §4.5 The report: a desired alert whose fire date has passed by verifiedAt is neither; proposal §7.5: confirmed coverage is measured from verifiedAt.",
+      "provenance": "RFC 0003 §4.5 The report: a desired alert whose fire date has passed by verifiedAt is neither, and confirmedCoveredUntil is never before verifiedAt.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",
@@ -657,7 +657,7 @@
     {
       "id": "reconciliation.failures.coverage-ends-at-the-plans",
       "description": "Every request is confirmed, but the plan's own coverage ends at 16:00 (a gap or an omitted alert): confirmed coverage is the plan's, not later.",
-      "provenance": "Proposal §7.5: the report's coverage can't exceed what the plan intended.",
+      "provenance": "RFC 0003 §4.5 The report: confirmedCoveredUntil is never past the plan's coveredUntil.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",

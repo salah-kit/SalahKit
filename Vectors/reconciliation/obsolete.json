@@ -5,7 +5,7 @@
     {
       "id": "reconciliation.obsolete.only-owned-requests-are-removed",
       "description": "The center holds an owned request the plan no longer wants (Asr), an owned request it still wants (Maghrib), another app's request, a request of another namespace under the same prefix, and one under the prefix that isn't an identity. Only Asr's is removed, in one call; Isha's is added.",
-      "provenance": "RFC 0003 §4.2 Request identifiers, §4.5 step 4; A2's obsoleteOwnRequestsAreRemovedAndOthersKept (retained).",
+      "provenance": "RFC 0003 §4.2 Request identifiers, §4.5 step 4; retains Salah's characterization test obsoleteOwnRequestsAreRemovedAndOthersKept (salah-kit/Salah at a0206dd).",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",
@@ -237,7 +237,7 @@
     {
       "id": "reconciliation.obsolete.empty-plan-clears-the-namespace",
       "description": "An empty plan of the scheduler's namespace removes every owned request and nothing else.",
-      "provenance": "RFC 0003 §4.5 step 4; A2's emptyScheduleClearsOwnRequestsAndDeliveries (retained for pending requests).",
+      "provenance": "RFC 0003 §4.5 step 4; retains Salah's characterization test emptyScheduleClearsOwnRequestsAndDeliveries (salah-kit/Salah at a0206dd) for pending requests.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",

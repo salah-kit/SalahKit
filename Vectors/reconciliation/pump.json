@@ -5,7 +5,7 @@
     {
       "id": "reconciliation.pump.serialized-applies",
       "description": "Two applies, one after the other: the second sees what the first installed and changes only what differs.",
-      "provenance": "Proposal §7.5: the update pump serializes complete batches.",
+      "provenance": "RFC 0003 §4.5 The update pump: apply calls run one at a time, in the order they arrive.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",
@@ -147,7 +147,7 @@
     {
       "id": "reconciliation.pump.overlapping-applies-reconcile-to-the-latest",
       "description": "A first apply is suspended in its fourth call, its first add. Two more plans arrive meanwhile. The first finishes its add, finds a later plan and stops; the second never makes a call; the third reconciles the center to itself, keeping the request the first added because it still matches. The first two reports say superseded and confirm nothing.",
-      "provenance": "Proposal §7.5: 'A superseded update finishes any already-started system operation before the latest generation reconciles; cancellation does not undo an accepted add'; RFC 0003 §4.5 The update pump.",
+      "provenance": "RFC 0003 §4.5 The update pump: a call already made always finishes first, nothing undoes an accepted add, and the pump reconciles toward the latest plan.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",

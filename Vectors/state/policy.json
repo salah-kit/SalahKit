@@ -487,8 +487,8 @@
     },
     {
       "id": "state.moment.before-fajr",
-      "description": "The 'before Fajr' moment of proposal §7.6: at 05:00 on 10-14, previous and latestPrayer are 10-13's Isha (the previous owning day, read as context), next and nextPrayer are 10-14's Fajr, 40 minutes away, so not approaching yet; the state changes at Fajr's approach (05:25).",
-      "provenance": "proposal §7.6 Moments, §9 'policy and moments'; RFC 0001 §4.6 Context, §4.7",
+      "description": "SalahFixtures' beforeFajr moment: at 05:00 on 10-14, previous and latestPrayer are 10-13's Isha (the previous owning day, read as context), next and nextPrayer are 10-14's Fajr, 40 minutes away, so not approaching yet; the state changes at Fajr's approach (05:25).",
+      "provenance": "RFC 0001 §3 PrayerFixtures.beforeFajr, §4.6 Context, §4.7",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {

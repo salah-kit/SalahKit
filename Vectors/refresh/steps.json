@@ -349,7 +349,7 @@
     {
       "id": "refresh.steps.timetable-expires",
       "description": "steps(fine 300, coarse 1800, window 600) over a timetable ending 12-31, from 20:00 to 01:00: the transitions (20:05, 20:20, 20:35 and the coverage boundary at 01-01 00:00), Isha's fine grid (20:10-20:30), and coarse dates from 21:00 on (20:30 is within 600 s of Isha). Coarse dates continue into the unavailable range.",
-      "provenance": "proposal §7.1 'Both strategies insert dates when coverage changes'; RFC 0001 §4.8 Transitions, Dates",
+      "provenance": "RFC 0001 §4.8 Transitions (a coverage boundary is a transition), Dates (.steps includes the transitions)",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {

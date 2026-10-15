@@ -5,7 +5,7 @@
     {
       "id": "state.overnight.day.monday-owns-isha-after-midnight",
       "description": "Monday 2026-06-22's Isha at 00:15 on Tuesday (\"00:15+1\") and its iqama at 00:30 on Tuesday belong to Monday.",
-      "provenance": "proposal §7.1 'Ownership and instants are separate'; RFC 0001 §4.2 dayOffset, §4.3 rule 4",
+      "provenance": "RFC 0001 §4.2 dayOffset, §4.3 rule 4",
       "input": {
         "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
         "source": {
@@ -71,7 +71,7 @@
     {
       "id": "state.overnight.events.spanning-midnight-lists-isha-once",
       "description": "events(from: Monday 21:00, through: Tuesday 03:00) lists Monday's Maghrib, Monday's Isha once (at 00:15 Tuesday, owned by Monday) and Tuesday's Fajr.",
-      "provenance": "proposal §7.1 'Ownership and instants are separate'; RFC 0001 §4.6 events(from:through:)",
+      "provenance": "RFC 0001 §4.6 events(from:through:) ('an overnight event appears once, in its owning day')",
       "input": {
         "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
         "source": {
@@ -103,7 +103,7 @@
     {
       "id": "state.overnight.state.tuesday-0005-next-is-monday-isha",
       "description": "At 00:05 on Tuesday, next is Monday's Isha (00:15) and it is approaching; previous is Monday's Maghrib.",
-      "provenance": "proposal §7.1 'State crosses midnight using owning-day context'; RFC 0001 §4.6 Context, §4.7",
+      "provenance": "RFC 0001 §4.6 Context, §4.7",
       "input": {
         "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
         "source": {
@@ -152,7 +152,7 @@
     {
       "id": "state.overnight.state.tuesday-0020-previous-is-monday-isha",
       "description": "At 00:20 on Tuesday, previous and latestPrayer are Monday's Isha, still just started until its published iqama at 00:30; next is Tuesday's Fajr.",
-      "provenance": "proposal §7.1; RFC 0001 §4.7 previous, next, justStarted (untilIqama)",
+      "provenance": "RFC 0001 §4.7 previous, next, justStarted (untilIqama)",
       "input": {
         "location": {"latitude": 55.95, "longitude": -3.19, "timeZone": "Europe/London"},
         "source": {

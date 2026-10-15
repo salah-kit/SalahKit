@@ -5,7 +5,7 @@
     {
       "id": "alerts.schedule.every-kind-one-day",
       "description": "Every prayer with an at-time alert, a 10-minute before-reminder and a 5-minute after-reminder over one day: fifteen alerts by fire date. Sunrise has no settings.",
-      "provenance": "RFC 0003 §4.3 Candidates; proposal §7.5 (fifteen requests for a full day).",
+      "provenance": "RFC 0003 §4.3 Candidates; §4.4's arithmetic example counts fifteen alerts a day.",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -861,7 +861,7 @@
     {
       "id": "alerts.schedule.reminders-of-events-outside-the-range",
       "description": "A short range holds only Dhuhr's before-reminder, though Dhuhr is after the range (alerts.schedule.after-reminder-of-an-earlier-prayer is the other direction).",
-      "provenance": "RFC 0003 §4.3 Candidates; proposal §7.5: query events before and after the range to include after-reminders of earlier prayers and before-reminders of later ones.",
+      "provenance": "RFC 0003 §4.3 Candidates: the query reaches before and after the range to include after-reminders of earlier prayers and before-reminders of later ones.",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -2328,7 +2328,7 @@
     {
       "id": "alerts.schedule.after-reminder-from-the-query-start",
       "description": "The range starts at 22:30, exactly two hours after Isha. Isha is read at the query's first instant (start − m), and its two-hour after-reminder fires at the range's start, which is included.",
-      "provenance": "RFC 0003 §4.3 Candidates: events(from: start − m, through: end + m) includes its start; proposal §7.5: this boundary behavior is part of the vectors.",
+      "provenance": "RFC 0003 §4.3 Candidates: events(from: start − m, through: end + m) includes its start.",
       "input": {
         "location": {
           "latitude": 21.4225,
@@ -2683,7 +2683,7 @@
     {
       "id": "alerts.schedule.before-reminder-from-near-the-query-end",
       "description": "The range ends at 02:12. Fajr at 04:11 is a minute inside the query's end (end + m), and its two-hour before-reminder at 02:11 is in the range.",
-      "provenance": "RFC 0003 §4.3 Candidates: the query reaches m past the range's end; proposal §7.5: this boundary behavior is part of the vectors.",
+      "provenance": "RFC 0003 §4.3 Candidates: the query reaches m past the range's end.",
       "input": {
         "location": {
           "latitude": 21.4225,

@@ -5,7 +5,7 @@
     {
       "id": "reconciliation.identity.moved-reminder-keeps-its-identifier",
       "description": "Dhuhr's before-reminder moves from 10 to 15 minutes (12:09 to 12:04). Its identifier has no time in it, so the request is replaced by one add and never removed; the confirmed occurrence carries the new fire date.",
-      "provenance": "Proposal §7.5 'Identity and updates'; RFC 0003 §4.2, §4.5 step 4 and 6. Corrects A2's characterizesAMovedAlertIsRemovedBeforeItsReplacementIsAdded and characterizesIdentifiersCarryTheFireTimestamp.",
+      "provenance": "RFC 0003 §4.2, §4.5 step 4 and 6. Corrects Salah's characterization tests characterizesAMovedAlertIsRemovedBeforeItsReplacementIsAdded and characterizesIdentifiersCarryTheFireTimestamp (salah-kit/Salah at a0206dd), as RFC 0003 §6 records.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",
@@ -103,7 +103,7 @@
     {
       "id": "reconciliation.identity.changed-prayer-time",
       "description": "A recalculation moves Asr from 15:35 to 15:41: the same request is replaced with the new trigger.",
-      "provenance": "Proposal §7.5: changing a calculation updates the same logical request.",
+      "provenance": "RFC 0003 §4.2: changing a calculation keeps the identity; §4.5 step 6 replaces the request.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",
@@ -398,7 +398,7 @@
     {
       "id": "reconciliation.identity.fajr-before-midnight",
       "description": "In Kazan, 20 June's Fajr alert fires at 23:45 on the 19th, the same instant as the 19th's Isha alert. They are two requests, each of its own day.",
-      "provenance": "RFC 0003 §4.2 (owning days, order); B1's note: an at-time alert for the next day's Fajr can fire before midnight.",
+      "provenance": "RFC 0003 §4.2 (owning days, order): a calculated Fajr at 23:45, and its at-time alert before midnight, belong to the next day; RFC 0001 §10 #1 (maximumLead).",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",

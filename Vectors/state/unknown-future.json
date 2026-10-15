@@ -5,7 +5,7 @@
     {
       "id": "state.unknown.last-published-evening",
       "description": "After Isha on the last published day (12-31), the state stays available with previous and latestPrayer known and next, nextPrayer null; it changes when 2027-01-01 starts.",
-      "provenance": "proposal §7.1 'Unknown future times remain unknown'; RFC 0001 §4.7 'What this means' (first bullet)",
+      "provenance": "RFC 0001 §4.7 'What this means' (first bullet)",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -47,7 +47,7 @@
     {
       "id": "state.unknown.after-last-published-day",
       "description": "Once 2027-01-01 starts, no field is known: unavailable. The next change is 2027-01-02 00:00, where 01-02's gap starts to contain the instant.",
-      "provenance": "proposal §7.1; RFC 0001 §4.7 Availability, changesAt",
+      "provenance": "RFC 0001 §4.7 Availability, changesAt",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -82,7 +82,7 @@
     {
       "id": "state.unknown.missing-middle-day.evening-before",
       "description": "12-02 has no row and 12-03 does. At 21:00 on 12-01, 12-03's Fajr is within the bound but never becomes next: 12-02's window [12-02 00:00, 12-03 05:40) lies before it.",
-      "provenance": "proposal §7.1 'A missing day followed by a later known row...'; RFC 0001 §4.7 next, 'What this means' (2nd bullet)",
+      "provenance": "RFC 0001 §4.7 next, 'What this means' (2nd bullet)",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -122,7 +122,7 @@
     {
       "id": "state.unknown.missing-middle-day.inside-gap",
       "description": "Inside the missing day's window the state is unavailable, and changesAt is the window's end (12-03 Fajr).",
-      "provenance": "proposal §7.1; RFC 0001 §4.7 Availability, changesAt",
+      "provenance": "RFC 0001 §4.7 Availability, changesAt",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -194,7 +194,7 @@
     {
       "id": "state.unknown.partial-row.before-maghrib",
       "description": "12-12 has no Isha. One minute before Maghrib, the window [Maghrib, 12-13 Fajr) hasn't opened: previous is Asr and next is Maghrib (approaching).",
-      "provenance": "proposal §7.1 'A partial row can still display its supplied times...'; RFC 0001 §4.6, §4.7",
+      "provenance": "RFC 0001 §4.6, §4.7 'What this means' (third bullet)",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -269,7 +269,7 @@
     {
       "id": "state.unknown.partial-row.events-still-listed",
       "description": "The partial row's supplied times are still listed by events(from:through:), with the Isha window as a gap.",
-      "provenance": "proposal §7.1; RFC 0001 §4.6 events(from:through:) 'Events of partial days are included'",
+      "provenance": "RFC 0001 §4.6 events(from:through:) 'Events of partial days are included'",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -394,7 +394,7 @@
     {
       "id": "state.latest-prayer.after-sunrise",
       "description": "latestPrayer is an occurrence, not a validity window: at 07:30, previous is sunrise and latestPrayer is still Fajr.",
-      "provenance": "proposal §7.1 'latestPrayer is an occurrence...'; RFC 0001 §4.7 'What this means' (fourth bullet)",
+      "provenance": "RFC 0001 §4.7 'What this means' (fourth bullet)",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {
@@ -436,7 +436,7 @@
     {
       "id": "state.latest-prayer.just-started-past-sunrise",
       "description": "With a Fajr iqama at 07:10 (rule after 90), Fajr stays justStarted after sunrise (07:02): justStarted follows latestPrayer and the policy, not a religious validity window.",
-      "provenance": "proposal §7.1; RFC 0001 §4.7 justStarted",
+      "provenance": "RFC 0001 §4.7 justStarted",
       "input": {
         "location": {"latitude": 1.35, "longitude": 103.82, "timeZone": "Asia/Singapore"},
         "source": {

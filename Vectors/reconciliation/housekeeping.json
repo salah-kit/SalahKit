@@ -5,7 +5,7 @@
     {
       "id": "reconciliation.housekeeping.delivered-retention",
       "description": "At 13:00 the two-day retention cutoff is 13:00 on 31 May. An owned notification delivered a second before it is removed; one delivered at the cutoff, a recent one, another app's and another namespace's old ones stay.",
-      "provenance": "A2's launchHousekeepingRemovesOnlyOldOwnDeliveredNotifications (retained); proposal §7.5 'Housekeeping'; RFC 0003 §4.5 step 5.",
+      "provenance": "RFC 0003 §4.5 step 5; retains Salah's characterization test launchHousekeepingRemovesOnlyOldOwnDeliveredNotifications (salah-kit/Salah at a0206dd).",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",

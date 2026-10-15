@@ -5,7 +5,7 @@
     {
       "id": "reconciliation.authorization.denied",
       "description": "Notifications are denied: the owned request is removed, nothing is added, and every desired alert fails with notAuthorized. Confirmed coverage ends at the first one.",
-      "provenance": "A2's deniedAuthorizationRemovesOwnRequestsAndAddsNone (retained); RFC 0003 §4.5 step 4.",
+      "provenance": "RFC 0003 §4.5 step 4; retains Salah's characterization test deniedAuthorizationRemovesOwnRequestsAndAddsNone (salah-kit/Salah at a0206dd).",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",
@@ -163,7 +163,7 @@
     {
       "id": "reconciliation.authorization.not-determined",
       "description": "Authorization not determined: the scheduler doesn't ask (that's the app's), adds nothing and reports notAuthorized.",
-      "provenance": "Proposal §7.5 'Stays in apps: authorization requests'; A2's authorizationIsRequestedOnlyWithSomethingToSchedule (app policy).",
+      "provenance": "RFC 0003 §4.5 Authorization: the app requests it and the scheduler never asks; Salah's characterization test authorizationIsRequestedOnlyWithSomethingToSchedule (salah-kit/Salah at a0206dd) is app policy.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",

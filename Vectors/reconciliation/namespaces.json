@@ -5,7 +5,7 @@
     {
       "id": "reconciliation.namespaces.foreign-plan",
       "description": "A plan of another namespace is rejected before any call.",
-      "provenance": "Proposal §7.5: validate the plan's namespace before any mutation; RFC 0003 §4.5.",
+      "provenance": "RFC 0003 §4.5 Validation: the plan's namespace is checked before any call to the center.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",
@@ -62,7 +62,7 @@
     {
       "id": "reconciliation.namespaces.empty-foreign-plan",
       "description": "An empty plan of another namespace is rejected too, so it can't clear this scheduler's requests.",
-      "provenance": "Proposal §7.5: 'including for an empty plan'.",
+      "provenance": "RFC 0003 §4.5 Validation: before any call to the center, including for an empty plan.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",
@@ -114,7 +114,7 @@
     {
       "id": "reconciliation.namespaces.foreign-alert-in-a-plan",
       "description": "A plan of this namespace holding one alert of another namespace is rejected whole.",
-      "provenance": "Proposal §7.5: 'also reject alerts from another namespace'.",
+      "provenance": "RFC 0003 §4.5 Validation: every alert's namespace must equal the scheduler's.",
       "input": {
         "scheduler": {
           "identifierPrefix": "salah.",

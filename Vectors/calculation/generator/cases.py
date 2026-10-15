@@ -1,4 +1,4 @@
-# Executed by gen.py, which defines add(), P(), the places and REF.
+# Executed by generate.py, which defines add(), P(), the places and REF.
 
 R2 = "RFC 0002 §4.2, §4.3"
 CORE_DAY = "RFC 0001 §4.3, §4.6 (day)"

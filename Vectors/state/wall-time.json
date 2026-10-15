@@ -33,7 +33,7 @@
     {
       "id": "state.walltime.spring-forward.reject",
       "description": "Spring forward (America/New_York, 02:00 EST -> 03:00 EDT): Fajr published at 02:30 doesn't exist; the default policy rejects it, so Fajr is missing with reason unresolvedWallTime.",
-      "provenance": "RFC 0001 §4.2 'No candidate'; proposal §7.1 'Wall times require a resolution policy'",
+      "provenance": "RFC 0001 §4.2 'No candidate'",
       "input": {
         "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
         "source": {
@@ -60,7 +60,7 @@
     {
       "id": "state.walltime.spring-forward.next-valid",
       "description": "Spring forward: with nonexistent = nextValid, Fajr at 02:30 resolves to 03:00 EDT, the end of the skipped range (07:00Z), not to 03:30.",
-      "provenance": "RFC 0001 §4.2 'No candidate'; proposal §7.1 'Wall times require a resolution policy'",
+      "provenance": "RFC 0001 §4.2 'No candidate'",
       "input": {
         "location": {"latitude": 40.71, "longitude": -74.01, "timeZone": "America/New_York"},
         "source": {

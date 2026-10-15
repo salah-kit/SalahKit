@@ -2625,7 +2625,7 @@
     {
       "id": "alerts.errors.zero-offset",
       "description": "A before-reminder of zero isn't positive.",
-      "provenance": "RFC 0003 §4.3 Errors 3; proposal §7.5: reject settings outside the declared positive offset bound.",
+      "provenance": "RFC 0003 §4.3 Errors 3: an offset that isn't positive is rejected.",
       "input": {
         "location": {
           "latitude": 21.4225,
