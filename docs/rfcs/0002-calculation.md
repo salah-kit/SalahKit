@@ -4,12 +4,11 @@
 - **Products:** SalahCalculation.
 - **Discussion:** [salah-kit/SalahKit#7](https://github.com/salah-kit/SalahKit/discussions/7).
 - **Started:** 2026-10-13.
-- **Supersedes:** the SalahAdhan sketch in the SalahKit proposal, §7.2, read with Amendment 3 (SalahTimes replaces adhan-swift).
 - **Depends on:** RFC 0001 (SalahCore's source contract), and SalahTimes' RFC 0001 (its API).
 
 SalahCalculation connects [SalahTimes](https://github.com/salah-kit/SalahTimes), the ecosystem's calculation engine, to SalahCore's `PrayerSource` contract. This RFC fixes its API and the rules by which a calculated day becomes a `PrayerDayAvailability`. The JSON vectors in `Vectors/calculation/` encode those rules.
 
-References like "§7.2" point to the SalahKit proposal; "Core §4.3" points to RFC 0001.
+"Core §4.3" points to RFC 0001.
 
 ---
 
@@ -66,10 +65,10 @@ SalahCalculation doesn't re-export SalahTimes. An app that names SalahTimes type
 
 ### 4.1 Settings
 
-- `parameters` is SalahTimes' `CalculationParameters`, the whole value: Fajr, Maghrib and Isha rules (angles, intervals, the Moonsighting Committee's seasonal rule and shafaq), madhab, high-latitude rule, night span, method adjustments, user adjustments, rounding and the opt-in Ramadan rule. The source never rebuilds it from a subset, resets a field to a method's value or fills in a default (§7.2 "Every upstream calculation control survives").
+- `parameters` is SalahTimes' `CalculationParameters`, the whole value: Fajr, Maghrib and Isha rules (angles, intervals, the Moonsighting Committee's seasonal rule and shafaq), madhab, high-latitude rule, night span, method adjustments, user adjustments, rounding and the opt-in Ramadan rule. The source never rebuilds it from a subset, resets a field to a method's value or fills in a default.
 - `init(method:madhab:ramadanIsha:)` is `method.parameters` with `madhab` and `ramadanIsha` set. Every other field is the method's.
 - `Codable` as `{"parameters": <SalahTimes' JSON>}`. SalahTimes decodes missing parameter keys as their defaults (only `fajr` and `isha` are required), so settings saved by an older version keep decoding.
-- `Hashable` and `Equatable` are synthesized from `parameters`, which SalahTimes declares `Hashable` itself (§7.2 asked for `Hashable` only if it's honestly synthesized; it is). Two settings are equal exactly when their parameters are.
+- `Hashable` and `Equatable` are synthesized from `parameters`, which SalahTimes declares `Hashable` itself, so the synthesis is honest. Two settings are equal exactly when their parameters are.
 
 ### 4.2 A calculated day
 
@@ -127,7 +126,7 @@ For a whole day, the first row that applies wins: the date's own checks come fir
 
 Both are SalahTimes features (SalahTimes RFC 0001, decision 7); SalahCalculation exposes them and implements neither.
 
-- **Ramadan Isha.** `CalculationSettings(method:madhab:ramadanIsha:)` and `parameters.ramadanIsha` select SalahTimes' `RamadanIshaRule`. It's off unless the app opts in. When on, SalahTimes replaces a positive Isha interval on days that fall in Ramadan in the Umm al-Qura calendar, shifted by the Hijri day offset; it changes nothing else, and never an angle-based Isha (§7.2, adhan-swift issue #23). Setting it changes only that one field of the settings.
+- **Ramadan Isha.** `CalculationSettings(method:madhab:ramadanIsha:)` and `parameters.ramadanIsha` select SalahTimes' `RamadanIshaRule`. It's off unless the app opts in. When on, SalahTimes replaces a positive Isha interval on days that fall in Ramadan in the Umm al-Qura calendar, shifted by the Hijri day offset; it changes nothing else, and never an angle-based Isha (adhan-swift issue #23). Setting it changes only that one field of the settings.
 - **Method suggestions.** `CalculationMethod.suggested(for:)` reads `location.countryCode` and returns `CalculationMethod.suggested(forCountryCode:)`, or `nil` without a country code or a sourced suggestion. Nothing applies a suggestion automatically. The table and its sources live in SalahTimes (`METHODS.md`, `Vectors/country-methods.json`), and corrections go there, as `calculation-method` issues.
 
 ### 4.7 Isolation and cost
@@ -136,17 +135,17 @@ Both are SalahTimes features (SalahTimes RFC 0001, decision 7); SalahCalculation
 - SalahTimes is used as SwiftPM builds it, with nonisolated default isolation. SalahKit's isolation checks apply MainActor default isolation to SalahKit's own targets only (Core §6.3).
 - A day costs two SalahTimes calculations (`D` and `D + 1`), about 20 µs in release. A query of the longest span, 400 days, reads at most 403 owning days: two before it for context, and none after it, because its end is the start of a day and the lead reaches back only 12 hours.
 
-## 5. Changes from the proposal's sketch (§7.2)
+## 5. Design decisions
 
-| Sketch | Now | Why |
-|---|---|---|
-| `AdhanSettings` with `parameters` and a separate `ramadanIsha` | `CalculationSettings` with `parameters` only; `ramadanIsha` lives inside them | SalahTimes keeps the Ramadan rule in `CalculationParameters`, so a second copy could disagree with it. |
-| `Codable, Equatable, Sendable`, no `Hashable` | also `Hashable` | adhan-swift's parameters weren't `Hashable`; SalahTimes' are, so synthesis is honest. |
-| `AdhanSource` | `CalculationSource` | Named for what it does, next to `TimetableSource`. |
-| An initializer failure is `.calculationUnavailable`; bad chronology is `.invalidData` | Bad input is `.invalidData`; an unsupported year is `.calculationUnavailable`; a time the contract can't hold makes only its kind missing | SalahTimes throws only for bad input or an unsupported year. Reporting single kinds keeps the rest of a polar day usable; the schedule would otherwise reject the whole day (Core §4.3). |
-| `MethodSuggestions.method(forCountryCode:)` and `.table` | `CalculationMethod.suggested(for: PrayerLocation)` | The table and its sources are SalahTimes'; SalahCalculation only connects it to `PrayerLocation`. |
-| `import Adhan`, the `Sendable` bridge, `@preconcurrency` | none | Amendment 3: SalahTimes is `Sendable` from the start. |
-| A Fajr before its day: not considered | `PrayerSource.maximumLead` in Core, 12 hours here | §4.4. |
+| Decision | Why |
+|---|---|
+| `CalculationSettings` holds `parameters` only; the Ramadan rule lives inside them | SalahTimes keeps the Ramadan rule in `CalculationParameters`, so a second copy could disagree with it. |
+| `CalculationSettings` is `Hashable` as well as `Codable`, `Equatable` and `Sendable` | SalahTimes' parameters are `Hashable`, so synthesis is honest. |
+| The source is `CalculationSource` | Named for what it does, next to `TimetableSource`. |
+| Bad input is `.invalidData`; an unsupported year is `.calculationUnavailable`; a time the contract can't hold makes only its kind missing | SalahTimes throws only for bad input or an unsupported year. Reporting single kinds keeps the rest of a polar day usable; the schedule would otherwise reject the whole day (Core §4.3). |
+| Method suggestions are `CalculationMethod.suggested(for: PrayerLocation)` | The table and its sources are SalahTimes'; SalahCalculation only connects it to `PrayerLocation`. |
+| SalahTimes' types are used directly, with no `Sendable` bridge or `@preconcurrency` import | SalahTimes' types are `Sendable`. |
+| A Fajr before its day: `PrayerSource.maximumLead` in Core, 12 hours here | §4.4. |
 
 ## 6. Dependency
 
@@ -164,8 +163,8 @@ SalahTimes' own vectors (`Vectors/times/`, copied into `Tests/Data/SalahTimes-0.
 
 - Unit tests: settings pass every parameter through, round-trip and hash honestly; the Ramadan opt-in changes only its field and only Isha on Ramadan days; every §4.5 case; a year of days at seven places and methods passes the schedule's contract checks with no invalid-data gap.
 - Salah's `PrayerTimesInvarianceTests`, migrated.
-- `docs/calculation-parity.md`: SalahCalculation against the times Salah computes today with adhan-swift, every difference over a minute explained.
-- `Examples/CalculatedPhone`: an iPhone app on the public API, with XCUITest journeys (§2.3 #1).
+- `docs/calculation-parity.md`: SalahCalculation against the times Salah computed with adhan-swift, every difference over a minute explained.
+- `Examples/CalculatedPhone`: an iPhone app on the public API, with XCUITest journeys.
 
 ## 9. Open questions
 
@@ -177,4 +176,4 @@ SalahTimes' own vectors (`Vectors/times/`, copied into `Tests/Data/SalahTimes-0.
 
 ## 10. Changes after review
 
-1. **Later days in §4.2 step 3** (2026-10-13, session B1, from review). Step 3 compared `D` with `D + 1` only. When `D + 1` had no times, a time of `D` could follow `D + 2`'s Fajr, and the schedule listed them out of order with no gap. Fuzzing found a case at 81.7° S with user adjustments of more than 12 hours, and Apia's skipped 2011-12-30 gives another with Fajr adjusted by −600 minutes. Step 3 now reads every later day whose times can come first, and Core rule 6 covers every later day (RFC 0001 §10, item 2). Five vectors were added and none changed: those two cases, the day between in the first, and Fajr on and a minute before the 12-hour bound.
+1. **Later days in §4.2 step 3** (2026-10-13, from review). Step 3 compared `D` with `D + 1` only. When `D + 1` had no times, a time of `D` could follow `D + 2`'s Fajr, and the schedule listed them out of order with no gap. Fuzzing found a case at 81.7° S with user adjustments of more than 12 hours, and Apia's skipped 2011-12-30 gives another with Fajr adjusted by −600 minutes. Step 3 now reads every later day whose times can come first, and Core rule 6 covers every later day (RFC 0001 §10, item 2). Five vectors were added and none changed: those two cases, the day between in the first, and Fajr on and a minute before the 12-hour bound.

@@ -4,12 +4,11 @@
 - **Products:** SalahWidgets, SalahUI.
 - **Discussion:** [salah-kit/SalahKit#9](https://github.com/salah-kit/SalahKit/discussions/9).
 - **Started:** 2026-10-14.
-- **Supersedes:** the sketches in the SalahKit proposal, §7.3 and §7.4.
 - **Depends on:** RFC 0001 (SalahCore: state §4.7, refresh planning §4.8, names and durations §4.9).
 
 SalahWidgets turns SalahCore's refresh plans into widget timelines that the widget extension builds by itself, shares an app's inputs through an App Group, and signals a running app. SalahUI gives SwiftUI components that decide what a schedule's state lets a view show, with styles that decide how it looks, and the color math of Salah's theme editor. This RFC fixes their API and behavior.
 
-References like "§7.3" point to the SalahKit proposal; "Core §4.8" points to RFC 0001.
+"Core §4.8" points to RFC 0001.
 
 ---
 
@@ -33,10 +32,10 @@ In SalahUI 0.2:
 - `ThemeColor` (with `color` in SwiftUI) and `ContrastCheck`.
 
 Not in these products:
-- App Intents and widget configurations (the app's, as in the extraction plan; §3.1);
+- App Intents and widget configurations, which are the app's;
 - interface text other than prayer names (each app's catalog); the components' default styles use only names, times, digits and a dash;
-- Salah's palettes, fonts and widget designs, which stay in Salah (§7.4);
-- a durable command queue between extension and app: a signal reaches only a running receiver (§5.3);
+- Salah's palettes, fonts and widget designs, which stay in Salah;
+- a durable command queue between extension and app: a signal reaches only a running receiver (§4.3);
 - notifications (SalahAlerts) and Live Activities (after 1.0).
 
 ## 3. Public API
@@ -202,7 +201,7 @@ nonisolated public struct ContrastCheck: Hashable, Sendable {
 - **Errors.** `appGroupUnavailable` when `UserDefaults(suiteName:)` returns `nil` (for example `NSGlobalDomain`), and `encodingFailed` with the encoder's message (for example a `Double` that isn't finite). Either way nothing is written or reloaded. Encoding happens before any comparison.
 - **Reloads.** `init(appGroup:key:)` reloads with `WidgetCenter.shared.reloadTimelines(ofKind:)` per kind, on iOS, macOS, watchOS and visionOS 26 or later. Without WidgetKit (tvOS, Linux) it stores only. The injected function of the other initializer replaces WidgetKit entirely.
 - **Concurrency.** No locking: a read-compare-write from two processes at once can both report a change. Give each key one writer, usually the app. Cross-process visibility is the system's (`cfprefsd`).
-- A generic type has no stored static properties, so a value declared once for app and extension is a computed `static var` in a constrained extension. The proposal's `static let` doesn't compile.
+- A generic type has no stored static properties, so a value declared once for app and extension is a computed `static var` in a constrained extension; a `static let` doesn't compile.
 - **Targets that default to main-actor isolation** (new Xcode projects do). There, `struct S: Codable, Equatable, Sendable` gets main-actor-isolated conformances (isolated conformances, Swift 6.2), which can't satisfy `SharedValue`'s `Sendable` parameter, and a static in `extension SharedValue where Value == S` is main-actor-isolated. Declare both `nonisolated`, and the widget's provider and entry too, since WidgetKit calls them off the main thread. The article and the README show it.
 
 ### 4.2 Timelines
@@ -217,7 +216,7 @@ The states use Core §4.8's lookahead (`start(civil(end) + 2)`), so an entry nea
 
 The WidgetKit `timeline(from:horizon:entry:)` maps each entry through `entry` and uses the policy `.after(reloadDate)`. For inputs the plan rejects, it returns one entry, `entry(n, .expired(knownThrough: n))`, with the policy `.never`: a widget shows the problem instead of crashing, and the app's next changed save reloads it.
 
-Distinct states, distinct meanings (§7.3):
+Distinct states, distinct meanings:
 - a source gap is a `.schedule(...)` state inside the timeline: partial (known previous, unknown next) or `.unavailable` with its coverage. A reload can't fill it;
 - `.expired` is the end of this timeline's validity, even for a calculated source with no end of its own.
 
@@ -228,7 +227,7 @@ With `.stateChanges` and the default policy, a 48-hour timeline has 34 entries (
 - `post()` is `notify_post(name)`; it returns whether the system accepted the post, not whether anyone observed it.
 - `observe` registers with `notify_register_dispatch` on a private serial queue and calls the handler through `Task { @MainActor in … }`. Nothing assumes the main queue is the main thread: a process that calls `dispatchMain()` services the main queue from another thread, where `MainActor.assumeIsolated` traps and a block that inherits main-actor isolation fails the runtime's check (§6.3). The registration block is `@Sendable` for that reason.
 - The hop holds the handler weakly through an object only the observation owns, so after `cancel()` or release, a signal that arrived while the main actor was busy calls nothing. `cancel()` is idempotent; `isActive` is `false` when registration failed or after cancel.
-- No payload, no queueing, no launch: posts while nothing observes are lost, and close posts may coalesce. The receiver acts on the signal, not on a value stored beside it, which can lag across processes (Salah's stop button, §7.3 "Live state").
+- No payload, no queueing, no launch: posts while nothing observes are lost, and close posts may coalesce. The receiver acts on the signal, not on a value stored beside it, which can lag across processes (Salah's stop button).
 - Apple platforms only (`canImport(notify)`).
 
 ### 4.4 Components
@@ -261,24 +260,24 @@ With `.stateChanges` and the default policy, a 48-hour timeline has 34 entries (
 
 SalahWidgets declares `NSPrivacyAccessedAPICategoryUserDefaults` with reason `1C8F.1` in `PrivacyInfo.xcprivacy`, a package resource, because `SharedValue` reads and writes App Group defaults. Apps still declare their own use in their own manifests. SalahUI uses no required-reason API.
 
-## 5. Changes from the proposal's sketch
+## 5. Design decisions
 
-| Sketch | Now | Why |
-|---|---|---|
-| `save` returns `Bool` and doesn't throw | `throws(SharedValueError) -> Bool`: whether the stored value changed | A failed encode would otherwise read as "unchanged", and the widget would never reload. |
-| No way to observe reloads | `init(appGroup:key:reloadTimelines:)` | Apps test what they save and when they ask for reloads (Salah's settings mirror, §10). |
-| `static let rihla` in a constrained extension | a computed `static var` | Generic types can't have stored static properties. |
-| `timeline(from:horizon:entry:) -> Timeline` only | also `timeline(from:horizon:) throws -> PrayerTimeline` with `validUntil`, `isTruncated` and `reloadDate`; the builder takes `limit` | §7.3 asks to expose the earlier cutoff; the value is testable without WidgetKit, on Linux too, and lets an app choose its own reload policy. |
-| Reload policy unspecified | `.after(reloadDate)`, halfway to `validUntil` | Half a horizon of slack for a late reload; about one reload a day for a calculated widget. |
-| Invalid inputs unspecified | one expired entry and `.never` (WidgetKit); the plan's errors (value) | No crash on a reachable path (STANDARD.md, Swift). |
-| `observe` returns `AnyObject` | returns `DarwinSignal.Observation` with `cancel()` and `isActive`; `post()` returns `Bool` | A named type documents the token's ownership; explicit cancel; honest about a failed registration or post. |
-| `PrayerTimesList(day:state:names:)` with a `PrayerState` | `state: PrayerState?`, and `countdown:` | An unavailable state has no `PrayerState`, but a partial day still has times to list (Core §9 #7). |
-| `NextPrayerView(state:names:timeZone:)` | adds `countdown:` | A static-text widget needs static countdown text. |
-| `PrayerRowConfiguration` | `status` optional; adds `dayOffset` and `dayOffsetText` | Rows without a state; an Isha after midnight or a Fajr before it is marked (CalculatedPhone's "Next day", B1). |
-| `NextPrayerConfiguration` | adds `abbreviation` | Circular complications and Lock Screen widgets (PhoneWidgets, WatchComplication). |
-| Style protocols only | adds `PlainPrayerRowStyle`, `PlainNextPrayerStyle` and `.plain` | The default look is documented and can be restored inside a styled subtree. |
-| `ContrastCheck.minimumHueDistance` | `minimumReservedDistance` | It's a distance between sRGB components, not between hues. |
-| `ThemeColor` | adds `color` (SwiftUI); clamps components in the math | Apps draw the colors they check; a decoded out-of-range value can't produce a ratio outside 1…21. |
+| Decision | Why |
+|---|---|
+| `save` throws `SharedValueError` and returns whether the stored value changed | A failed encode would otherwise read as "unchanged", and the widget would never reload. |
+| `init(appGroup:key:reloadTimelines:)` makes reloads observable | Apps test what they save and when they ask for reloads (Salah's settings mirror). |
+| A value shared by app and extension is a computed `static var` in a constrained extension | Generic types can't have stored static properties. |
+| Beside the WidgetKit `timeline(from:horizon:entry:)`, a `timeline(from:horizon:) throws -> PrayerTimeline` with `validUntil`, `isTruncated` and `reloadDate`; the builder takes `limit` | When the entry budget shortens the horizon, the earlier cutoff is visible instead of hidden. The value is testable without WidgetKit, on Linux too, and lets an app choose its own reload policy. |
+| The WidgetKit timeline reloads `.after(reloadDate)`, halfway to `validUntil` | Half a horizon of slack for a late reload; about one reload a day for a calculated widget. |
+| Invalid inputs give one expired entry and `.never` (WidgetKit), or the plan's errors (value) | No crash on a reachable path (STANDARD.md, Swift). |
+| `observe` returns `DarwinSignal.Observation` with `cancel()` and `isActive`; `post()` returns `Bool` | A named type documents the token's ownership; explicit cancel; honest about a failed registration or post. |
+| `PrayerTimesList` takes `state: PrayerState?`, and `countdown:` | An unavailable state has no `PrayerState`, but a partial day still has times to list (Core §9 #7). |
+| `NextPrayerView` takes `countdown:` | A static-text widget needs static countdown text. |
+| `PrayerRowConfiguration.status` is optional; the configuration has `dayOffset` and `dayOffsetText` | Rows without a state; an Isha after midnight or a Fajr before it is marked (CalculatedPhone's "Next day"). |
+| `NextPrayerConfiguration` has `abbreviation` | Circular complications and Lock Screen widgets (PhoneWidgets, WatchComplication). |
+| `PlainPrayerRowStyle`, `PlainNextPrayerStyle` and `.plain` | The default look is documented and can be restored inside a styled subtree. |
+| `ContrastCheck.minimumReservedDistance` | It's a distance between sRGB components, not between hues. |
+| `ThemeColor` has `color` (SwiftUI) and clamps components in the math | Apps draw the colors they check; a decoded out-of-range value can't produce a ratio outside 1…21. |
 
 ## 6. Probes
 
@@ -321,7 +320,7 @@ The first `observe` called `MainActor.assumeIsolated` inside the main-queue bloc
 
 ## 9. Consumer findings
 
-`Examples/PhoneWidgets` (an iPhone app and widget extension with a calculated source) and `Examples/WatchComplication` (a watch app and complication, with a companion iPhone app sending calculated or published inputs) use both products through the public API, in real extensions on simulators: PhoneWidgets' widget was added to the Home Screen by XCUITest, and the complication ran from the watch's Smart Stack. Their extensions built a timeline in 4.7 to 125 ms (median 7.5 ms, 36 entries, 34 calls) at a footprint of 7.4 to 18.5 MiB (iPhone 17 simulator, iOS 27), with one first call after the extension started cold at 356 ms, and under 30 ms at 12 to 15 MB (Apple Watch Series 11 simulator, watchOS 27), which answers the proposal's §14 risk for simulators; the oldest supported iPhone is still to measure. What they found:
+`Examples/PhoneWidgets` (an iPhone app and widget extension with a calculated source) and `Examples/WatchComplication` (a watch app and complication, with a companion iPhone app sending calculated or published inputs) use both products through the public API, in real extensions on simulators: PhoneWidgets' widget was added to the Home Screen by XCUITest, and the complication ran from the watch's Smart Stack. Their extensions built a timeline in 4.7 to 125 ms (median 7.5 ms, 36 entries, 34 calls) at a footprint of 7.4 to 18.5 MiB (iPhone 17 simulator, iOS 27), with one first call after the extension started cold at 356 ms, and under 30 ms at 12 to 15 MB (Apple Watch Series 11 simulator, watchOS 27). On simulators, then, building timelines in the extension is fast and small enough; the oldest supported iPhone is still to measure. What they found:
 
 1. **Main-actor targets need `nonisolated` declarations** (both): the shared value, its extension, the provider and the entry. Handled in the documentation (§4.1).
 2. **Inspecting the timeline WidgetKit gets** (both). A `Timeline`'s reload policy can't be read back, so an extension that logs `validUntil`, `reloadDate` or `isTruncated` calls `timeline(from:horizon:)` and builds the `Timeline` itself, with its own handling of the errors. That's the documented path; a converter would save a line or two, and waits for a third use.
@@ -336,21 +335,21 @@ The first `observe` called `MainActor.assumeIsolated` inside the main-queue bloc
 
 `Examples/MenuBar` (0.3.0, a macOS menu-bar app with a desktop widget) uses `SharedValue`, `DarwinSignal`, `PrayerTimelineBuilder` with `.steps`, and SalahUI's views with static countdowns. What it found:
 
-11. **The stop signal between sandboxed processes on macOS.** The app and its stop harness, both signed with a team, sandboxed and sharing an App Group, exchanged the signal and the shared values on macOS 27 with no prompt; C1 had tested only unsandboxed processes. The harness runs the widget intent's own `perform()`; the widget extension that WidgetKit launches for a real tap is still to observe.
+11. **The stop signal between sandboxed processes on macOS.** The app and its stop harness, both signed with a team, sandboxed and sharing an App Group, exchanged the signal and the shared values on macOS 27 with no prompt; `DarwinSignalTests` (§7) use unsandboxed processes only. The harness runs the widget intent's own `perform()`; the widget extension that WidgetKit launches for a real tap is still to observe.
 12. **Two writers of the live-state value** (§8 #5). The intent clears what plays and the app publishes it again after every signal, so the value has two writers. The app's write after each signal settles any race, so the pattern needs no compare-and-swap. `SharedValue`'s one-writer advice stands; the article "Lessons from Salah" names this exception.
 13. **A `.steps` display outside WidgetKit.** The menu bar's title is static text refreshed at a `.steps` plan's dates, with a limit of 1,000 entries: a minute grid an hour either side of a prayer needs about 120 per prayer, and Core's default of 96 is WidgetKit's budget, not an app's. Like PhoneWidgets (#3), it refreshes at each midnight as well; a second consumer for day boundaries in the refresh plan.
 14. **Static countdowns overstate by up to a step.** A `.staticText` countdown shows the time left at its entry's date, rounded down, so until the next entry the true time left is up to one step shorter. That's what static text means; a view that must never overstate uses the live countdown.
 
 ## 10. Changes after review
 
-1. **Review round R1** (2026-10-14, session C1). The snapshot comparison allowed 0.1 % of an image to differ, which let a time a minute late pass; it now allows 8 pixels. The test of a device in another zone set only SwiftUI's environment, and the Mac that recorded the references was at Makkah's offset; CI now reruns the snapshots at UTC+14. The plain row style let a countdown or a time wrap mid-number in a narrow row ("4:14:0"); numbers no longer wrap. DarwinSignal now receives notify(3)'s callbacks on a private queue, which makes the weak hop testable: a signal that arrives while the main actor is busy no longer reaches a cancelled observation. `save(nil)` removes an object under the key that isn't data. The figures for `steps` timelines were corrected.
-2. **Review round R2** (2026-10-14, session C1). R1's fix kept numbers from wrapping but let the next row's name shrink to "…" at 140 points, where the countdown and the time took the whole row; the row now leaves out its countdown first. `SharedValue` compares with, and loads, the App Group's own storage only, so a default registered in one process can't make every `save(nil)` reload or hide a value from the others. The `steps` figures now hold beyond Makkah.
+1. **First review round** (2026-10-14). The snapshot comparison allowed 0.1 % of an image to differ, which let a time a minute late pass; it now allows 8 pixels. The test of a device in another zone set only SwiftUI's environment, and the Mac that recorded the references was at Makkah's offset; CI now reruns the snapshots at UTC+14. The plain row style let a countdown or a time wrap mid-number in a narrow row ("4:14:0"); numbers no longer wrap. DarwinSignal now receives notify(3)'s callbacks on a private queue, which makes the weak hop testable: a signal that arrives while the main actor is busy no longer reaches a cancelled observation. `save(nil)` removes an object under the key that isn't data. The figures for `steps` timelines were corrected.
+2. **Second review round** (2026-10-14). The first round's fix kept numbers from wrapping but let the next row's name shrink to "…" at 140 points, where the countdown and the time took the whole row; the row now leaves out its countdown first. `SharedValue` compares with, and loads, the App Group's own storage only, so a default registered in one process can't make every `save(nil)` reload or hide a value from the others. The `steps` figures now hold beyond Makkah.
 
 
 ### 10.1 Open-issues amendment for 0.4.0 (2026-10-14)
 
-The one-week comment window for issues #12, #13 and #14 is waived under Amendment 11 of
-the build's approved amendments. Later API changes follow CONTRIBUTING's normal process.
+The maintainer waived the one-week comment window for issues #12, #13 and #14, which are
+pre-1.0 additions. Later API changes follow CONTRIBUTING's RFC process.
 
 **#13: a shared focus.** `PrayerFocus` is a nonisolated, Sendable value with
 `countdown(PrayerEvent)` and `countUp(PrayerEvent)`, `event` and `isCountUp`. Its failable
