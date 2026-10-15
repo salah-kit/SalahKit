@@ -22,15 +22,15 @@ as an official MUIS product.
 
 
 2. Times computed with Adhan Swift (SalahFixtures, MosqueBoard example and the
-   calculation parity report)
+   comparison in docs/calculation-parity.md)
 
 Files: the timetable data in Sources/SalahFixtures,
 Examples/MosqueBoard/Shared/Timetables/edinburgh-synthetic.json, and the
 comparison figures in docs/calculation-parity.md
 
 The prayer times in the SalahFixtures sample data, the begin times in the
-synthetic Edinburgh timetable and the Salah-side times behind the parity
-report's figures were computed with Adhan Swift
+synthetic Edinburgh timetable and the Adhan Swift side of the comparison in
+docs/calculation-parity.md were computed with Adhan Swift
 (https://github.com/batoulapps/adhan-swift, commit a6fa2de), used as a
 calculator on a development machine. Adhan Swift is Copyright (c) 2016 Batoul
 Apps and is distributed under the MIT License. This repository contains none of

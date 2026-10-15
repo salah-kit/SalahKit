@@ -20,10 +20,10 @@ The tables under "Places" and "Moments" and the list under "Checks run by the ge
 | | |
 | --- | --- |
 | Calculator | adhan-swift, commit `a6fa2deee80c5abb0b9ad04466f8ab12b53144e7` ("Merge pull request #96 from batoulapps/develop"), MIT License, Copyright (c) 2016 Batoul Apps |
-| How it was used | As a calculator only. A throwaway Swift package outside this repository depends by path on a read-only local clone of adhan-swift. SalahKit contains none of its code and doesn't depend on it. |
+| How it was used | As a calculator only. The generator is a separate Swift package, outside this repository, that depends on adhan-swift by path. SalahKit contains none of adhan-swift's code and doesn't depend on it. |
 | Generator | The two files listed at the end of this document |
-| Machine | macOS 27.0.1 on arm64, Apple Swift 6.4 |
-| Time zone data | tz database 2026c, the copy that Foundation (`icutz`) and Python's zoneinfo (`zoneinfo`) both read on this machine |
+| Platform | macOS 27.0.1 on arm64, Apple Swift 6.4 |
+| Time zone data | tz database 2026c, read by both Foundation (`icutz`) and Python's zoneinfo (`zoneinfo`) |
 | Run on | 2026-10-13 |
 
 A different adhan-swift commit or tz database can move a time by a minute. The fixtures keep the values below.
@@ -298,7 +298,7 @@ A separate Python script (standard library only) read the generator's JSON and c
 - Shapes: five consecutive rows per place (four for `incomplete`); Jumu'ah declared only on the `friday` row of 2026-10-16; the iqama offsets as listed; the 2026-11-10 row has no Isha, 2026-11-11 has no row, and 2026-11-13 is the last row.
 - Solar times: sunrise, sunset, transit, Asr, and the angle-based Fajr and Isha were recomputed with the NOAA solar equations. With the preset's minute offsets applied, every time is within 0.6 minute of the NOAA value (rounding accounts for up to 0.5), except Asr near the March equinox: 1.5 minutes across the New York days and 0.9 across the `ramadan` days. adhan-swift takes the Asr shadow angle from the declination at 0:00 UT; with that convention the difference is at most 0.7. Reykjavik's Fajr and Isha were recomputed from NOAA sunrise and sunset with the seventh-of-the-night rule and agree within 0.5. London's Fajr and Isha come from the Moonsighting Committee's seasonal formulas inside adhan-swift. They were only range-checked here (Fajr 112 to 121 min before sunrise, Isha 74 to 82 min after Maghrib).
 - Against a published timetable: the five Singapore days, 30 times, were compared with the MUIS Muslim Prayer Timetable 2026 on data.gov.sg (dataset `d_d441e7242e78efc566024dd5b0d9829c`, the one MosqueBoard uses; RFC 0001, section 8). 24 are equal and 6 are one minute earlier. None differs by more.
-- adhan-swift's own test suite (51 tests) passes on this machine at the same commit. It was run in a scratch export of the commit, because the clone is read-only.
+- adhan-swift's own test suite (51 tests) passes at the same commit, on the platform above.
 
 ## Regenerating
 
@@ -321,7 +321,7 @@ let package = Package(
   name: "fixtures-generator",
   platforms: [.macOS(.v13)],
   dependencies: [
-    // A read-only local clone of adhan-swift at commit a6fa2de (MIT). Never modified.
+    // adhan-swift checked out at commit a6fa2de (MIT), unmodified.
     .package(path: "../adhan-swift")
   ],
   targets: [
@@ -336,7 +336,7 @@ let package = Package(
 `Sources/fixtures-generator/main.swift`:
 
 ```swift
-// Generator for the SalahFixtures data (documented in FixtureData.md). A throwaway tool that
+// Generator for the SalahFixtures data (documented in FixtureData.md). A standalone tool that
 // lives outside the repository.
 //
 // It asks adhan-swift (commit a6fa2de, MIT license) for begin times, converts them to local wall
