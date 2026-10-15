@@ -171,8 +171,9 @@ jobs:
             exit 1
           fi
 
-      # The app builds under both default-isolation settings (proposal section 3.1). MosqueBoard
-      # builds no SalahTimes code, so the command-line setting can reach every target it builds.
+      # The app builds under both default-isolation settings, because an adopter's app may default
+      # to either (CONTRIBUTING.md, Default isolation). MosqueBoard builds no SalahTimes code, so
+      # the command-line setting can reach every target it builds.
       - name: Build (MainActor and nonisolated)
         run: |
           mkdir -p Examples/MosqueBoard/.derived
@@ -192,9 +193,9 @@ jobs:
       - name: Test the link check
         run: scripts/test-check-mosqueboard-links.sh
 
-      # The timetable example links SalahCore only, although the package graph resolves
-      # SalahTimes for SalahCalculation (proposal section 2.3 #2): checked in the build graph and
-      # in the binary.
+      # The published-timetable example must not depend on calculation: it links SalahCore only,
+      # although the package graph resolves SalahTimes for SalahCalculation. Checked in the build
+      # graph and in the binary.
       - name: Check that MosqueBoard links no calculation
         run: |
           scripts/check-mosqueboard-links.sh Examples/MosqueBoard/.derived/MainActor.log \
@@ -242,7 +243,7 @@ jobs:
       - name: Select the newest Xcode 26
         run: scripts/select-xcode.sh
 
-      # The tvOS app builds under both default-isolation settings too (proposal section 3.1).
+      # The tvOS app builds under both default-isolation settings too, as the iPad app does.
       - name: Build (MainActor and nonisolated)
         run: |
           mkdir -p Examples/MosqueBoard/.derived
@@ -317,10 +318,10 @@ jobs:
             exit 1
           fi
 
-      # The app builds under both default-isolation settings (proposal section 3.1). The
-      # project's CALCULATEDPHONE_ISOLATION reaches only the app's own targets: passing
-      # SWIFT_DEFAULT_ACTOR_ISOLATION here would also make SalahTimes' types main-actor-isolated
-      # (docs/rfcs/0001-core.md, section 6.3).
+      # The app builds under both default-isolation settings, because an adopter's app may default
+      # to either (CONTRIBUTING.md, Default isolation). The project's CALCULATEDPHONE_ISOLATION
+      # reaches only the app's own targets: passing SWIFT_DEFAULT_ACTOR_ISOLATION here would also
+      # make SalahTimes' types main-actor-isolated (docs/rfcs/0001-core.md, section 6.3).
       - name: Build (MainActor and nonisolated)
         run: |
           for isolation in MainActor nonisolated; do
@@ -389,10 +390,10 @@ jobs:
           fi
 
       # Every target (companion, watch app, complication and the three test bundles) builds
-      # under both default-isolation settings (proposal section 3.1). The project's
-      # WATCHCOMPLICATION_ISOLATION reaches only the example's own targets: passing
-      # SWIFT_DEFAULT_ACTOR_ISOLATION here would also make SalahTimes' types main-actor-isolated
-      # (docs/rfcs/0001-core.md, section 6.3).
+      # under both default-isolation settings, because an adopter's app may default to either
+      # (CONTRIBUTING.md, Default isolation). The project's WATCHCOMPLICATION_ISOLATION reaches
+      # only the example's own targets: passing SWIFT_DEFAULT_ACTOR_ISOLATION here would also make
+      # SalahTimes' types main-actor-isolated (docs/rfcs/0001-core.md, section 6.3).
       - name: Build (MainActor and nonisolated)
         run: |
           for isolation in MainActor nonisolated; do
@@ -439,7 +440,7 @@ jobs:
       # It needs a newly created and paired iPhone and Apple Watch simulator pair booted together
       # and WatchConnectivity delivery between them, which hasn't been shown to be reliable on
       # hosted runners; its XCUITest steps skip unless WATCHCOMPLICATION_PAIRED=1. Run it locally
-      # (README, Testing).
+      # (README, The paired journey).
       - name: Companion journey on an iPhone simulator
         run: |
           udid="$(xcrun simctl list devices available | grep -E '^ +iPhone' | head -n 1 \
@@ -492,10 +493,11 @@ jobs:
             exit 1
           fi
 
-      # The app and its widget extension build under both default-isolation settings (proposal
-      # section 3.1). The project's PHONEWIDGETS_ISOLATION reaches only the example's own targets:
-      # passing SWIFT_DEFAULT_ACTOR_ISOLATION here would also make SalahTimes' types
-      # main-actor-isolated (docs/rfcs/0001-core.md, section 6.3).
+      # The app and its widget extension build under both default-isolation settings, because an
+      # adopter's app may default to either (CONTRIBUTING.md, Default isolation). The project's
+      # PHONEWIDGETS_ISOLATION reaches only the example's own targets: passing
+      # SWIFT_DEFAULT_ACTOR_ISOLATION here would also make SalahTimes' types main-actor-isolated
+      # (docs/rfcs/0001-core.md, section 6.3).
       - name: Build (MainActor and nonisolated)
         run: |
           for isolation in MainActor nonisolated; do
@@ -572,9 +574,10 @@ jobs:
           fi
 
       # The app, its widget extension, the stop harness and the test bundles build under both
-      # default-isolation settings (proposal section 3.1). The project's MENUBAR_ISOLATION
-      # reaches only the example's own targets: passing SWIFT_DEFAULT_ACTOR_ISOLATION here would
-      # also make SalahTimes' types main-actor-isolated (docs/rfcs/0001-core.md, section 6.3).
+      # default-isolation settings, because an adopter's app may default to either
+      # (CONTRIBUTING.md, Default isolation). The project's MENUBAR_ISOLATION reaches only the
+      # example's own targets: passing SWIFT_DEFAULT_ACTOR_ISOLATION here would also make
+      # SalahTimes' types main-actor-isolated (docs/rfcs/0001-core.md, section 6.3).
       - name: Build (MainActor and nonisolated)
         run: |
           for isolation in MainActor nonisolated; do

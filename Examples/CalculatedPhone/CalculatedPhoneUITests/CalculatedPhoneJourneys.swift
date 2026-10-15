@@ -1,7 +1,7 @@
 import XCTest
 
 /// Journeys through the real app on an iPhone simulator, with the clock and location injected
-/// by launch arguments (proposal §2.3 #1).
+/// by launch arguments.
 ///
 /// Every launch freezes the clock, so each assertion is about one known instant. The expected
 /// times are SalahTimes 0.1.0's, computed once through SalahCalculation's public API; the

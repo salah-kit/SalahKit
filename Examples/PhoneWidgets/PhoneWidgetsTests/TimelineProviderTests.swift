@@ -86,7 +86,7 @@ struct ShownState: Hashable, CustomStringConvertible {
 }
 
 /// Successive 48-hour timelines of the example's own provider over seven days, with a fixed
-/// clock and a calculated source (proposal §7.3, "Done means").
+/// clock and a calculated source.
 @Suite("The widget's timelines over seven days")
 struct TimelineProviderTests {
   /// 2026-10-13 12:00 in Makkah.

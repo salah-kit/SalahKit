@@ -81,7 +81,7 @@ nonisolated final class WatchSmartStackJourney: WatchJourneyCase {
     // added the widget. That holds on a fresh pair, as the paired script's procedure uses: a
     // widget left in the Smart Stack by an earlier run survives reinstalling and would log
     // timelines whatever the taps did. The script's checks of the extension's log, which count
-    // only records made after the companion closed, stay the gate.
+    // only records made after the companion closed, decide the result.
     let count = waitForATimeline(timeout: 90)
     print("WATCHCOMPLICATION diagnostics after adding: \(count)")
     XCTAssertFalse(count.hasPrefix("0 "), "The complication extension built no timeline")

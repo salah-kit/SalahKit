@@ -2,7 +2,7 @@
 
 An iPhone app that calculates prayer times with SalahCalculation and shows them with SalahCore and SalahUI: the day's schedule, the state across midnight, every calculation parameter, and honest gaps where the calculation can't produce a time.
 
-CalculatedPhone is SalahKit's example of a calculating app (proposal §2.3 #1). It uses only the public API of `SalahCore`, `SalahCalculation`, `SalahUI` and `SalahAlerts`, and imports `SalahTimes` to name the engine's types. It has no `@testable` imports of the packages, no internals and no copies of package logic. Its journeys run on an iPhone simulator with an injected clock and location and assert the exact text on screen.
+CalculatedPhone is SalahKit's example of a calculating app. It uses only the public API of `SalahCore`, `SalahCalculation`, `SalahUI` and `SalahAlerts`, and imports `SalahTimes` to name the engine's types. It has no `@testable` imports of the packages, no internals and no copies of package logic. Its journeys run on an iPhone simulator with an injected clock and location and assert the exact text on screen.
 
 ## What it shows
 
@@ -99,7 +99,7 @@ SalahCalculation doesn't re-export SalahTimes ([RFC 0002](../../docs/rfcs/0002-c
 
 ## Tests
 
-The expected times are SalahTimes 0.1.0's. They were computed once, through SalahCalculation's public API (`PrayerSchedule(source: CalculationSource(settings), location:)`, then `day(_:)` and `state(at:through:)`), in a scratch Swift package that depended on this repository and printed each day's instants in the place's zone, and they're hardcoded in the tests. The Kashgar, Kazan and Tromsø cases match RFC 0002 §4.4 and the vectors in `Vectors/calculation/`.
+The expected times are SalahTimes 0.1.0's. They were computed once, through SalahCalculation's public API (`PrayerSchedule(source: CalculationSource(settings), location:)`, then `day(_:)` and `state(at:through:)`), in a separate Swift package that depended on this repository and printed each day's instants in the place's zone, and they're hardcoded in the tests. The Kashgar, Kazan and Tromsø cases match RFC 0002 §4.4 and the vectors in `Vectors/calculation/`.
 
 - `CalculatedPhoneTests` (Swift Testing) tests the app's logic below the UI: `PhoneSnapshot` at fixed instants (an ordinary day, after sunrise, after Isha, custom parameters, rounding with seconds, the Ramadan rule, user minutes, Kashgar's Isha after midnight before and after it, Kazan's Fajr before midnight, Tromsø after Asr and between Dhuhr and Asr, invalid coordinates, Arabic), the Calculation section's text for every parameter, choosing methods, the JSON round trip, `SettingsStore` saving and reloading, the launch arguments and the clock.
 - `CalculatedPhoneUITests` launches the real app with a frozen clock and asserts what a person sees, through accessibility identifiers such as `row.fajr.time`, `next.countdown`, `latest.owningDay`, `coverage.gap.0` and `calc.fajr`:
@@ -109,7 +109,7 @@ The expected times are SalahTimes 0.1.0's. They were computed once, through Sala
   4. Source failure: Tromsø on 21 June, where Fajr, sunrise, Maghrib and Isha can't be calculated and, after Asr, the banner explains the gap; and a latitude of 95°, where the whole day is invalid input with no times.
   5. Settings made in the app survive a relaunch without `-resetSettings`.
   6. Arabic names, Arabic-Indic digits and a right-to-left layout.
-- `AlertJourneys` uses the real notification center: it enables alerts through Settings, accepts the permission alert through Springboard, checks pending-request read-back, observes a Fajr notification with the app closed, changes the fixture times, injects an add failure, then turns alerts off and probes the system's pending-request limit. It checks confirmed coverage separately from the plan's horizon. Run it with the same test command above. On the iOS 27.0 simulator, the first permission grant has sometimes left adds failing with "Source is not authorized" despite an allowed status; restarting that simulator after the grant resolved it. Keep a failed first-grant run in the evidence and report any restart separately ([RFC 0003](../../docs/rfcs/0003-alerts.md), §8).
+- `AlertJourneys` uses the real notification center: it enables alerts through Settings, accepts the permission alert through Springboard, checks pending-request read-back, observes a Fajr notification with the app closed, changes the fixture times, injects an add failure, then turns alerts off and probes the system's pending-request limit. It checks confirmed coverage separately from the plan's horizon. Run it with the same test command above. On the iOS 27.0 simulator, the first permission grant has sometimes left adds failing with "Source is not authorized" despite an allowed status; restarting that simulator after the grant resolved it.
 
 ## Accessibility and languages
 
@@ -117,7 +117,7 @@ Every value has a VoiceOver label, such as "At 15:27", "Time remaining: 1 hour, 
 
 ## Pending
 
-- **A real iPhone:** only simulators have run the app so far. Run it on a physical iPhone, with large Dynamic Type sizes and VoiceOver.
+- **VoiceOver and the largest text sizes on a real iPhone:** only simulators have run the app so far ([#30](https://github.com/salah-kit/SalahKit/issues/30)).
 - **Contrast limit:** the example retains platform semantic secondary text, following [RFC 0004](../../docs/rfcs/0004-widgets-and-ui.md), §8 #6. The recorded light-mode ratio of 3.30–3.44:1 is below WCAG's 4.5:1 for body text; apps requiring that floor must restyle it. The orange coverage-banner outline is decorative: the primary-colored warning symbol and text carry its meaning. These measurements do not establish full contrast compliance.
-- **Real notification delivery:** check closed-app delivery and first-permission behavior on a physical iPhone; the simulator journey does not establish device behavior.
-- **Arabic review:** a native speaker should review the Arabic strings.
+- **Prayer alerts on a real iPhone:** delivery with the app closed, the first permission, changed times and overnight; the simulator journey doesn't establish device behavior ([#22](https://github.com/salah-kit/SalahKit/issues/22)).
+- **Arabic review:** a native speaker should review the Arabic strings ([#32](https://github.com/salah-kit/SalahKit/issues/32)).

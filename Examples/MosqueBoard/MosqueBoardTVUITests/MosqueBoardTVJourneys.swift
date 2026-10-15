@@ -1,7 +1,6 @@
 import XCTest
 
-/// Journeys through the real tvOS app, with the iPad journeys' boards, instants and expectations
-/// (proposal §2.3 #2 and §11).
+/// Journeys through the real tvOS app, with the iPad journeys' boards, instants and expectations.
 ///
 /// A TV board can't scroll, because nothing on it takes focus, so each journey also checks that
 /// the whole board fits on the screen.

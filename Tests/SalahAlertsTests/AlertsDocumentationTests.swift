@@ -31,7 +31,8 @@ import Testing
     }
   }
 
-  /// The article's plan with every reminder on, at midnight: the D7 example it describes.
+  /// The article's plan with every reminder on, at midnight: the arithmetic example of RFC 0003
+  /// §4.4, which the article describes.
   @Test func theArticlesPlanRuns() throws {
     let now = Fixture.date(0, 0)
     let every: (AlertSubject) -> AlertSettings? = { subject in

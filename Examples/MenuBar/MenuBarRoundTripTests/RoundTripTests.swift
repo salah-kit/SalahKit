@@ -40,11 +40,11 @@ struct RoundTripTests {
       }
   }
 
-  // MARK: - The stop round trip (proposal §7.3, Live state)
+  // MARK: - The stop round trip
 
-  /// The 0.3.0 gate: the widget intent's code, run in a separate process, stops the running
-  /// app's tone; the app republishes, and the widget's timeline, built by the extension's code
-  /// from what's stored, drops the Stop button.
+  /// The live-state pattern across processes: the widget intent's code, run in a separate
+  /// process, stops the running app's tone; the app republishes, and the widget's timeline,
+  /// built by the extension's code from what's stored, drops the Stop button.
   @Test("the widget's stop code stops the running app, which republishes")
   func widgetStop() async throws {
     let app = try await RunningApp.launch(Self.quiet + ["-playTestTone", "repeating"])

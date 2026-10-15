@@ -1,8 +1,8 @@
 // The first suite is migrated from Salah's
 // `GuidanceTests/RelativeDurationFormatterTests.swift` at commit 4bc00e9, ported from XCTest to
 // Swift Testing against `PrayerDurationFormat` (`.down` became `.remaining`, `.up` became
-// `.elapsed`). Every expected string is kept unchanged. The other suites add the cases of the
-// SalahKit proposal's Appendix B that are stable across platforms.
+// `.elapsed`). Every expected string is kept unchanged. The other suites add Foundation
+// formatting cases that are stable across platforms.
 
 import Foundation
 import Testing
@@ -72,7 +72,7 @@ private let arabic = locale("ar", numbering: "arab")
   }
 }
 
-/// Appendix B.1: 45 s, 720 s and 8,130 s in Salah's nine languages.
+/// 45 s, 720 s and 8,130 s in Salah's nine languages.
 @Suite struct DurationCompactLanguageTests {
   private func compact(_ locale: Locale) -> [String] {
     [45, 720, 8_130].map { remaining($0, locale) }
@@ -124,7 +124,7 @@ private let arabic = locale("ar", numbering: "arab")
   }
 }
 
-/// Appendix B.2: the tiers at their edges, rounded down.
+/// The tiers at their edges, rounded down.
 @Suite struct DurationTierEdgeTests {
   private let inputs: [TimeInterval] = [59, 60, 119, 3_599, 3_600, 3_659, 8_130]
 
@@ -166,7 +166,7 @@ private let arabic = locale("ar", numbering: "arab")
   }
 }
 
-/// Appendix B.3: spoken durations for VoiceOver, rounded down to the minute.
+/// Spoken durations for VoiceOver, rounded down to the minute.
 @Suite struct DurationSpokenTests {
   @Test func englishRoundsDown() {
     // Foundation's default rounding reads 8,130 s (2 h 15 m 30 s) as "16 minutes".

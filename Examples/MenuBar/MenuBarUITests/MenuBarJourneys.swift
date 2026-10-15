@@ -3,7 +3,7 @@ import SalahCalculation
 import SalahCore
 import XCTest
 
-/// Journeys through the real app on this Mac: its status item's title and the schedule window.
+/// Journeys through the real app on the Mac: its status item's title and the schedule window.
 ///
 /// Every launch is quiet: the tone plays at zero volume, notifications go to an in-memory center
 /// (no permission prompt, nothing in Notification Center), and the app opens its schedule in a

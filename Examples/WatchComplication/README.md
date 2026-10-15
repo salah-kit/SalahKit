@@ -2,7 +2,7 @@
 
 A minimal Apple Watch app with a complication, and a companion iPhone app that sends it its inputs over WatchConnectivity. The watch keeps its own copy of the inputs and builds its schedule from them: with the iPhone app closed, the watch app and the complication keep showing the next prayer and its countdown.
 
-WatchComplication is SalahKit's watch example (proposal §5.3 and §11). It uses only the public API of `SalahCore`, `SalahCalculation`, `SalahWidgets` and `SalahUI`. It shows what a watch must handle: inputs that haven't arrived yet, a later change from the iPhone, operation from the last valid inputs while the iPhone app is closed, and a published timetable that runs out.
+WatchComplication is SalahKit's watch example. It uses only the public API of `SalahCore`, `SalahCalculation`, `SalahWidgets` and `SalahUI`. It shows what a watch must handle: inputs that haven't arrived yet, a later change from the iPhone, operation from the last valid inputs while the iPhone app is closed, and a published timetable that runs out.
 
 ## Processes
 
@@ -12,7 +12,7 @@ WatchComplication is SalahKit's watch example (proposal §5.3 and §11). It uses
 | Watch app | `WatchComplicationWatch` | Receives the inputs, stores them with `SharedValue` in the watch's App Group, reloads the complication when they change, and shows the current state |
 | Complication | `Complications` (watchOS WidgetKit extension) | Reads the inputs from the watch's App Group and builds its timeline with `PrayerTimelineBuilder` |
 
-A watch app doesn't share App Group storage with its iPhone app (proposal §5.3), so the watch keeps its own copy. The App Group `group.io.github.salah-kit.WatchComplication` belongs to the watch app and its complication only. The companion never writes to it; it can only send.
+A watch app doesn't share App Group storage with its iPhone app, so the watch keeps its own copy. The App Group `group.io.github.salah-kit.WatchComplication` belongs to the watch app and its complication only. The companion never writes to it; it can only send.
 
 **Why an application context.** The watch needs only the latest inputs. `updateApplicationContext(_:)` keeps one context: a newer one replaces a context the watch hasn't received yet, and the system delivers it when the watch app next runs, whether or not the companion is still running. `transferUserInfo(_:)` would queue every send and deliver stale inputs first. The context also persists on both sides (`applicationContext`, `receivedApplicationContext`), so the companion shows what the watch gets next even after it relaunches, and the watch app reads the last context again once its session is active, in case a delivery was missed. That re-read stores the context only when it was sent after the watch's last receipt, so it never brings back an older send over inputs stored or removed since (by `-preset` or `-resetInputs`); a live delivery is always stored. Delivery timing isn't guaranteed: the watch works from what it has until new inputs arrive.
 
@@ -180,6 +180,6 @@ Every complication family reads as one VoiceOver element. For the next prayer, t
 
 ## Pending
 
-- **A real Apple Watch:** only simulators have run the example. Install it on an iPhone and a paired Apple Watch, add the complication to a face and to the Smart Stack, send inputs, close the iPhone app, and record what the watch shows over a day, including the ended timetable and delivery while the watch app isn't running.
+- **A real Apple Watch:** only simulators have run the example: real faces and the Smart Stack, hours with the iPhone app closed, a timetable that runs out, and VoiceOver on the corner family ([#25](https://github.com/salah-kit/SalahKit/issues/25)).
 - **Contrast check:** the example uses system colors; check them with SalahUI's `ContrastCheck` if it gets custom ones.
-- **Arabic review:** a native speaker should review the Arabic strings.
+- **Arabic review:** a native speaker should review the Arabic strings ([#34](https://github.com/salah-kit/SalahKit/issues/34)).

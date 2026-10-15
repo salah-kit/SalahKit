@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Proves that MosqueBoard, the timetable example, builds and links SalahCore and nothing that
-# calculates: neither the SalahCalculation product nor SalahTimes, although the package graph
-# resolves SalahTimes (proposal section 2.3 #2).
+# Proves that MosqueBoard, the published-timetable example, builds and links SalahCore and
+# nothing that calculates: neither the SalahCalculation product nor SalahTimes, although the
+# package graph resolves SalahTimes. An app that shows published times needs no calculation code.
 #
 # Usage: scripts/check-mosqueboard-links.sh <xcodebuild-log> <products-directory>
 #   xcodebuild-log      the output of an `xcodebuild build` or `build-for-testing` of MosqueBoard

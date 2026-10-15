@@ -62,7 +62,7 @@ let package = Package(
       name: "SalahWidgets",
       dependencies: ["SalahCore"],
       // SharedValue reads and writes App Group defaults, so the product declares that reason
-      // (1C8F.1) in its own privacy manifest (proposal section 7.3, Privacy).
+      // (1C8F.1) in its own privacy manifest (docs/rfcs/0004-widgets-and-ui.md, section 4.8).
       resources: [.copy("Resources/PrivacyInfo.xcprivacy")],
       swiftSettings: defaultIsolation
     ),

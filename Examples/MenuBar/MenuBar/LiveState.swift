@@ -3,7 +3,8 @@ import Observation
 import SalahWidgets
 import os
 
-/// What the app plays, and the live-state pattern around it (proposal §7.3, Live state):
+/// What the app plays, and the live-state pattern around it (SalahWidgets' article "Lessons
+/// from Salah"):
 ///
 /// 1. The app publishes what it plays in a `SharedValue` the widget reads.
 /// 2. The widget's Stop button runs ``StopPlaybackIntent`` in the extension's process: it

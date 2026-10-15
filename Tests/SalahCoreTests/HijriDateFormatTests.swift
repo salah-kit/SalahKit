@@ -31,7 +31,7 @@ private func components(_ year: Int, _ month: Int, _ day: Int) -> HijriDateForma
   HijriDateFormat.Components(year: year, month: month, day: day)
 }
 
-/// Appendix B.5: Umm al-Qura dates with the template `dMMMMy`.
+/// Umm al-Qura dates with the template `dMMMMy`.
 @Suite struct HijriDateFormatTests {
   @Test func english() {
     #expect(format("en").string(from: noon(2026, 10, 7)) == "Rabiʻ II 26, 1448")

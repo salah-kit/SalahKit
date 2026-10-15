@@ -1,6 +1,6 @@
 import XCTest
 
-/// Journeys through the real app with an injected board and clock (proposal §2.3 #2).
+/// Journeys through the real app with an injected board and clock.
 ///
 /// Every launch freezes the clock, so each assertion is about one known instant.
 ///

@@ -25,7 +25,8 @@ settings:
     CURRENT_PROJECT_VERSION: "1"
     LOCALIZATION_PREFERS_STRING_CATALOGS: YES
     # Builds pass SWIFT_DEFAULT_ACTOR_ISOLATION=nonisolated on the command line to check the
-    # other isolation setting (proposal §3.1); MainActor is Xcode 26's default for new apps.
+    # other isolation setting, because an adopter's app may default to either (CONTRIBUTING.md,
+    # Default isolation); MainActor is Xcode 26's default for new apps.
     SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
 targets:
   MosqueBoard:

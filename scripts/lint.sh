@@ -7,7 +7,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 paths=(Sources Tests Package.swift)
-# Examples joins the lint once it exists.
+# The examples' Swift too, whenever the checkout has them.
 if [[ -d Examples ]]; then
   paths+=(Examples)
 fi

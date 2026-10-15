@@ -47,7 +47,7 @@ nonisolated struct LaunchOptions: Equatable, Sendable {
   /// `-failAlertAdds dhuhr,asr`: adding these prayers' requests fails, to show a scheduling
   /// failure. This run only.
   var failAlertAdds: Set<PrayerKind> = []
-  /// `-probeNotificationLimit <count>`: after planning, add this many throwaway requests, count
+  /// `-probeNotificationLimit <count>`: after planning, add this many temporary requests, count
   /// how many the system keeps, and remove them. This run only.
   var probeNotificationLimit: Int?
 

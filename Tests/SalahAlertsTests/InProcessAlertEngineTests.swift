@@ -46,8 +46,8 @@ import Testing
     #expect(clock.armed == nil, "nothing is left to wake for")
   }
 
-  /// The D7 fixture: the notification plan holds only two days of reminders, but the engine
-  /// gets the whole schedule and reports a reminder on the third day.
+  /// RFC 0003 §4.4's arithmetic example: the notification plan holds only two days of reminders,
+  /// but the engine gets the whole schedule and reports a reminder on the third day.
   @Test func retainsRemindersTheNotificationPlanLeavesOut() throws {
     let now = Fixture.date(0, 0, dayOffset: -1)
     let every = AlertSettings(before: Fixture.minutes(10), after: Fixture.minutes(5))

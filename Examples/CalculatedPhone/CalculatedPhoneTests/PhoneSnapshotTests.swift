@@ -9,7 +9,7 @@ import Testing
 /// The screen's logic at fixed instants, below the UI.
 ///
 /// Expected times are SalahTimes 0.1.0's, computed once through SalahCalculation's public API
-/// (`PrayerSchedule(source: CalculationSource(settings), location:)`) in a scratch package; the
+/// (`PrayerSchedule(source: CalculationSource(settings), location:)`) in a separate package; the
 /// README records how. The journeys assert the same values on screen.
 struct PhoneSnapshotTests {
   private let english = PhoneStrings(language: "en")

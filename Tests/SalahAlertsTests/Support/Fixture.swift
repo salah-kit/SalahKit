@@ -2,9 +2,10 @@ import Foundation
 import SalahAlerts
 import SalahCore
 
-/// Salah's characterization fixture (A2, Salah `a0206dd`): Makkah, Tuesday 2 June 2026, with
-/// Fajr 04:11, Sunrise 05:38, Dhuhr 12:19, Asr 15:35, Maghrib 19:00 and Isha 20:30. Every day of
-/// the timetable repeats those times, so day arithmetic stays checkable.
+/// The fixture of Salah's characterization tests (salah-kit/Salah at `a0206dd`): Makkah,
+/// Tuesday 2 June 2026, with Fajr 04:11, Sunrise 05:38, Dhuhr 12:19, Asr 15:35, Maghrib 19:00
+/// and Isha 20:30. Every day of the timetable repeats those times, so day arithmetic stays
+/// checkable.
 nonisolated enum Fixture {
   static let zone = TimeZone(identifier: "Asia/Riyadh") ?? .gmt
   static let location = PrayerLocation(

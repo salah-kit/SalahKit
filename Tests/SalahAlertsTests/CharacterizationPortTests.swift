@@ -7,17 +7,17 @@ import Testing
   import UserNotifications
 #endif
 
-/// A2's characterization of Salah's `PrayerAlertScheduler` (Salah `a0206dd`,
+/// Salah's characterization tests of its `PrayerAlertScheduler` (salah-kit/Salah at `a0206dd`,
 /// `GuidanceTests/PrayerAlertSchedulerCharacterizationTests.swift`), ported to SalahAlerts.
 ///
-/// Behavior the proposal retains (§7.5 "Behavior retained and corrected") is tested as it was.
-/// Each `characterizes…` test that pinned a defect becomes a regression for the corrected
-/// contract. RFC 0003 §6 maps every test. The fixture is A2's: Makkah, 2 June 2026.
+/// Behavior SalahAlerts retains is tested as it was. Each `characterizes…` test that pinned a
+/// defect becomes a regression for the corrected contract. RFC 0003 §6 ("Behavior retained and
+/// corrected") maps every test. The fixture is Salah's: Makkah, 2 June 2026.
 @Suite struct CharacterizationPortTests {
   // MARK: The window and the budget
 
-  /// Was `characterizesTheAlertWindowIsYesterdayTodayAndTomorrow` (defect F2): alerts ran out
-  /// two days after the app last ran. A plan now covers a horizon within the budget.
+  /// Was `characterizesTheAlertWindowIsYesterdayTodayAndTomorrow`: alerts ran out two days
+  /// after the app last ran. A plan now covers a horizon within the budget.
   @Test func plansAHorizonNotThreeDays() throws {
     let now = Fixture.date(13, 0)
     let schedule = try Fixture.alerts(
@@ -44,7 +44,7 @@ import Testing
     #expect(schedule.alerts.first?.id.scheduleDay == CivilDay(year: 2026, month: 6, day: 2))
   }
 
-  /// Was `characterizesTheThreeDayWindowNeverReachesTheCap` (defect F2): the cap never bound.
+  /// Was `characterizesTheThreeDayWindowNeverReachesTheCap`: the cap never bound.
   /// With every kind on for six events over the horizon, the budget binds at 60.
   @Test func theBudgetBinds() throws {
     let now = Fixture.date(0, 0, dayOffset: -1)
@@ -56,10 +56,10 @@ import Testing
     #expect(AlertPlanner().notificationPlan(schedule, from: now).alerts.count == 60)
   }
 
-  /// Was `characterizesFirstSixtyRequestsByFireDateWithoutKindPriority` (defect F2): the first
-  /// 60 by fire date crowded out the fourth day's adhans with its reminders. Now the two
-  /// near-term days are reserved and the rest of the budget goes to at-time alerts: the fourth
-  /// day's Dhuhr is requested, its reminders aren't.
+  /// Was `characterizesFirstSixtyRequestsByFireDateWithoutKindPriority`: the first 60 by fire date
+  /// crowded out the fourth day's adhans with its reminders. Now the two near-term days are
+  /// reserved and the rest of the budget goes to at-time alerts: the fourth day's Dhuhr is
+  /// requested, its reminders aren't.
   @Test func nearTermFirstThenAtTimeAlerts() throws {
     let now = Fixture.date(0, 0)
     let every = AlertSettings(before: Fixture.minutes(10), after: Fixture.minutes(5))
@@ -296,7 +296,7 @@ import Testing
 }
 
 #if canImport(UserNotifications) && !os(tvOS)
-  /// The scheduler half of A2's characterization, against the modelled center.
+  /// The scheduler half of Salah's characterization tests, against the modelled center.
   @Suite struct SchedulerCharacterizationPortTests {
     nonisolated static let prefix = "guidance.prayer."
 
@@ -339,9 +339,9 @@ import Testing
         return content
       }
 
-    /// Was `characterizesIdentifiersCarryTheFireTimestamp` (defect, §7.5 identity): the
-    /// identifier was prefix, prayer, kind and the fire date's Unix time. Now it is the prefix,
-    /// namespace, owning day, prayer and kind, and moving a reminder keeps it.
+    /// Was `characterizesIdentifiersCarryTheFireTimestamp`: the identifier was prefix, prayer,
+    /// kind and the fire date's Unix time. Now it is the prefix, namespace, owning day, prayer
+    /// and kind, and moving a reminder keeps it.
     @Test func identifiersAreStable() async throws {
       let clock = TestClock(Fixture.date(6, 0))
       let center = ModelCenter(clock: clock)
@@ -370,9 +370,9 @@ import Testing
             notification: Fixture.identity(.dhuhr, .before), fireDate: Fixture.date(12, 4))))
     }
 
-    /// Was `characterizesAMovedAlertIsRemovedBeforeItsReplacementIsAdded` (defect, A-30): a moved
-    /// alert's request was removed before its replacement was added. Now it's replaced by an
-    /// add under its identifier and never removed.
+    /// Was `characterizesAMovedAlertIsRemovedBeforeItsReplacementIsAdded`: a moved alert's
+    /// request was removed before its replacement was added. Now it's replaced by an add under
+    /// its identifier and never removed.
     @Test func aMovedAlertIsReplacedNotRemoved() async throws {
       let clock = TestClock(Fixture.date(6, 0))
       let center = ModelCenter(clock: clock)

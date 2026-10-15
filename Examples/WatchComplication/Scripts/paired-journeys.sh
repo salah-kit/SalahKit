@@ -19,8 +19,9 @@
 #
 # Usage: Scripts/paired-journeys.sh <iPhone UDID> <Watch UDID> [derived data path]
 #
-# Create and pair the simulators first (README, Testing). The script boots both and shuts them
-# down at the end. Results, logs and the timeline log go to <derived data>/paired-results.
+# Create and pair the simulators first (README, The paired journey). The script boots both and
+# shuts them down at the end. Results, logs and the timeline log go to
+# <derived data>/paired-results.
 
 set -euo pipefail
 

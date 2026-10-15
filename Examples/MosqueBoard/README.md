@@ -2,7 +2,7 @@
 
 A board for an iPad and for a mosque's Apple TV that shows the mosque's published prayer and iqama times with SalahCore, and calculates nothing.
 
-MosqueBoard is SalahKit's example of a published-timetable app (proposal §2.3 #2). Both apps import only `SalahCore`. No Adhan or SalahCalculation code is in their source or their build graphs. Where the timetable has a hole, the board says so instead of inventing a time.
+MosqueBoard is SalahKit's example of a published-timetable app. Both apps import only `SalahCore`. No SalahTimes or SalahCalculation code is in their source or their build graphs, and CI checks that the apps link neither. Where the timetable has a hole, the board says so instead of inventing a time.
 
 ## What it shows
 
@@ -138,7 +138,7 @@ Every value on the board has a VoiceOver label, such as "Begins 05:31", "Iqama 0
 ## Pending
 
 - **Contrast limit:** the example retains platform semantic secondary text, following [RFC 0004](../../docs/rfcs/0004-widgets-and-ui.md), §8 #6. The recorded light-mode ratio of 3.30–3.44:1 is below WCAG's 4.5:1 for body text; apps requiring that floor must restyle it. The iOS measurements do not establish full contrast compliance or measure the TV's own background.
-- **A real iPad:** only simulators have run the board so far. Run it on a physical iPad in both orientations and with large Dynamic Type sizes.
-- **A real Apple TV:** only a simulator has run the tvOS app so far. Run it on an Apple TV connected to a TV, check that the board stays inside the picture with the TV's overscan, and leave it open past the screen-saver delay to confirm the board stays on screen.
-- **Arabic review:** a native speaker should review the Arabic strings.
+- **A real iPad:** only simulators have run the board so far: both orientations, the largest text sizes and Arabic ([#26](https://github.com/salah-kit/SalahKit/issues/26)), and VoiceOver ([#30](https://github.com/salah-kit/SalahKit/issues/30)).
+- **A real Apple TV:** only a simulator has run the tvOS app so far: the TV's overscan, the screen saver and reading the board from across a room ([#27](https://github.com/salah-kit/SalahKit/issues/27)).
+- **Arabic review:** a native speaker should review the Arabic strings ([#35](https://github.com/salah-kit/SalahKit/issues/35)).
 - **Local-source meaning:** see "Source interpretation" in [Timetables.md](Timetables.md).

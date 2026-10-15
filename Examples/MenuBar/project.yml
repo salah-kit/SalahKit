@@ -29,7 +29,8 @@ settings:
     SWIFT_EMIT_LOC_STRINGS: YES
     ENABLE_HARDENED_RUNTIME: YES
     # The default actor isolation of the example's own targets. Builds pass
-    # MENUBAR_ISOLATION=nonisolated (or MainActor) to check both settings (proposal §3.1).
+    # MENUBAR_ISOLATION=nonisolated (or MainActor) to check both settings, because an adopter's
+    # app may default to either (CONTRIBUTING.md, Default isolation).
     # Passing SWIFT_DEFAULT_ACTOR_ISOLATION itself on the command line would also reach the
     # package targets and make SalahTimes' types main-actor-isolated, which no app sees
     # (docs/rfcs/0001-core.md, section 6.3); this setting reaches only the targets below.

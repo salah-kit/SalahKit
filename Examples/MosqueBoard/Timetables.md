@@ -20,7 +20,7 @@ Each row is one owning day:
 ```
 
 - `times` are begin (adhan) times as local wall-clock times, `"HH:MM"` on a 24-hour clock.
-- `"+1"` means the clock time is on the next civil day but the prayer still belongs to the row's day. Above, the Isha of Sunday 21 June begins at 01:15 on Monday 22 June (RFC §4.2).
+- `"+1"` means the clock time is on the next civil day but the prayer still belongs to the row's day. Above, the Isha of Sunday 21 June begins at 01:15 on Monday 22 June (RFC 0001 §4.2).
 - `iqama` holds the published jama'ah (congregation) times. Only the synthetic file has them.
 - `"observances": {"dhuhr": "jumuah"}` declares Friday's Dhuhr as Jumu'ah. Its iqama is the Jumu'ah jama'ah time. SalahKit never infers Jumu'ah from the weekday.
 
@@ -72,7 +72,7 @@ For comparison, Edinburgh Central Mosque publishes its own [summer estimation po
 
 ### Begin times
 
-The begin times were computed with [adhan-swift](https://github.com/batoulapps/adhan-swift) (MIT, Batoul Apps) at commit `a6fa2de`, by a throwaway generator outside this repository. SalahKit doesn't depend on adhan-swift, and MosqueBoard doesn't link it.
+The begin times were computed with [adhan-swift](https://github.com/batoulapps/adhan-swift) (MIT, Batoul Apps) at commit `a6fa2de`, by the program under [Generator](#generator), which isn't part of this repository. SalahKit doesn't depend on adhan-swift, and MosqueBoard doesn't link it.
 
 | Parameter | Value |
 |---|---|
@@ -113,7 +113,7 @@ Every jama'ah time is at or after its begin time, and rounded up to a multiple o
 
 ### Generator
 
-A Swift package depending on the local adhan-swift clone by path:
+A Swift package that depends on a clone of adhan-swift at `a6fa2de`, by path:
 
 ```swift
 // swift-tools-version:6.0

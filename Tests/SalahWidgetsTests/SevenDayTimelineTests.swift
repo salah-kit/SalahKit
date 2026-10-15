@@ -6,11 +6,11 @@ import Testing
 
 @testable import SalahWidgets
 
-/// Successive 48-hour timelines over seven days, with a fixed clock (proposal §7.3, "Done
-/// means"). Each test runs ``WidgetHost`` and checks, at every five minutes and around every
-/// entry and event, that the entry on show says what the schedule says at that instant, that it
-/// never shows a schedule state past its timeline's validity, and that it shows the expired
-/// entry exactly while a late provider call leaves the timeline exhausted.
+/// Successive 48-hour timelines over seven days, with a fixed clock. Each test runs ``WidgetHost``
+/// and checks, at every five minutes and around every entry and event, that the entry on show says
+/// what the schedule says at that instant, that it never shows a schedule state past its timeline's
+/// validity, and that it shows the expired entry exactly while a late provider call leaves the
+/// timeline exhausted.
 @Suite("Seven days of widget timelines")
 struct SevenDayTimelineTests {
   static let riyadh = TimeZone(identifier: "Asia/Riyadh") ?? .gmt

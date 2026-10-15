@@ -2,7 +2,7 @@
 
 An iPhone app and a widget extension that share an App Group. The app saves the place, the calculation method and the names' language; the extension builds its own schedule with SalahCalculation and its own 48-hour timeline with SalahWidgets, and draws it with SalahUI on the Home Screen and the Lock Screen. Nothing depends on the app running after it saves.
 
-PhoneWidgets is SalahKit's widget example (proposal §11). It builds on [CalculatedPhone](../CalculatedPhone)'s calculated integration and stays small. It uses only the public API of `SalahCore`, `SalahCalculation`, `SalahWidgets` and `SalahUI`, and imports `SalahTimes` to name `CalculationMethod`. It has no `@testable` imports of the packages and no copies of package logic.
+PhoneWidgets is SalahKit's widget example. It builds on [CalculatedPhone](../CalculatedPhone)'s calculated integration and stays small. It uses only the public API of `SalahCore`, `SalahCalculation`, `SalahWidgets` and `SalahUI`, and imports `SalahTimes` to name `CalculationMethod`. It has no `@testable` imports of the packages and no copies of package logic.
 
 ## What it shows
 
@@ -163,7 +163,7 @@ Measured inside the real extension on an iPhone 17 simulator with iOS 27.0 (Xcod
 
 A later run measured 356 ms for the first call after the extension started cold, then 6.4 to 59 ms, at 14.7 to 18.1 MiB.
 
-The time is the provider's work alone (`ContinuousClock` around `PrayerTimelineProvider.timeline`); the footprint is `phys_footprint` before and after it, so it includes SwiftUI and WidgetKit, which the extension loads anyway. A simulator on a Mac says little about the oldest supported iPhone; that measurement is pending.
+The time is the provider's work alone (`ContinuousClock` around `PrayerTimelineProvider.timeline`); the footprint is `phys_footprint` before and after it, so it includes SwiftUI and WidgetKit, which the extension loads anyway. A simulator on a Mac says little about the oldest supported iPhone; that measurement is pending ([#24](https://github.com/salah-kit/SalahKit/issues/24)).
 
 ## Accessibility and languages
 
@@ -171,7 +171,7 @@ Every control has a VoiceOver label, and every widget family names the next pray
 
 ## Pending
 
-- **The seven-day iPhone soak** (proposal §7.3): install on an iPhone, add the widgets, don't open the app for seven days, then read the Widget log.
-- **The oldest supported iPhone:** measure the generation time and memory there.
-- **A real Lock Screen:** the accessory families are checked in the Widget states screen only.
-- **Arabic review:** a native speaker should review the Arabic strings.
+- **Seven days on a real iPhone:** install on an iPhone, add the widgets, don't open the app for seven days, then read the Widget log ([#23](https://github.com/salah-kit/SalahKit/issues/23)).
+- **The oldest supported iPhone:** measure the generation time and memory there ([#24](https://github.com/salah-kit/SalahKit/issues/24)).
+- **A real Lock Screen:** the accessory families are checked in the Widget states screen only; the seven-day check adds them to a real Lock Screen ([#23](https://github.com/salah-kit/SalahKit/issues/23)).
+- **Arabic review:** a native speaker should review the Arabic strings ([#33](https://github.com/salah-kit/SalahKit/issues/33)).

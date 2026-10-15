@@ -2,7 +2,7 @@
 
 A macOS menu-bar app that keeps running: the next prayer in the menu bar, refreshed at the dates of a `.steps` refresh plan; prayer alerts from SalahAlerts' in-process engine and notification plan, with a generated tone; and a desktop widget whose Stop button reaches the running app through the live-state pattern.
 
-MenuBar is SalahKit's always-running example (proposal §11). It uses only the public API of `SalahCore`, `SalahCalculation`, `SalahAlerts`, `SalahWidgets` and `SalahUI`, and imports `SalahTimes` to name `CalculationMethod`. It has no `@testable` imports of the packages and no copies of package logic.
+MenuBar is SalahKit's always-running example. It uses only the public API of `SalahCore`, `SalahCalculation`, `SalahAlerts`, `SalahWidgets` and `SalahUI`, and imports `SalahTimes` to name `CalculationMethod`. It has no `@testable` imports of the packages and no copies of package logic.
 
 ## What it shows
 
@@ -10,7 +10,7 @@ MenuBar is SalahKit's always-running example (proposal §11). It uses only the p
 - **Alerts for an app that keeps running.** `AlertCoordinator` follows SalahAlerts' article "Alerts within the 64-notification limit": `InProcessAlertEngine` gets the uncapped `AlertSchedule` from five minutes ago to two days ahead, `NotificationScheduler` gets the `NotificationPlan` of two weeks within the default budget of 60, and when alerts come due the engine's report goes to `deliver` (a banner for each alert the system won't show by itself) and the tone plays for `InProcessAlertEngine.preferredAlert(among:)`, the engine's default precedence. Alerts are off until the user turns them on, which asks for notification permission then. A notification for an alert whose tone the app plays carries no sound of its own, so the system doesn't play its sound beside the tone; if the app isn't running when it arrives, it's silent.
 - **Sleep, wake and clock changes.** `SystemEventObserver` listens for NSWorkspace's `didWakeNotification` and for `NSSystemClockDidChange` and `NSSystemTimeZoneDidChange`. Each one makes the engine catch up (`resync()`), the alerts replan and the display plan again from the new moment. The app also replans every twelve hours.
 - **A generated tone.** `ToneSynthesis` writes three soft sine notes as WAV data at launch, and `AudioTonePlayer` plays them with AVFoundation: once for the test tone, three times for an alert. No recording ships with the app.
-- **The live-state pattern** (proposal §7.3, and the article "Lessons from Salah"). The app publishes what it plays in `SharedValue.nowPlaying`. The widget shows a Stop button while something plays; its `StopPlaybackIntent` runs in the widget extension's process, clears the value and posts `MenuBarID.stopSignal`, a `DarwinSignal`. `LiveState` stops the tone when the signal arrives, without reading the stored value, and publishes what it plays again, which confirms the stop to the widget.
+- **The live-state pattern** (SalahWidgets' article "Lessons from Salah"). The app publishes what it plays in `SharedValue.nowPlaying`. The widget shows a Stop button while something plays; its `StopPlaybackIntent` runs in the widget extension's process, clears the value and posts `MenuBarID.stopSignal`, a `DarwinSignal`. `LiveState` stops the tone when the signal arrives, without reading the stored value, and publishes what it plays again, which confirms the stop to the widget.
 - **The widget.** Small and medium families for the desktop and Notification Center. The extension loads the settings and what plays from the App Group and builds a `.steps` timeline with `PrayerTimelineBuilder` (static text, a minute grid within 30 minutes of a prayer), with `includeDayBoundaries` for midnight entries within the same budget; without settings it asks the user to open the app.
 
 ### The app
@@ -23,7 +23,7 @@ MenuBar is SalahKit's always-running example (proposal §11). It uses only the p
 
 ## Screenshots
 
-These are the journeys' screenshot attachments, exported from a test run on this Mac (macOS 27) with `xcrun xcresulttool export attachments`. The journeys read the dropdown's view in a window (`-showWindow`), because macOS can hide a status item behind the camera housing.
+These are the journeys' screenshot attachments, exported with `xcrun xcresulttool export attachments` from a test run on a Mac with macOS 27. The journeys read the dropdown's view in a window (`-showWindow`), because macOS can hide a status item behind the camera housing.
 
 | | | |
 |---|---|---|
@@ -87,7 +87,7 @@ The app's targets default to `MainActor` isolation, as new Xcode projects do. `M
   - The signal alone: the harness posts only the signal, leaving the stored value saying the tone plays; the app stops, and its republish clears the value (`changed=true`).
   - A wake after sleeping through a prayer: launched a minute before Asr with alerts on and `-testEvents`, the app is asked by the harness's `sleep` to move its clock three minutes ahead and post NSWorkspace's wake notification to itself. Its log then has the wake, the display planned again ("Asr +2m"), Asr's alert started after the wake, and a replan.
   - A clock change beyond the grace: the harness's `clock` moves the app's clock ten minutes ahead and posts `NSSystemClockDidChange`; the display shows "Asr +9m", the alerts replan, and nothing plays.
-- **Journeys** (`MenuBarUITests`, XCUITest, on this Mac):
+- **Journeys** (`MenuBarUITests`, XCUITest, on the Mac):
   - `testScheduleShowsTheDay` and `testArabic`: the window lists Makkah's day, in English or Arabic, and the status item names the next prayer.
   - `testTitleRefreshesOnTheMinute`: launched three seconds before Asr, the status item's title turns to "Asr started 0 seconds ago" at Asr and to "Asr started 1 minute ago" a minute later, with nothing touching the app. (XCUITest reads the title's spoken label, which the app sets from the same refresh as the text "Asr +0s".)
   - `testAppStopButton`: the window's "Play test tone" shows what plays, and its Stop button ends it.
@@ -108,34 +108,24 @@ H=<products>/MenuBarStopHarness.app/Contents/MacOS/MenuBarStopHarness
 
 The app records what it does with playback, the stop signal and system events in a bounded log in the App Group (`DiagnosticsLog`, the example's evidence channel), and in the unified log under the subsystem `io.github.salah-kit.MenuBar`. `MenuBarRoundTripTests` runs the round trip against the running app: the app plays and the widget's timeline shows the Stop button; after `stop`, the app's log has `stopSignal`, `stopped signal wasPlaying=true` and `published playing=false`, the stored value is gone, and the widget's timeline, built by the extension's code in the harness's process, no longer shows the button.
 
-On this Mac (macOS 27, Xcode 27.0), signed with a personal team, the app and the harness ran sandboxed with the App Group, and the Darwin signal reached the app from the harness's sandbox with no prompt.
+On macOS 27 with Xcode 27.0, signed with a personal team, the app and the harness ran sandboxed with the App Group, and the Darwin signal reached the app from the harness's sandbox with no prompt.
 
 ## Accessibility and languages
 
-The Stop buttons are labelled "Stop the tone" (the widget's names the prayer: "Stop the tone for Asr"); the title has a spoken label ("Asr in 27 minutes"); SalahUI's rows read as one element with the full name. The dropdown and the widget use the system's text styles. Every string is in the String Catalog (`Shared/Localizable.xcstrings`), in English and Arabic; the Arabic is machine-drafted and marked as needing review, and the prayer names come from SalahCore's reviewed catalog.
+The Stop buttons are labelled "Stop the tone" (the widget's names the prayer: "Stop the tone for Asr"); the title has a spoken label ("Asr in 27 minutes"); SalahUI's rows read as one element with the full name. The dropdown and the widget use the system's text styles. Every string is in the String Catalog (`Shared/Localizable.xcstrings`), in English and Arabic; the Arabic is machine-drafted and marked as needing review ([#31](https://github.com/salah-kit/SalahKit/issues/31)), and the prayer names come from SalahCore's reviewed catalog.
 
 ## Pending
 
-These checks need a person. Record the tag, macOS version, signing setup, settings, timestamps,
-screenshots and logs in a check record of your own; the implementation run's workspace evidence
-is not included in this standalone repository.
+These checks need a person with a Mac. Each issue has the steps and what to record.
 
-- **A real tap on the desktop widget's Stop button:** build the app signed as above, launch
-  it with `-playTestTone repeating`, and add its small or medium widget to the desktop.
-  Click Stop three times across separate tone launches, including once in Arabic. Use the
-  harness's `state` command to confirm that what plays is absent and the timeline's
-  `showsStopButton` is false. Record click-to-stop/redraw delay and the app's `stopSignal`,
-  `stopped signal wasPlaying=true` and `published playing=false` log entries. The automated
-  harness runs the intent in a separate sandboxed process; only this tap observes the widget
-  extension that WidgetKit launches.
-- **Real sleep and wake:** launch with `-alerts on -reminder off -notifications memory`
-  and `-now` set about two minutes before a prayer. Sleep the Mac within a minute and wake
-  about three minutes later: the at-time tone should catch up once within its five-minute
-  grace. Repeat waking after eight minutes: it must not play beyond grace. Check a genuine
-  clock change, restoring automatic time afterwards. Then repeat the wake check using real
-  notifications after explicitly granting permission; record each banner separately from
-  the engine's due report and tone, expecting one delivery. The round-trip tests inject a
-  wake notification; a real sleep stops timers and leaves overdue delivery to the system.
+- **A real tap on the desktop widget's Stop button**
+  ([#29](https://github.com/salah-kit/SalahKit/issues/29)): the round-trip tests run the
+  intent's code in a separate sandboxed process; only a tap observes the widget extension that
+  WidgetKit launches.
+- **Real sleep, wake and a clock change**
+  ([#28](https://github.com/salah-kit/SalahKit/issues/28)): the round-trip tests inject the
+  wake and clock-change notifications; a real sleep stops timers and leaves overdue delivery to
+  the system.
 
 Read the app's unified log with:
 
