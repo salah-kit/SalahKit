@@ -310,7 +310,7 @@ A change to a calculation vector needs a written reason in RFC 0002 §10, in the
 
 ## Alert and reconciliation expectations
 
-A generator wrote both folders: `alerts/generator/` (`model.py` models RFC 0003 §4.3–§4.5 and the parts of RFC 0001 §4.4 and §4.6 the planner reads; `generate.py` holds the cases). It was written from RFC 0003 before SalahAlerts' implementation, and doesn't read it. Kazan's instants are those of `calculation/owning-days.json`, from SalahTimes' reference. Regenerate with `python3 Vectors/alerts/generator/generate.py`, which rewrites the files byte for byte. Independent reviewers recomputed the expectations with their own models before the implementation started; RFC 0003 §7 records what they found.
+A generator wrote both folders: `alerts/generator/` (`model.py` models RFC 0003 §4.3–§4.5 and the parts of RFC 0001 §4.4 and §4.6 the planner reads; `generate.py` holds the cases). It was written from RFC 0003 before SalahAlerts' implementation, and doesn't read it. Kazan's instants are those of `calculation/owning-days.json`, from SalahTimes' reference. Regenerate with `python3 Vectors/alerts/generator/generate.py`, which rewrites the files byte for byte. Before the implementation started, the expectations were recomputed with separate models of the RFC; RFC 0003 §7 records what that changed.
 
 A change to an existing alert or reconciliation vector needs a written reason in RFC 0003 §10, in the same commit.
 
