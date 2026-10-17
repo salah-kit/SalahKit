@@ -163,6 +163,34 @@ struct AlertCoordinatorTests {
     #expect(!rig.center.pendingIdentifiers.contains(request))
   }
 
+  @Test(
+    "after a sleep through a prayer, the engine's wake-up may report it before the wake",
+    arguments: [2 * 60, 1.5] as [TimeInterval])
+  func wakeUpBeforeTheWakeNotification(late: TimeInterval) async throws {
+    let asr = try Fixture.event(.asr)
+    let rig = Rig(at: asr.time.addingTimeInterval(-5 * 60), settings: Self.settings(reminder: nil))
+    rig.coordinator.replan()
+    await rig.coordinator.waitForApply()
+    let request = try Self.asrAlert(rig)
+    #expect(rig.center.pendingIdentifiers.contains(request))
+    // The Mac sleeps through Asr. The engine's wake-up waits on a clock that counts time asleep,
+    // so it runs, late, as the Mac wakes, before the app sees the wake notification.
+    rig.clock.jump(to: asr.time.addingTimeInterval(late))
+    rig.clock.fire()
+    #expect(rig.coordinator.lastDue.map(\.event.kind) == [.asr])
+    #expect(rig.player.plays.count == 1)
+    // `deliver`'s task runs and checks the center before the wake arrives.
+    try await Task.sleep(for: .milliseconds(100))
+    let replans = rig.coordinator.replanCount
+    rig.workspaceCenter.post(name: SystemEventObserver.didWake, object: nil)
+    #expect(await eventually { rig.coordinator.replanCount > replans })
+    await rig.coordinator.waitForApply()
+    // A replan from after Asr removes its past request, and Asr's banner is posted after it.
+    #expect(await eventually { rig.center.deliveredIdentifiers == [request] })
+    #expect(!rig.center.pendingIdentifiers.contains(request))
+    #expect(rig.player.plays.count == 1)
+  }
+
   @Test("a clock change within the grace catches up; beyond it, the alert is skipped")
   func clockChange() async throws {
     let asr = try Fixture.event(.asr)

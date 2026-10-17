@@ -18,7 +18,8 @@ import os
 ///   `InProcessAlertEngine.preferredAlert(among:)`, the engine's default precedence, picks.
 ///
 /// The app replans when it starts, when the settings change, after the Mac wakes and when the
-/// clock changes (``handle(_:)``), and every twelve hours.
+/// clock changes (``handle(_:)``), when the engine's wake-up reports an alert late, and every
+/// twelve hours.
 @MainActor
 @Observable
 final class AlertCoordinator {
@@ -26,6 +27,11 @@ final class AlertCoordinator {
   static let namespace = "prayers"
   /// How often the app replans while nothing else makes it.
   static let replanInterval: TimeInterval = 12 * 3_600
+  /// How long after an alert's fire date the engine's wake-up reports it on a Mac that's awake:
+  /// the engine arms it 0.15 seconds after the fire date, and `SystemAlertClock` wakes within
+  /// 0.75 seconds of that. A later report catches up, after a sleep or a busy moment. A sleep
+  /// that ends within this second looks like an on-time report.
+  static let onTimeReportDelay: TimeInterval = 1
 
   /// The latest schedule the engine follows; `nil` with alerts off.
   private(set) var engineSchedule: AlertSchedule?
@@ -47,6 +53,9 @@ final class AlertCoordinator {
   @ObservationIgnored private let replanClock: any AlertClock
   @ObservationIgnored private var engine: InProcessAlertEngine?
   @ObservationIgnored private var applyTask: Task<Void, Never>?
+  /// Set while the engine checks inside ``handle(_:)`` or ``replan()``, which apply a new plan
+  /// in the same turn, after anything it reports.
+  @ObservationIgnored private var applyFollows = false
   @ObservationIgnored private let diagnostics: Diagnostics?
   @ObservationIgnored private let budget: AlertBudget
   @ObservationIgnored private let logger = Logger(
@@ -95,7 +104,9 @@ final class AlertCoordinator {
     // A previously early-reported alert may have delivered before a small rollback. The
     // engine retains this mark across every later replan; new early reports stay eligible.
     if event == .clockChange { engine?.excludeHandledOccurrencesFromNotifications() }
+    applyFollows = true
     engine?.resync()
+    applyFollows = false
     replan()
   }
 
@@ -113,7 +124,9 @@ final class AlertCoordinator {
       let engineSchedule = try planner.schedule(
         schedule, namespace: Self.namespace, from: now.addingTimeInterval(-5 * 60),
         to: now.addingTimeInterval(2 * 86_400), settings: preferences.settings(for:))
+      applyFollows = true
       engine?.update(engineSchedule)
+      applyFollows = false
       self.engineSchedule = preferences.enabled ? engineSchedule : nil
       // The system: two weeks of alerts, as many as the budget holds.
       let longSchedule = try planner.schedule(
@@ -170,6 +183,16 @@ final class AlertCoordinator {
         NowPlaying.Alert(
           prayer: alert.event.kind, observance: alert.event.observance, kind: alert.kind))
     }
+    // The engine's wake-up waits on a clock that counts time asleep, so at the end of a sleep it
+    // can report a caught-up alert before the app sees the wake. Replanning now, as the wake
+    // will, keeps `deliver` behind an `apply` planned from after the alert, whichever comes
+    // first.
+    let now = clock.now
+    if !applyFollows,
+      due.contains(where: { now.timeIntervalSince($0.fireDate) > Self.onTimeReportDelay })
+    {
+      replan()
+    }
   }
 
   /// Posts banners for `due` once the plans applied so far have finished, including the one a
@@ -179,7 +202,9 @@ final class AlertCoordinator {
   /// still hold as pending, and then the app replans from the new moment. Delivering first would
   /// skip the alert because its request is pending, and the replan's `apply` would then remove
   /// that request, which is in the past: no banner at all. After the `apply`, `deliver` posts
-  /// the banner, or skips it when the system delivered the request meanwhile.
+  /// the banner, or skips it when the system delivered the request meanwhile. When the engine's
+  /// own wake-up reports the alert late, before the app sees the wake, `alertsCameDue` starts
+  /// that replan.
   private func deliver(_ due: [PlannedAlert]) {
     let content = AlertContent(strings: MenuBarStrings(language: settings.language))
     // The task starts after this turn on the main actor, when `applyTask` is the latest apply.

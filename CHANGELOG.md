@@ -8,6 +8,11 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
+- MenuBar no longer loses the banner of an alert that came due during a sleep when the engine's
+  wake-up reports it before the app sees the wake notification. A report more than a second late
+  now replans first, so `deliver` still runs after an `apply` planned from after the alert, and
+  the article on the notification limit says to do the same
+  ([#45](https://github.com/salah-kit/SalahKit/issues/45)).
 - `docs/calculation-parity.md` is now a guide for apps moving from adhan-swift: how its settings
   map onto `CalculationSettings`, which times change and why, and which an app must show as
   missing, with Salah's Ramadan, tie and country-table choices as an example of app policy.
