@@ -6,8 +6,22 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- `PrayerLocale.resolved` follows CLDR's default digits for the country an Arabic identifier
+  names: `ar-AE`, `ar-DZ`, `ar-EH`, `ar-LY`, `ar-MA` and `ar-TN` now get Latin digits instead of
+  Arabic-Indic ones. A bare `ar` and every other Arabic region keep Arabic-Indic digits, and an
+  explicit numbering system still wins, such as `ar-MA-u-nu-arab`
+  ([RFC 0001](docs/rfcs/0001-core.md), §10.4;
+  [#42](https://github.com/salah-kit/SalahKit/issues/42)).
+
 ### Fixed
 
+- `PrayerLocale.resolved` keeps a `-u-nu-` numbering system that matches the language's
+  script when it's given the identifier string, such as `ar-MA-u-nu-arab` or `bn-u-nu-beng`.
+  Foundation on macOS 27 drops that value when it parses the identifier, which left a locale
+  that formatted no digits. A `Locale` already made from such an identifier has lost the value;
+  build it with `Locale.Components` or `@numbers=` instead.
 - `docs/calculation-parity.md` is now a guide for apps moving from adhan-swift: how its settings
   map onto `CalculationSettings`, which times change and why, and which an app must show as
   missing, with Salah's Ramadan, tie and country-table choices as an example of app policy.

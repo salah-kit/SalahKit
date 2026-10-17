@@ -20,7 +20,7 @@
   /// Both stop at zero once the prayer has started. Pass only an event the schedule knows will
   /// come next, such as `PrayerState.nextPrayer`: when the next prayer is unknown, show no
   /// countdown at all. Digits follow the environment's locale; set it to a locale from
-  /// `PrayerLocale.resolved(_:)` for native digits.
+  /// `PrayerLocale.resolved(_:)` for the same digits on every platform.
   public struct PrayerCountdown: View {
     /// How a countdown updates.
     nonisolated public enum Mode: Hashable, Sendable {

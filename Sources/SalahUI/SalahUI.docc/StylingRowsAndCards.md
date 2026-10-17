@@ -144,7 +144,8 @@ a minute that hasn't passed. Both kinds stop at zero once the prayer has started
 
 The names come from the `PrayerNames` you pass, in their own locale; times and
 countdowns use the environment's locale. Set both to the language your app shows. A bare
-identifier such as `ar` can lose its native digits, so resolve it first:
+identifier such as `ar` can lose its native digits, and Arabic's default digits depend on the
+region (Latin in Morocco, Arabic-Indic in Egypt), so resolve it first:
 
 ```swift
 let locale = PrayerLocale.resolved("ar")
