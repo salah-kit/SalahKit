@@ -133,6 +133,9 @@ struct AlertTests {
     let arabic = PhoneAlertContent(strings: PhoneStrings(language: "ar"), timeZone: zone)
     #expect(arabic.title(alert(.atTime, 0)) == "الظهر")
     #expect(arabic.body(alert(.atTime, 0)).filter(Self.isVisible) == "حان وقت الظهر (١٢:٠٧)")
+    // The verb agrees with وقت, so it fits every name, the feminine الجمعة included.
+    #expect(english.body(alert(.after, 600)).filter(Self.isVisible) == "Dhuhr began 10 minutes ago")
+    #expect(arabic.body(alert(.after, 600)).filter(Self.isVisible).hasPrefix("بدأ وقت الظهر منذ "))
   }
 
   /// Foundation wraps interpolated arguments in directional isolates (U+2068, U+2069).
