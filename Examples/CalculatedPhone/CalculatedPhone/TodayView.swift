@@ -392,6 +392,7 @@ private struct RowView: View {
         nameAndStatus(id)
         timeAndMarker(id, alignment: .leading)
       }
+      .frame(maxWidth: .infinity, alignment: .leading)
     }
     .padding(.vertical, 2)
     .accessibilityElement(children: .contain)

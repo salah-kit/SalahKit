@@ -422,6 +422,14 @@ nonisolated final class CalculatedPhoneJourneys: XCTestCase {
           assertWordsWhole("next.owningDay", .caption1, in: app)
           assertWordsWhole("latest.owningDay", .caption1, in: app)
         }
+        // A stacked row starts at the card's leading edge, as the header does.
+        let place = element("header.place", in: app).frame
+        let fajr = element("row.fajr.name", in: app).frame
+        if language == "ar" {
+          XCTAssertEqual(fajr.maxX, place.maxX, accuracy: 1, "\(fajr) \(place)")
+        } else {
+          XCTAssertEqual(fajr.minX, place.minX, accuracy: 1, "\(fajr) \(place)")
+        }
         screenshot("07-largest-text-\(language)-\(arguments[1])")
         app.terminate()
       }
