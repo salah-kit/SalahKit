@@ -353,6 +353,136 @@
         }
       }
     },
+    "+%lld minutes": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تأخير بـ%lld دقائق"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تأخير بـ%lld دقيقة"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تأخير بدقيقة"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تأخير بـ%lld دقيقة"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تأخير بدقيقتين"
+                }
+              },
+              "zero": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تأخير بـ%lld دقيقة"
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "+%lld minute"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "+%lld minutes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "-%lld minutes": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تقديم بـ%lld دقائق"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تقديم بـ%lld دقيقة"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تقديم بدقيقة"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تقديم بـ%lld دقيقة"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تقديم بدقيقتين"
+                }
+              },
+              "zero": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تقديم بـ%lld دقيقة"
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "-%lld minute"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "-%lld minutes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "A method sets the Fajr, Maghrib and Isha rules, the night, its own minutes and the rounding. Changing any of them switches to Custom.": {
       "extractionState": "manual",
       "localizations": {

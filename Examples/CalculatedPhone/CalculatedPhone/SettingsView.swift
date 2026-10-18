@@ -281,7 +281,7 @@ struct SettingsView: View {
           )
           .accessibilityLabel(Text(verbatim: strings.names.name(of: kind)))
         }
-        .accessibilityValue(Text(verbatim: text.format.spokenMinutes(minutes, signed: true)))
+        .accessibilityValue(Text(verbatim: text.spokenSignedMinutes(minutes)))
         .accessibilityIdentifier("settings.adjust.\(kind.rawValue)")
       }
     } header: {

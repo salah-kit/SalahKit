@@ -146,6 +146,15 @@ nonisolated struct CalculationText: Sendable {
     format.spokenMinutes(value)
   }
 
+  /// Minutes added or taken away, in words, for VoiceOver: "+2 minutes", "-1 minute". Each
+  /// plural form keeps the direction, also where it has no number: Arabic says "تأخير بدقيقتين"
+  /// and "تقديم بدقيقة" (a delay of two minutes, an advance of one).
+  func spokenSignedMinutes(_ value: Int) -> String {
+    if value > 0 { return strings("+\(value) minutes") }
+    if value < 0 { return strings("-\(-value) minutes") }
+    return format.spokenMinutes(0)
+  }
+
   func text(_ rule: FajrRule) -> String {
     switch rule {
     case .angle(let value): degrees(value)
@@ -177,10 +186,10 @@ nonisolated struct CalculationText: Sendable {
     return items.isEmpty ? strings("None") : format.units(items)
   }
 
-  /// The minutes in words, for VoiceOver: "Sunrise −7 minutes, Dhuhr +5 minutes".
+  /// The minutes in words, for VoiceOver: "Sunrise -7 minutes, Dhuhr +5 minutes".
   func spokenText(_ adjustments: PrayerAdjustments) -> String {
     let items = Self.minutes(adjustments).map { kind, value in
-      strings("\(strings.names.name(of: kind)) \(format.spokenMinutes(value, signed: true))")
+      strings("\(strings.names.name(of: kind)) \(spokenSignedMinutes(value))")
     }
     return items.isEmpty ? strings("None") : format.units(items)
   }

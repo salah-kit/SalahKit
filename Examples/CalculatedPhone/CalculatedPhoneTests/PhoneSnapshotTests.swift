@@ -179,6 +179,33 @@ struct PhoneSnapshotTests {
     let isha = try #require(arabic.calculation.first { $0.id == "isha" })
     #expect(isha.value.split(whereSeparator: \.isWhitespace).contains("د"))
     #expect(isha.accessibilityLabel.contains("دقيقة"), "\(isha.accessibilityLabel)")
+    // Fajr +2 and Isha -5 keep their direction in Arabic too.
+    let adjustments = try #require(arabic.calculation.first { $0.id == "adjustments" })
+    #expect(adjustments.accessibilityLabel.contains("تأخير بدقيقتين"), "\(adjustments)")
+    #expect(adjustments.accessibilityLabel.contains("تقديم بـ"), "\(adjustments)")
+  }
+
+  /// Minutes added or taken away keep their direction in every plural form. Arabic's forms for
+  /// one and two minutes have no number, so "+1" and "-1" mustn't both read "دقيقة".
+  @Test func signedMinutesKeepTheirDirection() {
+    let english = CalculationText(strings: english)
+    #expect(english.spokenSignedMinutes(1) == "+1 minute")
+    #expect(english.spokenSignedMinutes(-1) == "-1 minute")
+    #expect(english.spokenSignedMinutes(2) == "+2 minutes")
+    #expect(english.spokenSignedMinutes(0) == "0 minutes")
+
+    let arabic = CalculationText(strings: PhoneStrings(language: "ar"))
+    #expect(arabic.spokenSignedMinutes(1) == "تأخير بدقيقة")
+    #expect(arabic.spokenSignedMinutes(-1) == "تقديم بدقيقة")
+    #expect(arabic.spokenSignedMinutes(2) == "تأخير بدقيقتين")
+    #expect(arabic.spokenSignedMinutes(-2) == "تقديم بدقيقتين")
+    let values = [-11, -3, -2, -1, 1, 2, 3, 11]
+    let spoken = values.map(arabic.spokenSignedMinutes)
+    #expect(Set(spoken).count == values.count, "\(spoken)")
+    for (value, text) in zip(values, spoken) {
+      #expect(text.hasPrefix(value > 0 ? "تأخير" : "تقديم"), "\(value): \(text)")
+    }
+    #expect(arabic.spokenSignedMinutes(3).contains("٣"), "\(spoken)")
   }
 
   // MARK: Across midnight
