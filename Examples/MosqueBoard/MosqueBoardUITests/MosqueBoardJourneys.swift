@@ -204,7 +204,8 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
           for kind in ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"] {
             assertShownWhole("row.\(kind).name", .title1, within: window, in: app)
             assertShownWhole("row.\(kind).time", .title1, within: window, in: app)
-            if board == "muis" {
+            // Edinburgh's Isha isn't published, so it has no status.
+            if board == "muis" || kind != "isha" {
               assertShownWhole("row.\(kind).status", .title3, within: window, in: app)
             }
           }
@@ -255,8 +256,8 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
       file: file, line: line)
   }
 
-  /// Asserts that VoiceOver reads the table in one piece, row by row, each row's times before
-  /// its status, and doesn't read the next-prayer panel or the banner between two rows.
+  /// Asserts that VoiceOver reads the next-prayer panel or the banner first, then the table in
+  /// one piece, row by row, each row's times before its status.
   @MainActor
   private func assertReadingOrder(
     in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line
@@ -278,6 +279,12 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
     let others = ["header.", "next.", "coverage.", "day.", "footer."]
     let between = order[first...last].filter { id in others.contains { id.hasPrefix($0) } }
     XCTAssertEqual(between, [], "read between the rows: \(order)", file: file, line: line)
+    let panel = order.indices.filter {
+      order[$0].hasPrefix("next.") || order[$0].hasPrefix("coverage.")
+    }
+    XCTAssertFalse(panel.isEmpty, "no panel: \(order)", file: file, line: line)
+    XCTAssertTrue(
+      panel.allSatisfy { $0 < first }, "panel after the table: \(order)", file: file, line: line)
     for kind in ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"] {
       guard let time = order.firstIndex(of: "row.\(kind).time"),
         let status = order.firstIndex(of: "row.\(kind).status")
