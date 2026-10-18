@@ -13,10 +13,9 @@ extension XCTestCase {
   ) -> XCUIApplication {
     continueAfterFailure = false
     let app = XCUIApplication()
-    app.launchArguments = [
-      "-board", board, "-now", instant, "-frozen", "-language", language,
-      "-AppleLanguages", "(\(language))", "-AppleLocale", language,
-    ] + arguments
+    app.launchArguments =
+      ["-board", board, "-now", instant, "-frozen", "-language", language]
+      + ["-AppleLanguages", "(\(language))", "-AppleLocale", language] + arguments
     app.launch()
     XCTAssertTrue(app.wait(for: .runningForeground, timeout: 30))
     XCTAssertTrue(element("header.title", in: app).waitForExistence(timeout: 30))
