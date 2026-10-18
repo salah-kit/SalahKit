@@ -20,7 +20,8 @@ All notable changes to this project are documented here. The format follows
   ([#53](https://github.com/salah-kit/SalahKit/issues/53)). CalculatedPhone reads each
   calculation parameter's title once, minutes in words, a stepper's name and value once each,
   and "Latest prayer" as a header. MosqueBoard labels the sunrise's empty iqama "No iqama" and
-  reads each row's times before its status and the next-prayer panel before the table.
+  reads each row's times before its status, and in landscape the table and the next-prayer
+  panel each in one piece.
   PhoneWidgets' countdowns say "Time remaining", the medium widget reads its card before its
   list, Arabic labels use the Arabic comma, the circular widget reads "Next prayer unknown"
   instead of "–, Unknown", and the notices' symbols are hidden from VoiceOver.

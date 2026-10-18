@@ -151,7 +151,7 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
 
     // In landscape the banner sits beside the table; VoiceOver still reads each in one piece.
     app = launch("edinburgh", at: "2026-06-24T23:00:00+01:00", orientation: .landscapeLeft)
-    assertReadingOrder(in: app)
+    assertReadingOrder(in: app, panelFirst: false)
     app.terminate()
 
     app = launch("edinburgh", at: "2026-06-26T12:00:00+01:00")
@@ -256,11 +256,15 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
       file: file, line: line)
   }
 
-  /// Asserts that VoiceOver reads the next-prayer panel or the banner first, then the table in
-  /// one piece, row by row, each row's times before its status.
+  /// Asserts that VoiceOver reads the table in one piece, row by row, each row's times before
+  /// its status, and the next-prayer panel or the banner in one piece: before the table when
+  /// `panelFirst`, as where the panel sits above it. Beside the table, in landscape, the panel
+  /// asks to come first with its sort priority, but the order iOS gives the two containers
+  /// there differs between versions, so only their being whole is checked.
   @MainActor
   private func assertReadingOrder(
-    in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line
+    in app: XCUIApplication, panelFirst: Bool = true, file: StaticString = #filePath,
+    line: UInt = #line
   ) {
     guard let root = try? app.snapshot() else {
       return XCTFail("No snapshot of the board", file: file, line: line)
@@ -282,9 +286,14 @@ nonisolated final class MosqueBoardJourneys: XCTestCase {
     let panel = order.indices.filter {
       order[$0].hasPrefix("next.") || order[$0].hasPrefix("coverage.")
     }
-    XCTAssertFalse(panel.isEmpty, "no panel: \(order)", file: file, line: line)
-    XCTAssertTrue(
-      panel.allSatisfy { $0 < first }, "panel after the table: \(order)", file: file, line: line)
+    guard let panelStart = panel.first, let panelEnd = panel.last else {
+      return XCTFail("no panel: \(order)", file: file, line: line)
+    }
+    let rowsInPanel = order[panelStart...panelEnd].filter { $0.hasPrefix("row.") }
+    XCTAssertEqual(rowsInPanel, [], "rows read inside the panel: \(order)", file: file, line: line)
+    if panelFirst {
+      XCTAssertLessThan(panelEnd, first, "panel after the table: \(order)", file: file, line: line)
+    }
     for kind in ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"] {
       guard let time = order.firstIndex(of: "row.\(kind).time"),
         let status = order.firstIndex(of: "row.\(kind).status")

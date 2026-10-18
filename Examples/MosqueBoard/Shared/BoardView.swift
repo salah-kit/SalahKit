@@ -109,8 +109,8 @@ struct BoardContent: View {
               PrayerTable(snapshot: snapshot, strings: strings)
                 .frame(maxWidth: .infinity)
                 .accessibilityElement(children: .contain)
-              // VoiceOver reads the panel first, as in portrait, then the table row by row,
-              // rather than mixing the two by height.
+              // VoiceOver reads the table and the panel each in one piece, rather than mixing
+              // the two by height; the panel's priority asks for it first, as in portrait.
               StatusPanel(snapshot: snapshot, strings: strings)
                 .frame(maxWidth: geometry.size.width * 0.38)
                 .accessibilityElement(children: .contain)
