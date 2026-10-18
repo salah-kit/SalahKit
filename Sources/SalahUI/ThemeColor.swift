@@ -56,13 +56,15 @@ nonisolated public struct ThemeColor: Codable, Hashable, Sendable {
 
   /// This color, moved toward white or black until it reaches `ratio` against `surface`.
   ///
-  /// The color moves in twenty equal steps, keeping its hue, toward whichever of white and
-  /// black reaches the ratio in fewer steps; the first step that reaches it wins. That's
-  /// usually toward white on a dark surface and toward black on a light one; on a mid-tone
-  /// surface it depends on the color. A color that already reaches the ratio comes back
-  /// unchanged. When both directions take the same number of steps, or neither reaches the
-  /// ratio, the color goes toward whichever of white and black contrasts more with the
-  /// surface, and ends at white or black if the ratio is out of reach. Opacity is kept.
+  /// The color moves toward white and toward black in twenty equal steps each, keeping its
+  /// hue. In each direction, the first step that reaches the ratio is a candidate, and the
+  /// candidate nearer the color (by ``distance(to:)``) wins. Both directions can reach a
+  /// ratio only on a mid-tone surface, and only a ratio up to about 4.58. Otherwise the color
+  /// gets lighter on a dark surface and darker on a light one. A color that already reaches
+  /// the ratio comes back unchanged. When the two candidates are equally near, or neither
+  /// direction reaches the ratio, the color goes toward whichever of white and black
+  /// contrasts more with the surface, and ends at white or black if the ratio is out of
+  /// reach. Opacity is kept.
   ///
   /// - Parameters:
   ///   - surface: The color it's drawn on.
@@ -71,9 +73,9 @@ nonisolated public struct ThemeColor: Codable, Hashable, Sendable {
   public func adjustedForContrast(against surface: ThemeColor, ratio: Double = 4.5) -> ThemeColor {
     if Self.contrastRatio(self, surface) >= ratio { return self }
     let start = (Self.unit(red), Self.unit(green), Self.unit(blue))
-    // The first step toward `end` (0 or 1) that reaches the ratio, or nil, with that color or
-    // `end` itself.
-    func moving(toward end: Double) -> (step: Int?, color: ThemeColor) {
+    // The first step toward `end` (0 or 1) that reaches the ratio, or `end` itself when none
+    // does.
+    func moving(toward end: Double) -> (reaches: Bool, color: ThemeColor) {
       func moved(_ component: Double, by fraction: Double) -> Double {
         component + (end - component) * fraction
       }
@@ -83,20 +85,25 @@ nonisolated public struct ThemeColor: Codable, Hashable, Sendable {
         candidate = ThemeColor(
           red: moved(start.0, by: fraction), green: moved(start.1, by: fraction),
           blue: moved(start.2, by: fraction), opacity: opacity)
-        if Self.contrastRatio(candidate, surface) >= ratio { return (step, candidate) }
+        if Self.contrastRatio(candidate, surface) >= ratio { return (true, candidate) }
       }
-      return (nil, candidate)
+      return (false, candidate)
     }
     let lighter = moving(toward: 1)
     let darker = moving(toward: 0)
     let whiteContrastsMore =
       Self.contrastRatio(ThemeColor(red: 1, green: 1, blue: 1), surface)
       >= Self.contrastRatio(ThemeColor(red: 0, green: 0, blue: 0), surface)
-    switch (lighter.step, darker.step) {
-    case (let up?, let down?) where up != down: return up < down ? lighter.color : darker.color
-    case (_?, nil): return lighter.color
-    case (nil, _?): return darker.color
-    default: return whiteContrastsMore ? lighter.color : darker.color
+    switch (lighter.reaches, darker.reaches) {
+    case (true, true):
+      let up = distance(to: lighter.color)
+      let down = distance(to: darker.color)
+      // Equally near, give or take rounding: let the surface decide.
+      if abs(up - down) > 1e-9 { return up < down ? lighter.color : darker.color }
+      return whiteContrastsMore ? lighter.color : darker.color
+    case (true, false): return lighter.color
+    case (false, true): return darker.color
+    case (false, false): return whiteContrastsMore ? lighter.color : darker.color
     }
   }
 
