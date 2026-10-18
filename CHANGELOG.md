@@ -17,13 +17,13 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
-- `PrayerLocale.resolved` gives back a locale that names its digits, such as `ar-MA-u-nu-arab`
-  or `bn-u-nu-beng`, rebuilt in ICU form (`ar_MA@numbers=arab`) on every platform. Foundation on
-  macOS 27 drops a `-u-nu-` value that matches the language's script when it parses the
-  identifier, which left a locale that formatted no digits, and on Linux `NumberFormatter`
-  crashes on a locale made from a `-u-nu-` identifier. A `Locale` already made from such an
-  identifier on macOS has lost the value; build it with `Locale.Components` or `@numbers=`
-  instead.
+- `PrayerLocale.resolved` gives back an identifier or a locale that names its digits in a BCP 47
+  extension, such as `ar-MA-u-nu-arab` or `bn-u-nu-beng`, rebuilt in ICU form
+  (`ar_MA@numbers=arab`) on every platform, and one in ICU form unchanged. Foundation on macOS 27
+  drops a `-u-nu-` value that matches the language's script when it parses the identifier, which
+  left a locale that formatted no digits, and on Linux `NumberFormatter` crashes on a locale made
+  from a `-u-nu-` identifier. A `Locale` already made from such an identifier on macOS has lost
+  the value; build it with `Locale.Components` or `@numbers=` instead.
 - MenuBar no longer loses the banner of an alert that came due during a sleep when the engine's
   wake-up reports it before the app sees the wake notification. A report more than a second late
   now replans first, so `deliver` still runs after an `apply` planned from after the alert, and

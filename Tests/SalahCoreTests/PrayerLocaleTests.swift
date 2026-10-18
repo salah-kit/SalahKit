@@ -173,4 +173,20 @@ private let arabicIndicDigitRegions = [
       PrayerLocale.resolved(Locale(identifier: "ar@numbers=latn")).numberingSystem.identifier
         == "latn")
   }
+
+  /// `NumberFormatter` on Linux crashes on a locale made from a BCP 47 `-u-nu-` identifier, so
+  /// the locale overload rebuilds such a locale in ICU form, as the identifier overload does.
+  @Test func localeOverloadFormatsALocaleThatNamesItsDigitsInBCP47() {
+    #expect(digits(12, PrayerLocale.resolved(Locale(identifier: "ar-EG-u-nu-latn"))) == "12")
+    #expect(digits(12, PrayerLocale.resolved(Locale(identifier: "fa-u-nu-latn"))) == "12")
+  }
+
+  /// A locale or an identifier that names its digits in ICU form comes back unchanged, with the
+  /// keys `Locale.Components` doesn't model, such as `cf`.
+  @Test func leavesALocaleInICUFormUnchanged() {
+    let identifier = "ar_EG@cf=account;numbers=latn"
+    #expect(PrayerLocale.resolved(Locale(identifier: identifier)).identifier == identifier)
+    #expect(PrayerLocale.resolved(identifier).identifier == identifier)
+    #expect(digits(12, PrayerLocale.resolved(identifier)) == "12")
+  }
 }

@@ -22,14 +22,16 @@ nonisolated public enum PrayerLocale {
   public static func resolved(_ identifier: String) -> Locale {
     let locale = Locale(identifier: identifier)
     guard namesNumberingSystem(identifier) else { return resolved(locale, explicit: false) }
-    // An identifier that names its digits comes back rebuilt through `Locale.Components`, in
-    // ICU form (`ar_MA@numbers=arab`), on every platform:
+    // An identifier in ICU form (`ar_MA@numbers=arab`) keeps its digits on every platform. One
+    // that names them in a BCP 47 extension comes back rebuilt through `Locale.Components`, in
+    // ICU form:
     // - Foundation on macOS 27 drops a `-u-nu-` value that matches the language's script when it
     //   parses an identifier: `ar-MA-u-nu-arab` becomes `ar-MA-u-nu`, which formats no digits.
     // - On Linux, `NumberFormatter` crashes on a locale made from a BCP 47 `-u-nu-` identifier
     //   (Swift 6.2 to 6.4), while the ICU form formats.
     // `Locale.Components` keeps the value, though not keys it doesn't model, such as `cf` or a
     // private-use tag; none of those changes prayer text.
+    guard unicodeExtensionNamesNumberingSystem(identifier) else { return locale }
     let components = Locale.Components(identifier: identifier)
     guard components.numberingSystem != nil else { return locale }
     return Locale(components: components)
@@ -51,8 +53,12 @@ nonisolated public enum PrayerLocale {
 
   private static func resolved(_ locale: Locale, explicit: Bool) -> Locale {
     if explicit {
-      // Rebuilt in ICU form, as ``resolved(_:)-(String)`` does, so `NumberFormatter` on Linux
-      // gets a locale it can format with.
+      // A locale that names its digits in a BCP 47 extension (`ar-MA-u-nu-arab`) comes back
+      // rebuilt in ICU form, as ``resolved(_:)-(String)`` does, so `NumberFormatter` on Linux
+      // gets a locale it can format with. One in ICU form already, such as a user's
+      // `ar_EG@numbers=latn`, comes back unchanged, keeping keys `Locale.Components` doesn't
+      // model and the user's own number and time preferences.
+      guard unicodeExtensionNamesNumberingSystem(locale.identifier) else { return locale }
       let components = Locale.Components(locale: locale)
       return components.numberingSystem == nil ? locale : Locale(components: components)
     }
@@ -90,10 +96,14 @@ nonisolated public enum PrayerLocale {
   /// Whether an identifier names a numbering system, as a BCP 47 `-u-…-nu-…` extension or an
   /// ICU `@numbers=` keyword.
   static func namesNumberingSystem(_ identifier: String) -> Bool {
+    identifier.lowercased().contains("numbers=")
+      || unicodeExtensionNamesNumberingSystem(identifier)
+  }
+
+  /// Whether an identifier names a numbering system in a BCP 47 `-u-…-nu-…` extension, the form
+  /// `NumberFormatter` on Linux can't format with.
+  static func unicodeExtensionNamesNumberingSystem(_ identifier: String) -> Bool {
     let lowered = identifier.lowercased().replacingOccurrences(of: "_", with: "-")
-    if lowered.contains("numbers=") {
-      return true
-    }
     guard let unicodeExtension = lowered.range(of: "-u-") else { return false }
     // Keys in the Unicode extension are two characters; "nu" is the numbering system.
     let subtags = lowered[unicodeExtension.upperBound...].split(separator: "-")
