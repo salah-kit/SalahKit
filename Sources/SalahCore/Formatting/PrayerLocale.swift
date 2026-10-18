@@ -22,13 +22,16 @@ nonisolated public enum PrayerLocale {
   public static func resolved(_ identifier: String) -> Locale {
     let locale = Locale(identifier: identifier)
     guard namesNumberingSystem(identifier) else { return resolved(locale, explicit: false) }
-    // Foundation on macOS 27 drops a `-u-nu-` value that matches the language's script when it
-    // parses an identifier: `ar-MA-u-nu-arab` becomes `ar-MA-u-nu`, which formats no digits.
+    // An identifier that names its digits comes back rebuilt through `Locale.Components`, in
+    // ICU form (`ar_MA@numbers=arab`), on every platform:
+    // - Foundation on macOS 27 drops a `-u-nu-` value that matches the language's script when it
+    //   parses an identifier: `ar-MA-u-nu-arab` becomes `ar-MA-u-nu`, which formats no digits.
+    // - On Linux, `NumberFormatter` crashes on a locale made from a BCP 47 `-u-nu-` identifier
+    //   (Swift 6.2 to 6.4), while the ICU form formats.
     // `Locale.Components` keeps the value, though not keys it doesn't model, such as `cf` or a
     // private-use tag; none of those changes prayer text.
     let components = Locale.Components(identifier: identifier)
-    guard let numbering = components.numberingSystem, numbering != locale.numberingSystem
-    else { return locale }
+    guard components.numberingSystem != nil else { return locale }
     return Locale(components: components)
   }
 
@@ -47,7 +50,13 @@ nonisolated public enum PrayerLocale {
   }
 
   private static func resolved(_ locale: Locale, explicit: Bool) -> Locale {
-    guard !explicit,
+    if explicit {
+      // Rebuilt in ICU form, as ``resolved(_:)-(String)`` does, so `NumberFormatter` on Linux
+      // gets a locale it can format with.
+      let components = Locale.Components(locale: locale)
+      return components.numberingSystem == nil ? locale : Locale(components: components)
+    }
+    guard
       let numbering = defaultNumbering(
         language: locale.language.languageCode?.identifier,
         region: locale.language.region?.identifier)
