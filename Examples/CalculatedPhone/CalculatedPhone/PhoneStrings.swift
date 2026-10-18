@@ -103,6 +103,17 @@ nonisolated struct PhoneFormat: Sendable {
     value.formatted(.number.sign(strategy: .always(includingZero: false)).locale(locale))
   }
 
+  /// Minutes in words with the locale's digits and plural forms, for VoiceOver: "90 minutes",
+  /// or "+5 minutes" when `signed`.
+  func spokenMinutes(_ value: Int, signed: Bool = false) -> String {
+    let number: FloatingPointFormatStyle<Double> =
+      signed
+      ? .number.sign(strategy: .always(includingZero: false)).locale(locale)
+      : .number.locale(locale)
+    return Measurement(value: Double(value), unit: UnitDuration.minutes).formatted(
+      .measurement(width: .wide, usage: .asProvided, numberFormatStyle: number).locale(locale))
+  }
+
   /// Items joined as the locale joins a list: "Fajr, Sunrise, and Isha".
   func list(_ items: [String]) -> String {
     items.formatted(.list(type: .and).locale(locale))

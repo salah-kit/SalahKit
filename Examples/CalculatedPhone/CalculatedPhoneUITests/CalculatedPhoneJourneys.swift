@@ -149,8 +149,11 @@ nonisolated final class CalculatedPhoneJourneys: XCTestCase {
     assertMissing("coverage.banner", in: app)
     XCTAssertEqual(label("calc.method", in: app), "Method: Umm al-Qura")
     XCTAssertEqual(label("calc.fajr", in: app), "Fajr: 18.5°")
-    XCTAssertEqual(label("calc.isha", in: app), "Isha: 90 min after Maghrib")
+    XCTAssertEqual(label("calc.isha", in: app), "Isha: 90 minutes after Maghrib")
     XCTAssertEqual(label("calc.madhab", in: app), "Asr (madhab): Shafi'i")
+    // The parameter's title is part of its value's label, so it isn't read on its own too.
+    let title = app.staticTexts.matching(NSPredicate(format: "label == 'Method'")).firstMatch
+    XCTAssertFalse(title.exists, "The Method title is read on its own")
     screenshot("01-makkah-ordinary-day")
   }
 
@@ -171,7 +174,9 @@ nonisolated final class CalculatedPhoneJourneys: XCTestCase {
     pick("Custom", from: "settings.method", of: app)
     // Umm al-Qura's 18.5° down to 16°, half a degree at a time.
     step("settings.fajrAngle", "Decrement", times: 5, of: app)
-    XCTAssertTrue(label("settings.fajrAngle", in: app).contains("16°"))
+    // The stepper reads its name and its value once each.
+    XCTAssertEqual(label("settings.fajrAngle", in: app), "Fajr angle")
+    XCTAssertEqual(element("settings.fajrAngle", in: app).value as? String, "16°")
     closeSettings(app)
     XCTAssertEqual(times(in: app), ["05:10", "06:16", "12:07", "16:19", "17:57", "19:27"])
     XCTAssertEqual(label("calc.method", in: app), "Method: Custom")
@@ -185,7 +190,7 @@ nonisolated final class CalculatedPhoneJourneys: XCTestCase {
     XCTAssertEqual(label("calc.rounding", in: app), "Rounding: Up to the minute")
     XCTAssertEqual(label("calc.method", in: app), "Method: Custom")
     XCTAssertEqual(label("calc.fajr", in: app), "Fajr: 16°")
-    XCTAssertEqual(label("calc.isha", in: app), "Isha: 90 min after Maghrib")
+    XCTAssertEqual(label("calc.isha", in: app), "Isha: 90 minutes after Maghrib")
     XCTAssertEqual(label("calc.madhab", in: app), "Asr (madhab): Hanafi")
     XCTAssertEqual(label("next.name", in: app), "Asr")
     XCTAssertEqual(label("next.countdown", in: app), "Time remaining: 2 hours, 20 minutes")
@@ -382,5 +387,74 @@ nonisolated final class CalculatedPhoneJourneys: XCTestCase {
     let time = element("row.fajr.time", in: app).frame
     XCTAssertGreaterThan(name.minX, time.maxX)
     screenshot("06-makkah-arabic")
+  }
+
+  // MARK: The largest text size
+
+  /// The largest accessibility text size, for this launch only.
+  private static let largestText = [
+    "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL",
+  ]
+
+  /// 7. At the largest text size, every name, status and time keeps its words whole: each is
+  /// at least as wide as its widest word, and a single word takes one line. Rows and the
+  /// next and latest prayers stack their parts instead of breaking them.
+  @MainActor
+  func testLargestTextSizeKeepsWordsWhole() {
+    let cases: [(String, [String])] = [
+      (Self.makkahAfternoon, ["-place", "makkah", "-method", "ummAlQura"]),
+      ("2026-06-22T00:05:00+08:00", ["-place", "kashgar", "-method", "muslimWorldLeague"]),
+    ]
+    for language in ["en", "ar"] {
+      for (instant, arguments) in cases {
+        let app = launch(at: instant, arguments + Self.largestText, language: language)
+        for kind in ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"] {
+          assertWordsWhole("row.\(kind).name", .title3, in: app)
+          assertWordsWhole("row.\(kind).status", .footnote, in: app)
+          assertWordsWhole("row.\(kind).time", .title3, in: app)
+        }
+        assertWordsWhole("next.name", .largeTitle, in: app)
+        assertWordsWhole("next.time", .title2, in: app)
+        assertWordsWhole("latest.title", .body, in: app)
+        assertWordsWhole("latest.name", .body, in: app)
+        assertWordsWhole("latest.time", .body, in: app)
+        if element("next.owningDay", in: app).exists {
+          assertWordsWhole("next.owningDay", .caption1, in: app)
+          assertWordsWhole("latest.owningDay", .caption1, in: app)
+        }
+        screenshot("07-largest-text-\(language)-\(arguments[1])")
+        app.terminate()
+      }
+    }
+  }
+
+  /// Asserts that an element's text isn't broken inside a word: it's at least as wide as its
+  /// widest word in `style` at the largest text size, and a single word takes one line.
+  @MainActor
+  private func assertWordsWhole(
+    _ identifier: String, _ style: UIFont.TextStyle, in app: XCUIApplication,
+    file: StaticString = #filePath, line: UInt = #line
+  ) {
+    let element = element(identifier, in: app)
+    XCTAssertTrue(element.waitForExistence(timeout: 10), "\(identifier) is missing")
+    // The visible text: a time's label reads "At 15:27"; its text is the last word.
+    var text = element.label.filter { $0 != "\u{2068}" && $0 != "\u{2069}" }
+    if identifier.hasSuffix(".time") && !identifier.hasPrefix("row.") {
+      text = String(text.split(separator: " ").last ?? "")
+    }
+    let traits = UITraitCollection(preferredContentSizeCategory: .accessibilityExtraExtraExtraLarge)
+    let font = UIFont.preferredFont(forTextStyle: style, compatibleWith: traits)
+    let words = text.split(whereSeparator: \.isWhitespace).map(String.init)
+    let widest =
+      words.map { ($0 as NSString).size(withAttributes: [.font: font]).width }.max() ?? 0
+    let frame = element.frame
+    XCTAssertGreaterThanOrEqual(
+      frame.width, widest - 1, "\(identifier) breaks a word of \"\(text)\": \(frame)",
+      file: file, line: line)
+    if words.count == 1 {
+      XCTAssertLessThan(
+        frame.height, font.lineHeight * 1.8, "\(identifier) wraps \"\(text)\": \(frame)",
+        file: file, line: line)
+    }
   }
 }

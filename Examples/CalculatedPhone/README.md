@@ -109,11 +109,12 @@ The expected times are SalahTimes 0.1.0's. They were computed once, through Sala
   4. Source failure: Tromsø on 21 June, where Fajr, sunrise, Maghrib and Isha can't be calculated and, after Asr, the banner explains the gap; and a latitude of 95°, where the whole day is invalid input with no times.
   5. Settings made in the app survive a relaunch without `-resetSettings`.
   6. Arabic names, Arabic-Indic digits and a right-to-left layout.
+  7. The largest accessibility text size, in English and Arabic, in Makkah and in Kashgar after midnight: every name, status and time is at least as wide as its widest word, and a single word takes one line.
 - `AlertJourneys` uses the real notification center: it enables alerts through Settings, accepts the permission alert through Springboard, checks pending-request read-back, observes a Fajr notification with the app closed, changes the fixture times, injects an add failure, then turns alerts off and probes the system's pending-request limit. It checks confirmed coverage separately from the plan's horizon. Run it with the same test command above. On the iOS 27.0 simulator, the first permission grant has sometimes left adds failing with "Source is not authorized" despite an allowed status; restarting that simulator after the grant resolved it.
 
 ## Accessibility and languages
 
-Every value has a VoiceOver label, such as "At 15:27", "Time remaining: 1 hour, 27 minutes", "From Sunday's schedule" or "Method: Umm al-Qura", and every control in Settings has a label. Text uses Dynamic Type styles, rows wrap when they don't fit, and the screen scrolls. Colors are system colors, with statuses also shown by symbols and weight, not by color alone. UI strings are in `Localizable.xcstrings` in English and Arabic; the Arabic strings are machine-drafted and marked as needing review.
+Every value has a VoiceOver label, such as "At 15:27", "Time remaining: 1 hour, 27 minutes", "From Sunday's schedule" or "Method: Umm al-Qura", and every control in Settings has a label. VoiceOver reads minutes in words ("Isha: 90 minutes after Maghrib", where the screen shows "90 min"), each Calculation parameter's title once, and a stepper's name and value once each ("Fajr angle", "16°"). Text uses Dynamic Type styles. A row, the next prayer or the latest prayer that doesn't fit on one line, as at the accessibility text sizes, stacks its parts, so names, statuses and times wrap only between words; the screen scrolls. Colors are system colors, with statuses also shown by symbols and weight, not by color alone. UI strings are in `Localizable.xcstrings` in English and Arabic; the Arabic strings are machine-drafted and marked as needing review.
 
 ## Pending
 

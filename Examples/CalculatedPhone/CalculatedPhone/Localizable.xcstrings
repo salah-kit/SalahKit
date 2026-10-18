@@ -1,6 +1,23 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "%@ %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%1$@ %2$@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ %2$@"
+          }
+        }
+      }
+    },
     "%@ %@ min": {
       "extractionState": "manual",
       "localizations": {
@@ -14,6 +31,57 @@
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ %2$@ min"
+          }
+        }
+      }
+    },
+    "%@ after Maghrib": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ بعد المغرب"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ after Maghrib"
+          }
+        }
+      }
+    },
+    "%@ after Maghrib in Ramadan": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ بعد المغرب في رمضان"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ after Maghrib in Ramadan"
+          }
+        }
+      }
+    },
+    "%@ after Maghrib in Ramadan, Hijri day offset %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%1$@ بعد المغرب في رمضان، بإزاحة %2$@ يوم هجري"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ after Maghrib in Ramadan, Hijri day offset %2$@"
           }
         }
       }
@@ -659,6 +727,23 @@
         }
       }
     },
+    "Fajr angle": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "زاوية الفجر"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fajr angle"
+          }
+        }
+      }
+    },
     "Fajr angle: %@": {
       "extractionState": "manual",
       "localizations": {
@@ -829,6 +914,23 @@
         }
       }
     },
+    "Isha %@ after Maghrib in Ramadan": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "العشاء بعد المغرب بـ %@ في رمضان"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Isha %@ after Maghrib in Ramadan"
+          }
+        }
+      }
+    },
     "Isha 120 min after Maghrib in Ramadan": {
       "extractionState": "manual",
       "localizations": {
@@ -842,6 +944,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Isha 120 min after Maghrib in Ramadan"
+          }
+        }
+      }
+    },
+    "Isha angle": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "زاوية العشاء"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Isha angle"
           }
         }
       }
