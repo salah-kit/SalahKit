@@ -24,7 +24,7 @@
         "ar": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "بدأت %1$@ منذ %2$@"
+            "value": "بدأ وقت %1$@ منذ %2$@"
           }
         },
         "en": {

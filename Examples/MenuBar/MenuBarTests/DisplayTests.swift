@@ -165,4 +165,67 @@ struct DisplayTests {
     display.update(settings: arabic)
     #expect(display.content?.title.text.hasPrefix("العصر") == true)
   }
+
+  @Test("in Arabic, the count-up's label agrees with the prayer's name")
+  func arabicCountUpLabel() throws {
+    var settings = Fixture.makkah
+    settings.language = .arabic
+    let asr = try Fixture.event(.asr)
+    let label = title(at: asr.time.addingTimeInterval(5 * 60), settings: settings)
+      .accessibilityLabel
+    // The prayer names are masculine, so the verb is بدأ وقت, not بدأت.
+    #expect(Self.plain(label).hasPrefix("بدأ وقت العصر منذ"), "\(label)")
+  }
+
+  @Test("counts agree with their nouns, in English and in Arabic")
+  func countsAgree() {
+    let english = MenuBarStrings(language: .english)
+    #expect(english("\(1) notifications confirmed.") == "1 notification confirmed.")
+    #expect(english("\(3) notifications confirmed.") == "3 notifications confirmed.")
+    #expect(
+      english("\(1) notifications confirmed until \("Friday").")
+        == "1 notification confirmed until Friday.")
+    #expect(
+      english("Following \(1) alerts while the app runs.")
+        == "Following 1 alert while the app runs.")
+    #expect(
+      english("Following \(20) alerts while the app runs.")
+        == "Following 20 alerts while the app runs.")
+
+    let arabic = MenuBarStrings(language: .arabic)
+    let confirmed = [
+      1: "تأكّد إشعار واحد.", 2: "تأكّد إشعاران.", 5: "تأكّد 5 إشعارات.", 11: "تأكّد 11 إشعارًا.",
+    ]
+    for (count, text) in confirmed {
+      #expect(Self.plain(arabic("\(count) notifications confirmed.")) == text)
+    }
+    #expect(
+      Self.plain(arabic("\(3) notifications confirmed until \("الجمعة")."))
+        == "تأكّد 3 إشعارات حتى الجمعة.")
+    #expect(
+      Self.plain(arabic("Following \(1) alerts while the app runs."))
+        == "يتابع التطبيق تنبيهًا واحدًا ما دام يعمل.")
+    #expect(
+      Self.plain(arabic("Following \(20) alerts while the app runs."))
+        == "يتابع التطبيق 20 تنبيهًا ما دام يعمل.")
+    // The reminder picker's choices.
+    let before = [
+      5: "قبلها بـ 5 دقائق", 10: "قبلها بـ 10 دقائق", 15: "قبلها بـ 15 دقيقة",
+      30: "قبلها بـ 30 دقيقة",
+    ]
+    for (minutes, text) in before {
+      #expect(Self.plain(arabic("\(minutes) minutes before")) == text)
+    }
+  }
+
+  /// The text without bidi isolates, and with Western digits, so it compares whatever digits and
+  /// isolates the locale's formatting adds.
+  static func plain(_ text: String) -> String {
+    let arabicIndic = Array("٠١٢٣٤٥٦٧٨٩")
+    return String(
+      text.unicodeScalars.filter { !(0x2066...0x2069).contains($0.value) }.map { scalar in
+        arabicIndic.firstIndex(of: Character(scalar)).map { Character(String($0)) }
+          ?? Character(scalar)
+      })
+  }
 }
