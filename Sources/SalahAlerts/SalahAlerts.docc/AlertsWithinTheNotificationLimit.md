@@ -173,7 +173,11 @@ If you also apply a new plan when you resync, deliver the engine's alerts after 
 finishes. After a sleep, the system can still hold a caught-up alert's request as pending, so
 `deliver` skips it; an `apply` planned from the new moment then removes that request, whose time
 has passed, and the alert gets no notification. After the `apply`, `deliver` posts it, or skips
-it when the system delivered it meanwhile. `Examples/MenuBar` does this.
+it when the system delivered it meanwhile. ``SystemAlertClock`` counts time asleep, so at the
+end of a sleep the engine's own wake-up can report a caught-up alert before your app hears of
+the wake. When `onDue` reports an alert more than a second after its fire date outside your own
+`resync` or `update`, apply a plan from that moment first, then deliver. `Examples/MenuBar` does
+both.
 
 On every replan, obtain the engine's retained notification exclusions and pass them to the
 planner:
