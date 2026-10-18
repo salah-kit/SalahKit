@@ -50,6 +50,19 @@ private func digits(_ value: Int, _ locale: Locale) -> String {
     #expect(digits(12, PrayerLocale.resolved("ar-MA-u-nu-latn")) == "12")
   }
 
+  @Test func onlyTheUnicodeExtensionNamesTheDigits() {
+    #expect(PrayerLocale.namesNumberingSystem("ar-u-ca-islamic-nu-latn"))
+    #expect(PrayerLocale.namesNumberingSystem("ar-t-en-u-nu-latn"))
+    // A `nu` in a private-use or transformed part isn't the numbering-system key (#54).
+    for identifier in ["ar-u-ca-islamic-x-nu-latn", "ar-x-u-nu-latn", "ar-u-ca-islamic-t-nu"] {
+      #expect(!PrayerLocale.namesNumberingSystem(identifier), "\(identifier)")
+      #expect(digits(1_234, PrayerLocale.resolved(identifier)) == "١٢٣٤", "\(identifier)")
+      #expect(
+        PrayerLocale.resolved(Locale(identifier: identifier)).numberingSystem.identifier
+          == "arab", "\(identifier)")
+    }
+  }
+
   @Test func leavesOtherLanguagesUnchanged() {
     for identifier in ["en", "en_US", "fr", "tr", "id", "ms", "de"] {
       #expect(PrayerLocale.resolved(identifier) == Locale(identifier: identifier), "\(identifier)")

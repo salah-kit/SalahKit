@@ -51,9 +51,20 @@ nonisolated public enum PrayerLocale {
     if lowered.contains("numbers=") {
       return true
     }
-    guard let unicodeExtension = lowered.range(of: "-u-") else { return false }
-    // Keys in the Unicode extension are two characters; "nu" is the numbering system.
-    let subtags = lowered[unicodeExtension.upperBound...].split(separator: "-")
-    return subtags.contains("nu")
+    // The Unicode extension runs from the `u` singleton to the next singleton, and everything
+    // after `x` is private use, so a `nu` in a `-t-` or `-x-` part names no digits. Keys in the
+    // Unicode extension are two characters; "nu" is the numbering system.
+    var inUnicodeExtension = false
+    for subtag in lowered.split(separator: "-") {
+      if subtag == "x" {
+        return false
+      }
+      if subtag.count == 1 {
+        inUnicodeExtension = subtag == "u"
+      } else if inUnicodeExtension, subtag == "nu" {
+        return true
+      }
+    }
+    return false
   }
 }
