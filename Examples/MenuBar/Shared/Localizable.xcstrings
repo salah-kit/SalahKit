@@ -86,24 +86,6 @@
         "ar" : {
           "variations" : {
             "plural" : {
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "قبلها بـ %lld دقيقة"
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "قبلها بدقيقة"
-                }
-              },
-              "two" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "قبلها بدقيقتين"
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "needs_review",
@@ -116,7 +98,25 @@
                   "value" : "قبلها بـ %lld دقيقة"
                 }
               },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "قبلها بدقيقة"
+                }
+              },
               "other" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "قبلها بـ %lld دقيقة"
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "قبلها بدقيقتين"
+                }
+              },
+              "zero" : {
                 "stringUnit" : {
                   "state" : "needs_review",
                   "value" : "قبلها بـ %lld دقيقة"
@@ -140,24 +140,6 @@
               "formatSpecifier" : "lld",
               "variations" : {
                 "plural" : {
-                  "zero" : {
-                    "stringUnit" : {
-                      "state" : "needs_review",
-                      "value" : "%arg إشعار"
-                    }
-                  },
-                  "one" : {
-                    "stringUnit" : {
-                      "state" : "needs_review",
-                      "value" : "إشعار واحد"
-                    }
-                  },
-                  "two" : {
-                    "stringUnit" : {
-                      "state" : "needs_review",
-                      "value" : "إشعاران"
-                    }
-                  },
                   "few" : {
                     "stringUnit" : {
                       "state" : "needs_review",
@@ -170,7 +152,25 @@
                       "value" : "%arg إشعارًا"
                     }
                   },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "إشعار واحد"
+                    }
+                  },
                   "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg إشعار"
+                    }
+                  },
+                  "two" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "إشعاران"
+                    }
+                  },
+                  "zero" : {
                     "stringUnit" : {
                       "state" : "needs_review",
                       "value" : "%arg إشعار"
@@ -213,6 +213,48 @@
     },
     "%lld notifications confirmed." : {
       "localizations" : {
+        "ar" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "تأكّد %lld إشعارات."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "تأكّد %lld إشعارًا."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "تأكّد إشعار واحد."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "تأكّد %lld إشعار."
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "تأكّد إشعاران."
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "تأكّد %lld إشعار."
+                }
+              }
+            }
+          }
+        },
         "en" : {
           "variations" : {
             "plural" : {
@@ -226,48 +268,6 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%lld notifications confirmed."
-                }
-              }
-            }
-          }
-        },
-        "ar" : {
-          "variations" : {
-            "plural" : {
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "تأكّد %lld إشعار."
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "تأكّد إشعار واحد."
-                }
-              },
-              "two" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "تأكّد إشعاران."
-                }
-              },
-              "few" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "تأكّد %lld إشعارات."
-                }
-              },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "تأكّد %lld إشعارًا."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "تأكّد %lld إشعار."
                 }
               }
             }
@@ -327,6 +327,48 @@
     },
     "Following %lld alerts while the app runs." : {
       "localizations" : {
+        "ar" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "يتابع التطبيق %lld تنبيهات ما دام يعمل."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "يتابع التطبيق %lld تنبيهًا ما دام يعمل."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "يتابع التطبيق تنبيهًا واحدًا ما دام يعمل."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "يتابع التطبيق %lld تنبيه ما دام يعمل."
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "يتابع التطبيق تنبيهين ما دام يعمل."
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "يتابع التطبيق %lld تنبيه ما دام يعمل."
+                }
+              }
+            }
+          }
+        },
         "en" : {
           "variations" : {
             "plural" : {
@@ -340,48 +382,6 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Following %lld alerts while the app runs."
-                }
-              }
-            }
-          }
-        },
-        "ar" : {
-          "variations" : {
-            "plural" : {
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "يتابع التطبيق %lld تنبيه ما دام يعمل."
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "يتابع التطبيق تنبيهًا واحدًا ما دام يعمل."
-                }
-              },
-              "two" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "يتابع التطبيق تنبيهين ما دام يعمل."
-                }
-              },
-              "few" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "يتابع التطبيق %lld تنبيهات ما دام يعمل."
-                }
-              },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "يتابع التطبيق %lld تنبيهًا ما دام يعمل."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "يتابع التطبيق %lld تنبيه ما دام يعمل."
                 }
               }
             }

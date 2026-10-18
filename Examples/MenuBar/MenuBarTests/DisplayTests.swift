@@ -173,7 +173,7 @@ struct DisplayTests {
     let asr = try Fixture.event(.asr)
     let label = title(at: asr.time.addingTimeInterval(5 * 60), settings: settings)
       .accessibilityLabel
-    // The prayer names are masculine, so the verb is بدأ وقت, not بدأت.
+    // The verb agrees with وقت, so it fits every name, the feminine الجمعة included.
     #expect(Self.plain(label).hasPrefix("بدأ وقت العصر منذ"), "\(label)")
   }
 
