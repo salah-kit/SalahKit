@@ -128,12 +128,13 @@ Both apps take the same arguments. They read no location and store nothing, so t
   5. Countdowns across the 2026 spring-forward and fall-back count elapsed time.
   6. The partial row and the missing day show the banner, never invented times.
   7. Arabic names, Arabic-Indic digits and a right-to-left layout.
+  8. The largest accessibility text size, in both orientations and both languages, on the MUIS board and on Edinburgh's partial row: every name, time and status is inside the window and at least as wide as its widest word, and VoiceOver reads the table in one piece, each row's times before its status.
 - `MosqueBoardTVTests` also checks that the tvOS app keeps the screen saver off.
 - `MosqueBoardTVUITests` runs the iPad journeys' cases on Apple TV with the same instants and expectations: the normal MUIS day, Jumu'ah on a Friday, the expired timetable's banner, Isha after midnight, the partial row and Arabic, plus the tallest board (Isha just started, in English and Arabic). Because a TV board can't scroll, each also checks that the footer ends inside the safe area, and the normal day checks that the countdown isn't shrunk to fit.
 
 ## Accessibility and languages
 
-Every value on the board has a VoiceOver label, such as "Begins 05:31", "Iqama 05:51", "Passed" or "Time remaining: 2 hours, 6 minutes". Text uses Dynamic Type styles, and the iPad board scrolls when it's too large to fit. tvOS has no Dynamic Type setting; its text styles have fixed sizes, and the TV board fits on one screen. Colors are system colors: primary text on the system background (the TV's own background on tvOS), with statuses also shown by symbols and weight, not by color alone. UI strings are in `Localizable.xcstrings` in English and Arabic. The Arabic strings are machine-drafted and marked as needing review.
+Every value on the board has a VoiceOver label, such as "Begins 05:31", "Iqama 05:51", "No iqama", "Passed" or "Time remaining: 2 hours, 6 minutes". VoiceOver reads each row's name and times before its status, and in landscape reads the next-prayer panel, or the coverage banner, before the table rather than between its rows. Text uses Dynamic Type styles, and the iPad board scrolls when it's too large to fit. At the accessibility text sizes the table's columns would leave the names no room, so each row stacks its name, times and status, the next-prayer panel goes above the table in landscape too, and the clock goes below the mosque's name when both don't fit on one line. tvOS has no Dynamic Type setting; its text styles have fixed sizes, and the TV board fits on one screen. Colors are system colors: primary text on the system background (the TV's own background on tvOS), with statuses also shown by symbols and weight, not by color alone. UI strings are in `Localizable.xcstrings` in English and Arabic. The Arabic strings are machine-drafted and marked as needing review.
 
 ## Pending
 

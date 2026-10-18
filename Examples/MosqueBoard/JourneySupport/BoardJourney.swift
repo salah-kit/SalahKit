@@ -5,17 +5,18 @@ import XCTest
 /// The members are `@MainActor`, so they compile under both default isolation settings.
 extension XCTestCase {
   /// Launches the real app on a board, with its clock frozen at an ISO 8601 instant and its
-  /// names, digits and dates in `language`, and waits until the board is on screen.
+  /// names, digits and dates in `language`, and waits until the board is on screen. `arguments`
+  /// are added to the launch arguments, such as a text size.
   @MainActor
-  func launchBoard(_ board: String, at instant: String, language: String = "en")
-    -> XCUIApplication
-  {
+  func launchBoard(
+    _ board: String, at instant: String, language: String = "en", arguments: [String] = []
+  ) -> XCUIApplication {
     continueAfterFailure = false
     let app = XCUIApplication()
     app.launchArguments = [
       "-board", board, "-now", instant, "-frozen", "-language", language,
       "-AppleLanguages", "(\(language))", "-AppleLocale", language,
-    ]
+    ] + arguments
     app.launch()
     XCTAssertTrue(app.wait(for: .runningForeground, timeout: 30))
     XCTAssertTrue(element("header.title", in: app).waitForExistence(timeout: 30))
