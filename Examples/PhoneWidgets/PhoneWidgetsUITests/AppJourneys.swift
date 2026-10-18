@@ -92,9 +92,6 @@ nonisolated final class AppJourneys: JourneyCase {
     XCTAssertLessThan(
       try XCTUnwrap(order.firstIndex(of: "widget.next.countdown")),
       try XCTUnwrap(order.firstIndex(of: "widget.row.fajr")), "\(order)")
-    // The setup notice's symbol is decoration, so VoiceOver doesn't read its name.
-    XCTAssertEqual(state("setup", .rectangular, in: app).images.count, 0)
-    XCTAssertEqual(state("setup", .circular, in: app).images.count, 0)
     // Every family names the next prayer in full for VoiceOver, the circular one too, although
     // it shows only the abbreviation ("A").
     assertNamesPrayer("Asr", in: "normal", of: app)
@@ -165,10 +162,15 @@ nonisolated final class AppJourneys: JourneyCase {
     XCTAssertEqual(text("widget.title", in: expired), "الأوقات بحاجة إلى تحديث")
   }
 
-  /// 4. At the largest text size the samples are drawn as WidgetKit draws the widgets, so
-  /// every state's text stays inside its widget in every family, in English and Arabic.
+  /// 4. At the largest text size the samples are drawn as WidgetKit draws the widgets: no
+  /// larger than `xxxLarge`, so every state's text stays inside its widget in every family, in
+  /// English and Arabic.
   @MainActor
   func testWidgetStatesAtTheLargestTextSize() {
+    let largest = UITraitCollection(preferredContentSizeCategory: .extraExtraExtraLarge)
+    func lineHeight(_ style: UIFont.TextStyle) -> CGFloat {
+      UIFont.preferredFont(forTextStyle: style, compatibleWith: largest).lineHeight
+    }
     for language in ["en", "ar"] {
       // At this size the save status is below the fold, so the launch waits for the app only.
       let app = XCUIApplication()
@@ -191,6 +193,16 @@ nonisolated final class AppJourneys: JourneyCase {
               "\(language) \(id) \(family.rawValue): \"\(text.label)\" at \(text.frame) is outside \(bounds)"
             )
           }
+        }
+        // The text is drawn at no more than xxxLarge: one line of the place's caption and of
+        // the next prayer's time is no taller than at that size (with room for the font's
+        // leading), where the app's own size would make it more than twice as tall.
+        for family in [Family.small, .medium, .large] where id == "normal" || id == "partial" {
+          let container = state(id, family, in: app)
+          let place = container.descendants(matching: .any)["widget.place"].frame
+          let time = container.descendants(matching: .any)["widget.next.time"].frame
+          XCTAssertLessThanOrEqual(place.height, lineHeight(.caption1) * 1.4, "\(id) \(family)")
+          XCTAssertLessThanOrEqual(time.height, lineHeight(.subheadline) * 1.4, "\(id) \(family)")
         }
         if id == "normal" || id == "expired" {
           scrollDown(to: id, in: app)

@@ -66,7 +66,11 @@ nonisolated final class HomeScreenJourney: JourneyCase {
     screenshot("11-widget-log")
     goBack(in: app)
     showWidget(on: springboard)
-    XCTAssertTrue(widgetText("widget.row.fajr", in: springboard).hasPrefix("الفجر"))
+    let fajr = widgetText("widget.row.fajr", in: springboard)
+    XCTAssertTrue(fajr.hasPrefix("الفجر"), fajr)
+    // VoiceOver's label joins the name and time with the Arabic comma, as the extension's
+    // language writes it, though the device runs in English.
+    XCTAssertTrue(fajr.contains("،") && !fajr.contains(","), fajr)
     XCTAssertEqual(widgetText("widget.place", in: springboard), "مكة المكرمة")
     screenshot("12-home-arabic")
 
