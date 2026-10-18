@@ -119,6 +119,7 @@ private struct NoticeView: View {
         Image(systemName: symbol)
           .font(.title3)
           .widgetAccentable()
+          .accessibilityHidden(true)
         Text(verbatim: wording.short ?? "")
           .font(.caption2)
           .multilineTextAlignment(.center)
@@ -133,7 +134,10 @@ private struct NoticeView: View {
             .font(.headline)
             .accessibilityIdentifier("widget.title")
         } icon: {
+          // The symbol is decoration: its default label, such as "Remove Map Pin" for
+          // `mappin.and.ellipse`, isn't what the notice means.
           Image(systemName: symbol)
+            .accessibilityHidden(true)
         }
         .widgetAccentable()
         Text(verbatim: wording.message ?? "")
@@ -190,33 +194,39 @@ private struct TimesView: View {
     case .accessoryInline:
       next.nextPrayerStyle(InlineNextStyle(strings: strings))
     case .accessoryCircular:
-      next.nextPrayerStyle(CircularNextStyle(strings: strings))
+      next.nextPrayerStyle(CircularNextStyle(strings: strings, countdownMode: countdownMode))
     case .accessoryRectangular:
-      next.nextPrayerStyle(RectangularNextStyle(strings: strings, note: wording.message))
+      next.nextPrayerStyle(
+        RectangularNextStyle(strings: strings, note: wording.message, countdownMode: countdownMode))
     case .systemSmall:
       VStack(alignment: .leading, spacing: 4) {
         placeLine
-        next.nextPrayerStyle(CardNextStyle(strings: strings, palette: palette, large: false))
+        next.nextPrayerStyle(card(large: false))
         Spacer(minLength: 0)
         note
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     case .systemMedium:
+      // VoiceOver reads the card, then the day's list: each column is its own container, so
+      // their lines aren't interleaved by height.
       HStack(alignment: .top, spacing: 12) {
         VStack(alignment: .leading, spacing: 4) {
           placeLine
-          next.nextPrayerStyle(CardNextStyle(strings: strings, palette: palette, large: false))
+          next.nextPrayerStyle(card(large: false))
           Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .contain)
+        .accessibilitySortPriority(1)
         dayList(font: .caption)
           .frame(maxWidth: .infinity)
+          .accessibilityElement(children: .contain)
       }
       .frame(maxHeight: .infinity, alignment: .top)
     default:
       VStack(alignment: .leading, spacing: 8) {
         placeLine
-        next.nextPrayerStyle(CardNextStyle(strings: strings, palette: palette, large: true))
+        next.nextPrayerStyle(card(large: true))
         Divider()
         dayList(font: .body)
         Spacer(minLength: 0)
@@ -224,6 +234,10 @@ private struct TimesView: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
+  }
+
+  private func card(large: Bool) -> CardNextStyle {
+    CardNextStyle(strings: strings, palette: palette, large: large, countdownMode: countdownMode)
   }
 
   private var next: NextPrayerView {
@@ -256,7 +270,7 @@ private struct TimesView: View {
         PrayerTimesList(
           day: day, state: times.state, names: strings.names, countdown: countdownMode
         )
-        .prayerRowStyle(WidgetRowStyle(palette: palette))
+        .prayerRowStyle(WidgetRowStyle(palette: palette, strings: strings))
         .font(font)
         if family == .systemMedium {
           note
@@ -276,6 +290,7 @@ private struct CardNextStyle: NextPrayerStyle {
   let strings: WidgetStrings
   let palette: WidgetPalette
   let large: Bool
+  let countdownMode: PrayerCountdown.Mode
 
   func makeBody(configuration: Configuration) -> some View {
     VStack(alignment: .leading, spacing: 2) {
@@ -310,6 +325,9 @@ private struct CardNextStyle: NextPrayerStyle {
           .foregroundStyle(palette.accent.color)
           .lineLimit(1)
           .minimumScaleFactor(0.6)
+          .accessibilityLabel(
+            countdownLabel(configuration, strings: strings, mode: countdownMode) ?? countdown
+          )
           .accessibilityIdentifier("widget.next.countdown")
       }
     }
@@ -320,6 +338,7 @@ private struct CardNextStyle: NextPrayerStyle {
 /// The circular Lock Screen widget: the next prayer's abbreviation over its countdown.
 private struct CircularNextStyle: NextPrayerStyle {
   let strings: WidgetStrings
+  let countdownMode: PrayerCountdown.Mode
 
   func makeBody(configuration: Configuration) -> some View {
     ZStack {
@@ -345,7 +364,21 @@ private struct CircularNextStyle: NextPrayerStyle {
       }
       .padding(4)
     }
-    .accessibilityElement(children: .combine)
+    .accessibilityElement(children: .ignore)
+    .accessibilityLabel(label(configuration))
+    .accessibilityIdentifier("widget.next")
+  }
+
+  /// The full name and the time remaining, or that the next prayer is unknown, rather than a
+  /// dash and "Unknown".
+  @MainActor
+  private func label(_ configuration: Configuration) -> Text {
+    guard let name = configuration.name else {
+      return Text(verbatim: strings("Next prayer unknown"))
+    }
+    guard let countdown = countdownLabel(configuration, strings: strings, mode: countdownMode)
+    else { return name }
+    return name + Text(verbatim: strings.labelSeparator) + countdown
   }
 }
 
@@ -354,6 +387,7 @@ private struct CircularNextStyle: NextPrayerStyle {
 private struct RectangularNextStyle: NextPrayerStyle {
   let strings: WidgetStrings
   let note: String?
+  let countdownMode: PrayerCountdown.Mode
 
   func makeBody(configuration: Configuration) -> some View {
     VStack(alignment: .leading, spacing: 1) {
@@ -371,6 +405,9 @@ private struct RectangularNextStyle: NextPrayerStyle {
       if let countdown = configuration.countdown {
         countdown
           .monospacedDigit()
+          .accessibilityLabel(
+            countdownLabel(configuration, strings: strings, mode: countdownMode) ?? countdown
+          )
           .accessibilityIdentifier("widget.next.countdown")
       } else if let note {
         Text(verbatim: note)
@@ -401,6 +438,7 @@ private struct InlineNextStyle: NextPrayerStyle {
 /// A row of the day's list: the next prayer in the accent color, passed ones secondary.
 private struct WidgetRowStyle: PrayerRowStyle {
   let palette: WidgetPalette
+  let strings: WidgetStrings
 
   func makeBody(configuration: Configuration) -> some View {
     let color: ThemeColor
@@ -433,8 +471,46 @@ private struct WidgetRowStyle: PrayerRowStyle {
     }
     .fontWeight(emphasized ? .semibold : .regular)
     .foregroundStyle(color.color)
-    .accessibilityElement(children: .combine)
+    .accessibilityElement(children: .ignore)
+    .accessibilityLabel(label(configuration))
     .accessibilityIdentifier("widget.row.\(configuration.kind.rawValue)")
+  }
+
+  /// The name, time and day offset, joined with the language's comma: "Fajr, 5:01 AM" or
+  /// "الفجر، ٥:٠١ ص". Combining the children would join them with an ASCII comma.
+  @MainActor
+  private func label(_ configuration: Configuration) -> Text {
+    let separator = Text(verbatim: strings.labelSeparator)
+    var label = configuration.name
+    if let time = configuration.time {
+      label = label + separator + time
+    }
+    if let offset = configuration.dayOffsetText {
+      label = label + separator + offset
+    }
+    return label
+  }
+}
+
+/// VoiceOver's label for the countdown to the configuration's next prayer: "Time remaining",
+/// then the time left. A live countdown's label holds a timer of its own, so it stays current;
+/// one drawn at a fixed moment reads the time left in words. `nil` without a countdown.
+@MainActor
+private func countdownLabel(
+  _ configuration: NextPrayerConfiguration, strings: WidgetStrings, mode: PrayerCountdown.Mode
+) -> Text? {
+  guard configuration.countdown != nil, let focus = configuration.focus, !focus.isCountUp
+  else { return nil }
+  let start = configuration.state.date
+  let end = max(start, focus.event.time)
+  switch mode {
+  case .staticText:
+    return Text(verbatim: strings.timeRemaining(from: start, until: end))
+  case .live:
+    let words = strings.timeRemainingAroundTimer
+    return Text(verbatim: words.before)
+      + Text(timerInterval: start...end, countsDown: true, showsHours: true)
+      + Text(verbatim: words.after)
   }
 }
 

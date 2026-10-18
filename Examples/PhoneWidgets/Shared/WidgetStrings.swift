@@ -90,6 +90,35 @@ nonisolated struct WidgetStrings: Sendable {
     return formatter.string(from: date)
   }
 
+  /// VoiceOver's words for a countdown: "Time remaining: 1 hour, 27 minutes".
+  func timeRemaining(_ spoken: String) -> String {
+    self("Time remaining: \(spoken)")
+  }
+
+  /// VoiceOver's words for the time left from `date` until `end`, for a countdown drawn at a
+  /// fixed moment: "Time remaining: 1 hour, 27 minutes".
+  func timeRemaining(from date: Date, until end: Date) -> String {
+    timeRemaining(
+      PrayerDurationFormat.string(end.timeIntervalSince(date), width: .spoken, locale: locale))
+  }
+
+  /// The words before and after a live countdown in VoiceOver's label, where the running timer
+  /// goes: "Time remaining: " and nothing after it in English.
+  var timeRemainingAroundTimer: (before: String, after: String) {
+    let marker = "\u{FFFC}"
+    let parts = timeRemaining(marker).components(separatedBy: marker)
+    return (parts.first ?? "", parts.dropFirst().joined(separator: marker))
+  }
+
+  /// What separates the parts of a label VoiceOver reads as one, such as a row's name and
+  /// time: a comma, or the Arabic comma "،" in Arabic.
+  var labelSeparator: String {
+    switch language {
+    case .english: ", "
+    case .arabic: "، "
+    }
+  }
+
   /// Names joined as the locale joins a list: "Fajr, Sunrise, and Isha".
   func list(_ kinds: [PrayerKind]) -> String {
     kinds.map { names.name(of: $0) }.formatted(.list(type: .and).locale(locale))

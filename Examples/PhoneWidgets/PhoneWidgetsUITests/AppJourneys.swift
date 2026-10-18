@@ -62,7 +62,7 @@ nonisolated final class AppJourneys: JourneyCase {
   /// 2. The widget's views for every state, in English: setup required, normal, partial (a
   /// partial day, and an unknown next prayer), unavailable and expired.
   @MainActor
-  func testWidgetStatesInEnglish() {
+  func testWidgetStatesInEnglish() throws {
     let app = launch(["-now", Self.makkahAfternoon, "-frozen", "-language", "en"], clean: true)
     open("open.states", in: app)
 
@@ -76,7 +76,25 @@ nonisolated final class AppJourneys: JourneyCase {
     XCTAssertEqual(text("widget.place", in: normal), "Makkah")
     // In the app the countdown is the time left at the entry's moment: 14:00 to Asr at 15:27.
     XCTAssertTrue(text("widget.next.countdown", in: normal).contains("27"))
-    XCTAssertTrue(text("widget.row.fajr", in: normal).hasPrefix("Fajr"))
+    // VoiceOver says what the number is, and the time left in words.
+    XCTAssertEqual(
+      text("widget.next.countdown", in: normal), "Time remaining: 1 hour, 27 minutes")
+    XCTAssertEqual(
+      text("widget.next.countdown", in: state("normal", .rectangular, in: app)),
+      "Time remaining: 1 hour, 27 minutes")
+    XCTAssertEqual(
+      text("widget.next", in: state("normal", .circular, in: app)),
+      "Asr, Time remaining: 1 hour, 27 minutes")
+    // The time has a narrow no-break space before "AM", as the locale writes it.
+    XCTAssertEqual(text("widget.row.fajr", in: normal), "Fajr, 5:00\u{202F}AM")
+    // The medium widget reads its card before its list, not line by line across both.
+    let order = identifiers(in: normal)
+    XCTAssertLessThan(
+      try XCTUnwrap(order.firstIndex(of: "widget.next.countdown")),
+      try XCTUnwrap(order.firstIndex(of: "widget.row.fajr")), "\(order)")
+    // The setup notice's symbol is decoration, so VoiceOver doesn't read its name.
+    XCTAssertEqual(state("setup", .rectangular, in: app).images.count, 0)
+    XCTAssertEqual(state("setup", .circular, in: app).images.count, 0)
     // Every family names the next prayer in full for VoiceOver, the circular one too, although
     // it shows only the abbreviation ("A").
     assertNamesPrayer("Asr", in: "normal", of: app)
@@ -100,8 +118,9 @@ nonisolated final class AppJourneys: JourneyCase {
     XCTAssertEqual(text("widget.message", in: unknown), "The next prayer isn't known.")
     XCTAssertTrue(text("widget.row.isha", in: unknown).hasPrefix("Isha"))
     XCTAssertFalse(unknown.descendants(matching: .any)["widget.next.countdown"].exists)
+    // The circular widget shows "–" and "Unknown"; VoiceOver reads a sentence instead.
     XCTAssertEqual(
-      text("widget.next.unknown", in: state("unknownNext", .circular, in: app)), "Unknown")
+      text("widget.next", in: state("unknownNext", .circular, in: app)), "Next prayer unknown")
     screenshot("04-states-partial")
 
     let unavailable = state("unavailable", .medium, in: app)
@@ -130,6 +149,11 @@ nonisolated final class AppJourneys: JourneyCase {
     XCTAssertEqual(text("widget.title", in: state("setup", .small, in: app)), "اختر مكانًا")
     let normal = state("normal", .medium, in: app)
     XCTAssertEqual(text("widget.next.name", in: normal), "العصر")
+    // Arabic labels join their parts with the Arabic comma, and say "Time remaining".
+    let fajr = text("widget.row.fajr", in: normal)
+    XCTAssertTrue(fajr.hasPrefix("الفجر، "), fajr)
+    XCTAssertFalse(fajr.contains(","), fajr)
+    XCTAssertTrue(text("widget.next.countdown", in: normal).hasPrefix("الوقت المتبقي: "))
     XCTAssertEqual(text("widget.place", in: normal), "مكة المكرمة")
     assertNamesPrayer("العصر", in: "normal", of: app)
     screenshot("07-states-arabic")
@@ -139,6 +163,42 @@ nonisolated final class AppJourneys: JourneyCase {
     XCTAssertEqual(text("widget.message", in: unavailable), "المكان أو الإعدادات غير صالحة.")
     let expired = state("expired", .medium, in: app)
     XCTAssertEqual(text("widget.title", in: expired), "الأوقات بحاجة إلى تحديث")
+  }
+
+  /// 4. At the largest text size the samples are drawn as WidgetKit draws the widgets, so
+  /// every state's text stays inside its widget in every family, in English and Arabic.
+  @MainActor
+  func testWidgetStatesAtTheLargestTextSize() {
+    for language in ["en", "ar"] {
+      // At this size the save status is below the fold, so the launch waits for the app only.
+      let app = XCUIApplication()
+      app.launchArguments = [
+        "-AppleLanguages", "(en)", "-AppleLocale", "en_US", "-cleanStart", "-now",
+        Self.makkahAfternoon, "-frozen", "-language", language,
+        "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL",
+      ]
+      app.launch()
+      XCTAssertTrue(app.wait(for: .runningForeground, timeout: 30))
+      open("open.states", in: app)
+      for id in ["setup", "normal", "partial", "unknownNext", "unavailable", "expired"] {
+        for family in [Family.small, .medium, .large, .circular, .rectangular, .inline] {
+          let container = state(id, family, in: app)
+          let bounds = container.frame.insetBy(dx: -1, dy: -1)
+          let texts = container.descendants(matching: .any).allElementsBoundByIndex
+          for text in texts where !text.frame.isEmpty {
+            XCTAssertTrue(
+              bounds.contains(text.frame),
+              "\(language) \(id) \(family.rawValue): \"\(text.label)\" at \(text.frame) is outside \(bounds)"
+            )
+          }
+        }
+        if id == "normal" || id == "expired" {
+          scrollDown(to: id, in: app)
+          screenshot("08-states-largest-text-\(id)-\(language)")
+        }
+      }
+      app.terminate()
+    }
   }
 
   // MARK: Helpers
@@ -170,6 +230,19 @@ nonisolated final class AppJourneys: JourneyCase {
       XCTAssertTrue(
         named.exists, "\(family.rawValue) doesn't read \(name): \(container.debugDescription)")
     }
+  }
+
+  /// The identifiers in a container, in the order VoiceOver reads them.
+  @MainActor
+  private func identifiers(in container: XCUIElement) -> [String] {
+    guard let root = try? container.snapshot() else { return [] }
+    var order: [String] = []
+    var pending = [root]
+    while let next = pending.popLast() {
+      if !next.identifier.isEmpty { order.append(next.identifier) }
+      pending.append(contentsOf: next.children.reversed())
+    }
+    return order
   }
 
   @MainActor

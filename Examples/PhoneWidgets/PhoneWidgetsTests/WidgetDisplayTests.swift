@@ -157,4 +157,26 @@ struct WidgetDisplayTests {
         foreground: palette.accent, background: palette.surface, reserved: WidgetPalette.reserved
       ).isEmpty)
   }
+
+  // MARK: VoiceOver
+
+  /// A countdown says what it counts: "Time remaining", then the time left.
+  @Test func countdownLabelsSayTimeRemaining() {
+    let asr = Self.afternoon.addingTimeInterval(87 * 60)
+    #expect(
+      Self.english.timeRemaining(from: Self.afternoon, until: asr)
+        == "Time remaining: 1 hour, 27 minutes")
+    let arabic = Self.arabic.timeRemaining(from: Self.afternoon, until: asr)
+    #expect(arabic.hasPrefix("الوقت المتبقي: "), "\(arabic)")
+    // A live countdown's label puts its timer after the same words.
+    #expect(Self.english.timeRemainingAroundTimer.before == "Time remaining: ")
+    #expect(Self.english.timeRemainingAroundTimer.after == "")
+    #expect(Self.arabic.timeRemainingAroundTimer.before.hasPrefix("الوقت المتبقي: "))
+  }
+
+  /// Labels read as one join their parts with the language's comma: "الفجر، ٥:٠٠ ص".
+  @Test func labelsUseTheLanguagesComma() {
+    #expect(Self.english.labelSeparator == ", ")
+    #expect(Self.arabic.labelSeparator == "، ")
+  }
 }
