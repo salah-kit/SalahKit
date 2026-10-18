@@ -54,13 +54,15 @@ nonisolated public struct ThemeColor: Codable, Hashable, Sendable {
     return (max(a, b) + 0.05) / (min(a, b) + 0.05)
   }
 
-  /// This color, moved toward white on a dark surface or toward black on a light one until it
-  /// reaches `ratio` against `surface`.
+  /// This color, moved toward white or black until it reaches `ratio` against `surface`.
   ///
-  /// The color moves in twenty equal steps, keeping its hue; the first step that reaches the
-  /// ratio wins. A color that already reaches it comes back unchanged. One that can't, because
-  /// the ratio is out of reach on this surface, ends at white or black. A surface counts as
-  /// dark when its relative luminance is below 0.5. Opacity is kept.
+  /// The color moves in twenty equal steps, keeping its hue, toward whichever of white and
+  /// black reaches the ratio in fewer steps; the first step that reaches it wins. That's
+  /// usually toward white on a dark surface and toward black on a light one; on a mid-tone
+  /// surface it depends on the color. A color that already reaches the ratio comes back
+  /// unchanged. When both directions take the same number of steps, or neither reaches the
+  /// ratio, the color goes toward whichever of white and black contrasts more with the
+  /// surface, and ends at white or black if the ratio is out of reach. Opacity is kept.
   ///
   /// - Parameters:
   ///   - surface: The color it's drawn on.
@@ -68,20 +70,34 @@ nonisolated public struct ThemeColor: Codable, Hashable, Sendable {
   /// - Returns: The adjusted color.
   public func adjustedForContrast(against surface: ThemeColor, ratio: Double = 4.5) -> ThemeColor {
     if Self.contrastRatio(self, surface) >= ratio { return self }
-    let towardWhite = surface.relativeLuminance < 0.5
     let start = (Self.unit(red), Self.unit(green), Self.unit(blue))
-    func moved(_ component: Double, by fraction: Double) -> Double {
-      component + ((towardWhite ? 1 : 0) - component) * fraction
+    // The first step toward `end` (0 or 1) that reaches the ratio, or nil, with that color or
+    // `end` itself.
+    func moving(toward end: Double) -> (step: Int?, color: ThemeColor) {
+      func moved(_ component: Double, by fraction: Double) -> Double {
+        component + (end - component) * fraction
+      }
+      var candidate = self
+      for step in 1...20 {
+        let fraction = Double(step) / 20
+        candidate = ThemeColor(
+          red: moved(start.0, by: fraction), green: moved(start.1, by: fraction),
+          blue: moved(start.2, by: fraction), opacity: opacity)
+        if Self.contrastRatio(candidate, surface) >= ratio { return (step, candidate) }
+      }
+      return (nil, candidate)
     }
-    var candidate = self
-    for step in 1...20 {
-      let fraction = Double(step) / 20
-      candidate = ThemeColor(
-        red: moved(start.0, by: fraction), green: moved(start.1, by: fraction),
-        blue: moved(start.2, by: fraction), opacity: opacity)
-      if Self.contrastRatio(candidate, surface) >= ratio { break }
+    let lighter = moving(toward: 1)
+    let darker = moving(toward: 0)
+    let whiteContrastsMore =
+      Self.contrastRatio(ThemeColor(red: 1, green: 1, blue: 1), surface)
+      >= Self.contrastRatio(ThemeColor(red: 0, green: 0, blue: 0), surface)
+    switch (lighter.step, darker.step) {
+    case (let up?, let down?) where up != down: return up < down ? lighter.color : darker.color
+    case (_?, nil): return lighter.color
+    case (nil, _?): return darker.color
+    default: return whiteContrastsMore ? lighter.color : darker.color
     }
-    return candidate
   }
 
   /// The straight-line distance between two colors' sRGB components, from 0 for the same color

@@ -8,6 +8,12 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
+- `ThemeColor.adjustedForContrast(against:ratio:)` moves toward whichever of white and black
+  reaches the ratio in fewer steps. It used to move toward white whenever the surface's relative
+  luminance was below 0.5, so on a mid-tone surface it could end at white, below the ratio, where
+  black reached it ([#57](https://github.com/salah-kit/SalahKit/issues/57)). On a surface where
+  only one direction reaches the ratio, such as a dark or light background, the result is
+  unchanged. RFC 0004 §10.2 records the change.
 - `PrayerLocale.resolved` takes an explicit numbering system from the `nu` key of an
   identifier's Unicode (`-u-`) extension or an `@numbers=` keyword, and no longer from a `nu`
   subtag in a private-use (`-x-`) or transformed (`-t-`) part. `ar-u-ca-islamic-x-nu-latn` now

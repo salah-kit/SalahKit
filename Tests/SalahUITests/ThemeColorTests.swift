@@ -122,11 +122,21 @@ struct ThemeColorTests {
     }
   }
 
+  /// The surfaces Salah's editor fixes a color against: its widget's dark and light backgrounds,
+  /// plus black and white. On these, only one direction can reach 3:1, so Salah's rule (toward
+  /// white below a luminance of 0.5) and the fewer-steps rule agree.
+  static let salahSurfaces: [ThemeColor] = [
+    black, white,
+    ThemeColor(red: 0.075, green: 0.094, blue: 0.180),
+    ThemeColor(red: 0.027, green: 0.035, blue: 0.078),
+    ThemeColor(red: 0.992, green: 0.976, blue: 0.945),
+    ThemeColor(red: 0.953, green: 0.925, blue: 0.875),
+  ]
+
   @Test("the contrast fix equals Salah's on a grid against its surfaces, at 3 and 4.5")
   func adjustmentMatchesSalah() {
-    let surfaces = [Self.black, Self.white] + Self.salahColors
     for color in Self.grid + Self.salahColors {
-      for surface in surfaces {
+      for surface in Self.salahSurfaces {
         for ratio in [3.0, 4.5] {
           let ours = color.adjustedForContrast(against: surface, ratio: ratio)
           let theirs = color.salah.adjustedForContrast(against: surface.salah, ratio: ratio)
@@ -154,12 +164,42 @@ struct ThemeColorTests {
     #expect(darker.red < pale.red)
   }
 
-  @Test("a ratio out of reach ends at white on dark and black on light")
+  @Test("on a mid-tone surface the contrast fix goes the way that reaches the ratio (#57)")
+  func midToneSurface() {
+    let color = ThemeColor(red: 0.45, green: 0.45, blue: 0.55)
+    // Relative luminance 0.32 and 0.45: white reaches only 2.85 and 2.11 on them.
+    for grey in [0.6, 0.7] {
+      let surface = ThemeColor(red: grey, green: grey, blue: grey)
+      let fixed = color.adjustedForContrast(against: surface)
+      #expect(ThemeColor.contrastRatio(fixed, surface) >= 4.5, "\(grey)")
+      #expect(fixed.red < color.red && fixed.blue < color.blue, "\(grey)")
+    }
+  }
+
+  @Test("when both ways reach the ratio, the one with fewer steps wins")
+  func fewerSteps() {
+    let surface = ThemeColor(red: 0.5, green: 0.5, blue: 0.5)
+    // Lighter than the surface: 5 steps toward white, 14 toward black.
+    let light = ThemeColor(red: 0.75, green: 0.75, blue: 0.75)
+    let lighter = light.adjustedForContrast(against: surface, ratio: 2.5)
+    #expect(lighter.red > light.red)
+    #expect(ThemeColor.contrastRatio(lighter, surface) >= 2.5)
+    // Darker than the surface: 3 steps toward black, 15 toward white.
+    let dark = ThemeColor(red: 0.3, green: 0.3, blue: 0.3)
+    let darker = dark.adjustedForContrast(against: surface, ratio: 2.5)
+    #expect(darker.red < dark.red)
+    #expect(ThemeColor.contrastRatio(darker, surface) >= 2.5)
+  }
+
+  @Test("a ratio out of reach ends at whichever of white and black contrasts more")
   func unreachable() {
     let grey = ThemeColor(red: 0.5, green: 0.5, blue: 0.5)
-    let midSurface = ThemeColor(red: 0.45, green: 0.45, blue: 0.45)
-    let result = grey.adjustedForContrast(against: midSurface, ratio: 21)
-    #expect([result.red, result.green, result.blue] == [1, 1, 1])
+    let darkMidSurface = ThemeColor(red: 0.45, green: 0.45, blue: 0.45)
+    let onDarkMid = grey.adjustedForContrast(against: darkMidSurface, ratio: 21)
+    #expect([onDarkMid.red, onDarkMid.green, onDarkMid.blue] == [1, 1, 1])
+    let lightMidSurface = ThemeColor(red: 0.6, green: 0.6, blue: 0.6)
+    let onLightMid = grey.adjustedForContrast(against: lightMidSurface, ratio: 21)
+    #expect([onLightMid.red, onLightMid.green, onLightMid.blue] == [0, 0, 0])
     let onLight = grey.adjustedForContrast(against: Self.white, ratio: 22)
     #expect([onLight.red, onLight.green, onLight.blue] == [0, 0, 0])
   }

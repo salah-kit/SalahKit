@@ -247,7 +247,7 @@ With `.stateChanges` and the default policy, a 48-hour timeline has 34 entries (
 ### 4.6 Theme tools
 
 - `relativeLuminance` is WCAG 2's (`0.03928` threshold); `contrastRatio` is `(L1 + 0.05) / (L2 + 0.05)`; `distance` is the Euclidean distance of the sRGB components (0 to √3). All three equal Salah's `GuidanceColorSpec` at `4bc00e9` for components in 0…1; outside it, a component counts as the nearest end, and NaN as 0.
-- `adjustedForContrast(against:ratio:)` returns the color unchanged when it reaches `ratio`; otherwise it moves the components toward white (surface luminance below 0.5) or black in 20 equal steps from the original color and returns the first step that reaches `ratio`, or the last one (white or black). Opacity is kept and ignored by the math.
+- `adjustedForContrast(against:ratio:)` returns the color unchanged when it reaches `ratio`. Otherwise it moves the components toward white and toward black in 20 equal steps from the original color, and returns the first step that reaches `ratio` in the direction that needs fewer steps. A tie, or a ratio that neither direction reaches, goes toward whichever of white and black contrasts more with the surface, and ends at white or black when the ratio is out of reach. Opacity is kept and ignored by the math. §10.2 amended this; before, the color always moved toward white when the surface's luminance was below 0.5.
 - `ContrastCheck.problems` returns `.lowContrast(ratio)` when the ratio is below `minimumContrast`, then `.tooCloseToReserved(color)` for each reserved color closer than `minimumReservedDistance`, in the given order. The defaults are Salah's guardrails (`AppearanceTab.swift:87-156` at `4bc00e9`): 3:1 for the large countdown, 0.28 from its functional colors.
 
 ### 4.7 Isolation and platforms
@@ -389,3 +389,22 @@ honor DST and skipped dates. The entry budget includes these dates and the final
 entry; validity ends at the first omitted date and reload remains halfway to that cutoff.
 A boundary at the first entry or validUntil adds no duplicate schedule entry. Default behavior
 is unchanged.
+
+### 10.2 Contrast direction (2026-10-19)
+
+Issue [#57](https://github.com/salah-kit/SalahKit/issues/57): `adjustedForContrast` took its
+direction from the surface alone, toward white below a relative luminance of 0.5. White and
+black contrast equally with a surface at about 0.18, so on a surface between about 0.18 and
+0.5 it moved toward white even where only black reached the ratio. On a mid-gray
+`(0.6, 0.6, 0.6)` it returned white at 2.85:1, where black gives 7.37:1.
+
+It now tries both directions and returns the first step that reaches the ratio in the
+direction that needs fewer steps. A tie, or a ratio neither direction reaches, goes toward
+whichever of white and black contrasts more with the surface (§4.6). Where only one direction
+can reach the ratio, the result is the same as before. That's always true on Salah's widget
+backgrounds and on black and white, and `ThemeColorTests` still compares those with Salah's
+original code. Salah's Appearance tab, the consumer, fixes a custom primary against those
+backgrounds, so its suggestions don't change.
+
+Discussed on [#9](https://github.com/salah-kit/SalahKit/discussions/9), open for comments from
+2026-10-19 to 2026-10-26.
