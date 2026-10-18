@@ -109,8 +109,10 @@ so Salah builds its Arabic locale with the `arab` numbering system, its Urdu and
 locales with `arabext`, and its Bengali locale with `beng`.
 
 SalahCore does the same for any identifier: `PrayerLocale.resolved(_:)` applies the language's
-numbering system unless the identifier names one, such as `ar@numbers=latn`. Use the resolved
-locale for every name, duration and time you show:
+numbering system unless the identifier names one, such as `ar@numbers=latn`. Arabic follows
+CLDR's default for the country the identifier names: `ar-MA`, `ar-DZ`, `ar-TN`, `ar-LY`, `ar-EH`
+and `ar-AE` get Latin digits, and every other Arabic locale, a bare `ar` included, gets
+Arabic-Indic digits. Use the resolved locale for every name, duration and time you show:
 
 ```swift
 let locale = PrayerLocale.resolved("ar")

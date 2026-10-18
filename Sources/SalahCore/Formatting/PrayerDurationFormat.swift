@@ -8,7 +8,8 @@ import Foundation
 /// values count as zero.
 ///
 /// Digits follow the locale. A bare identifier can lose its numbering system, so pass a locale
-/// from ``PrayerLocale/resolved(_:)-(String)`` when the language uses native digits.
+/// from ``PrayerLocale/resolved(_:)-(String)``, which gives a language and region the same
+/// digits on every platform.
 ///
 /// ```swift
 /// let locale = PrayerLocale.resolved("ar")

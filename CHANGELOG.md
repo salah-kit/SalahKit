@@ -6,8 +6,25 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- `PrayerLocale.resolved` follows CLDR's default digits for the country an Arabic identifier
+  names: `ar-AE`, `ar-DZ`, `ar-EH`, `ar-LY`, `ar-MA` and `ar-TN` now get Latin digits instead of
+  Arabic-Indic ones. A bare `ar` and every other Arabic region keep Arabic-Indic digits, and an
+  explicit numbering system still wins, such as `ar-MA-u-nu-arab`
+  ([RFC 0001](docs/rfcs/0001-core.md), §10.4;
+  [#42](https://github.com/salah-kit/SalahKit/issues/42)).
+
 ### Fixed
 
+- `PrayerLocale.resolved` gives back an identifier or a locale that names its digits in a BCP 47
+  extension, such as `ar-MA-u-nu-arab` or `bn-u-nu-beng`, rebuilt in ICU form
+  (`ar_MA@numbers=arab`) on every platform, and one in ICU form unchanged. Foundation on macOS 27
+  drops a `-u-nu-` value that matches the language's script when it parses the identifier, which
+  left a locale that formatted no digits, and on Linux `NumberFormatter` crashes on a locale made
+  from a `-u-nu-` identifier. A `Locale` already made on macOS 27 from an identifier whose
+  `-u-nu-` value matches the script has lost the value; build it with `Locale.Components` or
+  `@numbers=` instead.
 - `PrayerLocale.resolved` takes an explicit numbering system from the `nu` key of an
   identifier's Unicode (`-u-`) extension or an `@numbers=` keyword, and no longer from a `nu`
   subtag in a private-use (`-x-`) or transformed (`-t-`) part. `ar-u-ca-islamic-x-nu-latn` now
