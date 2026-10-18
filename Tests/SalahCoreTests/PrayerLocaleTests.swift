@@ -53,6 +53,9 @@ private func digits(_ value: Int, _ locale: Locale) -> String {
   @Test func onlyTheUnicodeExtensionNamesTheDigits() {
     #expect(PrayerLocale.namesNumberingSystem("ar-u-ca-islamic-nu-latn"))
     #expect(PrayerLocale.namesNumberingSystem("ar-t-en-u-nu-latn"))
+    #expect(PrayerLocale.namesNumberingSystem("ar-u-nu-latn-x-priv"))
+    // Niue's region code isn't the key either.
+    #expect(!PrayerLocale.namesNumberingSystem("ar-NU-u-ca-islamic"))
     // A `nu` in a private-use or transformed part isn't the numbering-system key (#54).
     for identifier in ["ar-u-ca-islamic-x-nu-latn", "ar-x-u-nu-latn", "ar-u-ca-islamic-t-nu"] {
       #expect(!PrayerLocale.namesNumberingSystem(identifier), "\(identifier)")
