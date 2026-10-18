@@ -25,6 +25,11 @@ All notable changes to this project are documented here. The format follows
   from a `-u-nu-` identifier. A `Locale` already made on macOS 27 from an identifier whose
   `-u-nu-` value matches the script has lost the value; build it with `Locale.Components` or
   `@numbers=` instead.
+- `PrayerLocale.resolved` takes an explicit numbering system from the `nu` key of an
+  identifier's Unicode (`-u-`) extension or an `@numbers=` keyword, and no longer from a `nu`
+  subtag in a private-use (`-x-`) or transformed (`-t-`) part. `ar-u-ca-islamic-x-nu-latn` now
+  gets Arabic-Indic digits, as `ar-u-ca-islamic` does
+  ([#54](https://github.com/salah-kit/SalahKit/issues/54)).
 - The examples keep their words whole at the largest text sizes. CalculatedPhone stacks a row,
   the next prayer or the latest prayer that doesn't fit on one line
   ([#50](https://github.com/salah-kit/SalahKit/issues/50)). MosqueBoard's iPad board stacks
