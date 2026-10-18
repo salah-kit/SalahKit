@@ -179,4 +179,13 @@ struct WidgetDisplayTests {
     #expect(Self.english.labelSeparator == ", ")
     #expect(Self.arabic.labelSeparator == "، ")
   }
+
+  /// A row without a time says why, rather than reading only the prayer's name.
+  @Test func rowsWithoutATimeSayWhy() {
+    #expect(Self.english.missingTime(.calculationUnavailable) == "Can't calculate")
+    #expect(Self.english.missingTime(.noPublishedData) == "Unknown")
+    #expect(Self.english.missingTime(nil) == "Unknown")
+    #expect(Self.arabic.missingTime(nil) == Self.arabic("Unknown"))
+    #expect(Self.arabic.missingTime(nil) != "Unknown")
+  }
 }

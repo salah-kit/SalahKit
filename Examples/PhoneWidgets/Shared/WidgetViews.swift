@@ -477,14 +477,14 @@ private struct WidgetRowStyle: PrayerRowStyle {
   }
 
   /// The name, time and day offset, joined with the language's comma: "Fajr, 5:01 AM" or
-  /// "الفجر، ٥:٠١ ص". Combining the children would join them with an ASCII comma.
+  /// "الفجر، ٥:٠١ ص". Combining the children would join them with an ASCII comma. A row
+  /// without a time says why instead of the "–" it shows.
   @MainActor
   private func label(_ configuration: Configuration) -> Text {
     let separator = Text(verbatim: strings.labelSeparator)
-    var label = configuration.name
-    if let time = configuration.time {
-      label = label + separator + time
-    }
+    var label =
+      configuration.name + separator
+      + (configuration.time ?? Text(verbatim: strings.missingTime(configuration.gapReason)))
     if let offset = configuration.dayOffsetText {
       label = label + separator + offset
     }

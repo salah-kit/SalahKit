@@ -110,6 +110,12 @@ nonisolated struct WidgetStrings: Sendable {
     return (parts.first ?? "", parts.dropFirst().joined(separator: marker))
   }
 
+  /// VoiceOver's words for a row without a time, which shows "–": "Can't calculate" when the
+  /// source can't calculate it, otherwise "Unknown".
+  func missingTime(_ reason: ScheduleGapReason?) -> String {
+    reason == .calculationUnavailable ? self("Can't calculate") : self("Unknown")
+  }
+
   /// What separates the parts of a label VoiceOver reads as one, such as a row's name and
   /// time: a comma, or the Arabic comma "،" in Arabic.
   var labelSeparator: String {
