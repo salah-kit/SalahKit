@@ -51,6 +51,9 @@ nonisolated final class HomeScreenJourney: JourneyCase {
     goBack(in: app)
     showWidget(on: springboard)
     XCTAssertTrue(widgetText("widget.row.fajr", in: springboard).hasPrefix("Fajr"))
+    // The live countdown says what it counts.
+    let countdown = widgetText("widget.next.countdown", in: springboard)
+    XCTAssertTrue(countdown.hasPrefix("Time remaining: "), countdown)
 
     // (a) Arabic names in the extension while the simulator runs in English.
     app.activate()
@@ -66,7 +69,13 @@ nonisolated final class HomeScreenJourney: JourneyCase {
     screenshot("11-widget-log")
     goBack(in: app)
     showWidget(on: springboard)
-    XCTAssertTrue(widgetText("widget.row.fajr", in: springboard).hasPrefix("الفجر"))
+    let fajr = widgetText("widget.row.fajr", in: springboard)
+    XCTAssertTrue(fajr.hasPrefix("الفجر"), fajr)
+    // VoiceOver's label joins the name and time with the Arabic comma, as the extension's
+    // language writes it, though the device runs in English.
+    XCTAssertTrue(fajr.contains("،") && !fajr.contains(","), fajr)
+    let arabicCountdown = widgetText("widget.next.countdown", in: springboard)
+    XCTAssertTrue(arabicCountdown.hasPrefix("الوقت المتبقي: "), arabicCountdown)
     XCTAssertEqual(widgetText("widget.place", in: springboard), "مكة المكرمة")
     screenshot("12-home-arabic")
 

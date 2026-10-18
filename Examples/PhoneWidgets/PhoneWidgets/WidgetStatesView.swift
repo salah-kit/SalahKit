@@ -125,7 +125,8 @@ struct WidgetStatesView: View {
 }
 
 /// A widget entry drawn in the app at its family's size on an iPhone, on the widget's
-/// background for the Home Screen families and on a dark one for the Lock Screen's.
+/// background for the Home Screen families and on a dark one for the Lock Screen's, at the
+/// text size WidgetKit would draw it at.
 struct WidgetFrame: View {
   let entry: PrayerEntry
   let family: WidgetFamily
@@ -135,7 +136,15 @@ struct WidgetFrame: View {
     frame
       // The entry is a fixed moment; a live timer would count from the real clock instead.
       .environment(\.widgetCountdownMode, .staticText)
+      // WidgetKit doesn't draw widgets larger than this, whatever the app's text size, so a
+      // sample drawn larger would overflow where the real widget doesn't.
+      .dynamicTypeSize(...Self.largestTextSize)
   }
+
+  /// The largest text size WidgetKit draws a widget at: with an accessibility size set, a Home
+  /// Screen widget's text is drawn at the largest standard size. The Lock Screen samples use the
+  /// same limit.
+  static let largestTextSize = DynamicTypeSize.xxxLarge
 
   @ViewBuilder private var frame: some View {
     let size = Self.size(of: family)

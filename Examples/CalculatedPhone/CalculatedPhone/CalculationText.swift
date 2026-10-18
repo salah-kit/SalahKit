@@ -9,6 +9,19 @@ nonisolated struct ParameterRow: Equatable, Identifiable, Sendable {
   var id: String
   var title: String
   var value: String
+  /// The value in words for VoiceOver: "90 minutes after Maghrib" where the screen shows
+  /// "90 min after Maghrib".
+  var spokenValue: String
+
+  init(id: String, title: String, value: String, spokenValue: String? = nil) {
+    self.id = id
+    self.title = title
+    self.value = value
+    self.spokenValue = spokenValue ?? value
+  }
+
+  /// What VoiceOver reads for the row: "Isha: 90 minutes after Maghrib".
+  var accessibilityLabel: String { "\(title): \(spokenValue)" }
 }
 
 /// Words for SalahTimes' parameters, in the app's language.
@@ -28,7 +41,9 @@ nonisolated struct CalculationText: Sendable {
       ParameterRow(id: "method", title: strings("Method"), value: name(of: settings.method)),
       ParameterRow(id: "fajr", title: strings("Fajr"), value: text(parameters.fajr)),
       ParameterRow(id: "maghrib", title: strings("Maghrib"), value: text(parameters.maghrib)),
-      ParameterRow(id: "isha", title: strings("Isha"), value: text(parameters.isha)),
+      ParameterRow(
+        id: "isha", title: strings("Isha"), value: text(parameters.isha),
+        spokenValue: spokenText(parameters.isha)),
       ParameterRow(
         id: "madhab", title: strings("Asr (madhab)"), value: name(of: parameters.madhab)),
       ParameterRow(
@@ -37,13 +52,16 @@ nonisolated struct CalculationText: Sendable {
       ParameterRow(id: "nightSpan", title: strings("Night"), value: name(of: parameters.nightSpan)),
       ParameterRow(
         id: "methodAdjustments", title: strings("Method's minutes"),
-        value: text(parameters.methodAdjustments)),
+        value: text(parameters.methodAdjustments),
+        spokenValue: spokenText(parameters.methodAdjustments)),
       ParameterRow(
-        id: "adjustments", title: strings("Your minutes"), value: text(parameters.adjustments)),
+        id: "adjustments", title: strings("Your minutes"), value: text(parameters.adjustments),
+        spokenValue: spokenText(parameters.adjustments)),
       ParameterRow(
         id: "rounding", title: strings("Rounding"), value: name(of: parameters.rounding)),
       ParameterRow(
-        id: "ramadanIsha", title: strings("Ramadan Isha"), value: text(parameters.ramadanIsha)),
+        id: "ramadanIsha", title: strings("Ramadan Isha"), value: text(parameters.ramadanIsha),
+        spokenValue: spokenText(parameters.ramadanIsha)),
     ]
   }
 
@@ -123,6 +141,20 @@ nonisolated struct CalculationText: Sendable {
     strings("\(format.number(Double(value))) min")
   }
 
+  /// A number of minutes in words, for VoiceOver: "90 minutes".
+  func spokenMinutes(_ value: Int) -> String {
+    format.spokenMinutes(value)
+  }
+
+  /// Minutes added or taken away, in words, for VoiceOver: "+2 minutes", "-1 minute". Each
+  /// plural form keeps the direction, also where it has no number: Arabic says "تأخير بدقيقتين"
+  /// and "تقديم بدقيقة" (a delay of two minutes, an advance of one).
+  func spokenSignedMinutes(_ value: Int) -> String {
+    if value > 0 { return strings("+\(value) minutes") }
+    if value < 0 { return strings("-\(-value) minutes") }
+    return format.spokenMinutes(0)
+  }
+
   func text(_ rule: FajrRule) -> String {
     switch rule {
     case .angle(let value): degrees(value)
@@ -148,14 +180,49 @@ nonisolated struct CalculationText: Sendable {
   }
 
   func text(_ adjustments: PrayerAdjustments) -> String {
+    let items = Self.minutes(adjustments).map { kind, value in
+      strings("\(strings.names.name(of: kind)) \(format.signed(value)) min")
+    }
+    return items.isEmpty ? strings("None") : format.units(items)
+  }
+
+  /// The minutes in words, for VoiceOver: "Sunrise -7 minutes, Dhuhr +5 minutes".
+  func spokenText(_ adjustments: PrayerAdjustments) -> String {
+    let items = Self.minutes(adjustments).map { kind, value in
+      strings("\(strings.names.name(of: kind)) \(spokenSignedMinutes(value))")
+    }
+    return items.isEmpty ? strings("None") : format.units(items)
+  }
+
+  /// The kinds with minutes other than zero, Fajr through Isha.
+  private static func minutes(_ adjustments: PrayerAdjustments) -> [(PrayerKind, Int)] {
     let minutes: [(PrayerKind, Int)] = [
       (.fajr, adjustments.fajr), (.sunrise, adjustments.sunrise), (.dhuhr, adjustments.dhuhr),
       (.asr, adjustments.asr), (.maghrib, adjustments.maghrib), (.isha, adjustments.isha),
     ]
-    let items = minutes.filter { $0.1 != 0 }.map { kind, value in
-      strings("\(strings.names.name(of: kind)) \(format.signed(value)) min")
+    return minutes.filter { $0.1 != 0 }
+  }
+
+  /// The Isha rule in words, for VoiceOver: "90 minutes after Maghrib".
+  func spokenText(_ rule: IshaRule) -> String {
+    if case .minutesAfterMaghrib(let value) = rule {
+      return strings("\(format.spokenMinutes(value)) after Maghrib")
     }
-    return items.isEmpty ? strings("None") : format.units(items)
+    return text(rule)
+  }
+
+  /// The Ramadan rule in words, for VoiceOver: "120 minutes after Maghrib in Ramadan".
+  func spokenText(_ rule: RamadanIshaRule) -> String {
+    switch rule {
+    case .off:
+      return text(rule)
+    case .interval(let minutes, 0):
+      return strings("\(format.spokenMinutes(minutes)) after Maghrib in Ramadan")
+    case .interval(let minutes, let offset):
+      return strings(
+        "\(format.spokenMinutes(minutes)) after Maghrib in Ramadan, Hijri day offset \(format.signed(offset))"
+      )
+    }
   }
 
   func text(_ rule: RamadanIshaRule) -> String {

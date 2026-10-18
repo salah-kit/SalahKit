@@ -119,6 +119,26 @@ struct InputsTests {
     #expect(arabic.isRightToLeft)
     #expect(arabic.names.name(of: .fajr) == "الفجر")
   }
+
+  @Test func timelineCountsAgreeWithTheirNoun() {
+    let english = AppStrings(language: "en")
+    #expect(english("\(1) timelines") == "1 timeline")
+    #expect(english("\(3) timelines") == "3 timelines")
+    let arabic = AppStrings(language: "ar")
+    let counts = [
+      0: "0 جدول زمني", 1: "جدول زمني واحد", 2: "جدولان زمنيان", 3: "3 جداول زمنية",
+      11: "11 جدولًا زمنيًا", 100: "100 جدول زمني",
+    ]
+    for (count, text) in counts {
+      #expect(Self.westernDigits(arabic("\(count) timelines")) == text)
+    }
+  }
+
+  /// The text with Western digits, whatever digits the locale formats numbers in.
+  static func westernDigits(_ text: String) -> String {
+    let arabicIndic = Array("٠١٢٣٤٥٦٧٨٩")
+    return String(text.map { arabicIndic.firstIndex(of: $0).map { Character(String($0)) } ?? $0 })
+  }
 }
 
 /// The receive-and-store path: a received context saved through `SharedValue`, with the

@@ -68,7 +68,9 @@ struct SettingsView: View {
       .accessibilityIdentifier("settings.alerts")
       Picker(selection: reminderBinding) {
         ForEach(PhoneAlertOptions.reminderChoices, id: \.self) { minutes in
-          Text(verbatim: reminderName(minutes)).tag(minutes)
+          Text(verbatim: reminderName(minutes))
+            .accessibilityLabel(Text(verbatim: spokenReminderName(minutes)))
+            .tag(minutes)
         }
       } label: {
         Text(verbatim: strings("Reminder before each prayer"))
@@ -89,6 +91,12 @@ struct SettingsView: View {
   private func reminderName(_ minutes: Int?) -> String {
     guard let minutes else { return strings("No reminder") }
     return strings("\(text.format.number(Double(minutes))) min")
+  }
+
+  /// The reminder in words, for VoiceOver: "5 minutes".
+  private func spokenReminderName(_ minutes: Int?) -> String {
+    guard let minutes else { return strings("No reminder") }
+    return text.spokenMinutes(minutes)
   }
 
   private var alertsBinding: Binding<Bool> {
@@ -158,8 +166,11 @@ struct SettingsView: View {
     Section {
       if case .angle(let angle) = parameters.fajr {
         Stepper(value: fajrAngleBinding(angle), in: 0...30, step: 0.5) {
+          // VoiceOver reads the name, then the value it adjusts, once each.
           Text(verbatim: strings("Fajr angle: \(text.degrees(angle))"))
+            .accessibilityLabel(Text(verbatim: strings("Fajr angle")))
         }
+        .accessibilityValue(Text(verbatim: text.degrees(angle)))
         .accessibilityIdentifier("settings.fajrAngle")
       } else {
         LabeledContent {
@@ -189,12 +200,16 @@ struct SettingsView: View {
       case .angle(let angle):
         Stepper(value: ishaAngleBinding(angle), in: 0...30, step: 0.5) {
           Text(verbatim: strings("Isha angle: \(text.degrees(angle))"))
+            .accessibilityLabel(Text(verbatim: strings("Isha angle")))
         }
+        .accessibilityValue(Text(verbatim: text.degrees(angle)))
         .accessibilityIdentifier("settings.ishaValue")
       case .minutesAfterMaghrib(let minutes):
         Stepper(value: ishaMinutesBinding(minutes), in: 0...180, step: 5) {
           Text(verbatim: strings("Isha: \(text.minutes(minutes)) after Maghrib"))
+            .accessibilityLabel(Text(verbatim: strings.names.name(of: .isha)))
         }
+        .accessibilityValue(Text(verbatim: text.spokenText(parameters.isha)))
         .accessibilityIdentifier("settings.ishaValue")
       case .moonsightingCommittee:
         Text(verbatim: strings("Isha: \(text.text(parameters.isha))"))
@@ -241,6 +256,9 @@ struct SettingsView: View {
       Toggle(isOn: ramadanBinding) {
         Text(verbatim: strings("Isha 120 min after Maghrib in Ramadan"))
       }
+      .accessibilityLabel(
+        Text(verbatim: strings("Isha \(text.spokenMinutes(120)) after Maghrib in Ramadan"))
+      )
       .accessibilityIdentifier("settings.ramadanIsha")
     } header: {
       Text(verbatim: strings("Your choices"))
@@ -259,8 +277,11 @@ struct SettingsView: View {
         Stepper(value: adjustmentBinding(kind), in: -60...60) {
           Text(
             verbatim: strings(
-              "\(strings.names.name(of: kind)): \(text.format.signed(minutes)) min"))
+              "\(strings.names.name(of: kind)): \(text.format.signed(minutes)) min")
+          )
+          .accessibilityLabel(Text(verbatim: strings.names.name(of: kind)))
         }
+        .accessibilityValue(Text(verbatim: text.spokenSignedMinutes(minutes)))
         .accessibilityIdentifier("settings.adjust.\(kind.rawValue)")
       }
     } header: {

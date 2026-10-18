@@ -146,6 +146,68 @@ struct PhoneSnapshotTests {
     #expect(adjusted.method == .preset(.ummAlQura))
   }
 
+  // MARK: VoiceOver
+
+  /// VoiceOver reads the Calculation section's minutes in words, with each parameter's title
+  /// once: "Isha: 90 minutes after Maghrib", where the screen shows "90 min after Maghrib".
+  @Test func calculationLabelsSayMinutesInWords() throws {
+    let adjusted = settings(.makkah, .ummAlQura) {
+      $0.calculation.parameters.adjustments.fajr = 2
+      $0.calculation.parameters.adjustments.isha = -5
+      $0.calculation.parameters.ramadanIsha = AppSettings.ramadanRule
+    }
+    let screen = try snapshot(adjusted, at: "2026-10-14T14:00:00+03:00")
+    let rows = Dictionary(uniqueKeysWithValues: screen.calculation.map { ($0.id, $0) })
+    #expect(rows["isha"]?.value == "90 min after Maghrib")
+    #expect(rows["isha"]?.accessibilityLabel == "Isha: 90 minutes after Maghrib")
+    #expect(rows["method"]?.accessibilityLabel == "Method: Umm al-Qura")
+    #expect(rows["fajr"]?.accessibilityLabel == "Fajr: 18.5°")
+    #expect(
+      rows["adjustments"]?.accessibilityLabel == "Your minutes: Fajr +2 minutes, Isha -5 minutes")
+    #expect(
+      rows["ramadanIsha"]?.accessibilityLabel
+        == "Ramadan Isha: 120 minutes after Maghrib in Ramadan")
+
+    // Arabic writes minutes as a word in its plural form, never the abbreviation "د", which
+    // VoiceOver would read as a letter.
+    let arabic = try snapshot(
+      adjusted, at: "2026-10-14T14:00:00+03:00", strings: PhoneStrings(language: "ar"))
+    let labels = arabic.calculation.map(\.accessibilityLabel)
+    for label in labels {
+      #expect(!label.split(whereSeparator: \.isWhitespace).contains("د"), "\(label)")
+    }
+    let isha = try #require(arabic.calculation.first { $0.id == "isha" })
+    #expect(isha.value.split(whereSeparator: \.isWhitespace).contains("د"))
+    #expect(isha.accessibilityLabel.contains("دقيقة"), "\(isha.accessibilityLabel)")
+    // Fajr +2 and Isha -5 keep their direction in Arabic too.
+    let adjustments = try #require(arabic.calculation.first { $0.id == "adjustments" })
+    #expect(adjustments.accessibilityLabel.contains("تأخير بدقيقتين"), "\(adjustments)")
+    #expect(adjustments.accessibilityLabel.contains("تقديم بـ"), "\(adjustments)")
+  }
+
+  /// Minutes added or taken away keep their direction in every plural form. Arabic's forms for
+  /// one and two minutes have no number, so "+1" and "-1" mustn't both read "دقيقة".
+  @Test func signedMinutesKeepTheirDirection() {
+    let english = CalculationText(strings: english)
+    #expect(english.spokenSignedMinutes(1) == "+1 minute")
+    #expect(english.spokenSignedMinutes(-1) == "-1 minute")
+    #expect(english.spokenSignedMinutes(2) == "+2 minutes")
+    #expect(english.spokenSignedMinutes(0) == "0 minutes")
+
+    let arabic = CalculationText(strings: PhoneStrings(language: "ar"))
+    #expect(arabic.spokenSignedMinutes(1) == "تأخير بدقيقة")
+    #expect(arabic.spokenSignedMinutes(-1) == "تقديم بدقيقة")
+    #expect(arabic.spokenSignedMinutes(2) == "تأخير بدقيقتين")
+    #expect(arabic.spokenSignedMinutes(-2) == "تقديم بدقيقتين")
+    let values = [-11, -3, -2, -1, 1, 2, 3, 11]
+    let spoken = values.map(arabic.spokenSignedMinutes)
+    #expect(Set(spoken).count == values.count, "\(spoken)")
+    for (value, text) in zip(values, spoken) {
+      #expect(text.hasPrefix(value > 0 ? "تأخير" : "تقديم"), "\(value): \(text)")
+    }
+    #expect(arabic.spokenSignedMinutes(3).contains("٣"), "\(spoken)")
+  }
+
   // MARK: Across midnight
 
   @Test func kashgarIshaAfterMidnightIsNext() throws {

@@ -103,6 +103,16 @@ nonisolated struct PhoneFormat: Sendable {
     value.formatted(.number.sign(strategy: .always(includingZero: false)).locale(locale))
   }
 
+  /// Minutes in words with the locale's digits and plural forms, for VoiceOver: "90 minutes".
+  ///
+  /// Some plural forms have no number, such as Arabic's "دقيقة" and "دقيقتان", so a signed
+  /// amount uses `CalculationText.spokenSignedMinutes(_:)`, which keeps its direction.
+  func spokenMinutes(_ value: Int) -> String {
+    Measurement(value: Double(value), unit: UnitDuration.minutes).formatted(
+      .measurement(width: .wide, usage: .asProvided, numberFormatStyle: .number.locale(locale))
+        .locale(locale))
+  }
+
   /// Items joined as the locale joins a list: "Fajr, Sunrise, and Isha".
   func list(_ items: [String]) -> String {
     items.formatted(.list(type: .and).locale(locale))

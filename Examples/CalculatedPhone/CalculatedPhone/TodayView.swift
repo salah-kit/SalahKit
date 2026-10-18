@@ -154,16 +154,23 @@ private struct NowCard: View {
     Card(title: strings("Next prayer")) {
       switch snapshot.next {
       case .prayer(let moment, let countdown, let spoken):
-        HStack(alignment: .firstTextBaseline, spacing: 8) {
-          Text(verbatim: moment.name)
-            .font(.largeTitle.bold())
-            .accessibilityIdentifier("next.name")
-          OwningDayTag(moment: moment, identifier: "next.owningDay")
-          Spacer(minLength: 8)
-          Text(verbatim: moment.time)
-            .font(.title2.monospacedDigit())
-            .accessibilityLabel(Text(verbatim: strings("At \(moment.time)")))
-            .accessibilityIdentifier("next.time")
+        // One line while it fits; at the largest text sizes, one part per line, so no name or
+        // time breaks in the middle of a word.
+        // A line that fits keeps each part at its full width (`fixedSize`): an HStack would
+        // otherwise share the width out and wrap a part that fits.
+        ViewThatFits(in: .horizontal) {
+          HStack(alignment: .firstTextBaseline, spacing: 8) {
+            nextName(moment).fixedSize(horizontal: true, vertical: false)
+            OwningDayTag(moment: moment, identifier: "next.owningDay")
+              .fixedSize(horizontal: true, vertical: false)
+            Spacer(minLength: 8)
+            nextTime(moment).fixedSize(horizontal: true, vertical: false)
+          }
+          VStack(alignment: .leading, spacing: 4) {
+            nextName(moment)
+            OwningDayTag(moment: moment, identifier: "next.owningDay")
+            nextTime(moment)
+          }
         }
         Text(verbatim: countdown)
           .font(.system(.largeTitle, design: .rounded).monospacedDigit().weight(.semibold))
@@ -201,9 +208,25 @@ private struct NowCard: View {
       }
     }
   }
+
+  private func nextName(_ moment: PhoneSnapshot.Moment) -> some View {
+    Text(verbatim: moment.name)
+      .font(.largeTitle.bold())
+      .accessibilityIdentifier("next.name")
+  }
+
+  private func nextTime(_ moment: PhoneSnapshot.Moment) -> some View {
+    Text(verbatim: moment.time)
+      .font(.title2.monospacedDigit())
+      .accessibilityLabel(Text(verbatim: strings("At \(moment.time)")))
+      .accessibilityIdentifier("next.time")
+  }
 }
 
 /// "Latest prayer: Isha 00:19 (Sunday's)".
+///
+/// One line while it fits. Otherwise the title goes above the moment, and at the largest text
+/// sizes the name, the owning day and the time take a line each, so no word breaks.
 private struct MomentLine: View {
   let title: String
   let moment: PhoneSnapshot.Moment
@@ -211,20 +234,60 @@ private struct MomentLine: View {
   let identifier: String
 
   var body: some View {
-    HStack(alignment: .firstTextBaseline, spacing: 8) {
-      Text(verbatim: title)
-        .foregroundStyle(Color.secondary)
-      Spacer(minLength: 8)
-      Text(verbatim: moment.name)
-        .fontWeight(.semibold)
-        .accessibilityIdentifier("\(identifier).name")
-      OwningDayTag(moment: moment, identifier: "\(identifier).owningDay")
-      Text(verbatim: moment.time)
-        .monospacedDigit()
-        .accessibilityLabel(Text(verbatim: strings("At \(moment.time)")))
-        .accessibilityIdentifier("\(identifier).time")
+    // A line that fits keeps each part at its full width (`fixedSize`): an HStack would
+    // otherwise share the width out and wrap a part that fits.
+    ViewThatFits(in: .horizontal) {
+      HStack(alignment: .firstTextBaseline, spacing: 8) {
+        heading.fixedSize(horizontal: true, vertical: false)
+        Spacer(minLength: 8)
+        oneLine
+      }
+      VStack(alignment: .leading, spacing: 4) {
+        heading
+        ViewThatFits(in: .horizontal) {
+          oneLine
+          VStack(alignment: .leading, spacing: 4) {
+            name
+            tag
+            time
+          }
+        }
+      }
     }
     .font(.body)
+  }
+
+  private var heading: some View {
+    Text(verbatim: title)
+      .foregroundStyle(Color.secondary)
+      .accessibilityAddTraits(.isHeader)
+      .accessibilityIdentifier("\(identifier).title")
+  }
+
+  private var name: some View {
+    Text(verbatim: moment.name)
+      .fontWeight(.semibold)
+      .accessibilityIdentifier("\(identifier).name")
+  }
+
+  private var tag: some View {
+    OwningDayTag(moment: moment, identifier: "\(identifier).owningDay")
+  }
+
+  /// The name, the owning day and the time on one line, each at its full width.
+  private var oneLine: some View {
+    HStack(alignment: .firstTextBaseline, spacing: 8) {
+      name.fixedSize(horizontal: true, vertical: false)
+      tag.fixedSize(horizontal: true, vertical: false)
+      time.fixedSize(horizontal: true, vertical: false)
+    }
+  }
+
+  private var time: some View {
+    Text(verbatim: moment.time)
+      .monospacedDigit()
+      .accessibilityLabel(Text(verbatim: strings("At \(moment.time)")))
+      .accessibilityIdentifier("\(identifier).time")
   }
 }
 
@@ -315,45 +378,64 @@ private struct RowView: View {
 
   var body: some View {
     let id = "row.\(configuration.kind.rawValue)"
-    HStack(alignment: .firstTextBaseline, spacing: 12) {
-      VStack(alignment: .leading, spacing: 2) {
-        configuration.name
-          .font(.title3.weight(isNext ? .bold : .regular))
-          .accessibilityIdentifier("\(id).name")
-        StatusLabel(
-          status: status,
-          text: configuration.event == nil ? nil : status?.text(strings) ?? strings("Unknown")
-        )
-        .accessibilityIdentifier("\(id).status")
+    // The name and status on the leading side and the time on the trailing side while they
+    // fit; at the largest text sizes they stack, so no word or time breaks in the middle. On
+    // one line each side keeps its full width (`fixedSize`): an HStack would otherwise share
+    // the width out and wrap a side that fits.
+    ViewThatFits(in: .horizontal) {
+      HStack(alignment: .firstTextBaseline, spacing: 12) {
+        nameAndStatus(id).fixedSize(horizontal: true, vertical: false)
+        Spacer(minLength: 8)
+        timeAndMarker(id, alignment: .trailing).fixedSize(horizontal: true, vertical: false)
       }
-      Spacer(minLength: 8)
-      VStack(alignment: .trailing, spacing: 2) {
-        if let event = configuration.event {
-          // This example deliberately uses a 24-hour clock, including seconds when the
-          // calculation's rounding is disabled, rather than the list's short-time text.
-          Text(verbatim: PhoneFormat(strings: strings, timeZone: timeZone).time(event.time))
-            .font(.title3.monospacedDigit().weight(isNext ? .bold : .regular))
-            .accessibilityIdentifier("\(id).time")
-        } else {
-          Text(verbatim: configuration.gapReason?.label(strings) ?? "–")
-            .font(.callout)
-            .foregroundStyle(Color.secondary)
-            .multilineTextAlignment(.trailing)
-            .accessibilityIdentifier("\(id).time")
-        }
-        if configuration.dayOffset != 0 {
-          Text(
-            verbatim: configuration.dayOffset > 0
-              ? strings("Next day") : strings("Previous evening")
-          )
-          .font(.caption)
-          .accessibilityIdentifier("\(id).marker")
-        }
+      VStack(alignment: .leading, spacing: 4) {
+        nameAndStatus(id)
+        timeAndMarker(id, alignment: .leading)
       }
+      .frame(maxWidth: .infinity, alignment: .leading)
     }
     .padding(.vertical, 2)
     .accessibilityElement(children: .contain)
     .accessibilityIdentifier(id)
+  }
+
+  private func nameAndStatus(_ id: String) -> some View {
+    VStack(alignment: .leading, spacing: 2) {
+      configuration.name
+        .font(.title3.weight(isNext ? .bold : .regular))
+        .accessibilityIdentifier("\(id).name")
+      StatusLabel(
+        status: status,
+        text: configuration.event == nil ? nil : status?.text(strings) ?? strings("Unknown")
+      )
+      .accessibilityIdentifier("\(id).status")
+    }
+  }
+
+  private func timeAndMarker(_ id: String, alignment: HorizontalAlignment) -> some View {
+    VStack(alignment: alignment, spacing: 2) {
+      if let event = configuration.event {
+        // This example deliberately uses a 24-hour clock, including seconds when the
+        // calculation's rounding is disabled, rather than the list's short-time text.
+        Text(verbatim: PhoneFormat(strings: strings, timeZone: timeZone).time(event.time))
+          .font(.title3.monospacedDigit().weight(isNext ? .bold : .regular))
+          .accessibilityIdentifier("\(id).time")
+      } else {
+        Text(verbatim: configuration.gapReason?.label(strings) ?? "–")
+          .font(.callout)
+          .foregroundStyle(Color.secondary)
+          .multilineTextAlignment(alignment == .trailing ? .trailing : .leading)
+          .accessibilityIdentifier("\(id).time")
+      }
+      if configuration.dayOffset != 0 {
+        Text(
+          verbatim: configuration.dayOffset > 0
+            ? strings("Next day") : strings("Previous evening")
+        )
+        .font(.caption)
+        .accessibilityIdentifier("\(id).marker")
+      }
+    }
   }
 }
 
@@ -418,13 +500,16 @@ private struct CalculationCard: View {
     }
   }
 
+  /// The title is read as part of the value's label, so VoiceOver skips it.
   private func title(_ row: ParameterRow) -> some View {
-    Text(verbatim: row.title).foregroundStyle(Color.secondary)
+    Text(verbatim: row.title)
+      .foregroundStyle(Color.secondary)
+      .accessibilityHidden(true)
   }
 
   private func value(_ row: ParameterRow) -> some View {
     Text(verbatim: row.value)
-      .accessibilityLabel(Text(verbatim: "\(row.title): \(row.value)"))
+      .accessibilityLabel(Text(verbatim: row.accessibilityLabel))
       .accessibilityIdentifier("calc.\(row.id)")
   }
 }

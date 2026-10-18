@@ -1,6 +1,23 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "%@ %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%1$@ %2$@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ %2$@"
+          }
+        }
+      }
+    },
     "%@ %@ min": {
       "extractionState": "manual",
       "localizations": {
@@ -18,13 +35,64 @@
         }
       }
     },
+    "%@ after Maghrib": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ بعد المغرب"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ after Maghrib"
+          }
+        }
+      }
+    },
+    "%@ after Maghrib in Ramadan": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ بعد المغرب في رمضان"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ after Maghrib in Ramadan"
+          }
+        }
+      }
+    },
+    "%@ after Maghrib in Ramadan, Hijri day offset %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%1$@ بعد المغرب في رمضان، بإزاحة %2$@ يوم هجري"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ after Maghrib in Ramadan, Hijri day offset %2$@"
+          }
+        }
+      }
+    },
     "%@ began %@ ago": {
       "extractionState": "manual",
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "بدأت %1$@ منذ %2$@"
+            "value": "بدأ وقت %1$@ منذ %2$@"
           }
         },
         "en": {
@@ -278,6 +346,136 @@
                 "stringUnit": {
                   "state": "translated",
                   "value": "%lld pending requests"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "+%lld minutes": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تأخير بـ%lld دقائق"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تأخير بـ%lld دقيقة"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تأخير بدقيقة"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تأخير بـ%lld دقيقة"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تأخير بدقيقتين"
+                }
+              },
+              "zero": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تأخير بـ%lld دقيقة"
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "+%lld minute"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "+%lld minutes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "-%lld minutes": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تقديم بـ%lld دقائق"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تقديم بـ%lld دقيقة"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تقديم بدقيقة"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تقديم بـ%lld دقيقة"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تقديم بدقيقتين"
+                }
+              },
+              "zero": {
+                "stringUnit": {
+                  "state": "needs_review",
+                  "value": "تقديم بـ%lld دقيقة"
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "-%lld minute"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "-%lld minutes"
                 }
               }
             }
@@ -659,6 +857,23 @@
         }
       }
     },
+    "Fajr angle": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "زاوية الفجر"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fajr angle"
+          }
+        }
+      }
+    },
     "Fajr angle: %@": {
       "extractionState": "manual",
       "localizations": {
@@ -829,6 +1044,23 @@
         }
       }
     },
+    "Isha %@ after Maghrib in Ramadan": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "العشاء بعد المغرب بـ %@ في رمضان"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Isha %@ after Maghrib in Ramadan"
+          }
+        }
+      }
+    },
     "Isha 120 min after Maghrib in Ramadan": {
       "extractionState": "manual",
       "localizations": {
@@ -842,6 +1074,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Isha 120 min after Maghrib in Ramadan"
+          }
+        }
+      }
+    },
+    "Isha angle": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "زاوية العشاء"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Isha angle"
           }
         }
       }

@@ -25,6 +25,23 @@ All notable changes to this project are documented here. The format follows
   from a `-u-nu-` identifier. A `Locale` already made on macOS 27 from an identifier whose
   `-u-nu-` value matches the script has lost the value; build it with `Locale.Components` or
   `@numbers=` instead.
+- The examples keep their words whole at the largest text sizes. CalculatedPhone stacks a row,
+  the next prayer or the latest prayer that doesn't fit on one line
+  ([#50](https://github.com/salah-kit/SalahKit/issues/50)). MosqueBoard's iPad board stacks
+  each row's name, times and status at the accessibility sizes, puts the next-prayer panel
+  above the table and the clock below the mosque's name when they don't fit
+  ([#51](https://github.com/salah-kit/SalahKit/issues/51)). PhoneWidgets' Widget states screen
+  and preview draw the widgets at the largest text size WidgetKit uses, so they look as the
+  real widgets do ([#52](https://github.com/salah-kit/SalahKit/issues/52)).
+- The examples' VoiceOver labels read once, in words and in reading order
+  ([#53](https://github.com/salah-kit/SalahKit/issues/53)). CalculatedPhone reads each
+  calculation parameter's title once, minutes in words, a stepper's name and value once each,
+  and "Latest prayer" as a header. MosqueBoard labels the sunrise's empty iqama "No iqama" and
+  reads each row's times before its status, and in landscape the table and the next-prayer
+  panel each in one piece.
+  PhoneWidgets' countdowns say "Time remaining", the medium widget reads its card before its
+  list, Arabic labels use the Arabic comma, the circular widget reads "Next prayer unknown"
+  instead of "–, Unknown", and the notices' symbols are hidden from VoiceOver.
 - MenuBar no longer loses the banner of an alert that came due during a sleep when the engine's
   wake-up reports it before the app sees the wake notification. A report more than a second late
   now replans first, so `deliver` still runs after an `apply` planned from after the alert, and

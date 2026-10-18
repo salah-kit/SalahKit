@@ -95,19 +95,28 @@ struct BoardView: View {
 struct BoardContent: View {
   let snapshot: BoardSnapshot
   let strings: BoardStrings
+  @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
   var body: some View {
     GeometryReader { geometry in
       ScrollView {
         VStack(alignment: .leading, spacing: BoardStyle.spacing) {
           HeaderView(snapshot: snapshot)
-          if geometry.size.width > geometry.size.height {
+          // At the accessibility text sizes the panel goes above the table, as in portrait:
+          // beside it, neither would have room for its words.
+          if geometry.size.width > geometry.size.height && !dynamicTypeSize.isAccessibilitySize {
             HStack(alignment: .top, spacing: BoardStyle.spacing) {
               PrayerTable(snapshot: snapshot, strings: strings)
                 .frame(maxWidth: .infinity)
+                .accessibilityElement(children: .contain)
+              // VoiceOver reads the table and the panel each in one piece, rather than mixing
+              // the two by height; the panel's priority asks for it first, as in portrait.
               StatusPanel(snapshot: snapshot, strings: strings)
                 .frame(maxWidth: geometry.size.width * 0.38)
+                .accessibilityElement(children: .contain)
+                .accessibilitySortPriority(1)
             }
+            .accessibilityElement(children: .contain)
           } else {
             StatusPanel(snapshot: snapshot, strings: strings)
             PrayerTable(snapshot: snapshot, strings: strings)
@@ -128,15 +137,18 @@ private struct HeaderView: View {
 
   var body: some View {
     VStack(alignment: .leading, spacing: 6) {
-      HStack(alignment: .firstTextBaseline) {
-        Text(verbatim: snapshot.title)
-          .font(BoardStyle.title)
-          .accessibilityAddTraits(.isHeader)
-          .accessibilityIdentifier("header.title")
-        Spacer(minLength: 16)
-        Text(verbatim: snapshot.clock)
-          .font(BoardStyle.clock)
-          .accessibilityIdentifier("header.clock")
+      // The clock goes below the title when both don't fit on one line. On one line each keeps
+      // its full width (`fixedSize`), rather than the HStack sharing the width out.
+      ViewThatFits(in: .horizontal) {
+        HStack(alignment: .firstTextBaseline) {
+          title.fixedSize(horizontal: true, vertical: false)
+          Spacer(minLength: 16)
+          clock.fixedSize(horizontal: true, vertical: false)
+        }
+        VStack(alignment: .leading, spacing: 6) {
+          title
+          clock
+        }
       }
       Text(verbatim: snapshot.subtitle)
         .font(BoardStyle.subtitle)
@@ -150,13 +162,31 @@ private struct HeaderView: View {
         .accessibilityIdentifier("header.hijri")
     }
   }
+
+  private var title: some View {
+    Text(verbatim: snapshot.title)
+      .font(BoardStyle.title)
+      .accessibilityAddTraits(.isHeader)
+      .accessibilityIdentifier("header.title")
+  }
+
+  private var clock: some View {
+    Text(verbatim: snapshot.clock)
+      .font(BoardStyle.clock)
+      .accessibilityIdentifier("header.clock")
+  }
 }
 
+/// The day's prayers: a table with a column each for the name, the times and the status, or at
+/// the accessibility text sizes a row each, with its parts stacked.
 private struct PrayerTable: View {
   let snapshot: BoardSnapshot
   let strings: BoardStrings
   @ScaledMetric(relativeTo: .title) private var timeWidth = BoardStyle.timeWidth
   @ScaledMetric(relativeTo: .title) private var statusWidth = BoardStyle.statusWidth
+  // The time and status columns grow with the text and would leave the names no room at these
+  // sizes, so the rows stack instead.
+  @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
@@ -167,6 +197,10 @@ private struct PrayerTable: View {
           .frame(maxWidth: .infinity, alignment: .leading)
           .background(BoardStyle.panel, in: .rect(cornerRadius: 12))
           .accessibilityIdentifier("day.unavailable")
+      } else if dynamicTypeSize.isAccessibilitySize {
+        ForEach(snapshot.rows) { row in
+          StackedPrayerRowView(row: row, strings: strings)
+        }
       } else {
         HStack {
           Text(verbatim: strings("Prayer")).frame(maxWidth: .infinity, alignment: .leading)
@@ -200,10 +234,13 @@ private struct PrayerRowView: View {
   var body: some View {
     let id = "row.\(row.kind.rawValue)"
     HStack {
+      // VoiceOver reads the row in column order, the name and times before the status, even
+      // where a wrapped status starts higher than the times.
       Text(verbatim: row.name)
         .font(BoardStyle.row.weight(isNext ? .bold : .regular))
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityIdentifier("\(id).name")
+        .accessibilitySortPriority(4)
       VStack(alignment: .leading, spacing: 0) {
         if let time = row.time {
           Text(verbatim: time)
@@ -225,6 +262,8 @@ private struct PrayerRowView: View {
         }
       }
       .frame(width: timeWidth, alignment: .leading)
+      .accessibilityElement(children: .contain)
+      .accessibilitySortPriority(3)
       Group {
         if let iqama = row.iqama {
           VStack(alignment: .leading, spacing: 0) {
@@ -238,14 +277,23 @@ private struct PrayerRowView: View {
                 .accessibilityIdentifier("\(id).iqamaNextDay")
             }
           }
-        } else {
+        } else if row.time == nil {
+          // The begin time's label already says why the row has no times.
           Text(verbatim: "–").font(BoardStyle.row).accessibilityHidden(true)
+        } else {
+          Text(verbatim: "–")
+            .font(BoardStyle.row)
+            .accessibilityLabel(Text(verbatim: strings("No iqama")))
+            .accessibilityIdentifier("\(id).noIqama")
         }
       }
       .frame(width: timeWidth, alignment: .leading)
+      .accessibilityElement(children: .contain)
+      .accessibilitySortPriority(2)
       StatusLabel(status: row.status, text: row.statusText)
         .frame(width: statusWidth, alignment: .leading)
         .accessibilityIdentifier("\(id).status")
+        .accessibilitySortPriority(1)
     }
     .padding(.vertical, BoardStyle.rowPadding)
     .padding(.horizontal, 12)
@@ -257,6 +305,91 @@ private struct PrayerRowView: View {
     }
     .accessibilityElement(children: .contain)
     .accessibilityIdentifier(id)
+  }
+}
+
+/// A row at the accessibility text sizes: the name, then the times, then the status, each
+/// wrapping at word boundaries in the full width. The times carry their column's word, since no
+/// column heading is shown.
+private struct StackedPrayerRowView: View {
+  let row: BoardSnapshot.Row
+  let strings: BoardStrings
+
+  private var isNext: Bool {
+    if case .next = row.status { return true }
+    return false
+  }
+
+  var body: some View {
+    let id = "row.\(row.kind.rawValue)"
+    VStack(alignment: .leading, spacing: 6) {
+      Text(verbatim: row.name)
+        .font(BoardStyle.row.weight(isNext ? .bold : .regular))
+        .accessibilityIdentifier("\(id).name")
+      ViewThatFits(in: .horizontal) {
+        HStack(alignment: .firstTextBaseline, spacing: 24) {
+          begins(id).fixedSize(horizontal: true, vertical: false)
+          iqama(id).fixedSize(horizontal: true, vertical: false)
+        }
+        VStack(alignment: .leading, spacing: 6) {
+          begins(id)
+          iqama(id)
+        }
+      }
+      StatusLabel(status: row.status, text: row.statusText)
+        .accessibilityIdentifier("\(id).status")
+    }
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .padding(.vertical, BoardStyle.rowPadding)
+    .padding(.horizontal, 12)
+    .background(isNext ? BoardStyle.panel : Color.clear, in: .rect(cornerRadius: 12))
+    .overlay {
+      if isNext {
+        RoundedRectangle(cornerRadius: 12).strokeBorder(Color.primary, lineWidth: 2)
+      }
+    }
+    .accessibilityElement(children: .contain)
+    .accessibilityIdentifier(id)
+  }
+
+  @ViewBuilder private func begins(_ id: String) -> some View {
+    VStack(alignment: .leading, spacing: 0) {
+      if let time = row.time {
+        Text(verbatim: strings("Begins \(time)"))
+          .font(BoardStyle.row.monospacedDigit().weight(isNext ? .bold : .regular))
+          .accessibilityIdentifier("\(id).time")
+        if row.isNextDay {
+          Text(verbatim: strings("Next day"))
+            .font(.caption)
+            .accessibilityIdentifier("\(id).nextDay")
+        }
+      } else {
+        Text(verbatim: row.missingText ?? "")
+          .font(BoardStyle.missing)
+          .accessibilityLabel(Text(verbatim: strings("Begin time: \(row.missingReason ?? "")")))
+          .accessibilityIdentifier("\(id).time")
+      }
+    }
+  }
+
+  @ViewBuilder private func iqama(_ id: String) -> some View {
+    if let iqama = row.iqama {
+      VStack(alignment: .leading, spacing: 0) {
+        Text(verbatim: strings("Iqama \(iqama)"))
+          .font(BoardStyle.row.monospacedDigit())
+          .accessibilityIdentifier("\(id).iqama")
+        if row.iqamaIsNextDay {
+          Text(verbatim: strings("Next day"))
+            .font(.caption)
+            .accessibilityIdentifier("\(id).iqamaNextDay")
+        }
+      }
+    } else if row.time != nil {
+      Text(verbatim: strings("No iqama"))
+        .font(BoardStyle.row)
+        .foregroundStyle(Color.secondary)
+        .accessibilityIdentifier("\(id).noIqama")
+    }
   }
 }
 

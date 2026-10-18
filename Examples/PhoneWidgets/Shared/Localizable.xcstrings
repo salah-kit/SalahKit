@@ -834,6 +834,23 @@
         }
       }
     },
+    "Time remaining: %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "الوقت المتبقي: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time remaining: %@"
+          }
+        }
+      }
+    },
     "Times need refreshing" : {
       "extractionState" : "manual",
       "localizations" : {

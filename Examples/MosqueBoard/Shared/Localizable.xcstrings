@@ -273,6 +273,23 @@
         }
       }
     },
+    "No iqama": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "لا إقامة"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No iqama"
+          }
+        }
+      }
+    },
     "Passed": {
       "extractionState": "manual",
       "localizations": {
