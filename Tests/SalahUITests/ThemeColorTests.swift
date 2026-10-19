@@ -4,7 +4,9 @@ import Testing
 @testable import SalahUI
 
 /// Salah's color math as imported at `4bc00e9` (`Shared/WidgetUI/GuidanceWidgetTheme.swift`,
-/// lines 8-63), copied verbatim apart from formatting, as the reference `ThemeColor` must match.
+/// lines 8-63), copied verbatim apart from formatting, as the reference `ThemeColor` matches.
+/// Its contrast fix still matches on Salah's own surfaces; elsewhere, `ThemeColor` takes the
+/// nearer direction (#57).
 private struct SalahColorSpec {
   var red: Double
   var green: Double
@@ -122,15 +124,51 @@ struct ThemeColorTests {
     }
   }
 
+  /// The surfaces Salah's editor fixes a color against: the tops and bottoms of its widget's
+  /// three background bases (midnight, sand and graphite) in dark and light, plus black and
+  /// white. On these, only one direction can reach a ratio above about 1.33, the one Salah's
+  /// rule (toward white below a luminance of 0.5) takes, so the two rules agree.
+  static let salahSurfaces: [ThemeColor] = [
+    black, white,
+    ThemeColor(red: 0.075, green: 0.094, blue: 0.180),
+    ThemeColor(red: 0.027, green: 0.035, blue: 0.078),
+    ThemeColor(red: 0.992, green: 0.976, blue: 0.945),
+    ThemeColor(red: 0.953, green: 0.925, blue: 0.875),
+    ThemeColor(red: 0.16, green: 0.13, blue: 0.11),
+    ThemeColor(red: 0.09, green: 0.07, blue: 0.055),
+    ThemeColor(red: 0.992, green: 0.952, blue: 0.890),
+    ThemeColor(red: 0.968, green: 0.910, blue: 0.820),
+    ThemeColor(red: 0.13, green: 0.13, blue: 0.15),
+    ThemeColor(red: 0.07, green: 0.07, blue: 0.085),
+    ThemeColor(red: 0.962, green: 0.962, blue: 0.972),
+    ThemeColor(red: 0.900, green: 0.900, blue: 0.920),
+  ]
+
   @Test("the contrast fix equals Salah's on a grid against its surfaces, at 3 and 4.5")
   func adjustmentMatchesSalah() {
+    for color in Self.grid + Self.salahColors {
+      for surface in Self.salahSurfaces {
+        // 1.34 is just above the highest ratio the other end can reach on these (sand's dark
+        // top, 1.329).
+        for ratio in [1.34, 3.0, 4.5] {
+          let ours = color.adjustedForContrast(against: surface, ratio: ratio)
+          let theirs = color.salah.adjustedForContrast(against: surface.salah, ratio: ratio)
+          #expect([ours.red, ours.green, ours.blue] == [theirs.red, theirs.green, theirs.blue])
+        }
+      }
+    }
+  }
+
+  @Test("the contrast fix reaches the ratio wherever Salah's did, on every surface")
+  func adjustmentReachesWhereSalahsDid() {
     let surfaces = [Self.black, Self.white] + Self.salahColors
     for color in Self.grid + Self.salahColors {
       for surface in surfaces {
         for ratio in [3.0, 4.5] {
-          let ours = color.adjustedForContrast(against: surface, ratio: ratio)
           let theirs = color.salah.adjustedForContrast(against: surface.salah, ratio: ratio)
-          #expect([ours.red, ours.green, ours.blue] == [theirs.red, theirs.green, theirs.blue])
+          guard SalahColorSpec.contrastRatio(theirs, surface.salah) >= ratio else { continue }
+          let ours = color.adjustedForContrast(against: surface, ratio: ratio)
+          #expect(ThemeColor.contrastRatio(ours, surface) >= ratio)
         }
       }
     }
@@ -154,12 +192,116 @@ struct ThemeColorTests {
     #expect(darker.red < pale.red)
   }
 
-  @Test("a ratio out of reach ends at white on dark and black on light")
+  @Test("on a mid-tone surface the contrast fix goes the way that reaches the ratio (#57)")
+  func midToneSurface() {
+    let color = ThemeColor(red: 0.45, green: 0.45, blue: 0.55)
+    // Relative luminance 0.32 and 0.45: white reaches only 2.85 and 2.11 on them.
+    for grey in [0.6, 0.7] {
+      let surface = ThemeColor(red: grey, green: grey, blue: grey)
+      let fixed = color.adjustedForContrast(against: surface)
+      #expect(ThemeColor.contrastRatio(fixed, surface) >= 4.5, "\(grey)")
+      #expect(fixed.red < color.red && fixed.blue < color.blue, "\(grey)")
+    }
+  }
+
+  static func grey(_ value: Double) -> ThemeColor {
+    ThemeColor(red: value, green: value, blue: value)
+  }
+
+  /// Expects each of a color's components within 1e-9 of the expected ones.
+  static func expectComponents(
+    _ color: ThemeColor, _ expected: [Double], _ comment: Comment,
+    sourceLocation: SourceLocation = #_sourceLocation
+  ) {
+    for (component, value) in zip([color.red, color.green, color.blue], expected) {
+      #expect(abs(component - value) < 1e-9, comment, sourceLocation: sourceLocation)
+    }
+  }
+
+  @Test("when both ways reach the ratio, the nearer candidate wins")
+  func nearerCandidate() {
+    let grey = Self.grey
+    // On a 0.5 grey at 2.5:1, a lighter grey moves 0.0625 toward white rather than 0.525
+    // toward black, and a darker one 0.045 toward black rather than 0.525 toward white.
+    let lighter = grey(0.75).adjustedForContrast(against: grey(0.5), ratio: 2.5)
+    Self.expectComponents(lighter, [0.8125, 0.8125, 0.8125], "0.75 on 0.5")
+    #expect(ThemeColor.contrastRatio(lighter, grey(0.5)) >= 2.5)
+    let darker = grey(0.3).adjustedForContrast(against: grey(0.5), ratio: 2.5)
+    Self.expectComponents(darker, [0.255, 0.255, 0.255], "0.3 on 0.5")
+    #expect(ThemeColor.contrastRatio(darker, grey(0.5)) >= 2.5)
+    // Fewer steps would go the other way here: 14 big steps toward black against 15 small
+    // ones toward white.
+    let pale = grey(0.8).adjustedForContrast(against: grey(0.55), ratio: 3)
+    Self.expectComponents(pale, [0.95, 0.95, 0.95], "0.8 on 0.55")
+    #expect(ThemeColor.contrastRatio(pale, grey(0.55)) >= 3)
+    // The nearer candidate, not the nearer end: a 0.3 grey on a 0.31 grey at 2.5:1 moves 0.28
+    // toward white rather than 0.285 toward black, though black is nearer the color.
+    let close = grey(0.3).adjustedForContrast(against: grey(0.31), ratio: 2.5)
+    Self.expectComponents(close, [0.58, 0.58, 0.58], "0.3 on 0.31")
+    // Nearness is the straight-line distance. Summing the components' changes would pick the
+    // lighter candidate for the first of these, and taking the largest change would for the
+    // second.
+    let teal = ThemeColor(red: 0.204, green: 0.804, blue: 0.726)
+    Self.expectComponents(
+      teal.adjustedForContrast(against: grey(0.555), ratio: 2.933), [0.0714, 0.2814, 0.2541],
+      "teal on 0.555")
+    let violet = ThemeColor(red: 0.384, green: 0.252, blue: 0.876)
+    Self.expectComponents(
+      violet.adjustedForContrast(against: grey(0.449), ratio: 3.487), [0.1152, 0.0756, 0.2628],
+      "violet on 0.449")
+  }
+
+  @Test("equally near candidates go toward whichever of white and black contrasts more")
+  func tie() {
+    let grey = Self.grey
+    // A 0.5 grey reaches the ratio after 13 steps each way on a 0.46 grey at 3:1, where white
+    // contrasts more (4.59 against 4.58), and after 11 on a 0.47 grey at 2.5:1, where black
+    // does (4.75 against 4.42).
+    let towardWhite = grey(0.5).adjustedForContrast(against: grey(0.46), ratio: 3)
+    #expect(abs(towardWhite.red - 0.825) < 1e-9)
+    #expect(ThemeColor.contrastRatio(towardWhite, grey(0.46)) >= 3)
+    let towardBlack = grey(0.5).adjustedForContrast(against: grey(0.47), ratio: 2.5)
+    #expect(abs(towardBlack.red - 0.225) < 1e-9)
+    #expect(ThemeColor.contrastRatio(towardBlack, grey(0.47)) >= 2.5)
+    // Ties that rounding would break the wrong way without the tolerance: 17 steps each way on
+    // a 0.45 grey at 3.85:1, where white contrasts more, and 13 on a 0.47 grey at 2.9:1, where
+    // black does.
+    Self.expectComponents(
+      grey(0.5).adjustedForContrast(against: grey(0.45), ratio: 3.85), [0.925, 0.925, 0.925],
+      "0.5 on 0.45")
+    Self.expectComponents(
+      grey(0.5).adjustedForContrast(against: grey(0.47), ratio: 2.9), [0.175, 0.175, 0.175],
+      "0.5 on 0.47")
+  }
+
+  @Test("the contrast fix leaves a color alone at a ratio of 1 or less, and clamps its input")
+  func adjustmentEdges() {
+    let color = ThemeColor(red: 0.3, green: 0.4, blue: 0.5, opacity: 0.7)
+    for ratio in [1.0, 0.5, 0] {
+      #expect(color.adjustedForContrast(against: color, ratio: ratio) == color)
+    }
+    let odd = ThemeColor(red: 2, green: -1, blue: .nan)
+    let fixed = odd.adjustedForContrast(against: ThemeColor(red: 0.5, green: 0.5, blue: 0.5))
+    for component in [fixed.red, fixed.green, fixed.blue] {
+      #expect((0...1).contains(component))
+    }
+    // Nearness is measured from the clamped color: (2.6, -0.49, 1.76) counts as (1, 0, 1),
+    // whose candidate toward black (0.57 away) is nearer than the one toward white (0.6).
+    let wild = ThemeColor(red: 2.603, green: -0.485, blue: 1.756)
+    Self.expectComponents(
+      wild.adjustedForContrast(against: Self.grey(0.521), ratio: 1.918), [0.6, 0, 0.6],
+      "clamped before measuring")
+  }
+
+  @Test("a ratio out of reach ends at whichever of white and black contrasts more")
   func unreachable() {
     let grey = ThemeColor(red: 0.5, green: 0.5, blue: 0.5)
-    let midSurface = ThemeColor(red: 0.45, green: 0.45, blue: 0.45)
-    let result = grey.adjustedForContrast(against: midSurface, ratio: 21)
-    #expect([result.red, result.green, result.blue] == [1, 1, 1])
+    let darkMidSurface = ThemeColor(red: 0.45, green: 0.45, blue: 0.45)
+    let onDarkMid = grey.adjustedForContrast(against: darkMidSurface, ratio: 21)
+    #expect([onDarkMid.red, onDarkMid.green, onDarkMid.blue] == [1, 1, 1])
+    let lightMidSurface = ThemeColor(red: 0.6, green: 0.6, blue: 0.6)
+    let onLightMid = grey.adjustedForContrast(against: lightMidSurface, ratio: 21)
+    #expect([onLightMid.red, onLightMid.green, onLightMid.blue] == [0, 0, 0])
     let onLight = grey.adjustedForContrast(against: Self.white, ratio: 22)
     #expect([onLight.red, onLight.green, onLight.blue] == [0, 0, 0])
   }
