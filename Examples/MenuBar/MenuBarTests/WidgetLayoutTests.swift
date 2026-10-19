@@ -17,7 +17,7 @@ struct WidgetLayoutTests {
     arguments: [NamesLanguage.english, .arabic], [false, true])
   func medium(language: NamesLanguage, playing: Bool) throws {
     let record = try render(language: language, playing: playing, family: .systemMedium)
-    let bounds = CGRect(x: 0, y: 0, width: 344, height: 164)
+    let bounds = CGRect(x: 18, y: 18, width: 308, height: 128)
     try checkVisible(record.focus, within: bounds)
     #expect(Set(record.rows.keys) == Set(PrayerKind.allCases))
     for kind in PrayerKind.allCases {
@@ -41,7 +41,7 @@ struct WidgetLayoutTests {
     arguments: [NamesLanguage.english, .arabic], [false, true])
   func small(language: NamesLanguage, playing: Bool) throws {
     let record = try render(language: language, playing: playing, family: .systemSmall)
-    let bounds = CGRect(x: 0, y: 0, width: 164, height: 164)
+    let bounds = CGRect(x: 18, y: 18, width: 128, height: 128)
     try checkVisible(record.focus, within: bounds)
     #expect(record.rows.isEmpty)
     if playing {
@@ -85,8 +85,8 @@ struct WidgetLayoutTests {
       .environment(\.layoutDirection, language.isRightToLeft ? .rightToLeft : .leftToRight)
       .prayerRowStyle(MeasuredWidgetRow(record: record))
       .nextPrayerStyle(MeasuredWidgetFocus(record: record))
-      // The desktop host was 344×164, with 18-point content insets. Keep the outer
-      // viewport finite too: an unconstrained-height renderer misses clipped content.
+      // Keep the viewport and its reserved padding finite. Content must stay inside
+      // the proposed content rectangle; overflowing into the padding is a failure.
       .padding(18)
       .frame(width: width, height: 164)
       .coordinateSpace(name: WidgetFrames.coordinateSpace)

@@ -96,7 +96,7 @@ The app's targets default to `MainActor` isolation, as new Xcode projects do. `M
 
 ## The stop round trip
 
-A tap on a desktop widget can't be automated, so the stop harness stands in for the widget extension. `MenuBarStopHarness` is a background-only app bundle with the same sandbox and App Group as the extension, so it can carry the App Group's provisioning profile. It compiles the same shared files and runs `StopPlaybackIntent().perform()`, the intent's own code. Each command prints one line of JSON:
+The automated round-trip suite does not place or click a desktop widget. Its stop harness exercises the extension's shared intent code in a separate process. `MenuBarStopHarness` is a background-only app bundle with the same sandbox and App Group as the extension, so it can carry the App Group's provisioning profile. It compiles the same shared files and runs `StopPlaybackIntent().perform()`, the intent's own code. Each command prints one line of JSON:
 
 ```sh
 H=<products>/MenuBarStopHarness.app/Contents/MacOS/MenuBarStopHarness
@@ -115,14 +115,15 @@ On macOS 27 with Xcode 27.0, signed with a personal team, the app and the harnes
 
 The Stop buttons are labelled "Stop the tone" (the widget's names the prayer: "Stop the tone for Asr"); the title has a spoken label ("Asr in 27 minutes"); SalahUI's rows read as one element with the full name. The dropdown and the widget use the system's text styles. Every string is in the String Catalog (`Shared/Localizable.xcstrings`), in English and Arabic; the Arabic is machine-drafted and marked as needing review ([#31](https://github.com/salah-kit/SalahKit/issues/31)), and the prayer names come from SalahCore's reviewed catalog.
 
+The real medium desktop widget's Stop control has also been checked on macOS 27.0.1:
+three pointer clicks, including an Arabic run, reached the running app, stopped its digital
+audio output and removed Stop from the widget. [#29](https://github.com/salah-kit/SalahKit/issues/29)
+records the source commit, timing bounds and app-state evidence.
+
 ## Pending
 
-These checks need a person with a Mac. Each issue has the steps and what to record.
+This check needs a person with a Mac. The issue has the steps and what to record.
 
-- **A real tap on the desktop widget's Stop button**
-  ([#29](https://github.com/salah-kit/SalahKit/issues/29)): the round-trip tests run the
-  intent's code in a separate sandboxed process; only a tap observes the widget extension that
-  WidgetKit launches.
 - **Real sleep, wake and a clock change**
   ([#28](https://github.com/salah-kit/SalahKit/issues/28)): the round-trip tests inject the
   wake and clock-change notifications; a real sleep stops timers and leaves overdue delivery to
