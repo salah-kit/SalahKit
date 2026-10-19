@@ -8,6 +8,8 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
+- MenuBar's medium widget keeps its full prayer list and Stop control within the widget while
+  a tone plays ([#59](https://github.com/salah-kit/SalahKit/issues/59)).
 - `PrayerLocale.resolved` takes an explicit numbering system from the `nu` key of an
   identifier's Unicode (`-u-`) extension or an `@numbers=` keyword, and no longer from a `nu`
   subtag in a private-use (`-x-`) or transformed (`-t-`) part. `ar-u-ca-islamic-x-nu-latn` now
