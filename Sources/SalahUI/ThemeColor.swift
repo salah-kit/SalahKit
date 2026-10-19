@@ -58,9 +58,10 @@ nonisolated public struct ThemeColor: Codable, Hashable, Sendable {
   ///
   /// The color moves toward white and toward black in twenty equal steps each, keeping its
   /// hue. In each direction, the first step that reaches the ratio is a candidate, and the
-  /// candidate nearer the color (by ``distance(to:)``) wins. Both directions can reach a
-  /// ratio only on a mid-tone surface, and only a ratio up to about 4.58. Otherwise the color
-  /// gets lighter on a dark surface and darker on a light one. A color that already reaches
+  /// candidate nearer the color (by ``distance(to:)``) wins. Both directions can reach a ratio
+  /// R only on a surface whose relative luminance is between 0.05 × R − 0.05 and
+  /// 1.05 / R − 0.05, a band that narrows to about 0.18 at R = √21, about 4.58. On a darker
+  /// surface the color gets lighter, and on a lighter one darker. A color that already reaches
   /// the ratio comes back unchanged. When the two candidates are equally near, or neither
   /// direction reaches the ratio, the color goes toward whichever of white and black
   /// contrasts more with the surface, and ends at white or black if the ratio is out of

@@ -247,7 +247,7 @@ With `.stateChanges` and the default policy, a 48-hour timeline has 34 entries (
 ### 4.6 Theme tools
 
 - `relativeLuminance` is WCAG 2's (`0.03928` threshold); `contrastRatio` is `(L1 + 0.05) / (L2 + 0.05)`; `distance` is the Euclidean distance of the sRGB components (0 to √3). All three equal Salah's `GuidanceColorSpec` at `4bc00e9` for components in 0…1; outside it, a component counts as the nearest end, and NaN as 0.
-- `adjustedForContrast(against:ratio:)` returns the color unchanged when it reaches `ratio`. Otherwise it moves the components toward white and toward black, in 20 equal steps each from the original color. In each direction the first step that reaches `ratio` is a candidate, and the candidate nearer the original color (by `distance(to:)`) is returned. Both directions can reach a ratio only on a mid-tone surface, and only a ratio up to about 4.58. Equally near candidates, or a ratio that neither direction reaches, go toward whichever of white and black contrasts more with the surface, and end at white or black when the ratio is out of reach. Opacity is kept and ignored by the math. §10.2 amended this; before, the color always moved toward white when the surface's luminance was below 0.5.
+- `adjustedForContrast(against:ratio:)` returns the color unchanged when it reaches `ratio`. Otherwise it moves the components toward white and toward black, in 20 equal steps each from the original color. In each direction the first step that reaches `ratio` is a candidate, and the candidate nearer the original color (by `distance(to:)`) is returned. Both directions can reach a ratio R only on a surface whose relative luminance is between 0.05 × R − 0.05 and 1.05 / R − 0.05, a band that narrows to about 0.18 at R = √21 (about 4.58); on a darker surface the color gets lighter, and on a lighter one darker. Equally near candidates, or a ratio that neither direction reaches, go toward whichever of white and black contrasts more with the surface, and end at white or black when the ratio is out of reach. Opacity is kept and ignored by the math. §10.2 amended this; before, the color always moved toward white when the surface's luminance was below 0.5.
 - `ContrastCheck.problems` returns `.lowContrast(ratio)` when the ratio is below `minimumContrast`, then `.tooCloseToReserved(color)` for each reserved color closer than `minimumReservedDistance`, in the given order. The defaults are Salah's guardrails (`AppearanceTab.swift:87-156` at `4bc00e9`): 3:1 for the large countdown, 0.28 from its functional colors.
 
 ### 4.7 Isolation and platforms
@@ -407,9 +407,10 @@ step toward the far end is the bigger change. A light grey (0.8) on a 0.55 grey 
 to 0.24 rather than 0.95.
 
 Where the only direction that can reach the ratio is the one the old rule took, the result is
-identical. That holds on black and white for any ratio above 1, and on Salah's widget
-backgrounds (the three bases' tops and bottoms in dark and light) for any ratio above about
-1.33, where the other end can't reach. `ThemeColorTests` compares those with Salah's original
+identical. On a surface of relative luminance L, the other end can't reach a ratio above
+(L + 0.05) / 0.05 when L is below about 0.18, or above 1.05 / (L + 0.05) when it's above. That
+covers black and white at any ratio above 1, and Salah's widget backgrounds (the three bases'
+tops and bottoms in dark and light) at any ratio above about 1.33. `ThemeColorTests` compares those with Salah's original
 code at 3 and 4.5, and checks on every palette surface that the fix reaches the ratio wherever
 the old rule did. Salah's Appearance tab, the consumer, fixes a custom primary against those
 backgrounds at 4.5, so its suggestions don't change.
