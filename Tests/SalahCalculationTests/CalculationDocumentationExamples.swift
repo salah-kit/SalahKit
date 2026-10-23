@@ -138,7 +138,7 @@ import Testing
 
     let friday = try #require(mosque.day(CivilDay(year: 2026, month: 3, day: 6)).day)
     #expect(friday[.dhuhr]?.observance == .jumuah)
-    #expect(friday[.dhuhr].map(names.name(of:)) == "Jumuah")
+    #expect(friday[.dhuhr].map(names.name(of:)) == "Jumu’ah")
     #expect(friday[.dhuhr]?.iqama == (try instant("2026-03-06T12:45:00+03:00")))
     let thursday = try #require(mosque.day(CivilDay(year: 2026, month: 3, day: 5)).day)
     #expect(thursday[.dhuhr]?.observance == .ordinary)

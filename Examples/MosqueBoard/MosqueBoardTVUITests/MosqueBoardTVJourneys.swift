@@ -62,9 +62,9 @@ nonisolated final class MosqueBoardTVJourneys: XCTestCase {
   @MainActor
   func testDeclaredJumuah() {
     var app = launchBoard("muis", at: "2026-10-16T12:30:00+08:00")
-    XCTAssertEqual(label("row.dhuhr.name", in: app), "Jumuah")
+    XCTAssertEqual(label("row.dhuhr.name", in: app), "Jumu’ah")
     XCTAssertEqual(label("row.dhuhr.iqama", in: app), "Iqama 13:22")
-    XCTAssertEqual(label("next.name", in: app), "Jumuah")
+    XCTAssertEqual(label("next.name", in: app), "Jumu’ah")
     assertFitsOnScreen(app)
     screenshot("tv-02-muis-friday-jumuah")
     app.terminate()

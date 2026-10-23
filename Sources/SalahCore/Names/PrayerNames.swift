@@ -128,7 +128,7 @@ nonisolated extension PrayerNames.Entry {
       case .maghrib: "M"
       case .isha: "I"
       }
-    case .jumuah: "Jumuah"
+    case .jumuah: "Jumu’ah"
     case .jumuahAbbreviation: "J"
     }
   }

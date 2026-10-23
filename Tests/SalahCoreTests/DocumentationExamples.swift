@@ -100,7 +100,7 @@ import Testing
     let fridayDay = try #require(schedule.day(friday).day)
     #expect(schedule.day(friday).coverage == .complete)
     #expect(fridayDay[.dhuhr]?.observance == .jumuah)
-    #expect(fridayDay[.dhuhr].map(names.name(of:)) == "Jumuah")
+    #expect(fridayDay[.dhuhr].map(names.name(of:)) == "Jumu’ah")
     #expect(fridayDay[.fajr]?.iqama == (try instant("2026-10-16T06:30:00+01:00")))
     #expect(fridayDay[.dhuhr]?.iqama == (try instant("2026-10-16T13:45:00+01:00")))
     #expect(fridayDay[.asr]?.iqama == (try instant("2026-10-16T15:51:00+01:00")))
@@ -130,7 +130,7 @@ import Testing
       }
     }
 
-    #expect(headline(at: try instant("2026-10-16T13:20:00+01:00")) == "Jumuah has started")
+    #expect(headline(at: try instant("2026-10-16T13:20:00+01:00")) == "Jumu’ah has started")
     #expect(headline(at: try instant("2026-10-16T13:50:00+01:00")) == "Asr in 1:51")
     #expect(
       headline(at: try instant("2026-10-17T19:00:00+01:00"))

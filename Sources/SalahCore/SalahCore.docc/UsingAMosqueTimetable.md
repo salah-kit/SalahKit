@@ -130,7 +130,7 @@ func headline(at now: Date) -> String {
 
 With the default ``StatePolicy``, a prayer counts as just started until its iqama:
 
-- At 13:20 on Friday, the headline is "Jumuah has started", until the Jumu'ah iqama at 13:45.
+- At 13:20 on Friday, the headline is "Jumu’ah has started", until the Jumu'ah iqama at 13:45.
 - At 13:50 on Friday, it's "Asr in 1:51".
 - At 19:00 on Saturday, it's "The timetable doesn't cover this time". Isha is blank that day, so
   it could begin at any moment between Maghrib and Sunday's Fajr. Rather than guess, the

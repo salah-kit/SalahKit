@@ -8,6 +8,8 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
+- The English name of Friday's congregational prayer is "Jumu’ah", with its apostrophe, in
+  `PrayerNames` and the catalog.
 - MenuBar's medium widget keeps its full prayer list and Stop control within the widget while
   a tone plays ([#59](https://github.com/salah-kit/SalahKit/issues/59)).
 - `PrayerLocale.resolved` takes an explicit numbering system from the `nu` key of an

@@ -14,7 +14,7 @@ private let salahEnglish: [PrayerNames.Entry: String] = [
   .name(.asr): "Asr", .abbreviation(.asr): "A",
   .name(.maghrib): "Maghrib", .abbreviation(.maghrib): "M",
   .name(.isha): "Isha", .abbreviation(.isha): "I",
-  .jumuah: "Jumuah", .jumuahAbbreviation: "J",
+  .jumuah: "Jumu’ah", .jumuahAbbreviation: "J",
 ]
 
 @Suite struct CatalogTests {
