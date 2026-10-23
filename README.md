@@ -32,7 +32,7 @@ Add the package with Swift Package Manager:
 
 ```swift
 dependencies: [
-  .package(url: "https://github.com/salah-kit/SalahKit.git", from: "0.4.0"),
+  .package(url: "https://github.com/salah-kit/SalahKit.git", from: "0.4.1"),
   // For calculated times, when your code names a method or another calculation rule.
   .package(url: "https://github.com/salah-kit/SalahTimes.git", .upToNextMinor(from: "0.1.0")),
 ],

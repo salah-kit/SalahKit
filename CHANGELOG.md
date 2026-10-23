@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-10-23
+
 ### Fixed
 
 - The English name of Friday's congregational prayer is "Jumu’ah", with its apostrophe, in
@@ -271,7 +273,8 @@ apps that prove them through the public API.
   that it links no calculation code) and CalculatedPhone; documentation published to GitHub
   Pages.
 
-[Unreleased]: https://github.com/salah-kit/SalahKit/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/salah-kit/SalahKit/compare/0.4.1...HEAD
+[0.4.1]: https://github.com/salah-kit/SalahKit/compare/0.4.0...0.4.1
 [0.4.0]: https://github.com/salah-kit/SalahKit/compare/0.3.0...0.4.0
 [0.3.0]: https://github.com/salah-kit/SalahKit/releases/tag/0.3.0
 [0.2.0]: https://github.com/salah-kit/SalahKit/releases/tag/0.2.0
