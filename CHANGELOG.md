@@ -17,6 +17,14 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
+- `ThemeColor.adjustedForContrast(against:ratio:)` tries both white and black and returns the
+  nearer color that reaches the ratio. It used to move toward white whenever the surface's
+  relative luminance was below 0.5, so on a mid-tone surface it could end at white, below the
+  ratio, where black reached it ([#57](https://github.com/salah-kit/SalahKit/issues/57)). Where
+  the only direction that can reach the ratio is the one it used to take, the result is
+  unchanged: on black and white, and on the reference widget backgrounds from Salah at
+  `4bc00e9`, at any ratio above about 1.33. RFC 0004 §10.2 gives the bound for any surface and records the change.
+
 - `PrayerLocale.resolved` gives back an identifier or a locale that names its digits in a BCP 47
   extension, such as `ar-MA-u-nu-arab` or `bn-u-nu-beng`, rebuilt in ICU form
   (`ar_MA@numbers=arab`) on every platform, and one in ICU form unchanged. Foundation on macOS 27

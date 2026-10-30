@@ -247,7 +247,7 @@ With `.stateChanges` and the default policy, a 48-hour timeline has 34 entries (
 ### 4.6 Theme tools
 
 - `relativeLuminance` is WCAG 2's (`0.03928` threshold); `contrastRatio` is `(L1 + 0.05) / (L2 + 0.05)`; `distance` is the Euclidean distance of the sRGB components (0 to √3). All three equal Salah's `GuidanceColorSpec` at `4bc00e9` for components in 0…1; outside it, a component counts as the nearest end, and NaN as 0.
-- `adjustedForContrast(against:ratio:)` returns the color unchanged when it reaches `ratio`; otherwise it moves the components toward white (surface luminance below 0.5) or black in 20 equal steps from the original color and returns the first step that reaches `ratio`, or the last one (white or black). Opacity is kept and ignored by the math.
+- `adjustedForContrast(against:ratio:)` returns the color unchanged when it reaches `ratio`. Otherwise it moves the components toward white and toward black, in 20 equal steps each from the original color. In each direction the first step that reaches `ratio` is a candidate, and the candidate nearer the original color (by `distance(to:)`) is returned. Both directions can reach a ratio R only on a surface whose relative luminance is between 0.05 × R − 0.05 and 1.05 / R − 0.05, a band that narrows to about 0.18 at R = √21 (about 4.58); on a darker surface the color gets lighter, and on a lighter one darker. Equally near candidates, or a ratio that neither direction reaches, go toward whichever of white and black contrasts more with the surface, and end at white or black when the ratio is out of reach. Opacity is kept and ignored by the math. §10.2 amended this; before, the color always moved toward white when the surface's luminance was below 0.5.
 - `ContrastCheck.problems` returns `.lowContrast(ratio)` when the ratio is below `minimumContrast`, then `.tooCloseToReserved(color)` for each reserved color closer than `minimumReservedDistance`, in the given order. The defaults are Salah's guardrails (`AppearanceTab.swift:87-156` at `4bc00e9`): 3:1 for the large countdown, 0.28 from its functional colors.
 
 ### 4.7 Isolation and platforms
@@ -302,7 +302,7 @@ The first `observe` called `MainActor.assumeIsolated` inside the main-queue bloc
 - `PrayerTimelineBuilderTests`: entries equal the plan's plus the expired entry, the 48-hour default and halfway reload, truncation at the first change left out, `steps` dates, an empty source, errors, and the WidgetKit timeline and its fallback.
 - `SevenDayTimelineTests`: successive timelines over seven days with a fixed clock, through a model of the provider's host (`WidgetHost`): calculated (Makkah), `steps` (truncated timelines), high latitude (Tromsø with the rule disabled, Kazan's Fajr before midnight), a timetable with a partial row, a missing day and an end, initial missing data followed by an app reload, a provider call late by 30 hours (the expired entry shows exactly until it), and late calls within the slack. Each checks, every five minutes and a second either side of every entry and event, that the shown state equals the schedule's. Mutants (reload at `validUntil`, a dropped entry) fail them.
 - `DarwinSignalTests`: a helper process posts and this one observes; this one posts and the helper observes (from a `dispatchMain()` process); cancel and release stop delivery, including of a signal that arrived while the main actor was busy (a hop that holds the handler strongly fails both); other names don't arrive.
-- `ThemeColorTests` and `ContrastCheck` tests: equality with Salah's code (copied into the test) on an 11-step grid and Salah's palette, for luminance, contrast, distance and the contrast fix at 3 and 4.5; ends of the scale; WCAG's #767676; clamping; thresholds.
+- `ThemeColorTests` and `ContrastCheck` tests: equality with Salah's code (copied into the test) on an 11-step grid and Salah's palette, for luminance, contrast and distance, and for the contrast fix at 3 and 4.5 on Salah's widget backgrounds, black and white; the fix reaching the ratio wherever Salah's did, on every palette surface; the mid-tone surfaces of #57, the nearer candidate, ties, and ratios of 1 or less (§10.2); ends of the scale; WCAG's #767676; clamping; thresholds.
 - `DisplayContentTests`: statuses, countdown placement, the schedule's zone across a clock change, day offsets both ways and in Arabic digits, declared Jumu'ah, and no countdown or name for an unknown next prayer.
 - `SnapshotTests`: the default styles at every SalahFixtures moment in English (left to right) and Arabic (right to left), Reykjavik's times after midnight and a declared Jumu'ah, and SwiftUI time zones that must render the same image. References are kept per macOS major version; an image fails when more than 8 pixels differ by more than 2 in a channel, and `SnapshotComparisonTests` shows that one changed digit, even in a caption, changes about 90 pixels or more. CI runs the suite again in a process at UTC+14, whose images must equal the references rendered at UTC: formatting in the device's zone fails 18 of the 20 cases.
 - `NarrowLayoutTests`: the plain styles at 140 and 56 points keep every time and countdown on one line; the snapshots `narrow-justStarted-en` and `narrow-beforeFajr-ar` show 140-point rows keeping the next prayer's name.
@@ -389,3 +389,32 @@ honor DST and skipped dates. The entry budget includes these dates and the final
 entry; validity ends at the first omitted date and reload remains halfway to that cutoff.
 A boundary at the first entry or validUntil adds no duplicate schedule entry. Default behavior
 is unchanged.
+
+### 10.2 Contrast direction (2026-10-19)
+
+Issue [#57](https://github.com/salah-kit/SalahKit/issues/57): `adjustedForContrast` took its
+direction from the surface alone, toward white below a relative luminance of 0.5. White and
+black contrast equally with a surface at about 0.18, so on a surface between about 0.18 and
+0.5 it moved toward white even where only black reached the ratio. On a mid-gray
+`(0.6, 0.6, 0.6)` it returned white at 2.85:1, where black gives 7.37:1.
+
+It now tries both directions and returns the nearer of the two candidates, the first step
+in each direction that reaches the ratio, so a suggestion changes the color as little as the
+20 steps allow. Equally near candidates, or a ratio neither direction reaches, go toward
+whichever of white and black contrasts more with the surface (§4.6). Choosing by the number of
+steps instead was considered and dropped: a step is a twentieth of the way to that end, so a
+step toward the far end is the bigger change. A light grey (0.8) on a 0.55 grey at 3:1 would go
+to 0.24 rather than 0.95.
+
+Where the only direction that can reach the ratio is the one the old rule took, the result is
+identical. On a surface of relative luminance L, the other end can't reach a ratio above
+(L + 0.05) / 0.05 when L is below about 0.18, or above 1.05 / (L + 0.05) when it's above. That
+covers black and white at any ratio above 1, and the reference widget backgrounds from Salah
+at `4bc00e9` (the three bases' tops and bottoms in dark and light) at any ratio above about
+1.33. `ThemeColorTests` compares those with that snapshot's original code at 3 and 4.5, and
+checks on every palette surface that the fix reaches the ratio wherever the old rule did.
+The Appearance tab in that snapshot, the original consumer, fixed a custom primary against
+those backgrounds at 4.5, so its historical suggestions agree with the new rule.
+
+Discussed on [#9](https://github.com/salah-kit/SalahKit/discussions/9), open for comments from
+2026-10-19 to 2026-10-26.
