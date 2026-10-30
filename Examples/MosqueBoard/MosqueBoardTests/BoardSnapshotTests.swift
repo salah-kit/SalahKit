@@ -41,7 +41,7 @@ struct BoardSnapshotTests {
   @Test func jumuahOnlyWhereDeclared() throws {
     let friday = try snapshot(.muis, at: "2026-10-16T12:00:00+08:00")
     let thursday = try snapshot(.muis, at: "2026-10-15T12:00:00+08:00")
-    #expect(try row(.dhuhr, in: friday).name == "Jumuah")
+    #expect(try row(.dhuhr, in: friday).name == "Jumu’ah")
     #expect(try row(.dhuhr, in: friday).iqama == "13:22")
     #expect(try row(.dhuhr, in: thursday).name == "Dhuhr")
     #expect(try row(.dhuhr, in: thursday).iqama == "13:02")

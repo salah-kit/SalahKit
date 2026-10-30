@@ -139,7 +139,7 @@ struct DisplayContentTests {
     let place = PrayerFixtures.friday
     let day = try #require(place.schedule.day(place.featuredDay).day)
     let rows = RowContent.rows(day: day, state: nil, names: Self.names, locale: Self.british)
-    #expect(rows.map(\.name) == ["Fajr", "Sunrise", "Jumuah", "Asr", "Maghrib", "Isha"])
+    #expect(rows.map(\.name) == ["Fajr", "Sunrise", "Jumu’ah", "Asr", "Maghrib", "Isha"])
 
     // 11:00 on that Friday, before Jumu'ah at 11:40.
     let morning = place.featuredDay.start(in: place.location.timeZone).addingTimeInterval(
@@ -148,7 +148,7 @@ struct DisplayContentTests {
       place.schedule.state(at: morning, through: morning + 86_400).prayerState)
     let next = NextPrayerContent(
       state: state, names: Self.names, timeZone: place.location.timeZone, locale: Self.british)
-    #expect(next.name == "Jumuah")
+    #expect(next.name == "Jumu’ah")
     #expect(next.abbreviation == "J")
     #expect(next.time == Self.clock("11:40"))
     #expect(next.countdown?.seconds == 2_400)

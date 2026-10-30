@@ -38,7 +38,7 @@ nonisolated public struct HijriDateFormat: Sendable {
   ///
   /// - Parameters:
   ///   - locale: The locale for month names and digits. Pass a locale from
-  ///     ``PrayerLocale/resolved(_:)-(String)`` for native digits.
+  ///     ``PrayerLocale/resolved(_:)-(String)`` for the same digits on every platform.
   ///   - timeZone: The zone in which a date's day is read; normally the location's.
   ///   - dayOffset: Whole days to add in the calendar before reading the date, such as `-1` or
   ///     `1` for a moon-sighting correction.

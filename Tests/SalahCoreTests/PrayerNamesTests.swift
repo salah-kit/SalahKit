@@ -22,7 +22,7 @@ private func names(_ identifier: String) -> PrayerNames {
       PrayerKind.allCases.map(english.name(of:))
         == ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"])
     #expect(PrayerKind.allCases.map(english.abbreviation(of:)) == ["F", "S", "D", "A", "M", "I"])
-    #expect(english.string(for: .jumuah) == "Jumuah")
+    #expect(english.string(for: .jumuah) == "Jumu’ah")
     #expect(english.string(for: .jumuahAbbreviation) == "J")
   }
 
@@ -63,7 +63,7 @@ private func names(_ identifier: String) -> PrayerNames {
 
   @Test func jumuahOnlyWhenObservanceDeclaresIt() {
     let english = names("en")
-    #expect(english.name(of: dhuhr(.jumuah)) == "Jumuah")
+    #expect(english.name(of: dhuhr(.jumuah)) == "Jumu’ah")
     #expect(english.abbreviation(of: dhuhr(.jumuah)) == "J")
     // A Friday Dhuhr without declared Jumu'ah stays Dhuhr.
     #expect(friday.weekday == 6)
