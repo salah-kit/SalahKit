@@ -91,6 +91,13 @@ private let arabic = locale("ar", numbering: "arab")
     #expect(compact(arabic) == ["٤٥ث", "١٢د", "٢:١٥"])
   }
 
+  @Test func moroccanArabicWithLatinDigits() {
+    // CLDR's default digits for Arabic in Morocco are Latin (RFC 0001 §4.9).
+    let morocco = PrayerLocale.resolved("ar-MA")
+    #expect(compact(morocco) == ["45ث", "12د", "2:15"])
+    #expect(spoken(8_130, morocco) == "ساعتان و15 دقيقة")
+  }
+
   @Test func persianUsesSalahsAbbreviations() {
     // Foundation's narrow units are Latin letters in Persian ("۴۵s"), so the seconds and minutes
     // tiers use Salah's abbreviations after the locale's digits.
