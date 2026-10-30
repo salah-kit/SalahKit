@@ -11,7 +11,7 @@ import Testing
 @Suite struct NonisolatedAPITests {
   @Test func thePublicAPIIsCallableFromNonisolatedCode() async throws {
     let summary = try await Task.detached { try exercisePublicAPI() }.value
-    #expect(summary == "Jumuah 13:30 | Isha | justStarted | 4 | ٢:١٥ | 1448")
+    #expect(summary == "Jumu’ah 13:30 | Isha | justStarted | 4 | ٢:١٥ | 1448")
   }
 }
 

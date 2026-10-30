@@ -81,6 +81,7 @@ The app's targets default to `MainActor` isolation, as new Xcode projects do. `M
   - `LiveStateTests`: publishing what plays and gating the widget's reloads; the stop signal stopping the tone and republishing; the signal with a stored value that still says the tone plays (the app stops, and its republish clears the value); a cleared value without the signal (nothing stops); a tone that ends by itself or can't start.
   - `AlertCoordinatorTests`: the engine gets the uncapped two-day schedule and the scheduler the 60-request plan; with a budget of two, a reminder the plan left out still comes due, gets a banner through `deliver` and plays the tone; two alerts due together play the one the engine's precedence picks; a wake posted to an injected NSWorkspace center after a sleep through Asr catches it up, replans, and then posts Asr's banner although its request was still pending (the banner goes out after the replan's apply, which removes the past request); the same banner goes out when the engine's wake-up reports Asr two minutes or a second and a half late, as the Mac wakes, before the wake notification arrives (the late report replans first); a clock change posted to an injected center within the five-minute grace catches up with a banner and beyond it skips; a time zone change replans; alerts off empties the engine and removes the requests; the twelve-hour replan; the notifications' wording and sounds.
   - `WidgetTimelineTests`: the setup entry; the `.steps` timeline with its minute grid, its expired entry and its midnight entries; the Stop button on every entry while a tone plays; the intent's work (clear, reload, signal).
+  - `WidgetLayoutTests`: the extension's real small and medium content at a finite desktop size, with and without playback, in English and Arabic; every prayer row, the focus and the native Stop control remain within the widget.
   - `ToneTests` and `LaunchOptionsTests`: the WAV data and the arguments; `-reminder` takes only the reminders the dropdown offers.
 - **Round trip** (`MenuBarRoundTripTests`, Swift Testing, no host app): each test starts the real app with launch arguments and drives the stop harness, each in its own process. These tests run in `xctest`, outside any sandbox; XCUITest's runner is sandboxed and can't start the harness.
   - The stop round trip (below).
@@ -95,7 +96,7 @@ The app's targets default to `MainActor` isolation, as new Xcode projects do. `M
 
 ## The stop round trip
 
-A tap on a desktop widget can't be automated, so the stop harness stands in for the widget extension. `MenuBarStopHarness` is a background-only app bundle with the same sandbox and App Group as the extension, so it can carry the App Group's provisioning profile. It compiles the same shared files and runs `StopPlaybackIntent().perform()`, the intent's own code. Each command prints one line of JSON:
+The automated round-trip suite does not place or click a desktop widget. Its stop harness exercises the extension's shared intent code in a separate process. `MenuBarStopHarness` is a background-only app bundle with the same sandbox and App Group as the extension, so it can carry the App Group's provisioning profile. It compiles the same shared files and runs `StopPlaybackIntent().perform()`, the intent's own code. Each command prints one line of JSON:
 
 ```sh
 H=<products>/MenuBarStopHarness.app/Contents/MacOS/MenuBarStopHarness
@@ -114,14 +115,15 @@ On macOS 27 with Xcode 27.0, signed with a personal team, the app and the harnes
 
 The Stop buttons are labelled "Stop the tone" (the widget's names the prayer: "Stop the tone for Asr"); the title has a spoken label ("Asr in 27 minutes"); SalahUI's rows read as one element with the full name. The dropdown and the widget use the system's text styles. Every string is in the String Catalog (`Shared/Localizable.xcstrings`), in English and Arabic; the Arabic is machine-drafted and marked as needing review ([#31](https://github.com/salah-kit/SalahKit/issues/31)), and the prayer names come from SalahCore's reviewed catalog.
 
+The real medium desktop widget's Stop control has also been checked on macOS 27.0.1:
+three pointer clicks, including an Arabic run, reached the running app, stopped its digital
+audio output and removed Stop from the widget. [#29](https://github.com/salah-kit/SalahKit/issues/29)
+records the source commit, timing bounds and app-state evidence.
+
 ## Pending
 
-These checks need a person with a Mac. Each issue has the steps and what to record.
+This check needs a person with a Mac. The issue has the steps and what to record.
 
-- **A real tap on the desktop widget's Stop button**
-  ([#29](https://github.com/salah-kit/SalahKit/issues/29)): the round-trip tests run the
-  intent's code in a separate sandboxed process; only a tap observes the widget extension that
-  WidgetKit launches.
 - **Real sleep, wake and a clock change**
   ([#28](https://github.com/salah-kit/SalahKit/issues/28)): the round-trip tests inject the
   wake and clock-change notifications; a real sleep stops timers and leaves overdue delivery to

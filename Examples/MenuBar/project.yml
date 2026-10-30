@@ -41,6 +41,8 @@ targets:
     platform: macOS
     sources:
       - path: MenuBar
+      # The widget's real content is also rendered by the hosted finite-layout tests.
+      - path: Widgets/PrayerWidgetView.swift
       # The settings, what plays, the stop intent, the widget's timeline and the strings: one
       # copy, compiled into the app, the widget extension and the stop harness.
       - path: Shared

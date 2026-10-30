@@ -25,6 +25,15 @@ All notable changes to this project are documented here. The format follows
   from a `-u-nu-` identifier. A `Locale` already made on macOS 27 from an identifier whose
   `-u-nu-` value matches the script has lost the value; build it with `Locale.Components` or
   `@numbers=` instead.
+
+## [0.4.1] - 2026-10-23
+
+### Fixed
+
+- The English name of Friday's congregational prayer is "Jumu’ah", with its apostrophe, in
+  `PrayerNames` and the catalog.
+- MenuBar's medium widget keeps its full prayer list and Stop control within the widget while
+  a tone plays ([#59](https://github.com/salah-kit/SalahKit/issues/59)).
 - `PrayerLocale.resolved` takes an explicit numbering system from the `nu` key of an
   identifier's Unicode (`-u-`) extension or an `@numbers=` keyword, and no longer from a `nu`
   subtag in a private-use (`-x-`) or transformed (`-t-`) part. `ar-u-ca-islamic-x-nu-latn` now
@@ -284,7 +293,8 @@ apps that prove them through the public API.
   that it links no calculation code) and CalculatedPhone; documentation published to GitHub
   Pages.
 
-[Unreleased]: https://github.com/salah-kit/SalahKit/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/salah-kit/SalahKit/compare/0.4.1...HEAD
+[0.4.1]: https://github.com/salah-kit/SalahKit/compare/0.4.0...0.4.1
 [0.4.0]: https://github.com/salah-kit/SalahKit/compare/0.3.0...0.4.0
 [0.3.0]: https://github.com/salah-kit/SalahKit/releases/tag/0.3.0
 [0.2.0]: https://github.com/salah-kit/SalahKit/releases/tag/0.2.0
