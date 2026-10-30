@@ -409,11 +409,12 @@ to 0.24 rather than 0.95.
 Where the only direction that can reach the ratio is the one the old rule took, the result is
 identical. On a surface of relative luminance L, the other end can't reach a ratio above
 (L + 0.05) / 0.05 when L is below about 0.18, or above 1.05 / (L + 0.05) when it's above. That
-covers black and white at any ratio above 1, and Salah's widget backgrounds (the three bases'
-tops and bottoms in dark and light) at any ratio above about 1.33. `ThemeColorTests` compares those with Salah's original
-code at 3 and 4.5, and checks on every palette surface that the fix reaches the ratio wherever
-the old rule did. Salah's Appearance tab, the consumer, fixes a custom primary against those
-backgrounds at 4.5, so its suggestions don't change.
+covers black and white at any ratio above 1, and the reference widget backgrounds from Salah
+at `4bc00e9` (the three bases' tops and bottoms in dark and light) at any ratio above about
+1.33. `ThemeColorTests` compares those with that snapshot's original code at 3 and 4.5, and
+checks on every palette surface that the fix reaches the ratio wherever the old rule did.
+The Appearance tab in that snapshot, the original consumer, fixed a custom primary against
+those backgrounds at 4.5, so its historical suggestions agree with the new rule.
 
 Discussed on [#9](https://github.com/salah-kit/SalahKit/discussions/9), open for comments from
 2026-10-19 to 2026-10-26.

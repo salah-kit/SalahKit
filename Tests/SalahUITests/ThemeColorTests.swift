@@ -124,10 +124,10 @@ struct ThemeColorTests {
     }
   }
 
-  /// The surfaces Salah's editor fixes a color against: the tops and bottoms of its widget's
-  /// three background bases (midnight, sand and graphite) in dark and light, plus black and
-  /// white. On these, only one direction can reach a ratio above about 1.33, the one Salah's
-  /// rule (toward white below a luminance of 0.5) takes, so the two rules agree.
+  /// The surfaces in Salah's editor at `4bc00e9`: the tops and bottoms of its widget's three
+  /// background bases (midnight, sand and graphite) in dark and light, plus black and white.
+  /// On these reference surfaces, only one direction can reach a ratio above about 1.33, the
+  /// one the original rule takes (toward white below a luminance of 0.5), so the rules agree.
   static let salahSurfaces: [ThemeColor] = [
     black, white,
     ThemeColor(red: 0.075, green: 0.094, blue: 0.180),
