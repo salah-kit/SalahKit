@@ -127,7 +127,7 @@ Under `MainActor` default isolation, the types that cross processes or threads a
   - the inputs' JSON round trip and fingerprints, the application context, the presets and the launch arguments;
   - the receive-and-store path through `SharedValue` with an injected reloader: the first inputs reload, the same inputs again don't, a repeated send is ignored, different inputs reload, a broken context keeps the last valid inputs, a reset reloads, and the session's last context read at launch never replaces newer local inputs;
   - the gallery placeholder, counted down from the moment it's asked for;
-  - the App Group the code opens is the one the build names in the watch app's Info.plist.
+  - the code opens the App Group the build names in the watch app's Info.plist, and the complication extension's Info.plist names the same one. CI runs the unit tests a second time under other identifiers, where code that named the group itself would open a different one.
 - `WatchUITests` runs the real watch app on a watch simulator, with no iPhone: the missing-settings view on a fresh start; the states screen with every state in every family; stored inputs shown again by a later launch; the ended timetable; Arabic.
 - `CompanionUITests` runs the companion: presets, a send and the session's state. Unpaired, WatchConnectivity refuses the send and the app says why.
 
@@ -150,6 +150,8 @@ Under `MainActor` default isolation, the types that cross processes or threads a
 Steps 8 to 10 drive the watch's home app (`com.apple.Carousel`): from the face, a turn of the crown opens the Smart Stack, and its Edit button and add slot open the widget gallery, where the example is listed. The home app exposes no accessibility elements there, so the steps tap coordinates measured on an Apple Watch Series 11 (46 mm) with watchOS 27; another watch or system may need new ones. A complication on a watch face would work the same way, but the simulator's default face (Numerals Duo) has no complication slots.
 
 The steps skip unless `WATCHCOMPLICATION_PAIRED=1` reaches the test runner, which the script arranges, so the schemes' ordinary test runs skip them.
+
+The script builds and tests under the example's own identifiers whatever `Config/Local.xcconfig` names: its `simctl` commands name the apps and the App Group.
 
 ```sh
 iphone=$(xcrun simctl create WC-iPhone com.apple.CoreSimulator.SimDeviceType.iPhone-17 \

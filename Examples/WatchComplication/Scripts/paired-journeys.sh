@@ -36,9 +36,9 @@ watch="$2"
 derived="${3:-.derived/paired}"
 results="${derived}/paired-results"
 project=WatchComplication.xcodeproj
-# The example's own identifiers. The script builds under them whatever Config/Local.xcconfig
-# names, so its simctl commands can name the apps and the App Group; the steps below run what
-# those builds produced.
+# The example's own identifiers. The script builds and tests under them whatever
+# Config/Local.xcconfig names, so its simctl commands can name the apps and the App Group, and
+# each step looks for the apps the builds produced.
 companion_id=io.github.salah-kit.WatchComplication
 watch_id="${companion_id}.watchkitapp"
 group_id=group.io.github.salah-kit.WatchComplication
@@ -81,7 +81,7 @@ step() {
   TEST_RUNNER_WATCHCOMPLICATION_PAIRED=1 xcodebuild test-without-building \
     -project "${project}" -scheme "${scheme}" -destination "id=${udid}" \
     -derivedDataPath "${derived}" -only-testing:"${test}" \
-    -resultBundlePath "${results}/${name}.xcresult" 2>&1 \
+    -resultBundlePath "${results}/${name}.xcresult" "${identity[@]}" 2>&1 \
     | tee "${results}/${name}.log" | grep -E "Test Case|error:|WATCHCOMPLICATION|TEST (SUCC|FAIL)"
 }
 

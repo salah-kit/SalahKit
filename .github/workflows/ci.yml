@@ -431,6 +431,26 @@ jobs:
             -derivedDataPath Examples/WatchComplication/.derived/test \
             -resultBundlePath Examples/WatchComplication/.derived/WatchComplicationWatch.xcresult
 
+      # The unit tests again, built as a developer signing with another team would build
+      # them: under identifiers other than the example's own. With the example's own, the App
+      # Group the build names is also the one the code falls back to, so only this run fails when
+      # the watch app or the complication extension stops taking the group from the build
+      # (IdentityTests).
+      - name: Unit tests under other identifiers
+        run: |
+          udid="$(xcrun simctl list devices available | grep -E '^ +Apple Watch' | head -n 1 \
+            | grep -oE '[0-9A-F]{8}-([0-9A-F]{4}-){3}[0-9A-F]{12}' || true)"
+          # Without a simulator, the step above has said so.
+          [[ -n "${udid}" ]] || exit 0
+          xcodebuild test \
+            -project Examples/WatchComplication/WatchComplication.xcodeproj \
+            -scheme WatchComplicationWatch -destination "id=${udid}" \
+            -only-testing:WatchComplicationTests \
+            -derivedDataPath Examples/WatchComplication/.derived/test \
+            -resultBundlePath Examples/WatchComplication/.derived/Watch-identifiers.xcresult \
+            APP_BUNDLE_IDENTIFIER=com.example.WatchComplication \
+            APP_GROUP_IDENTIFIER=group.com.example.WatchComplication
+
       # The companion's own journey (presets, a send and the session's state) runs on the first
       # available iPhone simulator, unpaired: WatchConnectivity refuses the send and the app says
       # why.
@@ -536,12 +556,31 @@ jobs:
             -derivedDataPath Examples/PhoneWidgets/.derived/test \
             -resultBundlePath Examples/PhoneWidgets/.derived/PhoneWidgets.xcresult
 
+      # The unit tests again, built as a developer signing with another team would build
+      # them: under identifiers other than the example's own. With the example's own, the App
+      # Group the build names is also the one the code falls back to, so only this run fails when
+      # the app or the widget extension stops taking the group from the build (IdentityTests).
+      - name: Unit tests under other identifiers
+        run: |
+          udid="$(xcrun simctl list devices available | grep -E '^ +iPhone' | head -n 1 \
+            | grep -oE '[0-9A-F]{8}-([0-9A-F]{4}-){3}[0-9A-F]{12}' || true)"
+          # Without a simulator, the step above has said so.
+          [[ -n "${udid}" ]] || exit 0
+          xcodebuild test \
+            -project Examples/PhoneWidgets/PhoneWidgets.xcodeproj -scheme PhoneWidgets \
+            -destination "id=${udid}" \
+            -only-testing:PhoneWidgetsTests \
+            -derivedDataPath Examples/PhoneWidgets/.derived/test \
+            -resultBundlePath Examples/PhoneWidgets/.derived/PhoneWidgets-identifiers.xcresult \
+            APP_BUNDLE_IDENTIFIER=com.example.PhoneWidgets \
+            APP_GROUP_IDENTIFIER=group.com.example.PhoneWidgets
+
       - name: Upload the test results
         if: failure()
         uses: actions/upload-artifact@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
         with:
           name: PhoneWidgets.xcresult
-          path: Examples/PhoneWidgets/.derived/PhoneWidgets.xcresult
+          path: Examples/PhoneWidgets/.derived/*.xcresult
           if-no-files-found: ignore
 
   menubar:
@@ -604,10 +643,28 @@ jobs:
             -resultBundlePath Examples/MenuBar/.derived/MenuBar.xcresult \
             CODE_SIGNING_ALLOWED=NO
 
+      # The unit tests and the round trip again, built as a developer signing with another team
+      # would build them: under identifiers other than the example's own. With the example's own,
+      # the App Group the build names is also the one the code falls back to, so only this run
+      # fails when the app or the widget extension stops taking the group from the build
+      # (IdentityTests), or when the app and the stop harness open different groups (the round
+      # trip).
+      - name: Unit tests and the round trip under other identifiers
+        run: |
+          xcodebuild test \
+            -project Examples/MenuBar/MenuBar.xcodeproj -scheme MenuBar \
+            -destination 'platform=macOS' \
+            -skip-testing:MenuBarUITests \
+            -derivedDataPath Examples/MenuBar/.derived/test \
+            -resultBundlePath Examples/MenuBar/.derived/MenuBar-identifiers.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            APP_BUNDLE_IDENTIFIER=com.example.MenuBar \
+            APP_GROUP_IDENTIFIER=group.com.example.MenuBar
+
       - name: Upload the test results
         if: failure()
         uses: actions/upload-artifact@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
         with:
           name: MenuBar.xcresult
-          path: Examples/MenuBar/.derived/MenuBar.xcresult
+          path: Examples/MenuBar/.derived/*.xcresult
           if-no-files-found: ignore

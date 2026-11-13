@@ -93,9 +93,11 @@ too: Apple registers a bundle identifier and an App Group to one team, and the o
 `Config/Shared.xcconfig` names are registered to the maintainers' team. `APP_BUNDLE_IDENTIFIER` is
 the example's main app's, and its other targets' follow it. `APP_GROUP_IDENTIFIER`, in the
 examples that share an App Group, goes into each target's entitlements and into the
-`AppGroupIdentifier` key of its Info.plist, where the code reads it. Unsigned builds, simulator
-builds and unit tests need neither setting; a test run signed with a team, such as MenuBar's
-signed run of its round-trip tests and journeys, needs them as any signed build does.
+`AppGroupIdentifier` key of its Info.plist, where the code reads it. Unsigned builds and simulator
+builds, their tests included, need neither setting; a test run signed with a team, such as
+MenuBar's signed run, needs them as any signed build does. CI runs the unit tests of the three
+examples that share an App Group, and MenuBar's round trip, a second time under other
+identifiers, where a process that didn't take the group from the build would open a different one.
 
 ## Vectors
 

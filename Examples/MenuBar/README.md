@@ -32,7 +32,7 @@ These are the journeys' screenshot attachments, exported with `xcrun xcresulttoo
 
 ## App Group and signing
 
-The app, the widget extension and the stop harness share the App Group `group.io.github.salah-kit.MenuBar`, and all three are sandboxed (WidgetKit runs only sandboxed extensions on macOS). On macOS an App Group named `group.…` must be authorized by a provisioning profile, so running the app needs a signing team:
+The app, the widget extension and the stop harness share the App Group (`APP_GROUP_IDENTIFIER` in `Config/Shared.xcconfig`, `group.io.github.salah-kit.MenuBar` by default), and all three are sandboxed (WidgetKit runs only sandboxed extensions on macOS). On macOS an App Group named `group.…` must be authorized by a provisioning profile, so running the app needs a signing team:
 
 1. Copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` (gitignored) and set your team, then uncomment `APP_BUNDLE_IDENTIFIER` and `APP_GROUP_IDENTIFIER` to name a bundle identifier and an App Group of your own. Apple registers an identifier and a group to one team, so a build signed with yours needs its own.
 2. Build with `-allowProvisioningUpdates`, or let Xcode manage signing: it registers the three bundle identifiers (yours, then `.Widgets` and `.StopHarness` after it) and the App Group.
@@ -87,7 +87,7 @@ The app's targets default to `MainActor` isolation, as new Xcode projects do. `M
   - `WidgetTimelineTests`: the setup entry; the `.steps` timeline with its minute grid, its expired entry and its midnight entries; the Stop button on every entry while a tone plays; the intent's work (clear, reload, signal).
   - `WidgetLayoutTests`: the extension's real small and medium content at a finite desktop size, with and without playback, in English and Arabic; every prayer row, the focus and the native Stop control remain within the widget.
   - `ToneTests` and `LaunchOptionsTests`: the WAV data and the arguments; `-reminder` takes only the reminders the dropdown offers.
-  - `IdentityTests`: the App Group the code opens is the one the build names in the app's Info.plist.
+  - `IdentityTests`: the code opens the App Group the build names in the app's Info.plist, and the widget extension's Info.plist names the same one. CI runs the unit tests and the round trip a second time under other identifiers, where a process that named the group itself would open a different one.
 - **Round trip** (`MenuBarRoundTripTests`, Swift Testing, no host app): each test starts the real app with launch arguments and drives the stop harness, each in its own process. These tests run in `xctest`, outside any sandbox; XCUITest's runner is sandboxed and can't start the harness. Signed, they find the app by the bundle identifier the build names in their own Info.plist, and need your team and, unless it holds the example's own, your identifiers ([App Group and signing](#app-group-and-signing)); unsigned, as in CI, neither.
   - The stop round trip (below).
   - The signal alone: the harness posts only the signal, leaving the stored value saying the tone plays; the app stops, and its republish clears the value (`changed=true`).
