@@ -60,10 +60,10 @@ These are the journeys' screenshot attachments, exported from a test run on an i
 
 ## App Group and signing
 
-Both targets declare the App Group in their entitlements (`PhoneWidgets/PhoneWidgets.entitlements`, `Widgets/Widgets.entitlements`), generated from `project.yml`. No team is committed.
+Both targets declare the App Group in their entitlements (`PhoneWidgets/PhoneWidgets.entitlements`, `Widgets/Widgets.entitlements`), generated from `project.yml`. The group is the build setting `APP_GROUP_IDENTIFIER` in `Config/Shared.xcconfig`; the build also writes it into the `AppGroupIdentifier` key of each target's Info.plist, where `PhoneWidgetsID.appGroup` reads it, so the code always opens the group the entitlements grant. The app's bundle identifier is `APP_BUNDLE_IDENTIFIER`, and the extension's (`.Widgets` after it) and the test bundles' follow it. No team is committed.
 
 - **Simulator:** no signing needed. Xcode signs simulator builds ad hoc and embeds the entitlements in the binaries, and the simulator honors the App Group: the app's saved settings reach the extension, as the Home Screen journey shows.
-- **Device:** copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` (gitignored) and set your team. Xcode's automatic signing registers the two bundle identifiers and the App Group. To ship your own app, change the identifiers (`io.github.salah-kit.PhoneWidgets`, `.Widgets`), the App Group in both entitlements and in `PhoneWidgetsID.appGroup`, and the widget kind.
+- **Device:** copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` (gitignored) and set your team, then uncomment `APP_BUNDLE_IDENTIFIER` and `APP_GROUP_IDENTIFIER` to name a bundle identifier and an App Group of your own. Apple registers an identifier and a group to one team, so a build signed with yours needs its own. Xcode's automatic signing registers the two bundle identifiers and the App Group. To ship your own app, set your identifiers in `Config/Shared.xcconfig` and change the widget kind.
 
 `PrivacyInfo.xcprivacy` in each target declares App Group `UserDefaults` access with reason `1C8F.1`. Neither target uses the standard defaults. The diagnostics log is a file in the App Group container and needs no required-reason API.
 
@@ -104,7 +104,8 @@ The example's targets set `SWIFT_DEFAULT_ACTOR_ISOLATION` to `$(PHONEWIDGETS_ISO
   - a provider call six hours past a timeline's validity, where the expired entry shows exactly from `validUntil` until the late call, and a call late by less than the slack, where it never shows;
   - no settings at first (setup required, no reload) until the app saves them and asks for a reload;
   - Tromsø's partial midsummer days and invalid coordinates;
-  - the state-to-view mapping and the wording of every state in English and Arabic, the settings' JSON and fingerprint, reload gating through `SettingsStore` with a recording `SharedValue`, the launch arguments, the diagnostics log and its 200-record bound, and the palette's `ContrastCheck`.
+  - the state-to-view mapping and the wording of every state in English and Arabic, the settings' JSON and fingerprint, reload gating through `SettingsStore` with a recording `SharedValue`, the launch arguments, the diagnostics log and its 200-record bound, and the palette's `ContrastCheck`;
+  - the App Group the code opens is the one the build names in the app's Info.plist.
 - `PhoneWidgetsUITests` runs the real app and the real extension:
   - `AppJourneys`: setting up, saving the same settings again ("unchanged"), changing the place, method and language ("reload requested"), a relaunch; launch arguments that apply once (a regression test: the app used to make its store in a view's initializer, which SwiftUI ran again when the language changed, and the discarded store saved the launch arguments over the change; the Home Screen journey found it); and the Widget states screen in English and Arabic, asserting the setup, normal, partial (with a known and an unknown next prayer), unavailable and expired wording, and that an unknown next prayer and an expired timeline show no countdown; the VoiceOver labels above; and every state at the largest text size, where each family's text stays inside its widget.
   - `HomeScreenJourney`: adds the medium widget through Springboard and checks the real extension. Hosted CI runners skip it (see below).

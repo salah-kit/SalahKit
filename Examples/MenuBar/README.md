@@ -34,14 +34,16 @@ These are the journeys' screenshot attachments, exported with `xcrun xcresulttoo
 
 The app, the widget extension and the stop harness share the App Group `group.io.github.salah-kit.MenuBar`, and all three are sandboxed (WidgetKit runs only sandboxed extensions on macOS). On macOS an App Group named `group.…` must be authorized by a provisioning profile, so running the app needs a signing team:
 
-1. Copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` (gitignored) and set your team.
-2. Build with `-allowProvisioningUpdates`, or let Xcode manage signing: it registers the three bundle identifiers (`io.github.salah-kit.MenuBar`, `.MenuBar.Widgets`, `.MenuBar.StopHarness`) and the App Group.
+1. Copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` (gitignored) and set your team, then uncomment `APP_BUNDLE_IDENTIFIER` and `APP_GROUP_IDENTIFIER` to name a bundle identifier and an App Group of your own. Apple registers an identifier and a group to one team, so a build signed with yours needs its own.
+2. Build with `-allowProvisioningUpdates`, or let Xcode manage signing: it registers the three bundle identifiers (yours, then `.Widgets` and `.StopHarness` after it) and the App Group.
+
+`Config/Shared.xcconfig` names the example's own identifiers, the defaults. Every target's bundle identifier follows `APP_BUNDLE_IDENTIFIER`. The build writes `APP_GROUP_IDENTIFIER` into the three targets' entitlements and into the `AppGroupIdentifier` key of their Info.plist, where `MenuBarID.appGroup` reads it, so the code always opens the group the entitlements grant. `MenuBarRoundTripTests` finds the running app by the `APP_BUNDLE_IDENTIFIER` its own Info.plist names.
 
 CI builds and tests unsigned (`CODE_SIGNING_ALLOWED=NO`): without entitlements nothing is sandboxed, and the app and the harness share the App Group's suite as plain preferences. The unit tests and the journeys run the same way; the signed run proves the sandboxed path.
 
 ## Building and testing
 
-From this folder, with your team in `Config/Local.xcconfig`:
+Run these from this folder. The signed run, its round-trip tests and journeys included, is a signed build like any other: it needs your team in `Config/Local.xcconfig` and, unless your team holds the example's own identifiers, yours there too ([App Group and signing](#app-group-and-signing)). The unsigned run, as CI's, needs neither.
 
 ```sh
 xcodegen                        # after changing project.yml; commit both files
@@ -83,12 +85,13 @@ The app's targets default to `MainActor` isolation, as new Xcode projects do. `M
   - `WidgetTimelineTests`: the setup entry; the `.steps` timeline with its minute grid, its expired entry and its midnight entries; the Stop button on every entry while a tone plays; the intent's work (clear, reload, signal).
   - `WidgetLayoutTests`: the extension's real small and medium content at a finite desktop size, with and without playback, in English and Arabic; every prayer row, the focus and the native Stop control remain within the widget.
   - `ToneTests` and `LaunchOptionsTests`: the WAV data and the arguments; `-reminder` takes only the reminders the dropdown offers.
-- **Round trip** (`MenuBarRoundTripTests`, Swift Testing, no host app): each test starts the real app with launch arguments and drives the stop harness, each in its own process. These tests run in `xctest`, outside any sandbox; XCUITest's runner is sandboxed and can't start the harness.
+  - `IdentityTests`: the App Group the code opens is the one the build names in the app's Info.plist.
+- **Round trip** (`MenuBarRoundTripTests`, Swift Testing, no host app): each test starts the real app with launch arguments and drives the stop harness, each in its own process. These tests run in `xctest`, outside any sandbox; XCUITest's runner is sandboxed and can't start the harness. Signed, they find the app by the bundle identifier the build names in their own Info.plist, and need your team and, unless it holds the example's own, your identifiers ([App Group and signing](#app-group-and-signing)); unsigned, as in CI, neither.
   - The stop round trip (below).
   - The signal alone: the harness posts only the signal, leaving the stored value saying the tone plays; the app stops, and its republish clears the value (`changed=true`).
   - A wake after sleeping through a prayer: launched a minute before Asr with alerts on and `-testEvents`, the app is asked by the harness's `sleep` to move its clock three minutes ahead and post NSWorkspace's wake notification to itself. Its log then has the wake, the display planned again ("Asr +2m"), Asr's alert started after the wake, and a replan.
   - A clock change beyond the grace: the harness's `clock` moves the app's clock ten minutes ahead and posts `NSSystemClockDidChange`; the display shows "Asr +9m", the alerts replan, and nothing plays.
-- **Journeys** (`MenuBarUITests`, XCUITest, on the Mac):
+- **Journeys** (`MenuBarUITests`, XCUITest, on the Mac). Signed, they need your team and, unless it holds the example's own, your identifiers, as the round trip does; unsigned, neither:
   - `testScheduleShowsTheDay` and `testArabic`: the window lists Makkah's day, in English or Arabic, and the status item names the next prayer.
   - `testTitleRefreshesOnTheMinute`: launched three seconds before Asr, the status item's title turns to "Asr started 0 seconds ago" at Asr and to "Asr started 1 minute ago" a minute later, with nothing touching the app. (XCUITest reads the title's spoken label, which the app sets from the same refresh as the text "Asr +0s".)
   - `testAppStopButton`: the window's "Play test tone" shows what plays, and its Stop button ends it.

@@ -168,7 +168,11 @@ nonisolated enum Products {
 /// The app, started with launch arguments.
 @MainActor
 final class RunningApp {
-  static let bundleIdentifier = "io.github.salah-kit.MenuBar"
+  /// The app's bundle identifier, which the build writes into this test bundle's Info.plist
+  /// (`APP_BUNDLE_IDENTIFIER`).
+  static let bundleIdentifier =
+    Bundle(for: ProductsMarker.self).object(forInfoDictionaryKey: "AppBundleIdentifier")
+    as? String ?? "io.github.salah-kit.MenuBar"
 
   private let process: Process
   /// The launch's identifier in the app's diagnostics log, once the harness has read it.

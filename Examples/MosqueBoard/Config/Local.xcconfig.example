@@ -1,2 +1,8 @@
 // Copy to Local.xcconfig (gitignored) and fill in your Apple Developer team ID.
 DEVELOPMENT_TEAM = YOURTEAMID
+
+// Apple registers a bundle identifier to one team, and the example's own is registered to
+// its maintainers' team. To sign with another team, uncomment this line and name an
+// identifier of your own: the other targets' bundle identifiers follow it. Unsigned and
+// simulator builds don't need it.
+// APP_BUNDLE_IDENTIFIER = com.yourname.MosqueBoard

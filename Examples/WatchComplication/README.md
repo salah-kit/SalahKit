@@ -12,7 +12,7 @@ WatchComplication is SalahKit's watch example. It uses only the public API of `S
 | Watch app | `WatchComplicationWatch` | Receives the inputs, stores them with `SharedValue` in the watch's App Group, reloads the complication when they change, and shows the current state |
 | Complication | `Complications` (watchOS WidgetKit extension) | Reads the inputs from the watch's App Group and builds its timeline with `PrayerTimelineBuilder` |
 
-A watch app doesn't share App Group storage with its iPhone app, so the watch keeps its own copy. The App Group `group.io.github.salah-kit.WatchComplication` belongs to the watch app and its complication only. The companion never writes to it; it can only send.
+A watch app doesn't share App Group storage with its iPhone app, so the watch keeps its own copy. The App Group (`APP_GROUP_IDENTIFIER` in `Config/Shared.xcconfig`, `group.io.github.salah-kit.WatchComplication` by default) belongs to the watch app and its complication only. The companion never writes to it; it can only send.
 
 **Why an application context.** The watch needs only the latest inputs. `updateApplicationContext(_:)` keeps one context: a newer one replaces a context the watch hasn't received yet, and the system delivers it when the watch app next runs, whether or not the companion is still running. `transferUserInfo(_:)` would queue every send and deliver stale inputs first. The context also persists on both sides (`applicationContext`, `receivedApplicationContext`), so the companion shows what the watch gets next even after it relaunches, and the watch app reads the last context again once its session is active, in case a delivery was missed. That re-read stores the context only when it was sent after the watch's last receipt, so it never brings back an older send over inputs stored or removed since (by `-preset` or `-resetInputs`); a live delivery is always stored. Delivery timing isn't guaranteed: the watch works from what it has until new inputs arrive.
 
@@ -79,7 +79,7 @@ This is the example's evidence channel, not something a prayer app needs.
 
 Open `WatchComplication.xcodeproj` and run the `WatchComplicationWatch` scheme on a paired Apple Watch simulator, or the `WatchComplication` scheme on its iPhone. Simulator builds need no signing: Xcode signs them ad hoc and embeds the App Group entitlement for the simulator.
 
-To run on devices, copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` and set your team there; it's gitignored. Then register the App Group `group.io.github.salah-kit.WatchComplication` for the watch app (`io.github.salah-kit.WatchComplication.watchkitapp`) and its extension (`io.github.salah-kit.WatchComplication.watchkitapp.Complications`); Xcode's automatic signing does it with your team. The companion (`io.github.salah-kit.WatchComplication`) needs no App Group.
+To run on devices, copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` (gitignored) and set your team there, then uncomment `APP_BUNDLE_IDENTIFIER` and `APP_GROUP_IDENTIFIER` to name a bundle identifier and an App Group of your own: Apple registers an identifier and a group to one team, so a build signed with yours needs its own. `APP_BUNDLE_IDENTIFIER` is the companion's (`io.github.salah-kit.WatchComplication` by default), and every other target's follows it: the watch app is `.watchkitapp` after it, its extension `.watchkitapp.Complications` and the unit tests `Tests`, and each UI-test bundle puts its own name in place of the last part (`io.github.salah-kit.WatchUITests`). The build writes the group into the watch app's and the extension's entitlements and into the `AppGroupIdentifier` key of their Info.plist, where `WatchStorage.appGroup` reads it; Xcode's automatic signing registers it with your team. The companion needs no App Group.
 
 From the command line, in this folder:
 
@@ -126,7 +126,8 @@ Under `MainActor` default isolation, the types that cross processes or threads a
   - other gaps, every sample on the states screen, the diagnostics record and its bounded log;
   - the inputs' JSON round trip and fingerprints, the application context, the presets and the launch arguments;
   - the receive-and-store path through `SharedValue` with an injected reloader: the first inputs reload, the same inputs again don't, a repeated send is ignored, different inputs reload, a broken context keeps the last valid inputs, a reset reloads, and the session's last context read at launch never replaces newer local inputs;
-  - the gallery placeholder, counted down from the moment it's asked for.
+  - the gallery placeholder, counted down from the moment it's asked for;
+  - the App Group the code opens is the one the build names in the watch app's Info.plist.
 - `WatchUITests` runs the real watch app on a watch simulator, with no iPhone: the missing-settings view on a fresh start; the states screen with every state in every family; stored inputs shown again by a later launch; the ended timetable; Arabic.
 - `CompanionUITests` runs the companion: presets, a send and the session's state. Unpaired, WatchConnectivity refuses the send and the app says why.
 

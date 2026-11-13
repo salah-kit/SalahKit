@@ -37,6 +37,7 @@
 		5C825AA1750C9B0D97385316 /* MenuBarTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36841FF730C1F63B29544E7 /* MenuBarTimeline.swift */; };
 		63AC55DCB3E16DA1486C1608 /* SalahCalculation in Frameworks */ = {isa = PBXBuildFile; productRef = E5910DAF70DD9595511A44A5 /* SalahCalculation */; };
 		664FD4D58C02F963AD21AFAF /* SalahUI in Frameworks */ = {isa = PBXBuildFile; productRef = 821D6265225B42A768DFC81F /* SalahUI */; };
+		68F4D96A7477B20A59B3C5FA /* IdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56830AE5C19BB008C2862561 /* IdentityTests.swift */; };
 		6D4ADA5A46B2765BB81BE59E /* SalahCore in Frameworks */ = {isa = PBXBuildFile; productRef = F00B1CF71A7229B228DF3034 /* SalahCore */; };
 		6EF26A823AE31F041E0DA7A0 /* MenuBarID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A9E190BB776D7191B4CEF5 /* MenuBarID.swift */; };
 		7098D23A16D12192C5381400 /* SalahWidgets in Frameworks */ = {isa = PBXBuildFile; productRef = 65DA598D83D4508ADEA1FC89 /* SalahWidgets */; };
@@ -143,7 +144,9 @@
 		4C89359310C3D1265D25B658 /* PrayerWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerWidgetView.swift; sourceTree = "<group>"; };
 		53409AB62C4C18FF4557F62F /* LiveStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStateTests.swift; sourceTree = "<group>"; };
 		56061F16F95C7D05F69ED747 /* MenuBarUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenuBarUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		56830AE5C19BB008C2862561 /* IdentityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityTests.swift; sourceTree = "<group>"; };
 		61E547020B7A81C08325BF38 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		66087786814F22A8AE47855C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		676A456F1808C8BB1C360172 /* MenuBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenuBar.entitlements; sourceTree = "<group>"; };
 		6968E407A8E7A4AD825B84D6 /* LaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptions.swift; sourceTree = "<group>"; };
 		6CC260C81E221E3726713D94 /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
@@ -151,6 +154,7 @@
 		7003D19231F3FFB20AB9B8E8 /* SalahKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SalahKit; path = ../..; sourceTree = SOURCE_ROOT; };
 		7179C3D0501E0EBF43C0AD2C /* RoundTripTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundTripTests.swift; sourceTree = "<group>"; };
 		74DDBD6D7339143804B6AED7 /* StopHarness.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StopHarness.entitlements; sourceTree = "<group>"; };
+		77C450ED4425120333BBA42A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		78994F07A9428BC417F80E43 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		79A9E190BB776D7191B4CEF5 /* MenuBarID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarID.swift; sourceTree = "<group>"; };
 		7B723514A81058C7CDD7FE3A /* Widgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Widgets.entitlements; sourceTree = "<group>"; };
@@ -173,6 +177,7 @@
 		F02CF2301920AD88ED2D1491 /* MenuBarStopHarness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenuBarStopHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3D4722811F6B3EEEF6792B6 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		F851B5EBC4C5BF163ABF9BD5 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		FEF62D611B221D1DA1530B63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -249,6 +254,7 @@
 				6CC260C81E221E3726713D94 /* Alerts.swift */,
 				F3D4722811F6B3EEEF6792B6 /* AppModel.swift */,
 				8D56AAD2B14FCFAB2A16AE61 /* Display.swift */,
+				77C450ED4425120333BBA42A /* Info.plist */,
 				6968E407A8E7A4AD825B84D6 /* LaunchOptions.swift */,
 				D4A6F694C1C250250391524F /* LiveState.swift */,
 				676A456F1808C8BB1C360172 /* MenuBar.entitlements */,
@@ -279,6 +285,7 @@
 			children = (
 				95CF00046504649C1238EDFA /* AlertCoordinatorTests.swift */,
 				6FE3822233B76B25E5C565AA /* DisplayTests.swift */,
+				56830AE5C19BB008C2862561 /* IdentityTests.swift */,
 				53409AB62C4C18FF4557F62F /* LiveStateTests.swift */,
 				E516D5E6843D87DD7FB13CDB /* Support.swift */,
 				D4E0E7665A319B3A42D93B87 /* ToneAndOptionsTests.swift */,
@@ -312,6 +319,7 @@
 		AEF35DE97F20503B8C588F9E /* StopHarness */ = {
 			isa = PBXGroup;
 			children = (
+				66087786814F22A8AE47855C /* Info.plist */,
 				78994F07A9428BC417F80E43 /* main.swift */,
 				AB38317D50B048ECB3426716 /* PrivacyInfo.xcprivacy */,
 				74DDBD6D7339143804B6AED7 /* StopHarness.entitlements */,
@@ -360,6 +368,7 @@
 		F3EA3C508BD9825387C2EFFB /* MenuBarRoundTripTests */ = {
 			isa = PBXGroup;
 			children = (
+				FEF62D611B221D1DA1530B63 /* Info.plist */,
 				7179C3D0501E0EBF43C0AD2C /* RoundTripTests.swift */,
 			);
 			path = MenuBarRoundTripTests;
@@ -671,6 +680,7 @@
 			files = (
 				F370912C04C0D17AD0F57FE7 /* AlertCoordinatorTests.swift in Sources */,
 				268B1087B1EA2BB37921B5B3 /* DisplayTests.swift in Sources */,
+				68F4D96A7477B20A59B3C5FA /* IdentityTests.swift in Sources */,
 				392A013D20677AF9458D1EA8 /* LiveStateTests.swift in Sources */,
 				0E04A3B0BFBB24583BF8AFDD /* Support.swift in Sources */,
 				78A758F4C66926E5F5FB52FC /* ToneAndOptionsTests.swift in Sources */,
@@ -729,7 +739,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBarTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)Tests";
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MenuBar.app/Contents/MacOS/MenuBar";
@@ -747,7 +757,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBarUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)UITests";
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 				TEST_TARGET_NAME = MenuBar;
@@ -761,12 +771,13 @@
 				CODE_SIGN_ENTITLEMENTS = StopHarness/StopHarness.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StopHarness/Info.plist;
 				INFOPLIST_KEY_LSBackgroundOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBar.StopHarness";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).StopHarness";
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 			};
@@ -849,6 +860,7 @@
 				CODE_SIGN_ENTITLEMENTS = MenuBar/MenuBar.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MenuBar/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MenuBar;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_LSUIElement = YES;
@@ -856,7 +868,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBar";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)";
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 			};
@@ -869,6 +881,7 @@
 				CODE_SIGN_ENTITLEMENTS = MenuBar/MenuBar.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MenuBar/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MenuBar;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_LSUIElement = YES;
@@ -876,7 +889,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBar";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)";
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 			};
@@ -893,7 +906,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBarTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)Tests";
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MenuBar.app/Contents/MacOS/MenuBar";
@@ -906,12 +919,13 @@
 				BUNDLE_LOADER = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MenuBarRoundTripTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBarRoundTripTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)RoundTripTests";
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 				TEST_HOST = "";
@@ -925,12 +939,13 @@
 				CODE_SIGN_ENTITLEMENTS = StopHarness/StopHarness.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StopHarness/Info.plist;
 				INFOPLIST_KEY_LSBackgroundOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBar.StopHarness";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).StopHarness";
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 			};
@@ -1012,7 +1027,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBar.Widgets";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).Widgets";
 				PRODUCT_NAME = MenuBarWidgets;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1033,7 +1048,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBar.Widgets";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).Widgets";
 				PRODUCT_NAME = MenuBarWidgets;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1052,7 +1067,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBarUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)UITests";
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 				TEST_TARGET_NAME = MenuBar;
@@ -1065,12 +1080,13 @@
 				BUNDLE_LOADER = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MenuBarRoundTripTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.MenuBarRoundTripTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)RoundTripTests";
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 				TEST_HOST = "";

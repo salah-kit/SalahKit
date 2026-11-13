@@ -10,7 +10,6 @@
 # there. The phone never shares storage with the watch.
 name: WatchComplication
 options:
-  bundleIdPrefix: io.github.salah-kit
   deploymentTarget:
     iOS: "17.0"
     watchOS: "10.0"
@@ -52,7 +51,7 @@ targets:
       - target: WatchComplicationWatch
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.WatchComplication
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)
         # iPhone only. Set per target: XcodeGen's iOS preset writes "1,2" at target level, which
@@ -75,7 +74,7 @@ targets:
       path: Watch/WatchComplicationWatch.entitlements
       properties:
         com.apple.security.application-groups:
-          - group.io.github.salah-kit.WatchComplication
+          - $(APP_GROUP_IDENTIFIER)
     dependencies:
       - package: SalahKit
         product: SalahCore
@@ -88,15 +87,17 @@ targets:
       - target: Complications
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.WatchComplication.watchkitapp
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER).watchkitapp
         GENERATE_INFOPLIST_FILE: YES
+        # Names the App Group, where the shared code reads it (WatchStorage.appGroup).
+        INFOPLIST_FILE: Watch/Info.plist
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)
         TARGETED_DEVICE_FAMILY: "4"
         INFOPLIST_KEY_CFBundleDisplayName: WatchComplication
         INFOPLIST_KEY_WKApplication: YES
         # A companion app makes WatchConnectivity available; the watch app still runs from its
         # own stored inputs while the iPhone app is closed.
-        INFOPLIST_KEY_WKCompanionAppBundleIdentifier: io.github.salah-kit.WatchComplication
+        INFOPLIST_KEY_WKCompanionAppBundleIdentifier: $(APP_BUNDLE_IDENTIFIER)
         INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp: NO
 
   # The complication: a watchOS WidgetKit extension that reads the watch app's stored inputs.
@@ -113,13 +114,15 @@ targets:
         CFBundleDisplayName: WatchComplication
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # The App Group, where the shared code reads it (WatchStorage.appGroup).
+        AppGroupIdentifier: $(APP_GROUP_IDENTIFIER)
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     entitlements:
       path: Complications/Complications.entitlements
       properties:
         com.apple.security.application-groups:
-          - group.io.github.salah-kit.WatchComplication
+          - $(APP_GROUP_IDENTIFIER)
     dependencies:
       - package: SalahKit
         product: SalahCore
@@ -133,7 +136,7 @@ targets:
       - sdk: SwiftUI.framework
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.WatchComplication.watchkitapp.Complications
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER).watchkitapp.Complications
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)
         TARGETED_DEVICE_FAMILY: "4"
         SKIP_INSTALL: YES
@@ -149,7 +152,7 @@ targets:
       - target: WatchComplicationWatch
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.WatchComplicationTests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)Tests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)
         TARGETED_DEVICE_FAMILY: "4"
@@ -165,7 +168,9 @@ targets:
       - target: WatchComplicationWatch
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.WatchUITests
+        # The companion's identifier without its last part (`:base`), then the target's name:
+        # io.github.salah-kit.WatchUITests by default.
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER:base).WatchUITests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)
         TARGETED_DEVICE_FAMILY: "4"
@@ -181,7 +186,9 @@ targets:
       - target: WatchComplication
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.CompanionUITests
+        # The companion's identifier without its last part (`:base`), then the target's name:
+        # io.github.salah-kit.CompanionUITests by default.
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER:base).CompanionUITests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)
         TARGETED_DEVICE_FAMILY: "1"

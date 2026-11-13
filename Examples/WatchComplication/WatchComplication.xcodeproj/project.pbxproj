@@ -61,6 +61,7 @@
 		E15FA421BCBC9C4B1B41F42C /* InputsPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A7BA276C67BB2299D856E8 /* InputsPreset.swift */; };
 		E4189EC32A908F1DED4E7E45 /* StatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A0FEDCFBE6AF31E19F472F /* StatesView.swift */; };
 		F0832A47DF4F5CC2C116011E /* InputsMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163FE764A0C1B20DFB325F3 /* InputsMessage.swift */; };
+		F4FE93E12A8D52E1C2F57FE1 /* IdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291F37B7B80300EED434586F /* IdentityTests.swift */; };
 		F7B502A7B088566CE864AE9A /* ComplicationViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE6166E7300AF79E8567CAF /* ComplicationViews.swift */; };
 		F8E1B89E7D3CCA81F8CDD8E0 /* ComplicationViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE6166E7300AF79E8567CAF /* ComplicationViews.swift */; };
 		F8E1F5B314A693ACDA102CBB /* SalahCore in Frameworks */ = {isa = PBXBuildFile; productRef = D709D012478EB1A0C95C55B9 /* SalahCore */; };
@@ -138,6 +139,7 @@
 		10D1097570A14E738FB40AB5 /* WatchComplicationWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WatchComplicationWatch.entitlements; sourceTree = "<group>"; };
 		17CBB00278C6611E63F349A8 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		23E63DE3521DFA0C5F16E1D7 /* CompanionUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CompanionUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		291F37B7B80300EED434586F /* IdentityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityTests.swift; sourceTree = "<group>"; };
 		3FF9A32F2B27A875944D6B91 /* WatchInputs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchInputs.swift; sourceTree = "<group>"; };
 		4218CDB95EE24375470FD171 /* WatchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WatchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		442396C0D25D6E491AD13857 /* SalahKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SalahKit; path = ../..; sourceTree = SOURCE_ROOT; };
@@ -168,6 +170,7 @@
 		DDB9BF4DE99BB4144E98FAD3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E67D3EE12858F5BB6D606A4C /* Complications.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Complications.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFB3AE55502190A01EFACE6B /* WatchJourneys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchJourneys.swift; sourceTree = "<group>"; };
+		F33FED72D53CC0A5A6E420E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F58674B4C5F94EFD3B3263A8 /* ComplicationTimeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationTimeline.swift; sourceTree = "<group>"; };
 		F97E645E25E03BEFBE0AC30C /* TimelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineTests.swift; sourceTree = "<group>"; };
 		FBFEB01CEB22DC1D5EA04F76 /* InputsReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputsReceiver.swift; sourceTree = "<group>"; };
@@ -282,6 +285,7 @@
 		7B6E37260D0801B835E06D2E /* WatchComplicationTests */ = {
 			isa = PBXGroup;
 			children = (
+				291F37B7B80300EED434586F /* IdentityTests.swift */,
 				8E0FF61A36B7ED02E4310E16 /* InputsTests.swift */,
 				F97E645E25E03BEFBE0AC30C /* TimelineTests.swift */,
 			);
@@ -324,6 +328,7 @@
 			children = (
 				98FA00B420026DB41B80C98E /* DiagnosticsView.swift */,
 				86D2278812D8CF439E6C0D1F /* HomeView.swift */,
+				F33FED72D53CC0A5A6E420E0 /* Info.plist */,
 				FBFEB01CEB22DC1D5EA04F76 /* InputsReceiver.swift */,
 				452146DDCB67FFECD2BB15FD /* PrivacyInfo.xcprivacy */,
 				92A0FEDCFBE6AF31E19F472F /* StatesView.swift */,
@@ -614,6 +619,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4FE93E12A8D52E1C2F57FE1 /* IdentityTests.swift in Sources */,
 				5F1E588AC8AFB73C4371A945 /* InputsTests.swift in Sources */,
 				62705C2CE15C1FF3F67C0125 /* TimelineTests.swift in Sources */,
 			);
@@ -765,11 +771,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Watch/WatchComplicationWatch.entitlements;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Watch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WatchComplication;
 				INFOPLIST_KEY_WKApplication = YES;
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "io.github.salah-kit.WatchComplication";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "$(APP_BUNDLE_IDENTIFIER)";
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.WatchComplication.watchkitapp";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).watchkitapp";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(WATCHCOMPLICATION_ISOLATION)";
@@ -791,7 +798,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.WatchComplication";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(WATCHCOMPLICATION_ISOLATION)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -808,7 +815,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.WatchComplicationTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)Tests";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(WATCHCOMPLICATION_ISOLATION)";
@@ -827,7 +834,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.WatchUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER:base).WatchUITests";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(WATCHCOMPLICATION_ISOLATION)";
@@ -846,7 +853,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.CompanionUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER:base).CompanionUITests";
 				SDKROOT = iphoneos;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(WATCHCOMPLICATION_ISOLATION)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -864,7 +871,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.WatchUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER:base).WatchUITests";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(WATCHCOMPLICATION_ISOLATION)";
@@ -883,7 +890,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.WatchComplication.watchkitapp.Complications";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).watchkitapp.Complications";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(WATCHCOMPLICATION_ISOLATION)";
@@ -897,11 +904,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Watch/WatchComplicationWatch.entitlements;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Watch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WatchComplication;
 				INFOPLIST_KEY_WKApplication = YES;
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "io.github.salah-kit.WatchComplication";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "$(APP_BUNDLE_IDENTIFIER)";
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.WatchComplication.watchkitapp";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).watchkitapp";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(WATCHCOMPLICATION_ISOLATION)";
@@ -980,7 +988,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.WatchComplicationTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)Tests";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(WATCHCOMPLICATION_ISOLATION)";
@@ -999,7 +1007,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.CompanionUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER:base).CompanionUITests";
 				SDKROOT = iphoneos;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(WATCHCOMPLICATION_ISOLATION)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1017,7 +1025,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.WatchComplication.watchkitapp.Complications";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).watchkitapp.Complications";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(WATCHCOMPLICATION_ISOLATION)";
@@ -1039,7 +1047,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.WatchComplication";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(WATCHCOMPLICATION_ISOLATION)";
 				TARGETED_DEVICE_FAMILY = 1;

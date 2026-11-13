@@ -39,6 +39,7 @@
 		924C9CBF22F1DDBAA542CBBE /* WidgetSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA8AEF04C61E715ACFCB3AF /* WidgetSettings.swift */; };
 		95022C63AF79589B325720D9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4813A2E36FF02526449D8AEA /* PrivacyInfo.xcprivacy */; };
 		AA5AA4F2E6C756CBB1809AAF /* WidgetDisplayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6086E1814AAF7095D89098 /* WidgetDisplayTests.swift */; };
+		AACA7D3AF0E5FE4686EDEDB6 /* IdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37071111208EC22D3EB2B86 /* IdentityTests.swift */; };
 		B34742CE923A7ADFCD339194 /* WidgetStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B82086E4D31A84CCF25D9F9D /* WidgetStrings.swift */; };
 		BAA08DE9C43E1E388FDD40D4 /* WidgetPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B7199821B8BC7EE50A618B /* WidgetPalette.swift */; };
 		C176F2936FB5B4B6BB541A71 /* SalahWidgets in Frameworks */ = {isa = PBXBuildFile; productRef = 4E14F956E8528AF5C6AE4488 /* SalahWidgets */; };
@@ -93,6 +94,7 @@
 /* Begin PBXFileReference section */
 		02CD6441F8D8665D05EA1461 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		098245B69FEDBA167A21E54B /* PhoneWidgetsTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PhoneWidgetsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E7347A78136581542D48D90 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1FCD9970FC0ADAB9490EBBBD /* SalahKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SalahKit; path = ../..; sourceTree = SOURCE_ROOT; };
 		2D3967C282B0D72A762D5B25 /* PhoneWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PhoneWidgets.entitlements; sourceTree = "<group>"; };
 		2E39A1BF6E207A7F7C90D4E0 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 		EC47D34728B0E831EA92F16D /* TimelineProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineProviderTests.swift; sourceTree = "<group>"; };
 		EEA274CC405B73077EA1D11B /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		F2024D365BFAE25DA2E753CF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F37071111208EC22D3EB2B86 /* IdentityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +217,7 @@
 		78DF9652D9E50CA8D4A7A766 /* PhoneWidgetsTests */ = {
 			isa = PBXGroup;
 			children = (
+				F37071111208EC22D3EB2B86 /* IdentityTests.swift */,
 				EEA274CC405B73077EA1D11B /* SettingsTests.swift */,
 				EC47D34728B0E831EA92F16D /* TimelineProviderTests.swift */,
 				AB6086E1814AAF7095D89098 /* WidgetDisplayTests.swift */,
@@ -256,6 +260,7 @@
 		E9F1F70479580B3960EEAD23 /* PhoneWidgets */ = {
 			isa = PBXGroup;
 			children = (
+				1E7347A78136581542D48D90 /* Info.plist */,
 				CD23708CA7CDD74720E3A509 /* LaunchOptions.swift */,
 				2D3967C282B0D72A762D5B25 /* PhoneWidgets.entitlements */,
 				43561602B1D05445F167E48D /* PhoneWidgetsApp.swift */,
@@ -435,6 +440,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AACA7D3AF0E5FE4686EDEDB6 /* IdentityTests.swift in Sources */,
 				392ECE503DA5061100A8015A /* SettingsTests.swift in Sources */,
 				32400285AD0735B6B9FAE0A3 /* TimelineProviderTests.swift in Sources */,
 				AA5AA4F2E6C756CBB1809AAF /* WidgetDisplayTests.swift in Sources */,
@@ -519,7 +525,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.PhoneWidgets.Widgets";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).Widgets";
 				PRODUCT_NAME = PhoneWidgetsWidgets;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -538,7 +544,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.PhoneWidgetsUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)UITests";
 				SDKROOT = iphoneos;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(PHONEWIDGETS_ISOLATION)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -556,7 +562,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.PhoneWidgetsTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)Tests";
 				SDKROOT = iphoneos;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(PHONEWIDGETS_ISOLATION)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -574,7 +580,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.PhoneWidgetsTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)Tests";
 				SDKROOT = iphoneos;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(PHONEWIDGETS_ISOLATION)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -589,6 +595,7 @@
 				CODE_SIGN_ENTITLEMENTS = PhoneWidgets/PhoneWidgets.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PhoneWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PhoneWidgets;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -597,7 +604,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.PhoneWidgets";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(PHONEWIDGETS_ISOLATION)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -614,7 +621,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.PhoneWidgetsUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)UITests";
 				SDKROOT = iphoneos;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(PHONEWIDGETS_ISOLATION)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -629,6 +636,7 @@
 				CODE_SIGN_ENTITLEMENTS = PhoneWidgets/PhoneWidgets.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PhoneWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PhoneWidgets;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -637,7 +645,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.PhoneWidgets";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(PHONEWIDGETS_ISOLATION)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -656,7 +664,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.github.salah-kit.PhoneWidgets.Widgets";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).Widgets";
 				PRODUCT_NAME = PhoneWidgetsWidgets;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;

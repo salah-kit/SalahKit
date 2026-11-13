@@ -8,6 +8,14 @@ All notable changes to this project are documented here. The format follows
 
 ### Changed
 
+- The examples take their bundle identifiers from a build setting, `APP_BUNDLE_IDENTIFIER` in
+  each example's `Config/Shared.xcconfig`, and PhoneWidgets, WatchComplication and MenuBar take
+  their App Group from `APP_GROUP_IDENTIFIER` there. Apple registers an identifier and a group
+  to one team, so only the team that held the examples' own could sign them; now a developer
+  names their own in `Config/Local.xcconfig`, beside their team. The entitlements and the code
+  read the same setting (the code through an `AppGroupIdentifier` key in the Info.plist), so
+  an app and its extension can't name different groups. The examples' own identifiers stay
+  the defaults.
 - `PrayerLocale.resolved` follows CLDR's default digits for the country an Arabic identifier
   names: `ar-AE`, `ar-DZ`, `ar-EH`, `ar-LY`, `ar-MA` and `ar-TN` now get Latin digits instead of
   Arabic-Indic ones. A bare `ar` and every other Arabic region keep Arabic-Indic digits, and an

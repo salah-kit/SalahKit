@@ -87,7 +87,15 @@ the destination). Each example's README lists its tests and how to run them.
 | `MenuBar` | macOS | For the sandboxed App Group its app, widget extension and stop harness share; its tests also run unsigned |
 
 Simulator builds need no signing. To sign an example, copy its `Config/Local.xcconfig.example` to
-`Config/Local.xcconfig` (gitignored) and set your team there; never commit a team.
+`Config/Local.xcconfig` (gitignored) and set your team there; never commit a team. Unless your
+team holds the example's own identifiers, uncomment the identifier lines there and name your own
+too: Apple registers a bundle identifier and an App Group to one team, and the ones each example's
+`Config/Shared.xcconfig` names are registered to the maintainers' team. `APP_BUNDLE_IDENTIFIER` is
+the example's main app's, and its other targets' follow it. `APP_GROUP_IDENTIFIER`, in the
+examples that share an App Group, goes into each target's entitlements and into the
+`AppGroupIdentifier` key of its Info.plist, where the code reads it. Unsigned builds, simulator
+builds and unit tests need neither setting; a test run signed with a team, such as MenuBar's
+signed run of its round-trip tests and journeys, needs them as any signed build does.
 
 ## Vectors
 

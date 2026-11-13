@@ -6,7 +6,6 @@
 # name changes the project and fails CI's generate check.
 name: PhoneWidgets
 options:
-  bundleIdPrefix: io.github.salah-kit
   deploymentTarget:
     # iOS 17 for `containerBackground(for: .widget)`.
     iOS: "17.0"
@@ -58,11 +57,13 @@ targets:
       path: PhoneWidgets/PhoneWidgets.entitlements
       properties:
         com.apple.security.application-groups:
-          - group.io.github.salah-kit.PhoneWidgets
+          - $(APP_GROUP_IDENTIFIER)
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.PhoneWidgets
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)
         GENERATE_INFOPLIST_FILE: YES
+        # Names the App Group, where the shared code reads it (PhoneWidgetsID.appGroup).
+        INFOPLIST_FILE: PhoneWidgets/Info.plist
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(PHONEWIDGETS_ISOLATION)
         # iPhone only. Set per target: XcodeGen's iOS preset writes "1,2" at target level, which
         # would override a project-level value.
@@ -94,16 +95,18 @@ targets:
         # An extension's versions must match its app's.
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # The App Group, where the shared code reads it (PhoneWidgetsID.appGroup).
+        AppGroupIdentifier: $(APP_GROUP_IDENTIFIER)
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     entitlements:
       path: Widgets/Widgets.entitlements
       properties:
         com.apple.security.application-groups:
-          - group.io.github.salah-kit.PhoneWidgets
+          - $(APP_GROUP_IDENTIFIER)
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.PhoneWidgets.Widgets
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER).Widgets
         PRODUCT_NAME: PhoneWidgetsWidgets
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: PhoneWidgets
@@ -120,7 +123,7 @@ targets:
       - target: PhoneWidgets
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.PhoneWidgetsTests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)Tests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(PHONEWIDGETS_ISOLATION)
         TARGETED_DEVICE_FAMILY: "1"
@@ -133,7 +136,7 @@ targets:
       - target: PhoneWidgets
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.PhoneWidgetsUITests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)UITests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(PHONEWIDGETS_ISOLATION)
         TARGETED_DEVICE_FAMILY: "1"

@@ -6,8 +6,15 @@ import SalahWidgets
 
 /// The identifiers the app and the extension share.
 nonisolated enum PhoneWidgetsID {
-  /// The App Group both targets declare in their entitlements.
-  static let appGroup = "group.io.github.salah-kit.PhoneWidgets"
+  /// The App Group the app and the widget extension share.
+  ///
+  /// The build writes `APP_GROUP_IDENTIFIER` (Config/Shared.xcconfig, or your own in
+  /// Config/Local.xcconfig) into each target's entitlements and into the `AppGroupIdentifier`
+  /// key of its Info.plist, where this reads it, so the code and the entitlements always name
+  /// the same group. A process without the key gets the example's own.
+  static let appGroup =
+    Bundle.main.object(forInfoDictionaryKey: "AppGroupIdentifier") as? String
+    ?? "group.io.github.salah-kit.PhoneWidgets"
   /// The widget's kind, which the app names when it asks WidgetKit for a reload.
   static let widgetKind = "io.github.salah-kit.PhoneWidgets.prayers"
   /// The `os.Logger` subsystem of both targets.

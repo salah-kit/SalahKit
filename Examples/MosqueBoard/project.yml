@@ -6,7 +6,6 @@
 # name changes the project and fails CI's generate check.
 name: MosqueBoard
 options:
-  bundleIdPrefix: io.github.salah-kit
   deploymentTarget:
     iOS: "17.0"
     tvOS: "17.0"
@@ -40,7 +39,7 @@ targets:
         product: SalahCore
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MosqueBoard
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)
         GENERATE_INFOPLIST_FILE: YES
         # iPad only. Set per target: XcodeGen's iOS preset writes "1,2" at target level, which
         # would override a project-level value.
@@ -62,7 +61,7 @@ targets:
       - target: MosqueBoard
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MosqueBoardTests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)Tests
         GENERATE_INFOPLIST_FILE: YES
         TARGETED_DEVICE_FAMILY: "2"
   MosqueBoardUITests:
@@ -75,7 +74,7 @@ targets:
       - target: MosqueBoard
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MosqueBoardUITests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)UITests
         GENERATE_INFOPLIST_FILE: YES
         TARGETED_DEVICE_FAMILY: "2"
         TEST_TARGET_NAME: MosqueBoard
@@ -98,7 +97,7 @@ targets:
       base:
         PRODUCT_NAME: MosqueBoard
         # One App Store record for the iPad and the TV app (universal purchase).
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MosqueBoard
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: MosqueBoard
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
@@ -114,7 +113,7 @@ targets:
       - target: MosqueBoardTV
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MosqueBoardTVTests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)TVTests
         GENERATE_INFOPLIST_FILE: YES
   MosqueBoardTVUITests:
     type: bundle.ui-testing
@@ -126,7 +125,7 @@ targets:
       - target: MosqueBoardTV
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MosqueBoardTVUITests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)TVUITests
         GENERATE_INFOPLIST_FILE: YES
         TEST_TARGET_NAME: MosqueBoardTV
 schemes:

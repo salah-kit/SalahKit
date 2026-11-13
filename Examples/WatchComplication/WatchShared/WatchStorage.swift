@@ -6,8 +6,15 @@ import SalahWidgets
 /// The iPhone has no access to it. The watch app is the only writer of the inputs and the
 /// receipt; the complication extension is the only writer of the timeline log.
 nonisolated enum WatchStorage {
-  /// The watch's App Group, shared by the watch app and the complication extension only.
-  static let appGroup = "group.io.github.salah-kit.WatchComplication"
+  /// The App Group of the watch, shared by the watch app and the complication extension only.
+  ///
+  /// The build writes `APP_GROUP_IDENTIFIER` (Config/Shared.xcconfig, or your own in
+  /// Config/Local.xcconfig) into each target's entitlements and into the `AppGroupIdentifier`
+  /// key of its Info.plist, where this reads it, so the code and the entitlements always name
+  /// the same group. A process without the key gets the example's own.
+  static let appGroup =
+    Bundle.main.object(forInfoDictionaryKey: "AppGroupIdentifier") as? String
+    ?? "group.io.github.salah-kit.WatchComplication"
   /// The complication's widget kind, reloaded when the stored inputs change.
   static let complicationKind = "PrayerComplication"
   /// The logging subsystem of every process in the example.

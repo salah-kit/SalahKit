@@ -6,7 +6,6 @@
 # name changes the project and fails CI's generate check.
 name: CalculatedPhone
 options:
-  bundleIdPrefix: io.github.salah-kit
   deploymentTarget:
     iOS: "17.0"
   developmentLanguage: en
@@ -49,7 +48,7 @@ targets:
         product: SalahUI
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.CalculatedPhone
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(CALCULATEDPHONE_ISOLATION)
         # iPhone only. Set per target: XcodeGen's iOS preset writes "1,2" at target level, which
@@ -69,7 +68,7 @@ targets:
       - target: CalculatedPhone
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.CalculatedPhoneTests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)Tests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(CALCULATEDPHONE_ISOLATION)
         TARGETED_DEVICE_FAMILY: "1"
@@ -82,7 +81,7 @@ targets:
       - target: CalculatedPhone
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.CalculatedPhoneUITests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)UITests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(CALCULATEDPHONE_ISOLATION)
         TARGETED_DEVICE_FAMILY: "1"

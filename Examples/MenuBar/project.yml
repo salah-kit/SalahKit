@@ -6,7 +6,6 @@
 # name changes the project and fails CI's generate check.
 name: MenuBar
 options:
-  bundleIdPrefix: io.github.salah-kit
   deploymentTarget:
     # macOS 14 for the widget's interactive Stop button (`Button(intent:)`).
     macOS: "14.0"
@@ -66,11 +65,13 @@ targets:
       properties:
         com.apple.security.app-sandbox: true
         com.apple.security.application-groups:
-          - group.io.github.salah-kit.MenuBar
+          - $(APP_GROUP_IDENTIFIER)
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MenuBar
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)
         GENERATE_INFOPLIST_FILE: YES
+        # Names the App Group, where the shared code reads it (MenuBarID.appGroup).
+        INFOPLIST_FILE: MenuBar/Info.plist
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(MENUBAR_ISOLATION)
         INFOPLIST_KEY_CFBundleDisplayName: MenuBar
         # A menu-bar app: no Dock icon, no main menu.
@@ -101,6 +102,8 @@ targets:
         # An extension's versions must match its app's.
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # The App Group, where the shared code reads it (MenuBarID.appGroup).
+        AppGroupIdentifier: $(APP_GROUP_IDENTIFIER)
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     entitlements:
@@ -109,10 +112,10 @@ targets:
         # WidgetKit runs only sandboxed extensions on macOS.
         com.apple.security.app-sandbox: true
         com.apple.security.application-groups:
-          - group.io.github.salah-kit.MenuBar
+          - $(APP_GROUP_IDENTIFIER)
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MenuBar.Widgets
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER).Widgets
         PRODUCT_NAME: MenuBarWidgets
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: MenuBar
@@ -142,11 +145,13 @@ targets:
       properties:
         com.apple.security.app-sandbox: true
         com.apple.security.application-groups:
-          - group.io.github.salah-kit.MenuBar
+          - $(APP_GROUP_IDENTIFIER)
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MenuBar.StopHarness
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER).StopHarness
         GENERATE_INFOPLIST_FILE: YES
+        # Names the App Group, where the shared code reads it (MenuBarID.appGroup).
+        INFOPLIST_FILE: StopHarness/Info.plist
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(MENUBAR_ISOLATION)
         # A command-line process in an app bundle, so it can carry the App Group's provisioning
         # profile: no Dock icon, no menu, no window.
@@ -162,7 +167,7 @@ targets:
       - target: MenuBar
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MenuBarTests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)Tests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(MENUBAR_ISOLATION)
   # The stop round trip and the simulated sleep and clock change. No host app: the tests run in
@@ -188,8 +193,10 @@ targets:
         product: SalahCalculation
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MenuBarRoundTripTests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)RoundTripTests
         GENERATE_INFOPLIST_FILE: YES
+        # Names the app the tests start and quit.
+        INFOPLIST_FILE: MenuBarRoundTripTests/Info.plist
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(MENUBAR_ISOLATION)
         TEST_HOST: ""
         BUNDLE_LOADER: ""
@@ -207,7 +214,7 @@ targets:
         product: SalahCalculation
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.salah-kit.MenuBarUITests
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)UITests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(MENUBAR_ISOLATION)
         TEST_TARGET_NAME: MenuBar

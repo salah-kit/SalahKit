@@ -49,7 +49,7 @@ These are the journeys' screenshot attachments, exported from a test run on an i
 
 ## Building and running
 
-Open `CalculatedPhone.xcodeproj` and run the `CalculatedPhone` scheme on an iPhone simulator. Simulator builds need no signing. To run on a device, copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` and set your team there; it's gitignored.
+Open `CalculatedPhone.xcodeproj` and run the `CalculatedPhone` scheme on an iPhone simulator. Simulator builds need no signing. To run on a device, copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` (gitignored) and set your team there, and uncomment `APP_BUNDLE_IDENTIFIER` to name a bundle identifier of your own: Apple registers an identifier to one team, so a build signed with yours needs its own. The test bundles' identifiers follow it.
 
 From the command line, in this folder:
 

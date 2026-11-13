@@ -36,9 +36,13 @@ watch="$2"
 derived="${3:-.derived/paired}"
 results="${derived}/paired-results"
 project=WatchComplication.xcodeproj
+# The example's own identifiers. The script builds under them whatever Config/Local.xcconfig
+# names, so its simctl commands can name the apps and the App Group; the steps below run what
+# those builds produced.
 companion_id=io.github.salah-kit.WatchComplication
-watch_id=io.github.salah-kit.WatchComplication.watchkitapp
+watch_id="${companion_id}.watchkitapp"
 group_id=group.io.github.salah-kit.WatchComplication
+identity=(APP_BUNDLE_IDENTIFIER="${companion_id}" APP_GROUP_IDENTIFIER="${group_id}")
 mkdir -p "${results}"
 started="$(date '+%Y-%m-%d %H:%M:%S')"
 
@@ -50,9 +54,9 @@ trap shutdown EXIT
 
 echo "== Building for both simulators"
 xcodebuild build-for-testing -project "${project}" -scheme WatchComplication \
-  -destination "id=${phone}" -derivedDataPath "${derived}" -quiet
+  -destination "id=${phone}" -derivedDataPath "${derived}" -quiet "${identity[@]}"
 xcodebuild build-for-testing -project "${project}" -scheme WatchComplicationWatch \
-  -destination "id=${watch}" -derivedDataPath "${derived}" -quiet
+  -destination "id=${watch}" -derivedDataPath "${derived}" -quiet "${identity[@]}"
 
 echo "== Booting the pair"
 xcrun simctl boot "${phone}" 2>/dev/null || true
