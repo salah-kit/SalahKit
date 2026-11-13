@@ -25,6 +25,11 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
+- MenuBar's app, widget extension and stop harness set `REGISTER_APP_GROUPS`, so Xcode signs
+  each with a provisioning profile that grants the App Group. With a team that has a wildcard
+  profile, Xcode signed them with that one instead, which grants no group, and macOS kept the
+  app and the harness out of the group's container: the round-trip tests failed, and the
+  widget extension, signed the same way, would have read nothing the app stored.
 - `ThemeColor.adjustedForContrast(against:ratio:)` tries both white and black and returns the
   nearer color that reaches the ratio. It used to move toward white whenever the surface's
   relative luminance was below 0.5, so on a mid-tone surface it could end at white, below the

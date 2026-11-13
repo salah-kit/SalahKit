@@ -69,6 +69,11 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)
+        # macOS keeps a process out of a `group.` App Group's container unless its provisioning
+        # profile grants the group. This has Xcode register the group for the target and sign
+        # it with a profile that grants it, where it could otherwise use a team's wildcard
+        # profile, which grants none. The widget extension and the stop harness set it too.
+        REGISTER_APP_GROUPS: YES
         GENERATE_INFOPLIST_FILE: YES
         # Names the App Group, where the shared code reads it (MenuBarID.appGroup).
         INFOPLIST_FILE: MenuBar/Info.plist
@@ -116,6 +121,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER).Widgets
+        # As the app: a profile that grants the App Group.
+        REGISTER_APP_GROUPS: YES
         PRODUCT_NAME: MenuBarWidgets
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: MenuBar
@@ -149,6 +156,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER).StopHarness
+        # As the app: a profile that grants the App Group.
+        REGISTER_APP_GROUPS: YES
         GENERATE_INFOPLIST_FILE: YES
         # Names the App Group, where the shared code reads it (MenuBarID.appGroup).
         INFOPLIST_FILE: StopHarness/Info.plist

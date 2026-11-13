@@ -778,6 +778,7 @@
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).StopHarness";
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 			};
@@ -869,6 +870,7 @@
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)";
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 			};
@@ -890,6 +892,7 @@
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)";
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 			};
@@ -946,6 +949,7 @@
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).StopHarness";
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
 			};
@@ -1029,6 +1033,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).Widgets";
 				PRODUCT_NAME = MenuBarWidgets;
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";
@@ -1050,6 +1055,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER).Widgets";
 				PRODUCT_NAME = MenuBarWidgets;
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = "$(MENUBAR_ISOLATION)";

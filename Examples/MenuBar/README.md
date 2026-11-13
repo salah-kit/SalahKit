@@ -37,6 +37,8 @@ The app, the widget extension and the stop harness share the App Group `group.io
 1. Copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` (gitignored) and set your team, then uncomment `APP_BUNDLE_IDENTIFIER` and `APP_GROUP_IDENTIFIER` to name a bundle identifier and an App Group of your own. Apple registers an identifier and a group to one team, so a build signed with yours needs its own.
 2. Build with `-allowProvisioningUpdates`, or let Xcode manage signing: it registers the three bundle identifiers (yours, then `.Widgets` and `.StopHarness` after it) and the App Group.
 
+The three targets set `REGISTER_APP_GROUPS`, so Xcode registers the group for each of them and signs each with a provisioning profile that grants it. Without the setting, Xcode can sign a target with a team's wildcard profile, which grants no App Group, and macOS then keeps that process out of the group's container: it reads nothing the others stored.
+
 `Config/Shared.xcconfig` names the example's own identifiers, the defaults. Every target's bundle identifier follows `APP_BUNDLE_IDENTIFIER`. The build writes `APP_GROUP_IDENTIFIER` into the three targets' entitlements and into the `AppGroupIdentifier` key of their Info.plist, where `MenuBarID.appGroup` reads it, so the code always opens the group the entitlements grant. `MenuBarRoundTripTests` finds the running app by the `APP_BUNDLE_IDENTIFIER` its own Info.plist names.
 
 CI builds and tests unsigned (`CODE_SIGNING_ALLOWED=NO`): without entitlements nothing is sandboxed, and the app and the harness share the App Group's suite as plain preferences. The unit tests and the journeys run the same way; the signed run proves the sandboxed path.
