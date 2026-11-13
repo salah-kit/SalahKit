@@ -24,7 +24,7 @@ final class CompanionModel {
   @ObservationIgnored private var bridge: CompanionSessionBridge?
   @ObservationIgnored private var sendsWhenActive: Bool
   private static let logger = Logger(
-    subsystem: "com.omarkhaled.salah.examples.WatchComplication", category: "companion")
+    subsystem: "com.omarkhaled.salah.examples.Watch", category: "companion")
 
   /// The session's state, as the companion shows it.
   struct WatchLink: Equatable, Sendable {

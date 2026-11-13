@@ -39,9 +39,9 @@ project=WatchComplication.xcodeproj
 # The example's own identifiers. The script builds and tests under them whatever
 # Config/Local.xcconfig names, so its simctl commands can name the apps and the App Group, and
 # each step looks for the apps the builds produced.
-companion_id=com.omarkhaled.salah.examples.WatchComplication
+companion_id=com.omarkhaled.salah.examples.Watch
 watch_id="${companion_id}.watchkitapp"
-group_id=group.com.omarkhaled.salah.examples.WatchComplication
+group_id=group.com.omarkhaled.salah.examples.Watch
 identity=(APP_BUNDLE_IDENTIFIER="${companion_id}" APP_GROUP_IDENTIFIER="${group_id}")
 mkdir -p "${results}"
 started="$(date '+%Y-%m-%d %H:%M:%S')"
@@ -155,7 +155,7 @@ for name, passed in checks.items():
     print(("PASS " if passed else "FAIL ") + name)
 EOF
 cat "${results}/timeline-log.txt"
-predicate='subsystem == "com.omarkhaled.salah.examples.WatchComplication"'
+predicate='subsystem == "com.omarkhaled.salah.examples.Watch"'
 xcrun simctl spawn "${watch}" log show --start "${started}" \
   --predicate "${predicate}" --style compact > "${results}/watch-log.txt" 2>/dev/null || true
 xcrun simctl spawn "${phone}" log show --start "${started}" \
