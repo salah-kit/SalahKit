@@ -433,8 +433,8 @@ jobs:
 
       # The unit tests again, built as a developer signing with another team would build
       # them: under identifiers other than the example's own. With the example's own, the App
-      # Group the build names is also the one the code falls back to, so only this run fails when
-      # the watch app or the complication extension stops taking the group from the build
+      # Group the build names is also the one the code falls back to, so the run above passes
+      # even if the code or an Info.plist names the group itself. This one fails on either
       # (IdentityTests).
       - name: Unit tests under other identifiers
         run: |
@@ -481,7 +481,12 @@ jobs:
         uses: actions/upload-artifact@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
         with:
           name: WatchComplication.xcresult
-          path: Examples/WatchComplication/.derived/*.xcresult
+          # Each bundle by name: a wildcard would start the search in `.derived`, and the action
+          # skips a hidden folder.
+          path: |
+            Examples/WatchComplication/.derived/WatchComplicationWatch.xcresult
+            Examples/WatchComplication/.derived/Watch-identifiers.xcresult
+            Examples/WatchComplication/.derived/WatchComplication.xcresult
           if-no-files-found: ignore
 
   phonewidgets:
@@ -558,8 +563,9 @@ jobs:
 
       # The unit tests again, built as a developer signing with another team would build
       # them: under identifiers other than the example's own. With the example's own, the App
-      # Group the build names is also the one the code falls back to, so only this run fails when
-      # the app or the widget extension stops taking the group from the build (IdentityTests).
+      # Group the build names is also the one the code falls back to, so the run above passes
+      # even if the code or an Info.plist names the group itself. This one fails on either
+      # (IdentityTests).
       - name: Unit tests under other identifiers
         run: |
           udid="$(xcrun simctl list devices available | grep -E '^ +iPhone' | head -n 1 \
@@ -580,7 +586,11 @@ jobs:
         uses: actions/upload-artifact@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
         with:
           name: PhoneWidgets.xcresult
-          path: Examples/PhoneWidgets/.derived/*.xcresult
+          # Each bundle by name: a wildcard would start the search in `.derived`, and the action
+          # skips a hidden folder.
+          path: |
+            Examples/PhoneWidgets/.derived/PhoneWidgets.xcresult
+            Examples/PhoneWidgets/.derived/PhoneWidgets-identifiers.xcresult
           if-no-files-found: ignore
 
   menubar:
@@ -645,9 +655,9 @@ jobs:
 
       # The unit tests and the round trip again, built as a developer signing with another team
       # would build them: under identifiers other than the example's own. With the example's own,
-      # the App Group the build names is also the one the code falls back to, so only this run
-      # fails when the app or the widget extension stops taking the group from the build
-      # (IdentityTests), or when the app and the stop harness open different groups (the round
+      # the App Group the build names is also the one the code falls back to, so the run above
+      # passes even if the code or an Info.plist names the group itself. This one fails on either
+      # (IdentityTests), and when the app and the stop harness open different groups (the round
       # trip).
       - name: Unit tests and the round trip under other identifiers
         run: |
@@ -666,5 +676,9 @@ jobs:
         uses: actions/upload-artifact@v7 # zizmor: ignore[unpinned-uses] -- STANDARD.md pins official actions to a major version
         with:
           name: MenuBar.xcresult
-          path: Examples/MenuBar/.derived/*.xcresult
+          # Each bundle by name: a wildcard would start the search in `.derived`, and the action
+          # skips a hidden folder.
+          path: |
+            Examples/MenuBar/.derived/MenuBar.xcresult
+            Examples/MenuBar/.derived/MenuBar-identifiers.xcresult
           if-no-files-found: ignore
