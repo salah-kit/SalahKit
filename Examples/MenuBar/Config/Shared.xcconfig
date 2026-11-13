@@ -9,6 +9,6 @@ DEVELOPMENT_TEAM =
 // the Info.plist key the code reads take the group from here. Apple registers an identifier
 // to one team, so to sign with another, name your own in Local.xcconfig.
 APP_BUNDLE_IDENTIFIER = io.github.salah-kit.MenuBar
-APP_GROUP_IDENTIFIER = group.io.github.salah-kit.MenuBar
+APP_GROUP_IDENTIFIER = group.io.github.salah-kit.MenuBar.shared
 
 #include? "Local.xcconfig"

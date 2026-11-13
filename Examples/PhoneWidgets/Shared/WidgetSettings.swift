@@ -14,7 +14,7 @@ nonisolated enum PhoneWidgetsID {
   /// the same group. A process without the key gets the example's own.
   static let appGroup =
     Bundle.main.object(forInfoDictionaryKey: "AppGroupIdentifier") as? String
-    ?? "group.io.github.salah-kit.PhoneWidgets"
+    ?? "group.io.github.salah-kit.PhoneWidgets.shared"
   /// The widget's kind, which the app names when it asks WidgetKit for a reload.
   static let widgetKind = "io.github.salah-kit.PhoneWidgets.prayers"
   /// The `os.Logger` subsystem of both targets.

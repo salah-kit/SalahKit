@@ -32,7 +32,7 @@ These are the journeys' screenshot attachments, exported with `xcrun xcresulttoo
 
 ## App Group and signing
 
-The app, the widget extension and the stop harness share the App Group (`APP_GROUP_IDENTIFIER` in `Config/Shared.xcconfig`, `group.io.github.salah-kit.MenuBar` by default), and all three are sandboxed (WidgetKit runs only sandboxed extensions on macOS). On macOS an App Group named `group.…` must be authorized by a provisioning profile, so running the app needs a signing team:
+The app, the widget extension and the stop harness share the App Group (`APP_GROUP_IDENTIFIER` in `Config/Shared.xcconfig`, `group.io.github.salah-kit.MenuBar.shared` by default), and all three are sandboxed (WidgetKit runs only sandboxed extensions on macOS). On macOS an App Group named `group.…` must be authorized by a provisioning profile, so running the app needs a signing team:
 
 1. Copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` (gitignored) and set your team, then uncomment `APP_BUNDLE_IDENTIFIER` and `APP_GROUP_IDENTIFIER` to name a bundle identifier and an App Group of your own. Apple registers an identifier and a group to one team, so a build signed with yours needs its own.
 2. Build with `-allowProvisioningUpdates`, or let Xcode manage signing: it registers the three bundle identifiers (yours, then `.Widgets` and `.StopHarness` after it) and the App Group.

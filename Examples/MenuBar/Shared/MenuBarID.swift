@@ -11,7 +11,7 @@ nonisolated enum MenuBarID {
   /// the same group. A process without the key gets the example's own.
   static let appGroup =
     Bundle.main.object(forInfoDictionaryKey: "AppGroupIdentifier") as? String
-    ?? "group.io.github.salah-kit.MenuBar"
+    ?? "group.io.github.salah-kit.MenuBar.shared"
   /// The widget's kind, which the app names when it asks WidgetKit for a reload.
   static let widgetKind = "io.github.salah-kit.MenuBar.prayers"
   /// The signal the widget's Stop button posts and the running app observes. The name belongs

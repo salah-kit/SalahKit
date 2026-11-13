@@ -14,7 +14,7 @@ nonisolated enum WatchStorage {
   /// the same group. A process without the key gets the example's own.
   static let appGroup =
     Bundle.main.object(forInfoDictionaryKey: "AppGroupIdentifier") as? String
-    ?? "group.io.github.salah-kit.WatchComplication"
+    ?? "group.io.github.salah-kit.WatchComplication.shared"
   /// The complication's widget kind, reloaded when the stored inputs change.
   static let complicationKind = "PrayerComplication"
   /// The logging subsystem of every process in the example.

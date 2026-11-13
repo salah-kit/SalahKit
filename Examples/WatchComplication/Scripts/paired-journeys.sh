@@ -41,7 +41,7 @@ project=WatchComplication.xcodeproj
 # each step looks for the apps the builds produced.
 companion_id=io.github.salah-kit.WatchComplication
 watch_id="${companion_id}.watchkitapp"
-group_id=group.io.github.salah-kit.WatchComplication
+group_id=group.io.github.salah-kit.WatchComplication.shared
 identity=(APP_BUNDLE_IDENTIFIER="${companion_id}" APP_GROUP_IDENTIFIER="${group_id}")
 mkdir -p "${results}"
 started="$(date '+%Y-%m-%d %H:%M:%S')"

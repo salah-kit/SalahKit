@@ -14,8 +14,10 @@ All notable changes to this project are documented here. The format follows
   to one team, so only the team that held the examples' own could sign them; now a developer
   names their own in `Config/Local.xcconfig`, beside their team. The entitlements and the code
   read the same setting (the code through an `AppGroupIdentifier` key in the Info.plist), so
-  an app and its extension can't name different groups. The examples' own identifiers stay
-  the defaults.
+  an app and its extension can't name different groups. The examples' own bundle identifiers
+  stay the defaults. Their App Groups are now `group.io.github.salah-kit.<Example>.shared`:
+  an App Group identifier is unique across Apple's developer teams, and PhoneWidgets' and
+  WatchComplication's shorter names are registered to a team that can't release them.
 - `PrayerLocale.resolved` follows CLDR's default digits for the country an Arabic identifier
   names: `ar-AE`, `ar-DZ`, `ar-EH`, `ar-LY`, `ar-MA` and `ar-TN` now get Latin digits instead of
   Arabic-Indic ones. A bare `ar` and every other Arabic region keep Arabic-Indic digits, and an
