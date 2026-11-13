@@ -11,7 +11,7 @@
   struct DarwinSignalTests {
     /// A name no other test or process uses.
     static func uniqueName() -> String {
-      "io.github.salah-kit.tests.signal.\(UUID().uuidString)"
+      "com.omarkhaled.salah.tests.signal.\(UUID().uuidString)"
     }
 
     @Test("a helper process posts and this process observes")

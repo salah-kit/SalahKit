@@ -11,12 +11,12 @@ nonisolated enum MenuBarID {
   /// the same group. A process without the key gets the example's own.
   static let appGroup =
     Bundle.main.object(forInfoDictionaryKey: "AppGroupIdentifier") as? String
-    ?? "group.io.github.salah-kit.MenuBar.shared"
+    ?? "group.com.omarkhaled.salah.examples.MenuBar"
   /// The widget's kind, which the app names when it asks WidgetKit for a reload.
-  static let widgetKind = "io.github.salah-kit.MenuBar.prayers"
+  static let widgetKind = "com.omarkhaled.salah.examples.MenuBar.prayers"
   /// The signal the widget's Stop button posts and the running app observes. The name belongs
   /// to this app, so no other process posts it by accident.
-  static let stopSignal = DarwinSignal(name: "io.github.salah-kit.MenuBar.stop")
+  static let stopSignal = DarwinSignal(name: "com.omarkhaled.salah.examples.MenuBar.stop")
   /// The `os.Logger` subsystem of every target.
-  static let logSubsystem = "io.github.salah-kit.MenuBar"
+  static let logSubsystem = "com.omarkhaled.salah.examples.MenuBar"
 }

@@ -105,10 +105,11 @@ nonisolated extension SharedValue where Value == DiagnosticsLog {
 nonisolated enum TestEventSignal {
   /// The Mac slept through ``sleepSeconds`` and woke: the app moves its clock forward and posts
   /// `NSWorkspace.didWakeNotification` in its own process.
-  static let sleep = DarwinSignal(name: "io.github.salah-kit.MenuBar.test.sleep")
+  static let sleep = DarwinSignal(name: "com.omarkhaled.salah.examples.MenuBar.test.sleep")
   /// The clock was set ``clockChangeSeconds`` ahead: the app moves its clock forward and posts
   /// `NSSystemClockDidChange` in its own process.
-  static let clockChange = DarwinSignal(name: "io.github.salah-kit.MenuBar.test.clockChange")
+  static let clockChange = DarwinSignal(
+    name: "com.omarkhaled.salah.examples.MenuBar.test.clockChange")
 
   static let sleepSeconds: TimeInterval = 3 * 60
   static let clockChangeSeconds: TimeInterval = 10 * 60

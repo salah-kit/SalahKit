@@ -55,7 +55,7 @@ struct AlertCoordinatorTests {
   }
 
   static func identifier(_ alert: PlannedAlert) -> String {
-    alert.id.requestIdentifier(prefix: "io.github.salah-kit.MenuBar.")
+    alert.id.requestIdentifier(prefix: "com.omarkhaled.salah.examples.MenuBar.")
   }
 
   @Test("the engine gets every alert of two days; the scheduler gets the budgeted plan")
@@ -351,7 +351,7 @@ struct AlertCoordinatorTests {
     let content = AlertContent(strings: MenuBarStrings(language: .english))
     let shared = rig.clock.shared
     let deferred = NotificationScheduler(
-      identifierPrefix: "io.github.salah-kit.MenuBar.", namespace: "prayers",
+      identifierPrefix: "com.omarkhaled.salah.examples.MenuBar.", namespace: "prayers",
       center: rig.center, now: { shared.value })
 
     rig.clock.jump(to: asr.time)

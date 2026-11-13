@@ -74,7 +74,7 @@
     }
 
     /// The queue notify(3) calls back on.
-    private static let queue = DispatchQueue(label: "io.github.salah-kit.DarwinSignal")
+    private static let queue = DispatchQueue(label: "com.omarkhaled.salah.DarwinSignal")
 
     /// The handler of one observation, which only the observation keeps alive.
     @MainActor

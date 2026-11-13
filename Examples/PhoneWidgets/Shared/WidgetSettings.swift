@@ -14,11 +14,11 @@ nonisolated enum PhoneWidgetsID {
   /// the same group. A process without the key gets the example's own.
   static let appGroup =
     Bundle.main.object(forInfoDictionaryKey: "AppGroupIdentifier") as? String
-    ?? "group.io.github.salah-kit.PhoneWidgets.shared"
+    ?? "group.com.omarkhaled.salah.examples.PhoneWidgets"
   /// The widget's kind, which the app names when it asks WidgetKit for a reload.
-  static let widgetKind = "io.github.salah-kit.PhoneWidgets.prayers"
+  static let widgetKind = "com.omarkhaled.salah.examples.PhoneWidgets.prayers"
   /// The `os.Logger` subsystem of both targets.
-  static let logSubsystem = "io.github.salah-kit.PhoneWidgets"
+  static let logSubsystem = "com.omarkhaled.salah.examples.PhoneWidgets"
 }
 
 /// The language of the widget's prayer names and wording.

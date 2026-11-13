@@ -7,6 +7,6 @@ DEVELOPMENT_TEAM =
 // The example's identity: the app's bundle identifier, which the test bundles' follow. Apple
 // registers an identifier to one team, so to sign with another, name your own in
 // Local.xcconfig.
-APP_BUNDLE_IDENTIFIER = io.github.salah-kit.CalculatedPhone
+APP_BUNDLE_IDENTIFIER = com.omarkhaled.salah.examples.CalculatedPhone
 
 #include? "Local.xcconfig"

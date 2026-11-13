@@ -191,7 +191,7 @@ nonisolated final class ReloadRecorder: @unchecked Sendable {
 /// Storage of the test's own, in a suite no other test or process uses.
 enum TestStorage {
   static func suite() -> String {
-    "io.github.salah-kit.MenuBarTests.\(UUID().uuidString)"
+    "com.omarkhaled.salah.examples.MenuBarTests.\(UUID().uuidString)"
   }
 
   static func nowPlaying(_ recorder: ReloadRecorder = ReloadRecorder()) -> SharedValue<NowPlaying> {
@@ -204,7 +204,7 @@ enum TestStorage {
 
   /// A signal name no other test or process uses.
   static func signal() -> DarwinSignal {
-    DarwinSignal(name: "io.github.salah-kit.MenuBarTests.\(UUID().uuidString)")
+    DarwinSignal(name: "com.omarkhaled.salah.examples.MenuBarTests.\(UUID().uuidString)")
   }
 }
 

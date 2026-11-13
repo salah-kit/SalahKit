@@ -172,7 +172,7 @@ final class RunningApp {
   /// (`APP_BUNDLE_IDENTIFIER`).
   static let bundleIdentifier =
     Bundle(for: ProductsMarker.self).object(forInfoDictionaryKey: "AppBundleIdentifier")
-    as? String ?? "io.github.salah-kit.MenuBar"
+    as? String ?? "com.omarkhaled.salah.examples.MenuBar"
 
   private let process: Process
   /// The launch's identifier in the app's diagnostics log, once the harness has read it.

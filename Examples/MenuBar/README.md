@@ -32,7 +32,7 @@ These are the journeys' screenshot attachments, exported with `xcrun xcresulttoo
 
 ## App Group and signing
 
-The app, the widget extension and the stop harness share the App Group (`APP_GROUP_IDENTIFIER` in `Config/Shared.xcconfig`, `group.io.github.salah-kit.MenuBar.shared` by default), and all three are sandboxed (WidgetKit runs only sandboxed extensions on macOS). On macOS an App Group named `group.…` must be authorized by a provisioning profile, so running the app needs a signing team:
+The app, the widget extension and the stop harness share the App Group (`APP_GROUP_IDENTIFIER` in `Config/Shared.xcconfig`, `group.com.omarkhaled.salah.examples.MenuBar` by default), and all three are sandboxed (WidgetKit runs only sandboxed extensions on macOS). On macOS an App Group named `group.…` must be authorized by a provisioning profile, so running the app needs a signing team:
 
 1. Copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` (gitignored) and set your team, then uncomment `APP_BUNDLE_IDENTIFIER` and `APP_GROUP_IDENTIFIER` to name a bundle identifier and an App Group of your own. Apple registers an identifier and a group to one team, so a build signed with yours needs its own.
 2. Build with `-allowProvisioningUpdates`, or let Xcode manage signing: it registers the three bundle identifiers (yours, then `.Widgets` and `.StopHarness` after it) and the App Group.
@@ -112,7 +112,7 @@ H=<products>/MenuBarStopHarness.app/Contents/MacOS/MenuBarStopHarness
 "$H" clock     # with -testEvents: the clock set ten minutes ahead
 ```
 
-The app records what it does with playback, the stop signal and system events in a bounded log in the App Group (`DiagnosticsLog`, the example's evidence channel), and in the unified log under the subsystem `io.github.salah-kit.MenuBar`. `MenuBarRoundTripTests` runs the round trip against the running app: the app plays and the widget's timeline shows the Stop button; after `stop`, the app's log has `stopSignal`, `stopped signal wasPlaying=true` and `published playing=false`, the stored value is gone, and the widget's timeline, built by the extension's code in the harness's process, no longer shows the button.
+The app records what it does with playback, the stop signal and system events in a bounded log in the App Group (`DiagnosticsLog`, the example's evidence channel), and in the unified log under the subsystem `com.omarkhaled.salah.examples.MenuBar`. `MenuBarRoundTripTests` runs the round trip against the running app: the app plays and the widget's timeline shows the Stop button; after `stop`, the app's log has `stopSignal`, `stopped signal wasPlaying=true` and `published playing=false`, the stored value is gone, and the widget's timeline, built by the extension's code in the harness's process, no longer shows the button.
 
 On macOS 27 with Xcode 27.0, signed with a personal team, the app and the harness ran sandboxed with the App Group, and the Darwin signal reached the app from the harness's sandbox with no prompt.
 
@@ -138,5 +138,5 @@ Read the app's unified log with:
 
 ```sh
 /usr/bin/log show --last 20m --style compact \
-  --predicate 'subsystem == "io.github.salah-kit.MenuBar"'
+  --predicate 'subsystem == "com.omarkhaled.salah.examples.MenuBar"'
 ```

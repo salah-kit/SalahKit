@@ -35,7 +35,7 @@ The tvOS app shows the same board from the same code, with the same launch argum
 | `MosqueBoardUITests/`, `MosqueBoardTVUITests/` | The iPad and the tvOS journeys | One UI-test bundle each |
 | `JourneySupport/` | How the journeys launch the board and read it | Both UI-test bundles |
 
-The only platform differences in the shared code are the layout's sizes and colors (`BoardStyle` in `Shared/BoardView.swift`) and the tvOS app delegate. The tvOS target's product and module are named `MosqueBoard`, like the iPad app's, so the same unit tests import it, and both apps use one bundle identifier, `APP_BUNDLE_IDENTIFIER` in `Config/Shared.xcconfig` (`io.github.salah-kit.MosqueBoard`), as one App Store app for iPad and Apple TV would.
+The only platform differences in the shared code are the layout's sizes and colors (`BoardStyle` in `Shared/BoardView.swift`) and the tvOS app delegate. The tvOS target's product and module are named `MosqueBoard`, like the iPad app's, so the same unit tests import it, and both apps use one bundle identifier, `APP_BUNDLE_IDENTIFIER` in `Config/Shared.xcconfig` (`com.omarkhaled.salah.examples.MosqueBoard`), as one App Store app for iPad and Apple TV would.
 
 ## The data
 

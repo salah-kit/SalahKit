@@ -6,7 +6,7 @@ PhoneWidgets is SalahKit's widget example. It builds on [CalculatedPhone](../Cal
 
 ## What it shows
 
-- **One file of settings, two processes.** `WidgetSettings` (the place, `CalculationSettings`, the method and the language) is `Codable`, `Equatable` and `Sendable`, stored with `SharedValue` under the versioned key `settings.v1` in the App Group (`APP_GROUP_IDENTIFIER` in `Config/Shared.xcconfig`, `group.io.github.salah-kit.PhoneWidgets.shared` by default). The app is its only writer.
+- **One file of settings, two processes.** `WidgetSettings` (the place, `CalculationSettings`, the method and the language) is `Codable`, `Equatable` and `Sendable`, stored with `SharedValue` under the versioned key `settings.v1` in the App Group (`APP_GROUP_IDENTIFIER` in `Config/Shared.xcconfig`, `group.com.omarkhaled.salah.examples.PhoneWidgets` by default). The app is its only writer.
 - **Reload gating.** Every change goes through `SharedValue.save(_:reloading:)` with the widget's kind, which asks WidgetKit for a reload only when the stored value changed. The app shows the answer for each save: "Save 3: changed, widget reload requested." or "Save 4: unchanged, no reload requested.", and has a button that saves the same settings again.
 - **The timeline in the extension.** `PrayerTimelineProvider.timeline(settings:now:)` is a pure function the extension's `TimelineProvider` calls and the tests call with a fixed clock. Without settings it returns one setup-required entry that never reloads. With settings it builds `PrayerSchedule(source: CalculationSource(…), location:)` and `PrayerTimelineBuilder` with `.stateChanges` over the default 48-hour horizon: an entry wherever the state changes, the timeline-expired entry at `validUntil`, and a reload halfway there. It enables `includeDayBoundaries` so the builder adds midnight entries in the place's zone within the same entry budget.
 - **A dynamic countdown.** The countdown is SalahUI's live one, `Text(timerInterval:)`, so the timeline needs entries only where the state changes.
@@ -137,7 +137,7 @@ xcodebuild test -project PhoneWidgets.xcodeproj -scheme PhoneWidgets \
 
 ## The diagnostics log
 
-The extension's evidence channel, kept to one file, `Shared/Diagnostics.swift`, and clearly marked: a widget built on this example doesn't need it. On every `getTimeline` the extension appends a record to `diagnostics.v1.json` in the App Group container (the last 200, written atomically; the extension is its only writer) and writes the same line to the unified log (subsystem `io.github.salah-kit.PhoneWidgets`, category `timeline`). Each record holds:
+The extension's evidence channel, kept to one file, `Shared/Diagnostics.swift`, and clearly marked: a widget built on this example doesn't need it. On every `getTimeline` the extension appends a record to `diagnostics.v1.json` in the App Group container (the last 200, written atomically; the extension is its only writer) and writes the same line to the unified log (subsystem `com.omarkhaled.salah.examples.PhoneWidgets`, category `timeline`). Each record holds:
 
 - the call's sequence number, date and family;
 - the fingerprint of the settings the extension read (a 64-bit FNV-1a hash of their JSON, shown in the app too) or `none`, and a summary such as `makkah · ummAlQura · ar`;
@@ -149,7 +149,7 @@ The app's Widget log screen shows the latest record in full, the earlier ones fo
 
 ```sh
 xcrun simctl spawn booted log show --last 1h \
-  --predicate 'subsystem == "io.github.salah-kit.PhoneWidgets"'
+  --predicate 'subsystem == "com.omarkhaled.salah.examples.PhoneWidgets"'
 ```
 
 ### Measured cost

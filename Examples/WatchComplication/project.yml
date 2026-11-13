@@ -169,7 +169,7 @@ targets:
     settings:
       base:
         # The companion's identifier without its last part (`:base`), then the target's name:
-        # io.github.salah-kit.WatchUITests by default.
+        # com.omarkhaled.salah.examples.WatchUITests by default.
         PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER:base).WatchUITests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)
@@ -187,7 +187,7 @@ targets:
     settings:
       base:
         # The companion's identifier without its last part (`:base`), then the target's name:
-        # io.github.salah-kit.CompanionUITests by default.
+        # com.omarkhaled.salah.examples.CompanionUITests by default.
         PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER:base).CompanionUITests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: $(WATCHCOMPLICATION_ISOLATION)

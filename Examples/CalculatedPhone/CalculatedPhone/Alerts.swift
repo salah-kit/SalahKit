@@ -55,7 +55,7 @@ nonisolated enum PhoneAlertPlanning {
   /// The namespace of the app's prayer alerts.
   static let namespace = "prayers"
   /// The prefix of every request identifier the app writes.
-  static let identifierPrefix = "io.github.salah-kit.CalculatedPhone."
+  static let identifierPrefix = "com.omarkhaled.salah.examples.CalculatedPhone."
   /// The thread that groups the app's notifications.
   static let thread = "prayers"
   /// How far ahead the app plans.

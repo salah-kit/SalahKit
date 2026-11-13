@@ -32,7 +32,7 @@ final class AlertCoordinator {
   @ObservationIgnored private var generation = 0
   @ObservationIgnored private var probeCount: Int?
   @ObservationIgnored private let log = Logger(
-    subsystem: "io.github.salah-kit.CalculatedPhone", category: "alerts")
+    subsystem: "com.omarkhaled.salah.examples.CalculatedPhone", category: "alerts")
 
   /// Creates a coordinator on `center`, the system's by default, wrapped in a failing center
   /// when `-failAlertAdds` asks for one. Requests the center rejects are tried again after

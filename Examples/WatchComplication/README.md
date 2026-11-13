@@ -12,7 +12,7 @@ WatchComplication is SalahKit's watch example. It uses only the public API of `S
 | Watch app | `WatchComplicationWatch` | Receives the inputs, stores them with `SharedValue` in the watch's App Group, reloads the complication when they change, and shows the current state |
 | Complication | `Complications` (watchOS WidgetKit extension) | Reads the inputs from the watch's App Group and builds its timeline with `PrayerTimelineBuilder` |
 
-A watch app doesn't share App Group storage with its iPhone app, so the watch keeps its own copy. The App Group (`APP_GROUP_IDENTIFIER` in `Config/Shared.xcconfig`, `group.io.github.salah-kit.WatchComplication.shared` by default) belongs to the watch app and its complication only. The companion never writes to it; it can only send.
+A watch app doesn't share App Group storage with its iPhone app, so the watch keeps its own copy. The App Group (`APP_GROUP_IDENTIFIER` in `Config/Shared.xcconfig`, `group.com.omarkhaled.salah.examples.WatchComplication` by default) belongs to the watch app and its complication only. The companion never writes to it; it can only send.
 
 **Why an application context.** The watch needs only the latest inputs. `updateApplicationContext(_:)` keeps one context: a newer one replaces a context the watch hasn't received yet, and the system delivers it when the watch app next runs, whether or not the companion is still running. `transferUserInfo(_:)` would queue every send and deliver stale inputs first. The context also persists on both sides (`applicationContext`, `receivedApplicationContext`), so the companion shows what the watch gets next even after it relaunches, and the watch app reads the last context again once its session is active, in case a delivery was missed. That re-read stores the context only when it was sent after the watch's last receipt, so it never brings back an older send over inputs stored or removed since (by `-preset` or `-resetInputs`); a live delivery is always stored. Delivery timing isn't guaranteed: the watch works from what it has until new inputs arrive.
 
@@ -66,11 +66,11 @@ These are the journeys' screenshot attachments, exported from test runs on an Ap
 
 ## Diagnostics
 
-The complication extension appends a record of each `getTimeline` call to the watch's App Group (`TimelineLog`, the latest 50): when it was asked, the family, the inputs' fingerprint or `none`, the entry count, the first and last entries' dates, where the timeline's validity ends, how many entries show each state, how long building took and the extension's memory footprint. It also logs each record with `os.Logger`, subsystem `io.github.salah-kit.WatchComplication`, category `timeline`. The watch app's **Diagnostics** screen lists the records and can ask WidgetKit to reload the complication. The watch app (category `watch`) and the companion (category `companion`) log what they store and send.
+The complication extension appends a record of each `getTimeline` call to the watch's App Group (`TimelineLog`, the latest 50): when it was asked, the family, the inputs' fingerprint or `none`, the entry count, the first and last entries' dates, where the timeline's validity ends, how many entries show each state, how long building took and the extension's memory footprint. It also logs each record with `os.Logger`, subsystem `com.omarkhaled.salah.examples.WatchComplication`, category `timeline`. The watch app's **Diagnostics** screen lists the records and can ask WidgetKit to reload the complication. The watch app (category `watch`) and the companion (category `companion`) log what they store and send.
 
 ```sh
 xcrun simctl spawn <watch UDID> log show --last 1h --style compact \
-  --predicate 'subsystem == "io.github.salah-kit.WatchComplication"'
+  --predicate 'subsystem == "com.omarkhaled.salah.examples.WatchComplication"'
 ```
 
 This is the example's evidence channel, not something a prayer app needs.
@@ -79,7 +79,7 @@ This is the example's evidence channel, not something a prayer app needs.
 
 Open `WatchComplication.xcodeproj` and run the `WatchComplicationWatch` scheme on a paired Apple Watch simulator, or the `WatchComplication` scheme on its iPhone. Simulator builds need no signing: Xcode signs them ad hoc and embeds the App Group entitlement for the simulator.
 
-To run on devices, copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` (gitignored) and set your team there, then uncomment `APP_BUNDLE_IDENTIFIER` and `APP_GROUP_IDENTIFIER` to name a bundle identifier and an App Group of your own: Apple registers an identifier and a group to one team, so a build signed with yours needs its own. `APP_BUNDLE_IDENTIFIER` is the companion's (`io.github.salah-kit.WatchComplication` by default), and every other target's follows it: the watch app is `.watchkitapp` after it, its extension `.watchkitapp.Complications` and the unit tests `Tests`, and each UI-test bundle puts its own name in place of the last part (`io.github.salah-kit.WatchUITests`). The build writes the group into the watch app's and the extension's entitlements and into the `AppGroupIdentifier` key of their Info.plist, where `WatchStorage.appGroup` reads it; Xcode's automatic signing registers it with your team. The companion needs no App Group.
+To run on devices, copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` (gitignored) and set your team there, then uncomment `APP_BUNDLE_IDENTIFIER` and `APP_GROUP_IDENTIFIER` to name a bundle identifier and an App Group of your own: Apple registers an identifier and a group to one team, so a build signed with yours needs its own. `APP_BUNDLE_IDENTIFIER` is the companion's (`com.omarkhaled.salah.examples.WatchComplication` by default), and every other target's follows it: the watch app is `.watchkitapp` after it, its extension `.watchkitapp.Complications` and the unit tests `Tests`, and each UI-test bundle puts its own name in place of the last part (`com.omarkhaled.salah.examples.WatchUITests`). The build writes the group into the watch app's and the extension's entitlements and into the `AppGroupIdentifier` key of their Info.plist, where `WatchStorage.appGroup` reads it; Xcode's automatic signing registers it with your team. The companion needs no App Group.
 
 From the command line, in this folder:
 

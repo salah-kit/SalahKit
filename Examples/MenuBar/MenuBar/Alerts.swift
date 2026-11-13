@@ -86,7 +86,7 @@ final class AlertCoordinator {
     self.budget = budget
     self.diagnostics = diagnostics
     scheduler = NotificationScheduler(
-      identifierPrefix: "io.github.salah-kit.MenuBar.", namespace: Self.namespace,
+      identifierPrefix: "com.omarkhaled.salah.examples.MenuBar.", namespace: Self.namespace,
       threadIdentifier: "prayers", center: center, now: schedulerNow)
     engine = InProcessAlertEngine(clock: clock) { [weak self] due in self?.alertsCameDue(due) }
   }

@@ -23,7 +23,7 @@ nonisolated private final class ReloadLog: Sendable {
 
 /// A shared value in a fresh suite of its own, removed when the test ends.
 private struct Fixture: ~Copyable {
-  let suite = "io.github.salah-kit.tests.shared-value.\(UUID().uuidString)"
+  let suite = "com.omarkhaled.salah.tests.shared-value.\(UUID().uuidString)"
   let log = ReloadLog()
 
   func value(key: String = "settings.v1") -> SharedValue<Settings> {
